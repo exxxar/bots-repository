@@ -147,11 +147,10 @@ class BotConstructor extends BaseLogicFactory
     {
         $this->loadJsonConfig();
         $this->commandsHandler();
+        $this->warningHandler();
         $this->menuHandler();
         $this->scriptsHandler();
         $this->pagesHandler();
-
-
     }
 
 }

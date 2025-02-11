@@ -28,64 +28,61 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                 :bot="bot"></BotSearchModal>
 
 
-
-
-                <button
-                    class="btn text-white p-2 btn-outline-light"
-                    style="font-size:12px;"
-                    @click="openTariffsModal"
-                    aria-controls="staticBackdrop">
-                    <i class="fas fa-money-bill"></i> У вас
-                    <span class="fw-bold text-white">0</span> руб, <span
-                    class="fw-bold text-white">{{ slotsCount }}</span> свободных слотов
-                </button>
-
+            <button
+                class="btn text-white p-2 btn-outline-light"
+                style="font-size:12px;"
+                @click="openTariffsModal"
+                aria-controls="staticBackdrop">
+                <i class="fas fa-money-bill"></i> У вас
+                <span class="fw-bold text-white">0</span> руб, <span
+                class="fw-bold text-white">{{ slotsCount }}</span> свободных слотов
+            </button>
 
 
             <div class="d-flex">
-            <button
-                v-if="bot"
-                class="btn text-white p-2 px-3 border-light mr-2 "
-                style="font-size:12px;"
-                type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#bot-section-menu" aria-controls="staticBackdrop">
-                <i class="fa-solid fa-screwdriver-wrench text-white"></i>
-            </button>
-            <div class="dropdown">
                 <button
+                    v-if="bot"
+                    class="btn text-white p-2 px-3 border-light mr-2 "
                     style="font-size:12px;"
-                    class="btn btn-outline-light text-white dropdown-toggle p-2 " type="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-user"></i>
-                    {{ profile?.name || profile?.username || profile?.telegram_chat_id || '-' }}
+                    type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#bot-section-menu" aria-controls="staticBackdrop">
+                    <i class="fa-solid fa-screwdriver-wrench text-white"></i>
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item"
-                           data-bs-toggle="offcanvas"
-                           role="button"
-                           href="#profile-sidebar">Профиль</a></li>
-                    <li><a
-                        href="javascript:void(0)"
-                        data-bs-toggle="modal" data-bs-target="#open-payment-modal"
-                        class="dropdown-item">Пополнить баланс</a></li>
-                    <li><a
-                        href="javascript:void(0)"
-                        data-bs-toggle="modal" data-bs-target="#activate-promo-code"
-                        class="dropdown-item">Ввести промокод</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item">Вопросы и ответы</a></li>
-                    <li><a
-                        data-bs-toggle="modal"
-                        data-bs-target="#feedbackModal"
-                        class="dropdown-item" href="javascript:void(0)">Тех. поддержка</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="/logout">Выход</a></li>
-                </ul>
-            </div>
+                <div class="dropdown">
+                    <button
+                        style="font-size:12px;"
+                        class="btn btn-outline-light text-white dropdown-toggle p-2 " type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-user"></i>
+                        {{ profile?.name || profile?.username || profile?.telegram_chat_id || '-' }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                               data-bs-toggle="offcanvas"
+                               role="button"
+                               href="#profile-sidebar">Профиль</a></li>
+                        <li><a
+                            href="javascript:void(0)"
+                            data-bs-toggle="modal" data-bs-target="#open-payment-modal"
+                            class="dropdown-item">Пополнить баланс</a></li>
+                        <li><a
+                            href="javascript:void(0)"
+                            data-bs-toggle="modal" data-bs-target="#activate-promo-code"
+                            class="dropdown-item">Ввести промокод</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item">Вопросы и ответы</a></li>
+                        <li><a
+                            data-bs-toggle="modal"
+                            data-bs-target="#feedbackModal"
+                            class="dropdown-item" href="javascript:void(0)">Тех. поддержка</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/logout">Выход</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -116,10 +113,38 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                             <label for="floatingPassword">Сумма для внесения, руб</label>
                         </div>
 
-                        <button class="btn btn-primary w-100 p-3"
-                                type="submit">Пополнить
+                        <button class="btn btn-primary w-100 p-3 d-flex justify-content-center align-items-center"
+                                type="submit">
+                            <span class="fw-bold mr-2">Оплатить через </span>
+                            <img
+                                style="width:50px; object-fit:cover;"
+                                v-lazy="'/images/Т-Банк.png'" alt="">
                         </button>
                     </form>
+
+                    <div class="d-flex justify-content-center align-items-center p-2">
+                        <span>Принимаем к оплате</span>
+                        <img
+                            class="p-2"
+                            style="width:80px; object-fit:cover;"
+                            v-lazy="'/images/sbp.png'" alt="">
+                        <img
+                            class="p-2"
+                            style="width:80px; object-fit:cover;"
+                            v-lazy="'/images/mir-logo.png'" alt="">
+                    </div>
+
+
+                    <a
+                        class="d-flex justify-content-center align-items-center p-2"
+                        href="https://tbank.ru" target="_blank">
+                        <span>Партнер системы</span>
+                        <img
+                            class="p-2"
+                            style="width:80px; object-fit:cover;"
+                            v-lazy="'/images/Т-Банк.png'" alt="">
+                    </a>
+
                 </div>
 
             </div>
@@ -154,7 +179,12 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                 <button
                                     type="button"
                                     @click="submitPayment(tariff.price)"
-                                    class="btn btn-primary p-3">Выбрать
+                                    class="btn btn-primary p-3 d-flex justify-content-center align-items-center">
+
+                                    <span class="fw-bold mr-2">Оплатить через </span>
+                                    <img
+                                        style="width:50px; object-fit:cover;"
+                                        v-lazy="'/images/Т-Банк.png'" alt="">
                                 </button>
                             </div>
                         </div>
@@ -164,6 +194,28 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                             Подождите, мы загружаем тарифы!
                         </p>
                     </template>
+
+                    <div class="d-flex justify-content-center align-items-center p-2">
+                        <span>Принимаем к оплате</span>
+                        <img
+                            class="p-2"
+                            style="width:80px; object-fit:cover;"
+                            v-lazy="'/images/sbp.png'" alt="">
+                        <img
+                            class="p-2"
+                            style="width:80px; object-fit:cover;"
+                            v-lazy="'/images/mir-logo.png'" alt="">
+                    </div>
+
+                    <a
+                        class="d-flex justify-content-center align-items-center p-2"
+                        href="https://tbank.ru" target="_blank">
+                        <span>Партнер системы</span>
+                        <img
+                            class="p-2"
+                            style="width:80px; object-fit:cover;"
+                            v-lazy="'/images/Т-Банк.png'" alt="">
+                    </a>
                 </div>
 
             </div>
@@ -682,7 +734,7 @@ export default {
 
         },
         loadActualTariffs() {
-            if (this.tariffs.length>0)
+            if (this.tariffs.length > 0)
                 return;
 
             this.$store.dispatch("getActualTariffs").then((response) => {

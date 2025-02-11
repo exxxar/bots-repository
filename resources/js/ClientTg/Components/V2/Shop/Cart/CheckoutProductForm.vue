@@ -398,9 +398,11 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                 <button
                     v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
                     :disabled="!canSubmitForm"
-                    class="btn btn-primary p-3 w-100 ">
-                    <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить
-
+                    class="btn btn-primary p-3 w-100 d-flex justify-content-center align-items-center">
+                    <i class="fa-solid fa-receipt mr-2"></i>
+                    <img
+                    style="width:80px; object-fit:cover;"
+                    v-lazy="'/images/Т-Банк.png'" alt="">
                 </button>
 
                 <button

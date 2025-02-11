@@ -90,7 +90,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             }
         }
 
-        return response()->json(['message' => 'OK']);
+        return "ok";
     }
 
     /**
