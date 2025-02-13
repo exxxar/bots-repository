@@ -258,3 +258,13 @@ export default {
     }
 }
 </script>
+<style>
+.simple-typeahead-list,
+.simple-typeahead-list-item {
+    background-color: var(--bs-body-bg);
+}
+.simple-typeahead-list-item-text {
+
+    color: var(--bs-primary);
+}
+</style>
