@@ -224,7 +224,7 @@ class Basket
         return $prizeText;
     }
 
-    private function sendPaidReceiptToChannel($order)
+    private function sendPaidReceiptToChannel($order, $message)
     {
         $uploadedPhoto = $this->uploadedImage;
 
@@ -270,7 +270,7 @@ class Basket
 
                 ],
                 $thread
-            );
+            )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message");
 
     }
 
@@ -499,6 +499,8 @@ class Basket
             );
 
 
+        $this->sendPaidReceiptToChannel($order, $productMessage);
+
         $paymentInfo = sprintf((Collection::make($this->slug->config)
             ->where("key", "payment_info")
             ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
@@ -507,7 +509,7 @@ class Basket
         $productMessage .= "\n\n$paymentInfo";
 
         $this->fsSendResult($productMessage);
-        $this->sendPaidReceiptToChannel($order);
+
     }
 
     private function goodsShopCheckout()
@@ -645,9 +647,9 @@ class Basket
             ->prepareReviews($order->id, $ids);
 
         $productMessage .= $discountItem->message ?? '';
-        $productMessage .= "\n\nТовар можно забрать в: <b>".$cdek->to->office->location->address_full."</b> (ваш тариф: ".$cdek->tariff->tariff_name.")\n" ;
-        $productMessage .= "График работы: <b>".$cdek->to->office->work_time."</b>\n" ;
-        $productMessage .= "Срок доставки от <b>".$cdek->tariff->calendar_min. "</b> до <b>".$cdek->tariff->calendar_max."</b> дней\n";
+        $productMessage .= "\n\nТовар можно забрать в: <b>" . $cdek->to->office->location->address_full . "</b> (ваш тариф: " . $cdek->tariff->tariff_name . ")\n";
+        $productMessage .= "График работы: <b>" . $cdek->to->office->work_time . "</b>\n";
+        $productMessage .= "Срок доставки от <b>" . $cdek->tariff->calendar_min . "</b> до <b>" . $cdek->tariff->calendar_max . "</b> дней\n";
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
 
@@ -669,7 +671,7 @@ class Basket
 
             $thread = $this->bot->topics["delivery"] ?? null;
 
-          //  $productMessage .= $this->gsPrepareUserInfo();
+            //  $productMessage .= $this->gsPrepareUserInfo();
 
             BotMethods::bot()
                 ->whereBot($this->bot)
@@ -685,7 +687,7 @@ class Basket
 
         $productMessage .= $this->gsPrepareFromInfo($order, $discountItem->discount ?? 0);
 
-      //  $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
+        //  $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
         $this->gsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order);
     }

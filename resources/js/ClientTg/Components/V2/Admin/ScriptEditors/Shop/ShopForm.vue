@@ -506,6 +506,24 @@ export default {
             },
             deep: true
         },
+        'form.can_use_sbp': {
+            handler: function (newValue) {
+                if (!this.form.can_use_sbp){
+                    this.form.sbp =  {
+                        selected_sbp_bank: 'tinkoff',
+                            tinkoff: {
+                            terminal_key: null,
+                                terminal_password: null,
+                                tax: null,
+                                vat: null,
+                        },
+                        sber: {}
+                    }
+                }
+            },
+            deep: true
+        },
+
     },
     mounted() {
 
