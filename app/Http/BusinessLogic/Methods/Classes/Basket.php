@@ -434,6 +434,15 @@ class Basket
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
 
         $needBill = false;
+
+        $productMessage .= $this->fsPrepareUserInfo($order, $discountItem->discount ?? 0);
+
+        if ($deliveryPrice > 0) {
+            $productMessage .= "\nДоставка: <b>" . $deliveryPrice . " руб.</b> за $distance км";
+            $productMessage .= "\nИтого c доставкой: <b>" . (($summaryPrice + $deliveryPrice) - $discountItem->discount) . " руб.</b>";
+        }
+
+
         switch ($paymentType) {
             case 0:
                 BusinessLogic::payment()
@@ -469,12 +478,6 @@ class Basket
 
                 $thread = $this->bot->topics["delivery"] ?? null;
 
-                $productMessage .= $this->fsPrepareUserInfo($order, $discountItem->discount ?? 0);
-
-                if ($deliveryPrice > 0) {
-                    $productMessage .= "\nДоставка: <b>" . $deliveryPrice . " руб.</b> за $distance км";
-                    $productMessage .= "\nИтого c доставкой: <b>" . (($summaryPrice + $deliveryPrice) - $discountItem->discount) . " руб.</b>";
-                }
 
                 BotMethods::bot()
                     ->whereBot($this->bot)
