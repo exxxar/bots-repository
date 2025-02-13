@@ -190,7 +190,7 @@ export default {
                 disabilities: [],
                 money: null,
                 cash: true,
-                payment_type: 4,
+                payment_type: 2,
                 persons: 1,
                 time: null,
                 when_ready: true,// по готовности
