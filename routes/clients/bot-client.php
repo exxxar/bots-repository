@@ -391,7 +391,7 @@ Route::prefix("bot-client")
 
         Route::prefix("cdek")
             ->controller(\App\Http\Controllers\Bots\Web\CdekController::class)
-            ->middleware(["tgAuth.admin"])
+            ->middleware(["tgAuth.any"])
             ->group(function(){
                 Route::post('/store', "store");
                 Route::post('/calc-basket-tariff', "calcBasketTariff");

@@ -52,7 +52,7 @@ class BotController extends Controller
             ->setBot($bot)
             ->sbpNotificationProductsPayment($request->all());
 
-        return ['message' => 'OK'];
+        return "OK";
     }
 
 
