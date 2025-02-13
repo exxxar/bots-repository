@@ -262,7 +262,7 @@ class Basket
                 "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
                 "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано') .
                 "\n<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n",
-                InputFile::create(storage_path() . "\\app\\$imageName"),
+                InputFile::create(storage_path() . "/app/$imageName"),
                 [
                     [
                         ["text" => "📜Заказ пользователя", "url" => $historyLink]
@@ -270,7 +270,7 @@ class Basket
 
                 ],
                 $thread
-            )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message");
+            )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message", $thread);
 
     }
 
