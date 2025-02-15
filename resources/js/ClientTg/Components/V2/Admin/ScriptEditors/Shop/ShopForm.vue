@@ -32,7 +32,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     id="floatingSelect" aria-label="Floating label select example">
                 <option :value="0">Продовольственный</option>
                 <option :value="1">Бытовые товары</option>
-<!--                <option :value="2">Электронные товары</option>-->
+                <!--                <option :value="2">Электронные товары</option>-->
             </select>
             <label for="floatingSelect">Тип магазина</label>
         </div>
@@ -91,7 +91,8 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                        type="checkbox"
                        v-model="form.need_automatic_delivery_request"
                        role="switch" id="script-settings-need_automatic_delivery_request">
-                <label class="form-check-label" for="script-settings-need_automatic_delivery_request">Автоматический расчет
+                <label class="form-check-label" for="script-settings-need_automatic_delivery_request">Автоматический
+                    расчет
                     цены доставки: <span
                         v-bind:class="{'text-primary fw-bold':form.need_automatic_delivery_request}">вкл</span> \ <span
                         v-bind:class="{'text-primary fw-bold':!form.need_automatic_delivery_request}">выкл</span></label>
@@ -99,8 +100,10 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
 
             <template v-if="form.need_automatic_delivery_request">
 
-                <p class="alert alert-light mb-2">Далее настройка параметров доставки: базовая цена для расчёта стоимости
-                    доставки. Расчёт доставки идет по прямой от точки А к точке Б. Формула: базовая цена + N км * цена за
+                <p class="alert alert-light mb-2">Далее настройка параметров доставки: базовая цена для расчёта
+                    стоимости
+                    доставки. Расчёт доставки идет по прямой от точки А к точке Б. Формула: базовая цена + N км * цена
+                    за
                     км</p>
                 <div class="form-floating mb-2">
                     <input type="number"
@@ -125,19 +128,20 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     <label for="floatingInput">Бесплатная доставка от</label>
                 </div>
 
-                <p class="alert alert-light mb-2">Расчет цены доставки происходит на основе координат. Укажите координаты
+                <p class="alert alert-light mb-2">Расчет цены доставки происходит на основе координат. Укажите
+                    координаты
                     вашего заведения из
                     <a class="text-primary fw-bold" href="https://yandex.ru/maps/" target="_blank">Яндекс.Карты</a> -
                     скопируйте и вставьте <span class="fw-bold text-primary">00.000000</span>, <span
                         class="fw-bold text-primary">00.000000</span> координаты в это поле.
                 </p>
-<!--                <div class="form-floating mb-2">
-                    <input type="text"
-                           v-model="form.yandex_geocoder"
-                           required
-                           class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Токен от Яндекс.Геокодер</label>
-                </div>-->
+                <!--                <div class="form-floating mb-2">
+                                    <input type="text"
+                                           v-model="form.yandex_geocoder"
+                                           required
+                                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                                    <label for="floatingInput">Токен от Яндекс.Геокодер</label>
+                                </div>-->
 
                 <div class="form-floating mb-2">
                     <input type="text"
@@ -201,7 +205,6 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                    class="form-control" id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Тоукен платежной системы</label>
         </div>
-
 
 
         <div class="divider my-3">Секции</div>
@@ -289,7 +292,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                 <a
                     :href="'/bot-client/'+bot.bot_domain+'/tables-qr?count='+form.max_tables+'&script-id='+scriptId"
                     target="_blank"
-                    class="btn btn-info w-100"
+                    class="btn btn-info w-100 p-3"
                 ><i class="fa-solid fa-qrcode"></i> Скачать QR-коды для столиков</a>
             </template>
 
@@ -350,6 +353,18 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                 <label for="floatingSelect">% НДС</label>
             </div>
 
+            <p class="alert alert-light mb-2">
+                Ссылка для добавления в оповещения
+
+                <a href="https://www.tbank.ru/" target="_blank">Т-Банка</a>
+            </p>
+            <button
+                @click="copyToClipBoard"
+                type="button"
+                class="btn btn-info p-3 w-100"
+            >
+                <i class="fa-regular fa-clipboard mr-2"></i>Скопировать ссылку
+            </button>
         </template>
 
 
@@ -456,7 +471,7 @@ export default {
                 can_buy_after_closing: false,
                 can_use_cash: true,
                 can_use_card: true,
-                payment_token:null,
+                payment_token: null,
                 need_pay_after_call: false,
                 disabled_text: null,
 
@@ -495,7 +510,10 @@ export default {
         bot() {
             return window.currentBot
         },
-        scriptId(){
+        pageTinkoffLink() {
+            return import.meta.env.VITE_ASSET_URL + "/payment-products-notify/tinkoff/" + this.bot.bot_domain
+        },
+        scriptId() {
             return window.currentScript || null
         }
     },
@@ -508,14 +526,14 @@ export default {
         },
         'form.can_use_sbp': {
             handler: function (newValue) {
-                if (!this.form.can_use_sbp){
-                    this.form.sbp =  {
+                if (!this.form.can_use_sbp) {
+                    this.form.sbp = {
                         selected_sbp_bank: 'tinkoff',
-                            tinkoff: {
+                        tinkoff: {
                             terminal_key: null,
-                                terminal_password: null,
-                                tax: null,
-                                vat: null,
+                            terminal_password: null,
+                            tax: null,
+                            vat: null,
                         },
                         sber: {}
                     }
@@ -536,6 +554,21 @@ export default {
         })
     },
     methods: {
+        copyToClipBoard() {
+            let text = this.pageTinkoffLink
+            navigator.clipboard.writeText(text).then(() => {
+                this.$notify({
+                    title: "Копирование",
+                    text: "Ссылка скопирована в буфер"
+                })
+            }).catch((err) => {
+                this.$notify({
+                    title: "Копирование",
+                    text: "Ошибка копирования",
+                    type: "error"
+                })
+            });
+        },
         selectScript(item) {
 
             if (item == null) {

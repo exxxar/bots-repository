@@ -364,71 +364,71 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
             style="border-radius:10px 10px 0px 0px;">
 
-        <template v-if="spent_time_counter<=0">
-            <template v-if="settings.need_automatic_delivery_request">
-<!-- v-if="cartTotalPrice <= settings.free_shipping_starts_from"-->
-                <button
-                    v-if="delivery_price_request_step===0"
-                    @click="requestDeliveryPrice"
-                    class="btn btn-primary text-white p-3 w-100 mb-2 d-flex align-items-center justify-content-center"
-                    :disabled="!canRequestDeliverPrice">
-                    <i class="fa-solid fa-map-location-dot mr-2"></i> Рассчитать цену доставки
+            <template v-if="spent_time_counter<=0">
+                <template v-if="settings.need_automatic_delivery_request">
+                    <!-- v-if="cartTotalPrice <= settings.free_shipping_starts_from"-->
+                    <button
+                        v-if="delivery_price_request_step===0"
+                        @click="requestDeliveryPrice"
+                        class="btn btn-primary text-white p-3 w-100 d-flex align-items-center justify-content-center"
+                        :disabled="!canRequestDeliverPrice">
+                        <i class="fa-solid fa-map-location-dot mr-2"></i> Рассчитать цену доставки
+                        <div
+                            v-if="!need_request_delivery_price"
+                            class="spinner-border ml-2 spinner-border-sm"
+                            role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                </template>
+
+
+                <template v-if="delivery_price_request_step===1">
+
+                    <button
+                        v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
+                        :disabled="!canSubmitForm"
+                        class="btn btn-primary p-3 w-100">
+                        <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                        <i v-else class="fa-solid fa-hourglass  mr-2"></i>
+                        Оформить
+
+                    </button>
+
+                    <button
+                        v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
+                        :disabled="!canSubmitForm"
+                        class="btn btn-primary p-3 w-100 d-flex justify-content-center align-items-center">
+                        Оплатить через
+                        <img
+                            style="width:80px; object-fit:cover;margin-left:10px;"
+                            v-lazy="'/images/Т-Банк.png'" alt="">
+                    </button>
+
+                    <button
+                        v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
+                        type="button"
+                        @click="nextStep"
+                        :disabled="!canSubmitForm"
+                        class="btn btn-primary p-3 w-100">
+                        <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+                    </button>
+                </template>
+
+            </template>
+            <template v-else>
+                <button type="button"
+                        class="btn btn-primary p-3 w-100 d-flex align-items-center justify-content-center">
+                    Осталось ждать {{ spent_time_counter || 0 }} сек.
                     <div
-                        v-if="!need_request_delivery_price"
+                        v-if="!canSubmitForm"
                         class="spinner-border ml-2 spinner-border-sm"
                         role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
+
                 </button>
             </template>
-
-
-            <template v-if="delivery_price_request_step===1">
-
-                <button
-                    v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
-                    :disabled="!canSubmitForm"
-                    class="btn btn-primary p-3 w-100 mb-2">
-                    <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
-                    <i v-else class="fa-solid fa-hourglass  mr-2"></i>
-                    Оформить
-
-                </button>
-
-                <button
-                    v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
-                    :disabled="!canSubmitForm"
-                    class="btn btn-primary p-3 w-100 d-flex justify-content-center align-items-center">
-                    <i class="fa-solid fa-receipt mr-2"></i>
-                    <img
-                    style="width:80px; object-fit:cover;"
-                    v-lazy="'/images/Т-Банк.png'" alt="">
-                </button>
-
-                <button
-                    v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
-                    type="button"
-                    @click="nextStep"
-                    :disabled="!canSubmitForm"
-                    class="btn btn-primary p-3 w-100">
-                    <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
-                </button>
-            </template>
-
-        </template>
-        <template v-else>
-            <button type="button"
-                    class="btn btn-primary p-3 w-100 d-flex align-items-center justify-content-center">
-                Осталось ждать {{ spent_time_counter || 0 }} сек.
-                <div
-                    v-if="!canSubmitForm"
-                    class="spinner-border ml-2 spinner-border-sm"
-                    role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-
-            </button>
-        </template>
         </nav>
     </form>
 </template>
@@ -440,7 +440,7 @@ export default {
     props: ["settings", "modelValue"],
     data() {
         return {
-            delivery_price_request_step:0,
+            delivery_price_request_step: 0,
             spent_time_counter: 0,
             need_select_table_by_number: false,
             need_request_delivery_price: true,
@@ -454,7 +454,16 @@ export default {
 
         'modelValue': {
             handler: function (newValue) {
+
                 this.$emit("update:modelValue", this.modelValue)
+            },
+            deep: true
+        },
+        'modelValue.need_pickup': {
+            handler: function (newValue) {
+
+                this.delivery_price_request_step = this.modelValue.need_pickup === true ? 1 : 0
+
             },
             deep: true
         },
@@ -487,7 +496,7 @@ export default {
                 this.cartTotalPrice >= this.settings.min_price :
                 this.cartTotalPrice - this.cashbackLimit > this.settings.min_price
 
-            return sumIsValid  && (this.spent_time_counter || 0) === 0
+            return sumIsValid && (this.spent_time_counter || 0) === 0
         },
 
         cashbackLimit() {
@@ -541,7 +550,7 @@ export default {
 
     },
     methods: {
-        goToProductCart(){
+        goToProductCart() {
             document.dispatchEvent(new Event('switch-to-cart'));
         },
         decPersons() {

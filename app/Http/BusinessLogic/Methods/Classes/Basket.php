@@ -228,17 +228,16 @@ class Basket
     {
         $uploadedPhoto = $this->uploadedImage;
 
-
-        if (is_null($uploadedPhoto))
-            return;
+        $hasPhoto = !is_null($uploadedPhoto);
 
         $whenReady = ($this->data["when_ready"] ?? "false") == "true";
 
-        $ext = $uploadedPhoto->getClientOriginalExtension();
+        if ($hasPhoto) {
+            $ext = $uploadedPhoto->getClientOriginalExtension();
+            $imageName = Str::uuid() . "." . $ext;
+            $uploadedPhoto->storeAs("$imageName");
+        }
 
-        $imageName = Str::uuid() . "." . $ext;
-
-        $uploadedPhoto->storeAs("$imageName");
 
         $thread = $this->bot->topics["orders"] ?? null;
 
@@ -251,26 +250,41 @@ class Basket
 
         $channel = $this->bot->order_channel ?? $this->bot->main_channel ?? null;
 
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendPhoto(
-                $channel,
-                "#оплатачеком\n" .
-                ($whenReady ? "🟢" : "🟡") . "Заказ №:" . ($order->id ?? '-') . "\n" .
-                "Идентификатор клиента: " . ($botUserTelegramChatId ?? '-') . "\n" .
-                "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
-                "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
-                "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано') .
-                "\n<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n",
-                InputFile::create(storage_path() . "/app/$imageName"),
-                [
-                    [
-                        ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                    ],
+        $userLink = "<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n";
+        if ($hasPhoto)
+        $tmpMessage = "#оплатачеком\n" .
+            ($whenReady ? "🟢" : "🟡") . "Заказ №:" . ($order->id ?? '-') . "\n" .
+            "Идентификатор клиента: " . ($botUserTelegramChatId ?? '-') . "\n" .
+            "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
+            "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
+            "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано');
 
-                ],
-                $thread
-            )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message", $thread);
+        if ($hasPhoto)
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendPhoto(
+                    $channel,
+                    $tmpMessage,
+                    InputFile::create(storage_path() . "/app/$imageName"),
+                    [
+                        [
+                            ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                        ],
+
+                    ],
+                    $thread
+                )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message\n$userLink", $thread);
+        else
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendInlineKeyboard($channel, "#оплатаналичными\n$message\n$userLink",
+                    [
+                        [
+                            ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                        ],
+
+                    ],
+                    $thread);
 
     }
 
@@ -282,7 +296,7 @@ class Basket
         $paymentType = $this->data["payment_type"] ?? 4;
 
 
-        $productMessage = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
+        $productMessage = (!$needPickup ? "#заказдоставка\n" : "#заказсамовывоз\n");
         $productMessage .= $this->checkWheelOfFortuneAction();
         $productMessage .= $this->fsPrepareDisabilities();
 

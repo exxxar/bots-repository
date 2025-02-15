@@ -1,16 +1,165 @@
-models:
-  BotReview:
-    bot_id: id foreign:bots
-    bot_user_id: id foreign:bot_users
-    rating: integer default:0
-    description: longtext nullable
-    relationships:
-      belongsTo: Bot, BotUser
+openapi: 3.0.0
+info:
+  title: User Management API
+  description: API для управления пользователями (CRUD)
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Основной сервер API
 
+paths:
+  /users:
+    get:
+      summary: Получить список пользователей
+      operationId: getUsers
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "500":
+          description: Ошибка сервера
+    post:
+      summary: Создать нового пользователя
+      operationId: createUser
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses:
+        "201":
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Некорректные данные
 
+  /users/{id}:
+    get:
+      summary: Получить информацию о пользователе
+      operationId: getUserById
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Данные о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Пользователь не найден
+    put:
+      summary: Обновить данные пользователя
+      operationId: updateUser
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Пользователь обновлен
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Некорректные данные
+        "404":
+          description: Пользователь не найден
+    delete:
+      summary: Удалить пользователя
+      operationId: deleteUser
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Пользователь удален
+        "404":
+          description: Пользователь не найден
 
-seeders:     BotReview
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "johndoe@example.com"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-02-11T12:00:00Z"
 
-controllers:
-  BotReview:
-    resource: api
+    UserCreate:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "johndoe@example.com"
+        password:
+          type: string
+          format: password
+          example: "securepassword"
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe Updated"
+        email:
+          type: string
+          format: email
+          example: "johnupdated@example.com"
