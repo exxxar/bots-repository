@@ -90,7 +90,9 @@
                 <i class="fa-regular fa-image my-2 text-primary" style="font-size:20px;"></i>
                 <span
                     class="text-primary fw-bold text-center">Выбрать фотографию чека в формате: jpg, png, bmp</span>
-                <input type="file" id="menu-photos" accept="image/*"
+                <input type="file"
+                       required
+                       id="menu-photos" accept="image/*"
                        @change="onChangePhotos"
                        style="display:none;"/>
 
@@ -143,6 +145,15 @@ export default {
     },
     computed: {
         ...mapGetters(['cartProducts', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        cashbackLimit() {
+            let maxUserCashback = this.getSelf.cashBack ? this.getSelf.cashBack.amount : 0
+            let summaryPrice = this.cartTotalPrice || 0
+            let botCashbackPercent = this.bot.max_cashback_use_percent || 0
+
+            let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
+
+            return Math.min(cashBackAmount, maxUserCashback)
+        },
         finallyPrice() {
             return !this.modelValue.use_cashback ?
                 Math.max(1, (this.cartTotalPrice -
@@ -177,6 +188,9 @@ export default {
         },
         onChangePhotos(e) {
             const file = e.target.files[0]
+
+            if (!file) return;
+
             this.modelValue.image = file
         },
         getPhoto(imgObject) {

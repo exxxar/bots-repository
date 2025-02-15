@@ -401,10 +401,10 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
 
         <div v-if="iconForm.items[selected_menu_item_index].image_url &&
         !photos_for_upload[iconForm.items[selected_menu_item_index].slug] ">
-            <a
+<!--            <a
                 class="w-100 text-center mb-2"
                 @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
-                href="javascript:void(0)">Вернуть стандартное фото</a>
+                href="javascript:void(0)">Вернуть стандартное фото</a>-->
             <img
                 v-lazy="'/images/shop-v2-2/'+iconForm.items[selected_menu_item_index].image_url"
                 class="img-thumbnail w-100" alt="...">
@@ -423,6 +423,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                 @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
                 href="javascript:void(0)">отменить?</a>
         </p>
+        <div v-if="iconConfig.errorMessage" class="alert alert-danger my-2" v-html="iconConfig.errorMessage"></div>
         <div class="form-floating my-2">
             <input type="file" :id="'menu-photos-'+selected_menu_item_index" accept="image/*"
                    required
@@ -431,6 +432,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             />
             <label for="floatingInput">Изображение</label>
         </div>
+
 
         <button
             @click="storeMenu"
@@ -516,6 +518,12 @@ export default {
                 level_3: 0,
                 max_cashback_use_percent: 0,
                 cashback_config: []
+            },
+            iconConfig:{
+                maxWidth: 500, // Максимальная ширина (px)
+                maxHeight: 500, // Максимальная высота (px)
+                maxSizeMB: 2, // Максимальный размер (MB)
+                errorMessage: "",
             },
             iconForm: {
                 items: [
@@ -656,7 +664,20 @@ export default {
         tab(oldV, newV) {
             if (this.tab === 2)
                 this.loadFriendsScriptVariants()
-        }
+        },
+        'selected_menu_item_index': {
+            handler: function (newValue) {
+                this.iconConfig.errorMessage = ""
+            },
+            deep: true
+        },
+        'iconForm': {
+            handler: function (newValue) {
+               this.iconConfig.errorMessage = ""
+            },
+            deep: true
+        },
+
     },
     mounted() {
 
@@ -734,9 +755,28 @@ export default {
             this.selected_menu_item_index = index
         },
         onChangePhotos(e, index) {
-            const files = e.target.files
-            const slug = this.iconForm.items[index].slug
-            this.photos_for_upload[slug] = files[0]
+            const file = e.target.files[0]
+
+            if (!file) return;
+
+            const fileSizeMB = file.size / (1024 * 1024);
+            if (fileSizeMB > this.iconConfig.maxSizeMB) {
+                this.iconConfig.errorMessage = `Файл слишком большой. Максимальный размер: ${this.iconConfig.maxSizeMB}MB`;
+                return;
+            }
+
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                if (img.width > this.iconConfig.maxWidth || img.height > this.iconConfig.maxHeight) {
+                    this.iconConfig.errorMessage = `Изображение слишком большое. Макс: ${this.iconConfig.maxWidth}x${this.iconConfig.maxHeight}px`;
+                } else {
+                    this.iconConfig.errorMessage = "";
+                    const slug = this.iconForm.items[index].slug
+                    this.photos_for_upload[slug] = file
+                }
+            };
+
 
         },
         storeMenu() {
