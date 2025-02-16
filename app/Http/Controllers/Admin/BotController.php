@@ -29,7 +29,7 @@ class BotController extends Controller
     public function setBalance(Request $request)
     {
         $request->validate([
-            "amount" => "required|number|min:1",
+            "amount" => "required|numeric|min:1",
             "bot_domain" => "required"
         ]);
 
