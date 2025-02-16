@@ -293,17 +293,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-f43d985e.js",
@@ -319,14 +319,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
-    "file": "assets/Register-1a8f864d.css",
+    "file": "assets/Login-1a8f864d.css",
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
-      "assets/Register-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/ForgotPassword-ac2880e4.js",
+    "file": "assets/ForgotPassword-18cbb19d.js",
     "imports": [
       "_index.es-94f59699.js",
       "_GuestLayout-267a57c3.js",
@@ -338,14 +338,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
-    "file": "assets/Register-1a8f864d.css",
+    "file": "assets/Login-1a8f864d.css",
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
-      "assets/Register-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/Login-f8bde176.js",
+    "file": "assets/Login-31ad4864.js",
     "imports": [
       "_index.es-94f59699.js",
       "_GuestLayout-267a57c3.js",
@@ -357,14 +357,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Login.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
-    "file": "assets/Register-1a8f864d.css",
+    "file": "assets/Login-1a8f864d.css",
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
-      "assets/Register-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/Register-ebea8a27.js",
+    "file": "assets/Register-9e961f7b.js",
     "imports": [
       "_index.es-94f59699.js",
       "_GuestLayout-267a57c3.js",
@@ -376,14 +376,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Register.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
-    "file": "assets/Register-1a8f864d.css",
+    "file": "assets/Login-1a8f864d.css",
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
-      "assets/Register-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/RegisterStep2-92939f35.js",
+    "file": "assets/RegisterStep2-ff87ef47.js",
     "imports": [
       "_GuestLayout-267a57c3.js",
       "_index.es-94f59699.js"
@@ -529,7 +529,7 @@
       "assets/DevPage-b787d46b.css",
       "assets/ChatMini-c2fc192f.css"
     ],
-    "file": "assets/DevPage-ce0dc851.js",
+    "file": "assets/DevPage-b0338f19.js",
     "imports": [
       "_index.es-94f59699.js",
       "_ManagerProfile-e4b03a3f.js",
@@ -698,7 +698,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-48dfa651.js",
+    "file": "assets/app-9873619c.js",
     "imports": [
       "_index.es-94f59699.js",
       "_index-058af764.js"
