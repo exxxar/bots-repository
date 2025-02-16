@@ -26,6 +26,41 @@ use Illuminate\Support\Facades\File;
 class BotController extends Controller
 {
 
+    public function setBalance(Request $request)
+    {
+        $request->validate([
+            "amount" => "required|number|min:1",
+            "bot_domain" => "required"
+        ]);
+
+        $bot = Bot::query()
+            ->where("bot_domain", $request->bot_domain)
+            ->first();
+
+        $botUser = BotUser::query()
+            ->where("user_id", Auth::user()->id)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        BusinessLogic::payment()
+            ->setBot($bot)
+            ->setBotUser($botUser)
+            ->setBotBalance($request->all());
+
+        return response()->noContent();
+    }
+
+    public function getActualBotTypes(Request $request)
+    {
+        // Загружаем тарифы из JSON-файла
+        $types = json_decode(File::get(base_path() . '/botTypes.json'), true);
+
+        usort($types, fn($a, $b) => $a['id'] <=> $b['id']);
+
+        return \response()
+            ->json($types);
+    }
+
     public function getActualTariffs(Request $request)
     {
         // Загружаем тарифы из JSON-файла
@@ -159,7 +194,7 @@ class BotController extends Controller
             ->first();
 
         $botUser = BotUser::query()
-            // ->where("user_id", Auth::user()->id)
+            ->where("user_id", Auth::user()->id)
             ->where("bot_id", $bot->id)
             ->first();
 

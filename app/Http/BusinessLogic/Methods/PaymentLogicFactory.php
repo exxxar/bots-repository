@@ -28,6 +28,28 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PaymentLogicFactory extends BaseLogicFactory
 {
 
+    public function setBotBalance($amount){
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(400, "Критерии функции не выполнены!");
+
+        $accountBalance = $this->botUser->balance ?? 0;
+
+        if ($accountBalance - $amount < 0)
+            throw new HttpException(400, "Недостаточно средств на балансе");
+
+        $this->botUser->balance -= $amount;
+        $this->botUser->save();
+        $this->bot->balance += min($amount, $accountBalance);
+        $this->bot->save();
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Баланс бота <b>".$this->bot->bot_domain."</b> успешно пополнен на <b>$amount руб</b>. И составляет теперь <b>".$this->bot->balance." руб.</b>");
+
+    }
+
 
     public function sbpNotificationProductsPayment($data)
     {

@@ -4,9 +4,11 @@ namespace App\Http\BusinessLogic\Methods\Classes;
 
 use App\Http\BusinessLogic\Methods\BaseLogicFactory;
 use App\Models\BotMenuSlug;
+use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
 use App\Models\BotWarning;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BotConstructor extends BaseLogicFactory
@@ -64,9 +66,16 @@ class BotConstructor extends BaseLogicFactory
         if (is_null($this->menu))
             return;
 
+        if (!is_null($this->menu->linked ?? null)) {
+            foreach ($this->menu->linked as $linkId => $sluggedLink) {
+                $this->menu->url = str_replace($this->menu->url, '{' . $linkId . '}', $this->links[$sluggedLink] ?? '');
+
+            }
+        }
+
         $this->bot->menu = [
             "text" => $this->menu->title ?? "Меню",
-            "url" => $this->menu->url ?? null,
+            "url" => env("APP_URL") . ($this->menu->url ?? null),
         ];
 
         $this->bot->menu->save();
@@ -102,27 +111,47 @@ class BotConstructor extends BaseLogicFactory
         if (is_null($this->pages))
             return;
 
-        if (isset($pages->data))
-            foreach ($pages->data as $page) {
-                $page = (object)$page;
+        foreach ($this->pages as $page) {
+            $page = (object)$page;
 
-                $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
+            $pageSlug = BotMenuSlug::query()
+                ->create([
+                    'bot_id' => $this->bot->id,
+                    'command' => $page->title,
+                    'comment' => "Генерируем страницу $page->title",
+                    'slug' => Str::uuid(),
+                    'is_global' => false,
+                ]);
 
-                if (!is_null($tmpSlug)) {
-                    $tmpSlug = $tmpSlug->replicate();
-                    $tmpSlug->bot_id = $bot->id;
-                    $tmpSlug->save();
+            if (!is_null($page->reply_keyboard ?? null))
+                $replyKeyboard = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => 'reply',
+                    'slug' => Str::uuid(),
+                    'menu' => $page->reply_keyboard->menu ?? null,
+                    'settings' => $page->reply_keyboard->settings ?? null,
+                ]);
 
-                    BotPage::query()->create([
-                        'bot_menu_slug_id' => $tmpSlug->id,
-                        'content' => $page->content,
-                        'images' => $page->images,
-                        'reply_keyboard_id' => $page->reply_keyboard_id,
-                        'inline_keyboard_id' => $page->inline_keyboard_id,
-                        'bot_id' => $bot->id,
-                    ]);
-                }
-            }
+            if (!is_null($page->inline_keyboard ?? null))
+                $inlineKeyboard = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => 'inline',
+                    'slug' => Str::uuid(),
+                    'menu' => $page->inline_keyboard->menu ?? null,
+                    'settings' => null,
+                ]);
+
+            BotPage::query()->create([
+                'bot_menu_slug_id' => $pageSlug->id,
+                'content' => $page->content,
+                'images' => null,
+                'reply_keyboard_id' => $replyKeyboard->id ?? null,
+                'inline_keyboard_id' => $inlineKeyboard->id ?? null,
+                'need_log_user_action' => $page->need_log_user_action ?? false,
+                'next_bot_menu_slug_id' => $this->links[$page->next_bot_menu_slug_id] ?? null,
+                'bot_id' => $this->bot->id,
+            ]);
+        }
 
     }
 
@@ -131,8 +160,8 @@ class BotConstructor extends BaseLogicFactory
         if (is_null($this->scripts))
             return;
 
-        foreach ($this->scripts as $slug)
-            BotMenuSlug::query()->create([
+        foreach ($this->scripts as $slug) {
+            $script = BotMenuSlug::query()->create([
                 'bot_id' => $this->bot->id,
                 'command' => $slug->command,
                 'comment' => $slug->comment,
@@ -140,17 +169,34 @@ class BotConstructor extends BaseLogicFactory
                 'is_global' => $slug->is_global ?? false,
                 'config' => $slug->config ?? null,
             ]);
+            $this->links[$slug->slug] = $script->id;
+
+            if (!is_null($slug->linked ?? null)) {
+
+                foreach ($slug->linked as $linkId => $sluggedLink) {
+                    $config = $slug->config;
+                    foreach ($config as $index => $value) {
+                        if ($value["key"] == $linkId)
+                            $config[$index]["value"] = $this->links[$sluggedLink] ?? null;
+                    }
+                    $script->config = $config;
+                    $script->save();
+
+                }
+            }
+        }
+
 
     }
 
-    public function handler(): void
+    public function run(): void
     {
         $this->loadJsonConfig();
         $this->commandsHandler();
         $this->warningHandler();
-        $this->menuHandler();
         $this->scriptsHandler();
         $this->pagesHandler();
+        $this->menuHandler();
     }
 
 }

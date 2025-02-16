@@ -7,6 +7,7 @@ use App\Exports\BotStatisticExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
+use App\Http\BusinessLogic\Methods\Classes\BotConstructor;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\BotCollection;
 use App\Http\Resources\BotCustomFieldSettingCollection;
@@ -1424,6 +1425,15 @@ class BotLogicFactory extends BaseLogicFactory
 
         $bot = $bot->fresh();
 
+        if (($data["bot_type"] ?? 0) > 0) {
+            $constructor = new BotConstructor();
+            $constructor
+                ->setBot($bot)
+                ->setBotUser($data["bot_type"])
+                ->run();
+        }
+
+
         return new BotResource($bot);
     }
 
@@ -1615,7 +1625,6 @@ class BotLogicFactory extends BaseLogicFactory
 
         return new BotResource($this->bot);
     }
-
 
 
     public function updateWebHookAndConfig($server = null): void

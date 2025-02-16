@@ -68,10 +68,22 @@ export default createStore({
                 return Promise.reject(err);
             })
         },
-
         async getActualTariffs(context) {
 
             let link = `/get-actual-tariffs`
+
+            let _axios = util.makeAxiosFactory(link, 'POST')
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
+        async getActualBotTypes(context) {
+
+            let link = `/get-actual-bot-types`
 
             let _axios = util.makeAxiosFactory(link, 'POST')
 

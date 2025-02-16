@@ -13,6 +13,7 @@ Route::middleware(['auth', 'verified'])
     ->group(function () {
 
         Route::post("/get-actual-tariffs", [\App\Http\Controllers\Admin\BotController::class, "getActualTariffs"]);
+        Route::post("/get-actual-bot-types", [\App\Http\Controllers\Admin\BotController::class, "getActualBotTypes"]);
         Route::post("/send-invoice", [\App\Http\Controllers\Admin\BotController::class, "sendInvoice"]);
 
         Route::get('/dev', function () {
@@ -122,6 +123,7 @@ Route::prefix("admin")
                 Route::post("/", "index");
                 Route::post("/ids", "listByIds");
                 Route::post('/get-me', "getMe");
+                Route::post('/set-balance', "setBalance");
                 Route::post('/load-current-servers', "loadCurrentServerList");
                 Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
                 Route::post('/update-shop-link', "updateShopLink");

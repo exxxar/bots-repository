@@ -92,51 +92,19 @@ import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugSimple
                                                 </div>
                                             </div>
 
-                                            <!-- Карточка 2: Бот для кафетериев / ресторанного дела -->
-                                            <div class="col-md-6 mb-2">
+
+                                            <div class="col-md-6 mb-2" v-for="(item, index) in bot_types">
                                                 <div class="card cursor-pointer"
-                                                     @click="botForm.bot_type=1"
-                                                     v-bind:class="{'border-primary':botForm.bot_type === 1}"
+                                                     @click="botForm.bot_type=item.id"
+                                                     v-bind:class="{'border-primary':botForm.bot_type === item.id}"
                                                      style="height:120px;">
                                                     <div
-                                                        v-bind:class="{'text-primary':botForm.bot_type === 1}"
+                                                        v-bind:class="{'text-primary':botForm.bot_type === item.id}"
                                                         class="card-body d-flex flex-column justify-content-center align-items-center  p-3">
-                                                        <i class="fas fa-utensils mb-2" style="font-size:20px;"></i>
-                                                        <h6 style="font-size:14px;text-align:center;">Бот для кафетериев<br>и
-                                                            ресторанного дела</h6>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                            <!-- Карточка 3: Бот для салона красоты -->
-                                            <div class="col-md-6 mb-2">
-                                                <div class="card cursor-pointer"
-                                                     @click="botForm.bot_type=2"
-                                                     v-bind:class="{'border-primary':botForm.bot_type === 2}"
-                                                     style="height:120px;">
-                                                    <div
-                                                        v-bind:class="{'text-primary':botForm.bot_type === 2}"
-                                                        class="card-body d-flex flex-column justify-content-center align-items-center  p-3">
-                                                        <i class="fas fa-spa mb-2" style="font-size:20px;"></i>
-                                                        <h6 style="font-size:14px;text-align:center;">Бот для салонов
-                                                            красоты</h6>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6 mb-2">
-                                                <div class="card cursor-pointer"
-                                                     @click="botForm.bot_type=3"
-                                                     v-bind:class="{'border-primary':botForm.bot_type === 3}"
-                                                     style="height:120px;">
-                                                    <div
-                                                        v-bind:class="{'text-primary':botForm.bot_type === 3}"
-                                                        class="card-body d-flex flex-column justify-content-center align-items-center  p-3">
-                                                        <i class="fas fa-comments mb-2" style="font-size:20px;"></i>
-                                                        <h6 style="font-size:14px;text-align:center;">Диалоговый
-                                                            бот</h6>
+                                                        <template v-if="item.icon"><span v-html="item.icon"></span>
+                                                        </template>
+                                                        <h6 style="font-size:14px;text-align:center;">
+                                                            {{ item.title }}</h6>
                                                     </div>
 
                                                 </div>
@@ -1039,6 +1007,8 @@ import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugSimple
 
                             <button
                                 type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#bot-balance-payment"
                                 v-if="profile.is_manager"
                                 class="btn btn-primary p-3 w-100 mb-3">Пополнить баланс бота
                             </button>
@@ -1161,6 +1131,75 @@ import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugSimple
 
     </form>
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="bot-balance-payment" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form
+                v-on:submit.prevent="submitBotBalancePayment"
+                class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Пополнение баланса бота</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <template v-if="bot">
+                        <div class="alert alert-light mb-2">
+                            <p class="mb-2">Общий баланс: <strong
+                                class="text-primary fw-bold">{{ profile.manager.balance || 0 }} ₽</strong></p>
+                            <p class="mb-2">Тариф в боте <strong class="text-primary fw-bold">{{ bot.tax_per_day }}
+                                ₽\день</strong></p>
+                            <p class="mb-2">Баланс в боте <strong class="text-primary fw-bold">{{ bot.balance }}
+                                ₽</strong></p>
+                            <p class="mb-2"><strong class="fw-bold">Важно!</strong> Будьте внимательны при указании
+                                суммы пополнения, отменить данную операцию будет невозможно!</p>
+                        </div>
+                        <div class="d-flex flex-wrap mb-2" v-if="this.profile.manager.balance>0">
+                            <button type="button"
+                                    @click="selectPaymentVariant(1)"
+                                    class="btn btn-light text-primary">1 месяц
+                            </button>
+                            <button type="button"
+                                    @click="selectPaymentVariant(3)"
+                                    class="btn btn-light text-primary">3 месяца
+                            </button>
+                            <button type="button"
+                                    @click="selectPaymentVariant(6)"
+                                    class="btn btn-light text-primary">6 месяцев
+                            </button>
+                            <button type="button"
+                                    @click="selectPaymentVariant(12)"
+                                    class="btn btn-light text-primary">1 год
+                            </button>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number"
+                                   min="1"
+                                   v-model="balanceForm.amount"
+                                   :max="profile.manager.balance || 0 "
+                                   class="form-control" id="bot-balance" placeholder="name@example.com">
+                            <label for="bot-balance">Вносимая сумма, ₽</label>
+                        </div>
+                    </template>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit"
+                            :disabled="spent_time_counter>0"
+                            class="btn btn-primary">
+                        <template v-if="spent_time_counter>0">
+                            Осталось подождать {{ spent_time_counter }} сек.
+                        </template>
+                        <template v-else>
+                            Пополнить баланс
+                        </template>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="modal fade" id="select-script-for-menu" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -1212,6 +1251,9 @@ export default {
     props: ["bot"],
     data() {
         return {
+            balanceForm: {
+                amount: 0,
+            },
             load_photo: true,
             loadCommandEditor: true,
             select_script_modal: null,
@@ -1252,6 +1294,7 @@ export default {
             ],
             showCode: false,
             tab: 0,
+            bot_types: [],
             spent_time_counter: 0,
             can_create: true,
             can_create_topics: true,
@@ -1482,6 +1525,7 @@ export default {
     },
     mounted() {
 
+        this.getActualBotTypes()
         this.select_script_modal = new bootstrap.Modal('#select-script-for-menu', {})
         //this.loadCurrentCompany()
         if (localStorage.getItem("cashman_admin_bot_creator_counter") != null) {
@@ -1492,7 +1536,6 @@ export default {
         window.addEventListener('store_current_company-change-event', (event) => {
             this.company = this.getCurrentCompany
         });
-
 
 
         window.addEventListener('add-payment-system-event', (event) => {
@@ -1607,6 +1650,49 @@ export default {
 
     },
     methods: {
+        selectPaymentVariant(month) {
+            this.balanceForm.amount = Math.min(this.bot.tax_per_day * 31 * month, this.profile.manager.balance)
+        },
+        submitBotBalancePayment() {
+            this.startTimer();
+
+            let data = new FormData();
+
+            Object.keys(this.balanceForm)
+                .forEach(key => {
+                    const item = this.balanceForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+            data.append("bot_domain", this.bot.bot_domain)
+
+            this.$store.dispatch("setBotBalance", {
+                form: data
+            })
+                .then((response) => {
+                    this.balanceForm.amount = 0
+                    this.$notify({
+                        title: "Пополнение баланса",
+                        text: "Отлично! Баланс бота успешно пополнен",
+                        type: 'success'
+                    });
+                    window.location.reload()
+                }).catch(() => {
+                this.$notify({
+                    title: "Пополнение баланса",
+                    text: "Ошибка пополнения баланса бота",
+                    type: 'error'
+                });
+            })
+        },
+        getActualBotTypes() {
+            this.$store.dispatch("getActualBotTypes").then((response) => {
+                this.bot_types = response || []
+            })
+        },
         openSelectScriptModal() {
             this.select_script_step = 0
             this.select_script_modal.show()
@@ -1658,31 +1744,6 @@ export default {
         removeMessage(index) {
             this.messages.splice(index, 1)
         },
-        createBotTopics() {
-            this.can_create_topics = false
-            this.$store.dispatch("createBotTopics", {
-                dataObject: {
-                    topics: this.botForm.message_threads,
-                    bot_id: this.bot.id
-                },
-            }).then((resp) => {
-                this.botForm.message_threads = resp.data
-
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Топики успешно созданы!",
-                    type: 'success'
-                });
-            }).catch(() => {
-                this.can_create_topics = true
-
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Ошибка создания топиков",
-                    type: 'error'
-                });
-            })
-        },
         getMe() {
             let token = this.botForm.bot_token || ''
             if (token.length < 40)
@@ -1702,16 +1763,6 @@ export default {
                 this.$nextTick(() => {
                     this.load_photo = true
                 })
-            })
-        },
-        getChatLink(chatId) {
-            this.$store.dispatch("loadChatInfo", {
-                dataObject: {
-                    chat_id: chatId,
-                    bot_id: this.bot.id
-                },
-            }).then((resp) => {
-                console.log("chat info", resp)
             })
         },
         addTextTo(object = {param: null, text: null}) {

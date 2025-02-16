@@ -46,6 +46,21 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+
+    async setBotBalance(context, payload = {form: null}) {
+
+        let link = `${BASE_BOTS_LINK}/set-balance`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.form)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async saveYClients(context, payload = {yClientsForm: null}) {
 
         let link = `${BASE_BOTS_LINK}/save-y-clients`
