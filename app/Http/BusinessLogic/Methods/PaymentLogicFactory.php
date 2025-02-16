@@ -32,12 +32,12 @@ class PaymentLogicFactory extends BaseLogicFactory
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(400, "Критерии функции не выполнены!");
 
-        $accountBalance = $this->botUser->balance ?? 0;
+        $accountBalance = $this->botUser->manager->balance ?? 0;
 
         if ($accountBalance - $amount < 0)
             throw new HttpException(400, "Недостаточно средств на балансе");
 
-        $this->botUser->balance -= $amount;
+        $this->botUser->manager->balance -= $amount;
         $this->botUser->save();
         $this->bot->balance += min($amount, $accountBalance);
         $this->bot->save();
