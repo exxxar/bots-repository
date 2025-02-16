@@ -33,21 +33,14 @@ class BotController extends Controller
             "bot_domain" => "required"
         ]);
 
-        Log::info("bot_user".print_r($request->botUser ?? '-', true));
-        Log::info("bot".print_r($request->bot?? '-', true));
-        Log::info("user".print_r(Auth::user()->id?? '-', true));
+
         $bot = Bot::query()
             ->where("bot_domain", $request->bot_domain)
             ->first();
 
-        $botUser = BotUser::query()
-            ->where("user_id", Auth::user()->id)
-            ->where("bot_id", $bot->id)
-            ->first();
-
         BusinessLogic::payment()
             ->setBot($bot)
-            ->setBotUser($botUser)
+            ->setBotUser($request->botUser ?? null)
             ->setBotBalance($request->all());
 
         return response()->noContent();
