@@ -1155,7 +1155,7 @@ import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugSimple
                             <p class="mb-2"><strong class="fw-bold">Важно!</strong> Будьте внимательны при указании
                                 суммы пополнения, отменить данную операцию будет невозможно!</p>
                         </div>
-                        <div class="d-flex flex-wrap mb-2" v-if="this.profile.manager.balance>0">
+                        <div class="d-flex flex-wrap mb-2" v-if="profile.manager.balance>0">
                             <button type="button"
                                     @click="selectPaymentVariant(1)"
                                     class="btn btn-light text-primary">1 месяц
@@ -1420,7 +1420,7 @@ export default {
     watch: {
         'isValidTelegramToken': {
             handler(val) {
-                if (this.profile.is_admin && (this.servers || []).length === 0)
+                if (this.profile?.is_admin && (this.servers || []).length === 0)
                     this.loadCurrentServers()
             },
             deep: true
