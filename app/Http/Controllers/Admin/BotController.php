@@ -41,7 +41,7 @@ class BotController extends Controller
         BusinessLogic::payment()
             ->setBot($bot)
             ->setBotUser($request->botUser ?? null)
-            ->setBotBalance($request->all());
+            ->setBotBalance($request->amount);
 
         return response()->noContent();
     }
