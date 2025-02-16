@@ -34,7 +34,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                 @click="openTariffsModal"
                 aria-controls="staticBackdrop">
                 <i class="fas fa-money-bill"></i> У вас
-                <span class="fw-bold text-white">0</span> руб, <span
+                <span class="fw-bold text-white"> {{profile.balance || 0}}</span> руб, <span
                 class="fw-bold text-white">{{ slotsCount }}</span> свободных слотов
             </button>
 
