@@ -1144,7 +1144,7 @@ import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugSimple
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <template v-if="bot">
+                    <template v-if="bot && profile">
                         <div class="alert alert-light mb-2">
                             <p class="mb-2">Общий баланс: <strong
                                 class="text-primary fw-bold">{{ profile.manager.balance || 0 }} ₽</strong></p>
