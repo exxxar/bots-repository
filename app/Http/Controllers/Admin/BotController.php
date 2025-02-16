@@ -33,6 +33,9 @@ class BotController extends Controller
             "bot_domain" => "required"
         ]);
 
+        Log::info("bot_user".print_r($request->botUser ?? '-', true));
+        Log::info("bot".print_r($request->bot?? '-', true));
+        Log::info("user".print_r(Auth::user()->id?? '-', true));
         $bot = Bot::query()
             ->where("bot_domain", $request->bot_domain)
             ->first();
