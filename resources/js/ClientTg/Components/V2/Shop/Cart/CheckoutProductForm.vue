@@ -548,6 +548,7 @@ export default {
         if (this.modelValue.disabilities.length > 0)
             this.modelValue.has_disability = true
 
+        this.delivery_price_request_step = (this.modelValue.need_pickup === true ? 1 : 0)||(this.settings.need_automatic_delivery_request ? 0 : 1)
     },
     methods: {
         goToProductCart() {
