@@ -48,7 +48,7 @@ class QueueController extends Controller
 
         BusinessLogic::bots()
             ->setBot($bot)
-            ->sendToRedisQueue($request->all());
+            ->sendToCroneQueue($request->all());
 
         return response()->noContent();
     }
