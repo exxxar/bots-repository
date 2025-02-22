@@ -87,13 +87,6 @@ class SimpleDeliveryController extends SlugController
 
             ],
 
-            [
-                "type" => "text",
-                "key" => "shop_theme_id",
-                "description" => "Идентификатор темы магазина",
-                "value" => 0,
-
-            ],
 
             [
                 "type" => "text",
@@ -717,52 +710,34 @@ class SimpleDeliveryController extends SlugController
             ->where("key", "main_image")
             ->first())["value"] ?? null;
 
-        $shopThemeId = (Collection::make($config[1])
-            ->where("key", "shop_theme_id")
-            ->first())["value"] ?? 0;
 
-
-        switch ($shopThemeId) {
-            default:
-            case 0:
-                $keyboard = [
-                    [
-                        ["text" => "$btnText", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main"
-                        ]],
-                    ],
-                ];
-
-
-                break;
-            case 1:
-
-                $keyboard = [
-                    [
-                        ["text" => "$btnText", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/catalog"]
-                        ],
-                    ],
-                    [
-                        ["text" => "🛒Корзина", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/cart"]
-                        ],
-                    ],
-                    [
-                        ["text" => "😎Мой профиль", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/profile"]
-                        ],
-                    ],
-                    /*  [
-                          ["text" => "😎Контакты", "web_app" => [
-                              "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/contacts"]
-                          ],
-                      ],*/
-                ];
-
-
-                break;
-        }
+        $keyboard = [
+            [
+                ["text" => "💎Меню магазина", "web_app" => [
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/menu"]
+                ],
+            ],
+            [
+                ["text" => "$btnText", "web_app" => [
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/catalog"]
+                ],
+            ],
+            [
+                ["text" => "🛒Корзина", "web_app" => [
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/cart"]
+                ],
+            ],
+            [
+                ["text" => "😎Мой профиль", "web_app" => [
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/profile"]
+                ],
+            ],
+            /*  [
+                  ["text" => "😎Контакты", "web_app" => [
+                      "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/contacts"]
+                  ],
+              ],*/
+        ];
 
 
         if (is_null($mainImage))
