@@ -1336,7 +1336,6 @@ class BotLogicFactory extends BaseLogicFactory
             "bot_token" => "required",
             "balance" => "required",
             "tax_per_day" => "required",
-            "bot_type" => "required",
             "maintenance_message" => "required",
             "level_1" => "required",
         ]);
@@ -1429,7 +1428,7 @@ class BotLogicFactory extends BaseLogicFactory
             $constructor = new BotConstructor();
             $constructor
                 ->setBot($bot)
-                ->setBotUser($data["bot_type"])
+                ->setBotUser($data["bot_type"] ?? 0)
                 ->run();
         }
 
