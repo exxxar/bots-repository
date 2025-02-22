@@ -38,7 +38,7 @@ class BotConstructor extends BaseLogicFactory
     private function loadJsonConfig(): void
     {
 
-        $jsonString = file_get_contents(base_path() . 'botTypes.json');
+        $jsonString = file_get_contents(base_path() . '/botTypes.json');
         $data = json_decode($jsonString, true);
 
         if (!$data) {
