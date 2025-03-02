@@ -66,8 +66,8 @@ class GeoLogicFactory extends BaseLogicFactory
         }
 
         return (object)[
-            'lat' => (float)$data[0]['lat'],
-            'lon' => (float)$data[0]['lon']
+            'lat' => (float)($data[0]['lat']),
+            'lon' => (float)($data[0]['lon'])
         ];
 
 
@@ -88,8 +88,8 @@ class GeoLogicFactory extends BaseLogicFactory
 
         $coords = explode(',', $shopCoords);
 
-        $latB = $coords[0] ?? 0;
-        $longB = $coords[1] ?? 0;
+        $latB = floatval($coords[0] ?? 0);
+        $longB = floatval($coords[1] ?? 0);
 
         $earth_radius = 6372795;
         // перевести координаты в радианы

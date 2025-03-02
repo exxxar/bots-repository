@@ -218,7 +218,7 @@ class ProductController extends Controller
                 ->setSlug($request->slug ?? null)
                 ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
-            $distance = $tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0;
+            $distance = floatval($tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0);
             return response()->json([
                 "distance" => $distance,
                 "price" => round($min_base_delivery_price + $distance * $price_per_km, 2)
