@@ -80,7 +80,9 @@ export default {
 
                     let data = resp.data
                     Object.keys(data).forEach(item => {
-                        this.settings[item] = data[item]
+                        if (item)
+                            this.settings[item] = data[item]
+
                     })
 
                     this.settings_loaded = true

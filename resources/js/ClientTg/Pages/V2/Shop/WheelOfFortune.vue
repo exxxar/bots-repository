@@ -99,7 +99,8 @@ export default {
 
                 this.$nextTick(() => {
                     Object.keys(resp).forEach(item => {
-                        this.script_data[item] = resp[item]
+                        if (item)
+                            this.script_data[item] = resp[item]
                     })
 
                     /*const items = this.shuffle(this.script_data.wheel_of_fortune.items)

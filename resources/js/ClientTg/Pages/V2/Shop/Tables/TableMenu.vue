@@ -19,7 +19,8 @@ import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog
             class="btn btn-primary w-100 p-2 px-3 rounded-3 shadow-lg d-flex justify-content-between align-items-center">
 
             <div class="btn-group dropup">
-                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                     <i class="fa-solid fa-cart-shopping mr-2"></i>
                 </button>
                 <ul class="dropdown-menu">
@@ -84,8 +85,8 @@ export default {
         this.loadBasketData()
     },
     methods: {
-        clearCart(){
-            this.$store.dispatch("clearCart").then(()=>{
+        clearCart() {
+            this.$store.dispatch("clearCart").then(() => {
                 this.$notify({
                     title: "Корзина",
                     text: "Корзина успешно очищена!",
@@ -106,7 +107,8 @@ export default {
                         this.settings = {}
 
                     Object.keys(resp).forEach(item => {
-                        this.settings[item] = resp[item]
+                        if (item)
+                            this.settings[item] = resp[item]
                     })
 
                     this.settings_loaded = true

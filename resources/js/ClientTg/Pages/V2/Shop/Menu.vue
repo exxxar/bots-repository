@@ -154,8 +154,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                 class="fa-solid fa-house-lock mr-2 text-primary"></i>Другие админ сервисы</h6>
 
 
-
-            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4  g-2" >
+            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4  g-2">
                 <div class="col">
                     <button type="button"
                             @click="goTo('ClientsV2')"
@@ -169,7 +168,6 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
 
                     </button>
                 </div>
-
 
 
                 <div class="col">
@@ -199,7 +197,6 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
 
                     </button>
                 </div>
-
 
 
                 <div class="col">
@@ -248,13 +245,13 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
 
             </div>
 
-<!--            <button
-                style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                @click="switchToPage('/adminmenu')"
-                class="btn  btn-outline-light text-primary mb-2 w-100 p-3 rounded-3 shadow-sm ">
+            <!--            <button
+                            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+                            @click="switchToPage('/adminmenu')"
+                            class="btn  btn-outline-light text-primary mb-2 w-100 p-3 rounded-3 shadow-sm ">
 
-                <i class="fa fa-people-carry "></i> Основная админ. панель
-            </button>-->
+                            <i class="fa fa-people-carry "></i> Основная админ. панель
+                        </button>-->
         </template>
 
     </div>
@@ -411,7 +408,8 @@ export default {
 
                 this.$nextTick(() => {
                     Object.keys(data).forEach(item => {
-                        this.script_data[item] = data[item]
+                        if (item)
+                            this.script_data[item] = data[item]
                     })
 
                     this.loadScriptData = true

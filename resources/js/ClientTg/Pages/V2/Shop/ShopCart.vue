@@ -77,13 +77,13 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                     class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">
                 Оформление заказа
             </button>
-<!--            <button type="button"
-                    v-if="tab>=1"
-                    @click="tab=0"
-                    style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">
-                Корзина с товаром
-            </button>-->
+            <!--            <button type="button"
+                                v-if="tab>=1"
+                                @click="tab=0"
+                                style="box-shadow: 1px 1px 6px 0px #0000004a;"
+                                class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">
+                            Корзина с товаром
+                        </button>-->
         </div>
         <div v-else class="w-100">
             <button type="button"
@@ -116,7 +116,7 @@ export default {
     data() {
         return {
             tab: 0,
-            loaded_settings:true,
+            loaded_settings: true,
             settings: {
                 can_use_cash: true,
                 can_use_card: true,
@@ -130,12 +130,12 @@ export default {
                 can_buy_after_closing: false,
                 free_shipping_starts_from: 0,
 
-                max_tables:0,
+                max_tables: 0,
                 need_table_list: false,
 
                 need_use_sbp: false,
                 sbp: {
-                    selected_sbp_bank:'tinkoff',
+                    selected_sbp_bank: 'tinkoff',
                     tinkoff: {
                         terminal_key: null,
                         terminal_password: null,
@@ -161,13 +161,13 @@ export default {
                 phone: null,
                 address: null,
                 promo: {
-                    discount_in_percent:false,
+                    discount_in_percent: false,
                     discount: 0,
                     activate_price: 0,
-                    code:null,
+                    code: null,
                 },
-                cdek:{
-                    tariff:null,
+                cdek: {
+                    tariff: null,
                     to: {
                         region: null,
                         city: null,
@@ -199,7 +199,7 @@ export default {
                 delivery_price: 0,
                 distance: 0,
                 allergy: null,
-                action_prize:null,
+                action_prize: null,
             },
         }
     },
@@ -276,7 +276,7 @@ export default {
         });
 
         document.addEventListener('switch-to-cart', () => {
-           this.changeTab(0)
+            this.changeTab(0)
 
             document.querySelector("#basket").scrollIntoView({
                 behavior: 'smooth'
@@ -292,8 +292,8 @@ export default {
         goToCatalog() {
             this.$router.push({name: 'CatalogV2'})
         },
-        selectPrize(item){
-          this.deliveryForm.action_prize = item
+        selectPrize(item) {
+            this.deliveryForm.action_prize = item
         },
         loadShopModuleData() {
             this.loaded_settings = false
@@ -301,7 +301,8 @@ export default {
                 this.$nextTick(() => {
                     let data = resp.data
                     Object.keys(data).forEach(item => {
-                        this.settings[item] = data[item]
+                        if (item)
+                            this.settings[item] = data[item]
                     })
 
                     this.loaded_settings = true
@@ -328,16 +329,16 @@ export default {
                 localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
 
 
-         /*   if (this.spent_time_counter>0) {
-                this.$notify({
-                    title: 'Упс!',
-                    text: "Сделать повторный заказ можно через "+this.spent_time_counter+" сек.",
-                    type: 'error'
-                })
+            /*   if (this.spent_time_counter>0) {
+                   this.$notify({
+                       title: 'Упс!',
+                       text: "Сделать повторный заказ можно через "+this.spent_time_counter+" сек.",
+                       type: 'error'
+                   })
 
-                return;
-            }
-*/
+                   return;
+               }
+   */
             let data = new FormData();
 
             //data.append("need_payment_link", this.deliveryForm.payment_type === 0)
