@@ -79,11 +79,12 @@ export default {
                         this.settings = {}
 
                     let data = resp.data
-                    Object.keys(data).forEach(item => {
-                        if (item)
-                            this.settings[item] = data[item]
+                    if (data)
+                        Object.keys(data).forEach(item => {
+                            if (item)
+                                this.settings[item] = data[item]
 
-                    })
+                        })
 
                     this.settings_loaded = true
                 })

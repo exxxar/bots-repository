@@ -407,10 +407,11 @@ export default {
                 this.script_data = []
 
                 this.$nextTick(() => {
-                    Object.keys(data).forEach(item => {
-                        if (item)
-                            this.script_data[item] = data[item]
-                    })
+                    if (data)
+                        Object.keys(data).forEach(item => {
+                            if (item)
+                                this.script_data[item] = data[item]
+                        })
 
                     this.loadScriptData = true
                 })

@@ -106,10 +106,11 @@ export default {
                     if (!this.settings)
                         this.settings = {}
 
-                    Object.keys(resp).forEach(item => {
-                        if (item)
-                            this.settings[item] = resp[item]
-                    })
+                    if (resp)
+                        Object.keys(resp).forEach(item => {
+                            if (item)
+                                this.settings[item] = resp[item]
+                        })
 
                     this.settings_loaded = true
                 })

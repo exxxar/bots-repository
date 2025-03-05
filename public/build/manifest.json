@@ -36,7 +36,7 @@
     "src": "ManagerProfile.css"
   },
   "TelegramChannelHelper.css": {
-    "file": "assets/TelegramChannelHelper-ee5a9069.css",
+    "file": "assets/TelegramChannelHelper-8363056c.css",
     "src": "TelegramChannelHelper.css"
   },
   "V1Layout.css": {
@@ -206,11 +206,11 @@
       "_index.es-94f59699.js"
     ]
   },
-  "_V1Layout-7b43f2d3.js": {
+  "_V1Layout-6d90d13a.js": {
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-7b43f2d3.js",
+    "file": "assets/V1Layout-6d90d13a.js",
     "imports": [
       "_index.es-94f59699.js",
       "resources/js/ClientTg/app.js"
@@ -293,17 +293,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-f43d985e.js",
@@ -320,7 +320,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
@@ -339,7 +339,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
@@ -358,7 +358,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
@@ -377,7 +377,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
@@ -714,11 +714,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-432ec2a6.js",
+    "file": "assets/MainV1-a82bb05b.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-94f59699.js",
-      "_V1Layout-7b43f2d3.js",
+      "_V1Layout-6d90d13a.js",
       "resources/js/ClientTg/app.js",
       "_TelegramChannelHelper-4fafe92e.js",
       "_TelegramChannelHelper.vue_vue_type_style_index_0_lang-88e3539b.js",
@@ -741,7 +741,7 @@
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/MainV2-995ead5e.js",
+    "file": "assets/MainV2-7162ee21.js",
     "imports": [
       "_index.es-94f59699.js",
       "resources/js/ClientTg/app.js",
@@ -769,9 +769,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-7aa010fd.js",
+    "file": "assets/Result-9e8e883f.js",
     "imports": [
-      "_V1Layout-7b43f2d3.js",
+      "_V1Layout-6d90d13a.js",
       "resources/js/ClientTg/app.js",
       "_index.es-94f59699.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -829,7 +829,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-63ce866c.js",
+    "file": "assets/CashBack-0e440699.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-94f59699.js",
@@ -848,9 +848,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-dd86b036.js",
+    "file": "assets/Result-25fc1a9e.js",
     "imports": [
-      "_V1Layout-7b43f2d3.js",
+      "_V1Layout-6d90d13a.js",
       "_index.es-94f59699.js",
       "resources/js/ClientTg/app.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -886,7 +886,7 @@
       "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-da034d36.js",
+    "file": "assets/app-6f21ff4b.js",
     "imports": [
       "_index.es-94f59699.js",
       "__plugin-vue_export-helper-c27b6911.js",

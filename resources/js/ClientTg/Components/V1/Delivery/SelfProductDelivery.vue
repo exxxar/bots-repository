@@ -770,10 +770,11 @@ export default {
         loadShopModuleData() {
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
                 this.$nextTick(() => {
-                    Object.keys(resp).forEach(item => {
-                        if (item)
-                            this.settings[item] = resp[item]
-                    })
+                    if (resp)
+                        Object.keys(resp).forEach(item => {
+                            if (item)
+                                this.settings[item] = resp[item]
+                        })
                 })
             })
         },

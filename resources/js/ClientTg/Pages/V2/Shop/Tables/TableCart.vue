@@ -592,9 +592,11 @@ export default {
             this.loaded_settings = false
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
                 this.$nextTick(() => {
-                    Object.keys(resp).forEach(item => {
-                        this.settings[item] = resp[item]
-                    })
+
+                    if (resp)
+                        Object.keys(resp).forEach(item => {
+                            this.settings[item] = resp[item]
+                        })
 
                     this.fillForm()
                     this.loaded_settings = true
