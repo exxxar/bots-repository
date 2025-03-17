@@ -9,6 +9,23 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
     <form
         v-on:submit.prevent="submitCdek"
         class="row py-3">
+
+        <div class="col-md-6 col-12 mb-2">
+
+            <div class="form-floating">
+                <input type="text" class="form-control"
+                       placeholder="phone"
+                       aria-label="phone"
+                       v-model="cdekForm.phone"
+                       required
+                       aria-describedby="phone">
+                <label class="form-label" id="phone">
+                    Номер телефона отправителя
+                </label>
+            </div>
+
+        </div>
+
         <div class="col-md-6 col-12 mb-2">
 
             <div class="form-floating">
@@ -51,10 +68,12 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
 
         <div class="col-md-6 mb-2">
             <div class="dropdown">
-                <button class="btn btn-outline-light text-primary dropdown-toggle w-100 p-3" type="button" data-bs-toggle="dropdown"
+                <button class="btn btn-outline-light text-primary dropdown-toggle w-100 p-3" type="button"
+                        data-bs-toggle="dropdown"
                         aria-expanded="false">
                     Выбрать доп. сервисы
-                    <span class="badge bg-primary" v-if="cdekForm.config.services.length>0">{{cdekForm.config.services.length}}</span>
+                    <span class="badge bg-primary"
+                          v-if="cdekForm.config.services.length>0">{{ cdekForm.config.services.length }}</span>
                 </button>
                 <ul class="dropdown-menu w-100">
                     <li
@@ -87,6 +106,21 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
                 v-on:callback="selectOffice"/>
         </div>
 
+        <div class="col-md-12">
+            <p class="my-2">Размер посылки по умолчанию</p>
+            <button
+                type="button"
+                @click="openDimensionModal"
+                class="btn btn-light w-100 p-3">
+                <span v-if="emptyDimensions"><i class="fa-solid fa-dolly text-primary"></i> Укажите размер</span>
+                <span v-else>
+            {{ cdekForm.config.base_dimensions.width || 0 }}x{{ cdekForm.config.base_dimensions.height || 0 }}x{{
+                        cdekForm.config.base_dimensions.length || 0
+                    }} см, до {{ cdekForm.config.base_dimensions.weight || 0 }}кг
+        </span>
+            </button>
+        </div>
+
         <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
              style="border-radius:10px 10px 0px 0px;">
             <button type="submit" class="btn btn-primary p-3 w-100">
@@ -97,6 +131,72 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
 
     </form>
 
+    <!-- Modal -->
+    <div class="modal fade" id="dimension-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <form class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Расчёт размеров</h1>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="divider my-3">Габариты</div>
+                    <div class="form-floating mb-3">
+                        <input type="number"
+                               min="0"
+                               v-model="cdekForm.config.base_dimensions.width"
+                               required
+                               class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Ширина, см</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number"
+                               min="0"
+                               v-model="cdekForm.config.base_dimensions.height"
+                               required
+                               class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Высота, см</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number"
+                               min="0"
+                               v-model="cdekForm.config.base_dimensions.length"
+                               required
+                               class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Длина, см</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number"
+                               min="0"
+                               step="0.1"
+                               v-model="cdekForm.config.base_dimensions.weight"
+                               required
+                               class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Вес, кг</label>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button
+                        data-bs-dismiss="modal"
+                        type="button" class="btn btn-primary w-100">
+                        <span v-if="emptyDimensions"><i class="fa-solid fa-dolly"></i> Добавить</span>
+                        <span v-else>
+                            {{
+                                cdekForm.config.base_dimensions.width || 0
+                            }}x{{ cdekForm.config.base_dimensions.height || 0 }}x{{
+                                cdekForm.config.base_dimensions.length || 0
+                            }} см, до {{ cdekForm.config.base_dimensions.weight || 0 }}кг
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </template>
 <script>
 
@@ -107,7 +207,7 @@ export default {
     data() {
         return {
             load: false,
-
+            dimensionModal: null,
             tariffs: [
                 {
                     code: 136,
@@ -158,21 +258,36 @@ export default {
                 secure_password: null,
                 is_active: true,
                 bot_id: null,
+                phone: null,
                 config: {
                     tariff_code: null,
                     region: null,
                     city: null,
                     office: null,
                     services: [],
+                    base_dimensions: {
+                        length: 0,
+                        width: 0,
+                        height: 0,
+                        weight: 0,
+                    }
                 }
             },
         }
     },
-
+    computed: {
+        emptyDimensions() {
+            return this.cdekForm.config.base_dimensions.width == 0 &&
+                this.cdekForm.config.base_dimensions.height == 0 &&
+                this.cdekForm.config.base_dimensions.length == 0 &&
+                this.cdekForm.config.base_dimensions.weight == 0
+        }
+    },
     mounted() {
-        if (this.bot.cdek)
-        {
 
+        this.dimensionModal = new bootstrap.Modal(document.getElementById('dimension-modal'), {})
+
+        if (this.bot.cdek) {
 
             this.$nextTick(() => {
                 this.load = false
@@ -181,11 +296,20 @@ export default {
                 this.cdekForm.is_active = this.bot.cdek.is_active || true
                 this.cdekForm.bot_id = this.bot.cdek.bot_id || this.bot.id || null
 
+                this.cdekForm.phone = this.bot.company?.phones[0] || null
+
                 if (this.bot.cdek?.config) {
                     this.cdekForm.config.tariff_code = this.bot.cdek.config.tariff_code || null
                     this.cdekForm.config.region = this.bot.cdek.config.region || null
                     this.cdekForm.config.city = this.bot.cdek.config.city || null
                     this.cdekForm.config.office = this.bot.cdek.config.office || null
+
+                    if (this.bot.cdek.config.base_dimensions) {
+                        this.cdekForm.config.base_dimensions.length = this.bot.cdek.config.base_dimensions.length || 0
+                        this.cdekForm.config.base_dimensions.width = this.bot.cdek.config.base_dimensions.width || 0
+                        this.cdekForm.config.base_dimensions.height = this.bot.cdek.config.base_dimensions.height || 0
+                        this.cdekForm.config.base_dimensions.weight = this.bot.cdek.config.base_dimensions.weight || 0
+                    }
                 }
                 this.load = true
 
@@ -194,9 +318,11 @@ export default {
         }
 
 
-
     },
     methods: {
+        openDimensionModal() {
+            this.dimensionModal.show();
+        },
         selectOffice(event) {
 
             this.cdekForm.config.region = event.region
@@ -236,6 +362,8 @@ export default {
                     text: "Данные успешно сохранены",
                     type: "success",
                 });
+
+                window.location.reload()
             }).catch(err => {
                 this.$notify({
                     title: "Работа с CDEK",

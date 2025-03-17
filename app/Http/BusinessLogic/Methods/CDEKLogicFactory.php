@@ -9,6 +9,7 @@ use App\Models\AmoCrm;
 use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\Cdek;
+use App\Models\Company;
 use CdekSDK2\BaseTypes\Location;
 use CdekSDK2\BaseTypes\Package;
 use CdekSDK2\BaseTypes\Tariff;
@@ -271,8 +272,6 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tmpTo = (object)($data["to"]);
 
-        Log::info("cdek from ".print_r($tmpFrom, true));
-        Log::info("cdek to ".print_r($tmpTo, true));
 
         $to = [
             "country_code" => "RU",
@@ -329,7 +328,6 @@ class CDEKLogicFactory extends BaseLogicFactory
             ->calculator()
             ->add($tariff);
 
-        Log::info("tariff cdek=>".print_r($result, true));
 
         return $result->isOk() ? Collection::make(json_decode($result->getBody())->tariff_codes)
             ->where("tariff_code", $tariffCode)
@@ -435,8 +433,12 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $s_phones = [];
 
+        $company = Company::query()
+            ->where("id", $this->bot->company_id)
+            ->first();
 
-        foreach (($data["sender_phones"] ?? $this->bot->company->phones ?? []) as $item) {
+
+        foreach (($company->phones ?? []) as $item) {
             $s_phones[] = BaseTypes\Phone::create(['number' => $item]);
         }
 
@@ -446,6 +448,12 @@ class CDEKLogicFactory extends BaseLogicFactory
             $r_phones[] = BaseTypes\Phone::create(['number' => $item]);
         }
 
+        $baseDimensions = $this->bot->cdek->config->base_dimensions ?? [
+            "height" => 15,
+            "width" => 15,
+            "length" => 15,
+            "weight" => 1,
+        ];
         // dd($from);
 
         $from = $this->getLocation($from);
@@ -467,7 +475,7 @@ class CDEKLogicFactory extends BaseLogicFactory
                         'ware_key' => $packageItem->ware_key ?? '', //артикул товара
                         'payment' => BaseTypes\Money::create(['value' => $packageItem->payment ?? 0]),
                         'cost' => $packageItem->price ?? 0, //объявленная стоимость (ценность)
-                        'weight' => $packageItem->weight ?? 1, //вес
+                        'weight' => $packageItem->weight ?? 0, //вес
                         'amount' => $packageItem->amount ?? 1, //кол-во
                     ]);
 
@@ -489,11 +497,10 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             $tmpPackages[] = Package::create([
                 "number" => Str::uuid(),
-                'weight' => ($weight ?? 1)
-                    * 1000,
-                'length' => $package->length ?? 30,
-                'width' => $package->width ?? 30,
-                'height' => $package->height ?? 30,
+                'weight' => ($weight ?? $baseDimensions["weight"]) * 1000,
+                'length' => $package->length ?? $baseDimensions["length"],
+                'width' => $package->width ?? $baseDimensions["width"],
+                'height' => $package->height ?? $baseDimensions["height"],
                 'items' => $packageItems,
                 'comment' => '-'
             ]);
@@ -609,6 +616,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $validator = Validator::make($data, [
+            "phone" => "required",
             "account" => "required",
             "secure_password" => "required",
         ]);
@@ -634,6 +642,17 @@ class CDEKLogicFactory extends BaseLogicFactory
                 'config' => $config
             ]);
 
+
+        $company = Company::query()
+            ->where("id", $this->bot->company_id)
+            ->first();
+
+        if (!is_null($company)) {
+            $phones = $company->phones ?? [];
+            $phones[0] = $data["phone"];
+            $company->phones = $phones;
+            $company->save();
+        }
 
         return new CdekResource($cdek);
     }
