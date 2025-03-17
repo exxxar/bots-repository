@@ -532,11 +532,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         ]);
 
 
-        Log::info("products cdek=>" . print_r($tmpPackages, true));
-
         $cdek = $this->auth();
-
-        Log::info("test cdek auth=>" . print_r($cdek, true));
         $result = $cdek->orders()
             ->add($order);
 
