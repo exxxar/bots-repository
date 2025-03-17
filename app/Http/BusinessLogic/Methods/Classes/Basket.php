@@ -248,6 +248,9 @@ class Basket
                 base64_encode("001" . ($botUserTelegramChatId))
             );
 
+        $userProfileLink = "https://t.me/" . ($this->bot->bot_domain) . "?start=" .
+                base64_encode("003" . $botUserTelegramChatId);
+
         $channel = $this->bot->order_channel ?? $this->bot->main_channel ?? null;
 
         $userLink = "<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n";
@@ -269,6 +272,9 @@ class Basket
                     [
                         [
                             ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                        ],
+                        [
+                            ["text" => "✉Работа с пользователем", "url" => $userProfileLink]
                         ],
 
                     ],

@@ -717,21 +717,7 @@ class SimpleDeliveryController extends SlugController
                     "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/menu"]
                 ],
             ],
-            [
-                ["text" => "$btnText", "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/catalog"]
-                ],
-            ],
-            [
-                ["text" => "🛒Корзина", "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/cart"]
-                ],
-            ],
-            [
-                ["text" => "😎Мой профиль", "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/profile"]
-                ],
-            ],
+
             /*  [
                   ["text" => "😎Контакты", "web_app" => [
                       "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/contacts"]
