@@ -266,6 +266,8 @@ class CDEKLogicFactory extends BaseLogicFactory
             "address" => $tmpFrom->address,
         ];
 
+        if (!isset($data["to"]))
+            throw new HttpException(404, "Не указан адрес назначения!");
 
         $tmpTo = (object)($data["to"]);
 
