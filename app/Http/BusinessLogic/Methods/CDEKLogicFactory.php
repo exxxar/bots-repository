@@ -460,7 +460,7 @@ class CDEKLogicFactory extends BaseLogicFactory
                         'ware_key' => $packageItem->ware_key ?? '', //артикул товара
                         'payment' => BaseTypes\Money::create(['value' => $packageItem->payment ?? 0]),
                         'cost' => $packageItem->price ?? 0, //объявленная стоимость (ценность)
-                        'weight' => $packageItem->weight ?? 0, //вес
+                        'weight' => $packageItem->weight ?? 1, //вес
                         'amount' => $packageItem->amount ?? 1, //кол-во
                     ]);
 
@@ -472,20 +472,21 @@ class CDEKLogicFactory extends BaseLogicFactory
                     'ware_key' => $package->ware_key ?? Str::uuid(), //артикул товара
                     'payment' => BaseTypes\Money::create(['value' => $package->payment ?? 0]),
                     'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
-                    'weight' => $package->weight ?? 0, //вес
+                    'weight' => $package->weight ?? 1, //вес
                     'amount' => $package->count ?? 1, //кол-во
                 ]);
 
-                $weight += $packageItem->weight ?? 0;
+                $weight += $packageItem->weight ?? 1;
             }
 
 
             $tmpPackages[] = Package::create([
                 "number" => Str::uuid(),
-                'weight' => $weight * 1000,
-                'length' => $package->length ?? 0,
-                'width' => $package->width ?? 0,
-                'height' => $package->height ?? 0,
+                'weight' => ($weight ?? 1)
+                    * 1000,
+                'length' => $package->length ?? 30,
+                'width' => $package->width ?? 30,
+                'height' => $package->height ?? 30,
                 'items' => $packageItems,
                 'comment' => '-'
             ]);
@@ -517,11 +518,15 @@ class CDEKLogicFactory extends BaseLogicFactory
         ]);
 
 
+        Log::info("products cdek=>" . print_r($tmpPackages, true));
+
         $cdek = $this->auth();
 
+        Log::info("test cdek auth=>" . print_r($cdek, true));
         $result = $cdek->orders()
             ->add($order);
 
+        Log::info("test cdek order=>" . print_r($result, true));
 
         return $result->isOk() ?
             $cdek->formatResponse($result, BaseTypes\Order::class)->entity :
