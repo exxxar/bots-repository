@@ -276,8 +276,8 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $to = [
             "country_code" => "RU",
-            "code" => $tmpTo->city["code"],
-            "address" => $tmpTo->office["location"]["address"],
+            "code" => $tmpTo->city["code"] ?? null,
+            "address" => $tmpTo->office["location"]["address"] ?? null,
         ];
 
 
