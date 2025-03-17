@@ -269,6 +269,9 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tmpTo = (object)($data["to"]);
 
+        Log::info("cdek from ".print_r($tmpFrom, true));
+        Log::info("cdek to ".print_r($tmpTo, true));
+
         $to = [
             "country_code" => "RU",
             "code" => $tmpTo->city["code"],
@@ -292,10 +295,10 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             $packages[] = Package::create([
                 'number' => $item->id,
-                'weight' => $dimension->weight ?? 0,
-                'length' => $dimension->length ?? 0,
-                'width' => $dimension->width ?? 0,
-                'height' => $dimension->height ?? 0,
+                'weight' => $dimension->weight ?? 1000,
+                'length' => $dimension->length ?? 10,
+                'width' => $dimension->width ?? 20,
+                'height' => $dimension->height ?? 20,
             ]);
         }
 
@@ -323,6 +326,8 @@ class CDEKLogicFactory extends BaseLogicFactory
         $result = $cdek
             ->calculator()
             ->add($tariff);
+
+        Log::info("tariff cdek=>".print_r($result, true));
 
         return $result->isOk() ? Collection::make(json_decode($result->getBody())->tariff_codes)
             ->where("tariff_code", $tariffCode)
