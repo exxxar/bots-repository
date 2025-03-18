@@ -427,6 +427,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tariffCode = $tariff->tariff_code ?? 1;
 
+        Log::info("tariffCode=>".print_r($tariffCode, true));
 
         if ($validator->fails())
             throw new ValidationException($validator);
