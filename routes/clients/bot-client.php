@@ -625,6 +625,8 @@ Route::prefix("bot-client")
                 Route::post("/", "index");
             });
 
+
+
         Route::get("/simple/{botDomain}", [ShopScriptController::class, "simpleHomePage"])
             ->where("slug", "[0-9]+|route");
 

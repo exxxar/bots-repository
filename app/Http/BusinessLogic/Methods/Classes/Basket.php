@@ -270,24 +270,23 @@ class Basket
                     $tmpMessage,
                     InputFile::create(storage_path() . "/app/$imageName"),
                     [
-                        [
+                     /*   [
                             ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                        ],
+                        ],*/
                         [
                             ["text" => "✉Работа с пользователем", "url" => $userProfileLink]
                         ],
 
-                    ],
-                    $thread
-                )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message\n$userLink", $thread);
+                    ]
+                )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message\n$userLink");
         else
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendInlineKeyboard($channel, "#оплатаналичными\n$message\n$userLink",
                     [
-                        [
+                      /*  [
                             ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                        ],
+                        ],*/
                         [
                             ["text" => "✉Работа с пользователем", "url" => $userProfileLink]
                         ],
@@ -665,7 +664,7 @@ class Basket
                     "office" => $cdekSettings->office ?? null,
                 ],
                 "packages" => $package,
-            ]);
+            ], $order->id);
 
         BusinessLogic::review()
             ->setBotUser($this->botUser)

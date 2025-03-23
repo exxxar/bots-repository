@@ -140,6 +140,7 @@ Route::prefix("web")
 
 
 require __DIR__ . '/clients/bot-client.php';
+require __DIR__ . '/clients/mobile.php';
 
 Route::post('/sanctum/token', function (Request $request) {
     $request->validate([

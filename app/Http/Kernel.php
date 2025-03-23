@@ -78,5 +78,6 @@ class Kernel extends HttpKernel
         'slug' => SlugCheck::class,
         'bot.slots' => ManagerBotSlotsCheck::class,
         'check-node' => CheckAppNode::class,
+        'mobile.auth' => \App\Http\Middleware\MobileAuth::class,
     ];
 }

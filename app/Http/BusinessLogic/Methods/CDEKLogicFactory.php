@@ -402,7 +402,7 @@ class CDEKLogicFactory extends BaseLogicFactory
      * @throws ValidationException
      * @throws \Exception
      */
-    public function createOrder(array $data)
+    public function createOrder(array $data, $orderId = null)
     {
 
         if (is_null($this->bot))
@@ -462,6 +462,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tmpPackages = [];
 
+        $index = 1;
         foreach ($packages as $package) {
             $package = (object)$package;
 
@@ -497,7 +498,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
 
             $tmpPackages[] = Package::create([
-                "number" => Str::uuid(),
+                "number" => $index,
                 'weight' => ($weight ?? $baseDimensions["weight"]) * 1000,
                 'length' => $package->length ?? $baseDimensions["length"],
                 'width' => $package->width ?? $baseDimensions["width"],
@@ -505,13 +506,17 @@ class CDEKLogicFactory extends BaseLogicFactory
                 'items' => $packageItems,
                 'comment' => '-'
             ]);
+
+            $index++;
         }
 
+        Log::info("shop_mode=>".print_r($type, true));
 
         $order = BaseTypes\Order::create([
             //  'number' => $data["id"] ?? null,
+            "uuid" => Str::uuid(),
             'type' => $type,
-            "number" => Str::uuid(),
+            "number" => $orderId ?? Str::uuid(),
             'tariff_code' => $tariffCode ?? '1',
             "comment" => $data["comment"] ?? '-',
             'sender' => BaseTypes\Contact::create([
