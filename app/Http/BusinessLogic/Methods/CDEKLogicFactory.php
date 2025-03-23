@@ -45,9 +45,9 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $client = new Client();
         $cdek = new \CdekSDK2\Client($client);
-        // $cdek->setAccount($account);
-        //  $cdek->setSecure($secure);
-        $cdek->setTest(true);
+        $cdek->setAccount($account);
+        $cdek->setSecure($secure);
+        $cdek->setTest(false);
 
 
         try {
@@ -288,6 +288,13 @@ class CDEKLogicFactory extends BaseLogicFactory
             ->whereNull("ordered_at")
             ->get();
 
+        $baseDimensions = $this->bot->cdek->config->base_dimensions ?? [
+            "height" => 15,
+            "width" => 15,
+            "length" => 15,
+            "weight" => 1,
+        ];
+
         foreach ($basket as $item) {
             $item = $item->product;
 
@@ -296,10 +303,10 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             $packages[] = Package::create([
                 'number' => $item->id,
-                'weight' => $dimension->weight ?? 1000,
-                'length' => $dimension->length ?? 10,
-                'width' => $dimension->width ?? 20,
-                'height' => $dimension->height ?? 20,
+                'weight' => (($dimension->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight) * 1000,
+                'length' => ($dimension->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
+                'width' => ($dimension->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
+                'height' => ($dimension->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
             ]);
         }
 
@@ -514,24 +521,18 @@ class CDEKLogicFactory extends BaseLogicFactory
             $index++;
         }
 
-        Log::info("From=>" . print_r($from, true));
-        Log::info("TO=>" . print_r($to, true));
-
-        Log::info("shop_mode=>" . print_r($type, true));
-        Log::info("package=>" . print_r($test, true));
 
         $order = BaseTypes\Order::create([
             //  'number' => $data["id"] ?? null,
             "uuid" => Str::uuid(),
             'type' => $type,
-            "number" => "5d-715949416558965",//$orderId ?? Str::uuid(),
+            "number" => $orderId ?? Str::uuid(),
             'tariff_code' => $tariffCode ?? '1',
             "comment" => $data["comment"] ?? '-',
             'sender' => BaseTypes\Contact::create([
-                'company' => "Гараев Иван Александрович",//$this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
-                'name' => "Гараев Иван Александрович",//$data["sender_name"] ?? 'CashMan',
-                'phones' => [BaseTypes\Phone::create(['number' => "+79263183806"])],//$s_phones,
-                'tin' => "753608673461",
+                'company' => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
+                'name' => $data["sender_name"] ?? 'CashMan',
+                'phones' => $s_phones,
             ]),
             'recipient' => BaseTypes\Contact::create([
                 'name' => $data["recipient_name"],
