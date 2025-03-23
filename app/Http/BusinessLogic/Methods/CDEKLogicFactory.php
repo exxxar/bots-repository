@@ -427,7 +427,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tariffCode = $tariff->tariff_code ?? 1;
 
-        Log::info("tariffCode=>".print_r($tariffCode, true));
+        Log::info("tariffCode=>" . print_r($tariffCode, true));
 
         if ($validator->fails())
             throw new ValidationException($validator);
@@ -457,8 +457,8 @@ class CDEKLogicFactory extends BaseLogicFactory
         ];
         // dd($from);
 
-        $from = $this->getLocation($from);
-        $to = $this->getLocation($to);
+        //  $from = $this->getLocation($from);
+        //$to = $this->getLocation($to);
 
         $tmpPackages = [];
 
@@ -500,10 +500,10 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             $tmp = [
                 "number" => $index,
-                'weight' => ($weight ?? $baseDimensions["weight"]) * 1000,
-                'length' => $package->length ?? $baseDimensions["length"],
-                'width' => $package->width ?? $baseDimensions["width"],
-                'height' => $package->height ?? $baseDimensions["height"],
+                'weight' => (($weight ?? 0) == 0 ? $baseDimensions["weight"] : $weight) * 1000,
+                'length' => ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $package->length,
+                'width' => ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $package->width,
+                'height' => ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $package->height,
                 'items' => $packageItems,
                 'comment' => '-'
             ];
@@ -514,8 +514,8 @@ class CDEKLogicFactory extends BaseLogicFactory
             $index++;
         }
 
-        Log::info("shop_mode=>".print_r($type, true));
-        Log::info("package=>".print_r($test, true));
+        Log::info("shop_mode=>" . print_r($type, true));
+        Log::info("package=>" . print_r($test, true));
 
         $order = BaseTypes\Order::create([
             //  'number' => $data["id"] ?? null,
@@ -537,9 +537,9 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "passport_date_of_issue" => "",
                 "passport_organization" => "",
             ]),
-           'shipment_point'=>$from["code"],
-           'delivery_point'=>$to["code"],
-           // 'from_location' => BaseTypes\Location::create((array)$from),
+            'shipment_point' => $from->office->code,
+            'delivery_point' => $to->office->code,
+            // 'from_location' => BaseTypes\Location::create((array)$from),
             //'to_location' => BaseTypes\Location::create((array)$to),
             'packages' => $tmpPackages
         ]);
