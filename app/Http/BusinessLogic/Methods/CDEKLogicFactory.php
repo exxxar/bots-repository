@@ -419,7 +419,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         ]);
 
 
-        $type = ($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
+        $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
         $tariff = $data["tariff"];
         $from = $data["from"];
         $to = $data["to"];
@@ -511,6 +511,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         }
 
         Log::info("shop_mode=>".print_r($type, true));
+        Log::info("package=>".print_r($tmpPackages, true));
 
         $order = BaseTypes\Order::create([
             //  'number' => $data["id"] ?? null,
