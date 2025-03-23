@@ -51,6 +51,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         $cdek->setSecure($secure);
 
 
+        Log::info("is test=".($cdek->isTest()?"true":"false"));
      //   $cdek->setTest(false);
 
 
@@ -530,13 +531,13 @@ class CDEKLogicFactory extends BaseLogicFactory
             //  'number' => $data["id"] ?? null,
             "uuid" => Str::uuid(),
             'type' => $type,
-            "number" => $orderId ?? Str::uuid(),
+            "number" => "5d-687069443476940",//$orderId ?? Str::uuid(),
             'tariff_code' => $tariffCode ?? '1',
             "comment" => $data["comment"] ?? '-',
             'sender' => BaseTypes\Contact::create([
-                'company' => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
-                'name' => $data["sender_name"] ?? 'CashMan',
-                'phones' => $s_phones,
+                'company' => "Гараев Иван Александрович",//$this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
+                'name' => "Гараев Иван Александрович",$data["sender_name"] ?? 'CashMan',
+                'phones' =>[ BaseTypes\Phone::create(['number' => "+79263183806"])]// $s_phones,
             ]),
             'recipient' => BaseTypes\Contact::create([
                 'name' => $data["recipient_name"],
