@@ -514,6 +514,9 @@ class CDEKLogicFactory extends BaseLogicFactory
             $index++;
         }
 
+        Log::info("From=>".print_r($from, true));
+        Log::info("TO=>".print_r($to, true));
+
         Log::info("shop_mode=>" . print_r($type, true));
         Log::info("package=>" . print_r($test, true));
 
