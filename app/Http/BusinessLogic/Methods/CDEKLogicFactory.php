@@ -537,7 +537,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             'sender' => BaseTypes\Contact::create([
                 'company' => "Гараев Иван Александрович",//$this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
                 'name' => "Гараев Иван Александрович",$data["sender_name"] ?? 'CashMan',
-                'phones' =>[ BaseTypes\Phone::create(['number' => "+79263183806"])]// $s_phones,
+                'phones' =>$s_phones// ,
             ]),
             'recipient' => BaseTypes\Contact::create([
                 'name' => $data["recipient_name"],
