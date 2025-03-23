@@ -462,6 +462,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tmpPackages = [];
 
+        $test = [];
         $index = 1;
         foreach ($packages as $package) {
             $package = (object)$package;
@@ -497,7 +498,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             }
 
 
-            $tmpPackages[] = Package::create([
+            $tmp = [
                 "number" => $index,
                 'weight' => ($weight ?? $baseDimensions["weight"]) * 1000,
                 'length' => $package->length ?? $baseDimensions["length"],
@@ -505,13 +506,16 @@ class CDEKLogicFactory extends BaseLogicFactory
                 'height' => $package->height ?? $baseDimensions["height"],
                 'items' => $packageItems,
                 'comment' => '-'
-            ]);
+            ];
+
+            $test[] = $tmp;
+            $tmpPackages[] = Package::create($tmp);
 
             $index++;
         }
 
         Log::info("shop_mode=>".print_r($type, true));
-        Log::info("package=>".print_r($tmpPackages, true));
+        Log::info("package=>".print_r($test, true));
 
         $order = BaseTypes\Order::create([
             //  'number' => $data["id"] ?? null,
@@ -533,8 +537,10 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "passport_date_of_issue" => "",
                 "passport_organization" => "",
             ]),
-            'from_location' => BaseTypes\Location::create((array)$from),
-            'to_location' => BaseTypes\Location::create((array)$to),
+           'shipment_point'=>$from["code"],
+           'delivery_point'=>$to["code"],
+           // 'from_location' => BaseTypes\Location::create((array)$from),
+            //'to_location' => BaseTypes\Location::create((array)$to),
             'packages' => $tmpPackages
         ]);
 
