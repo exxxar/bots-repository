@@ -541,7 +541,7 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "passport_organization" => "",
             ]),
             'shipment_point' => $from->office["code"],
-            'delivery_point' => $to->office["code"],
+            'delivery_point' => $to->office->code,
             // 'from_location' => BaseTypes\Location::create((array)$from),
             //'to_location' => BaseTypes\Location::create((array)$to),
             'packages' => $tmpPackages
