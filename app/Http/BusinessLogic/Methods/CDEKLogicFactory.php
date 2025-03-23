@@ -43,11 +43,15 @@ class CDEKLogicFactory extends BaseLogicFactory
         $account = $this->bot->cdek->account ?? null;
         $secure = $this->bot->cdek->secure_password ?? null;
 
+        Log::info("params=>$account | $secure");
+
         $client = new Client();
         $cdek = new \CdekSDK2\Client($client);
         $cdek->setAccount($account);
         $cdek->setSecure($secure);
-        $cdek->setTest(false);
+
+
+     //   $cdek->setTest(false);
 
 
         try {
@@ -464,8 +468,8 @@ class CDEKLogicFactory extends BaseLogicFactory
         ];
         // dd($from);
 
-        //  $from = $this->getLocation($from);
-        //$to = $this->getLocation($to);
+         $from = $this->getLocation($from);
+        $to = $this->getLocation($to);
 
         $tmpPackages = [];
 
@@ -542,10 +546,10 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "passport_date_of_issue" => "",
                 "passport_organization" => "",
             ]),
-            'shipment_point' => $from->office["code"],
-            'delivery_point' => $to->office->code,
-            // 'from_location' => BaseTypes\Location::create((array)$from),
-            //'to_location' => BaseTypes\Location::create((array)$to),
+        //    'shipment_point' => $from->office["code"],
+          //  'delivery_point' => $to->office->code,
+             'from_location' => BaseTypes\Location::create((array)$from),
+            'to_location' => BaseTypes\Location::create((array)$to),
             'packages' => $tmpPackages
         ]);
 
