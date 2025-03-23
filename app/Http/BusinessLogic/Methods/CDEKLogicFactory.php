@@ -490,11 +490,11 @@ class CDEKLogicFactory extends BaseLogicFactory
                     'ware_key' => $package->ware_key ?? Str::uuid(), //артикул товара
                     'payment' => BaseTypes\Money::create(['value' => $package->payment ?? 0]),
                     'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
-                    'weight' => $package->weight ?? 1, //вес
+                    'weight' => ($package->weight ?? 0) ? 1 : $package->weight, //вес
                     'amount' => $package->count ?? 1, //кол-во
                 ]);
 
-                $weight += $packageItem->weight ?? 1;
+                $weight += ($package->weight ?? 0) ? 1 : $package->weight;
             }
 
 
@@ -514,8 +514,8 @@ class CDEKLogicFactory extends BaseLogicFactory
             $index++;
         }
 
-        Log::info("From=>".print_r($from, true));
-        Log::info("TO=>".print_r($to, true));
+        Log::info("From=>" . print_r($from, true));
+        Log::info("TO=>" . print_r($to, true));
 
         Log::info("shop_mode=>" . print_r($type, true));
         Log::info("package=>" . print_r($test, true));
