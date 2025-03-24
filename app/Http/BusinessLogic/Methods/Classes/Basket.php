@@ -262,6 +262,7 @@ class Basket
             "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
             "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано');
 
+        sleep(1);
         if ($hasPhoto)
             BotMethods::bot()
                 ->whereBot($this->bot)

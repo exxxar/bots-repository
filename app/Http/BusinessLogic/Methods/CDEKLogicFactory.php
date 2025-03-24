@@ -19,6 +19,7 @@ use CdekSDK2\Exceptions\AuthException;
 use CdekSDK2\Exceptions\RequestException;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -31,8 +32,10 @@ class CDEKLogicFactory extends BaseLogicFactory
 {
     use LogicUtilities;
 
+    private $authUrl = 'https://api.cdek.ru';
+    private $token;
 
-    protected function auth(): ?\CdekSDK2\Client
+    protected function auth()
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -43,30 +46,22 @@ class CDEKLogicFactory extends BaseLogicFactory
         $account = $this->bot->cdek->account ?? null;
         $secure = $this->bot->cdek->secure_password ?? null;
 
-        Log::info("params=>$account | $secure");
+        $response = Http::asForm()->post($this->authUrl . '/v2/oauth/token', [
+            'grant_type' => 'client_credentials',
+            'client_id' => $account,
+            'client_secret' => $secure,
+        ]);
 
-        $client = new Client();
-        $cdek = new \CdekSDK2\Client($client);
-        $cdek->setAccount($account);
-        $cdek->setSecure($secure);
+        $data = $response->json();
+        $this->token = $data['access_token'] ?? null;
+        return $this->token;
+    }
 
-
-        Log::info("is test=".($cdek->isTest()?"true":"false"));
-     //   $cdek->setTest(false);
-
-
-        try {
-            $cdek->authorize();
-
-            return $cdek;
-        } catch (AuthException $e1) {
-            //Авторизация не выполнена, не верные account и secure
-            Log::info($e1->getMessage());
-        } catch (RequestException $e2) {
-            Log::info($e2->getMessage());
+    private function ensureToken()
+    {
+        if (!$this->token) {
+            $this->auth();
         }
-
-        return null;
     }
 
     /**
@@ -114,20 +109,17 @@ class CDEKLogicFactory extends BaseLogicFactory
      * @throws RequestException
      * @throws \Exception
      */
-    protected function officeList($cityCode, $countryCode = 'ru', $page = 0, $size = 100): mixed
+    protected function officeList($cityCode, $countryCode = 'ru'): mixed
     {
-        $cdek = $this->auth();
 
-        $result = $cdek->offices()
-            ->getFiltered([
-                'country_code' => $countryCode,
-                'city_code' => $cityCode,
-                'size' => $size,
-                'page' => $page]);
+        $this->ensureToken();
+        $query = $cityCode ? ['city_code' => $cityCode, 'country_code' => $countryCode] : [];
 
-        return $result->isOk() ?
-            $cdek->formatResponseList($result, \CdekSDK2\Dto\PickupPointList::class)->items :
-            [];
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->token,
+        ])->get($this->authUrl . '/v2/deliverypoints', $query);
+
+        return $response->json() ?? [];
 
     }
 
@@ -137,8 +129,6 @@ class CDEKLogicFactory extends BaseLogicFactory
      */
     protected function cities($countryCode = null, $regionCode = null, $city = null): mixed
     {
-        $cdek = $this->auth();
-
 
         $filter = [];
 
@@ -151,14 +141,15 @@ class CDEKLogicFactory extends BaseLogicFactory
         if (!is_null($city))
             $filter['city'] = $city;
 
-        $result = is_null($countryCode) ?
-            $cdek->cities()->get() :
-            $cdek->cities()->getFiltered($filter);
 
+        $this->ensureToken();
+        $query = $regionCode ? ['region_code' => $regionCode, ...$filter] : [...$filter];
 
-        return $result->isOk() ?
-            $cdek->formatResponseList($result, \CdekSDK2\Dto\CityList::class)->items :
-            [];
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->token,
+        ])->get($this->authUrl . '/v2/location/regions', $query);
+
+        return $response->json();
     }
 
     /**
@@ -167,15 +158,13 @@ class CDEKLogicFactory extends BaseLogicFactory
      */
     protected function regions(): mixed
     {
-        $cdek = $this->auth();
 
-        $result = $cdek
-            ->cities()
-            ->getFiltered(["country_codes" => "ru", 'page' => 0, 'size' => 1000]);
+        $this->ensureToken();
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->token,
+        ])->get($this->authUrl . '/v2/location/regions', ['country_codes' => "ru", 'page' => 0, 'size' => 1000]);
 
-        return $result->isOk() ?
-            $cdek->formatResponseList($result, \CdekSDK2\Dto\RegionList::class)->items :
-            [];
+        return $response->json();
 
     }
 
@@ -202,43 +191,48 @@ class CDEKLogicFactory extends BaseLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-        $cdek = $this->auth();
-
 
         $from = $this->getLocation(json_decode($data["from"]));
         $to = $this->getLocation(json_decode($data["to"]));
 
-        $packages = [];
+        $baseDimensions = $this->bot->cdek->config->base_dimensions ?? [
+            "height" => 15,
+            "width" => 15,
+            "length" => 15,
+            "weight" => 1,
+        ];
 
+        $packages = [];
 
         foreach (json_decode($data["packages"]) as $item) {
             $item = (object)$item;
-            $packages[] = Package::create([
-                'weight' => $item->weight,
-                'length' => $item->length,
-                'width' => $item->width,
-                'height' => $item->height,
-            ]);
+            $packages[] = [
+                'number' => $item->id,
+                'weight' => (($item->weight ?? 0) == 0 ? $baseDimensions["weight"] : $item->weight) * 1000,
+                'length' => ($item->length ?? 0) == 0 ? $baseDimensions["length"] : $item->length,
+                'width' => ($item->width ?? 0) == 0 ? $baseDimensions["width"] : $item->width,
+                'height' => ($item->height ?? 0) == 0 ? $baseDimensions["height"] : $item->height,
+            ];
         }
 
-        $tariff = Tarifflist::create([]);
-        $tariff->date = (new \DateTime())->format(\DateTime::ISO8601);
-        $tariff->type = Tarifflist::TYPE_ECOMMERCE;
-        $tariff->currecy = Currencies::RUBLE;
-        $tariff->lang = Tarifflist::LANG_RUS;
-        $tariff->from_location = Location::create($from);
-        $tariff->to_location = Location::create($to);
-        $tariff->packages = $packages;
+        $this->ensureToken();
 
-        $result = $cdek
-            ->calculator()
-            ->add($tariff);
+        $data = [
+            "type" => 1,
+            "date" => now()->toDateString(),
+            "currency" => 1,
+            "lang" => "rus",
+            "from_location" => $from,
+            "to_location" => $to,
+            "packages" => $packages,
+        ];
 
-        return $result->isOk() ?
-            $cdek->formatResponseList($result, \CdekSDK2\Dto\TariffList::class)->tariff_codes ?? [] :
-            [];
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->token,
+        ])->post($this->authUrl.'/v2/calculator/tarifflist', $data);
 
-
+        return $response->json();
     }
 
 
@@ -277,13 +271,11 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tmpTo = (object)($data["to"]);
 
-
         $to = [
             "country_code" => "RU",
             "code" => $tmpTo->city["code"] ?? null,
             "address" => $tmpTo->office["location"]["address"] ?? null,
         ];
-
 
         $packages = [];
 
@@ -306,45 +298,33 @@ class CDEKLogicFactory extends BaseLogicFactory
             $dimension = !is_null($item->dimension ?? null) ?
                 (object)$item->dimension ?? null : null;
 
-            $packages[] = Package::create([
+            $packages[] = [
                 'number' => $item->id,
                 'weight' => (($dimension->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight) * 1000,
                 'length' => ($dimension->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
                 'width' => ($dimension->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
                 'height' => ($dimension->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
-            ]);
+            ];
         }
 
-        /*  //todo: удалить
-          $packages[] = Package::create([
-              'number' => 1,
-              'weight' => 5000,
-              'length' => 40,
-              'width' => 40,
-              'height' => 40,
 
-          ]);*/
+        $data = [
+            "type" => 1,
+            "tariff_code" => $tariffCode,
+            "date" => now()->toDateString(),
+            "currency" => 1,
+            "lang" => "rus",
+            "from_location" =>$from,
+            "to_location" =>$to,
+            "packages" => $packages,
+        ];
 
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->token,
+        ])->post($this->authUrl."/v2/calculator/tariff", $data);
 
-        $tariff = Tarifflist::create([]);
-        $tariff->date = (new \DateTime())->format(\DateTime::ISO8601);
-        $tariff->type = 1;
-        $tariff->currecy = Currencies::RUBLE;
-        $tariff->lang = 'rus';
-//Номера тарифов есть в документации к API: https://api-docs.cdek.ru/63345430.html
-        $tariff->from_location = Location::create($from);
-        $tariff->to_location = Location::create($to);
-        $tariff->packages = $packages;
-
-        $result = $cdek
-            ->calculator()
-            ->add($tariff);
-
-
-        return $result->isOk() ? Collection::make(json_decode($result->getBody())->tariff_codes)
-            ->where("tariff_code", $tariffCode)
-            ->first() : null;
-
+        return $response->json();
     }
 
     /**
@@ -431,6 +411,10 @@ class CDEKLogicFactory extends BaseLogicFactory
         ]);
 
 
+        if (!$this->token) {
+            $this->auth();
+        }
+
         $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
         $tariff = $data["tariff"];
         $from = $data["from"];
@@ -438,8 +422,6 @@ class CDEKLogicFactory extends BaseLogicFactory
         $packages = $data["packages"];
 
         $tariffCode = $tariff->tariff_code ?? 1;
-
-        Log::info("tariffCode=>" . print_r($tariffCode, true));
 
         if ($validator->fails())
             throw new ValidationException($validator);
@@ -452,13 +434,13 @@ class CDEKLogicFactory extends BaseLogicFactory
 
 
         foreach (($company->phones ?? []) as $item) {
-            $s_phones[] = BaseTypes\Phone::create(['number' => $item]);
+            $s_phones[] = ['number' => $item];
         }
 
         $r_phones = [];
 
         foreach (($data["recipient_phones"] ?? []) as $item) {
-            $r_phones[] = BaseTypes\Phone::create(['number' => $item]);
+            $r_phones[] = ['number' => $item];
         }
 
         $baseDimensions = $this->bot->cdek->config->base_dimensions ?? [
@@ -467,14 +449,11 @@ class CDEKLogicFactory extends BaseLogicFactory
             "length" => 15,
             "weight" => 1,
         ];
-        // dd($from);
 
-        // $from = $this->getLocation($from);
-        //$to = $this->getLocation($to);
 
         $tmpPackages = [];
 
-        $test = [];
+
         $index = 1;
         foreach ($packages as $package) {
             $package = (object)$package;
@@ -485,26 +464,26 @@ class CDEKLogicFactory extends BaseLogicFactory
             if (count($package->items ?? []) > 0)
                 foreach ($package->items as $packageItem) {
                     $packageItem = (object)$packageItem;
-                    $packageItems[] = BaseTypes\Item::create([
+                    $packageItems[] = [
                         'name' => $packageItem->name ?? 'Товар', //описание товара
                         'ware_key' => $packageItem->ware_key ?? '', //артикул товара
-                        'payment' => BaseTypes\Money::create(['value' => $packageItem->payment ?? 0]),
+                        'payment' => ['value' => $packageItem->payment ?? 0],
                         'cost' => $packageItem->price ?? 0, //объявленная стоимость (ценность)
                         'weight' => $packageItem->weight ?? 0, //вес
                         'amount' => $packageItem->amount ?? 1, //кол-во
-                    ]);
+                    ];
 
                     $weight += $packageItem->weight ?? 0;
                 }
             else {
-                $packageItems[] = BaseTypes\Item::create([
+                $packageItems[] = [
                     'name' => $package->title ?? 'Товар', //описание товара
                     'ware_key' => $package->ware_key ?? Str::uuid(), //артикул товара
-                    'payment' => BaseTypes\Money::create(['value' => $package->payment ?? 0]),
+                    'payment' => ['value' => $package->payment ?? 0],
                     'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
                     'weight' => ($package->weight ?? 0) ? 1 : $package->weight, //вес
                     'amount' => $package->count ?? 1, //кол-во
-                ]);
+                ];
 
                 $weight += ($package->weight ?? 0) ? 1 : $package->weight;
             }
@@ -520,51 +499,44 @@ class CDEKLogicFactory extends BaseLogicFactory
                 'comment' => '-'
             ];
 
-            $test[] = $tmp;
-            $tmpPackages[] = Package::create($tmp);
+            $tmpPackages[] = $tmp;
 
             $index++;
         }
 
 
-        $order = BaseTypes\Order::create([
-            //  'number' => $data["id"] ?? null,
+        $data = [
             "uuid" => Str::uuid(),
-            'type' => $type,
-            "number" => "5d-687069443476940",//$orderId ?? Str::uuid(),
-            'tariff_code' => $tariffCode ?? '1',
+            "type" => $type,
+            "number" => $orderId ?? Str::uuid(),
+            "tariff_code" => $tariffCode,
             "comment" => $data["comment"] ?? '-',
-            'sender' => BaseTypes\Contact::create([
-                'company' => "Гараев Иван Александрович",//$this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
-                'name' => "Гараев Иван Александрович",//$data["sender_name"] ?? 'CashMan',
-                'phones' =>[BaseTypes\Phone::create(['number' => "+79263183806"])]///$s_phones// ,
-            ]),
-            'recipient' => BaseTypes\Contact::create([
-                'name' => $data["recipient_name"],
-                'phones' => $r_phones,
-                "passport_series" => "",
-                "passport_number" => "",
-                "passport_date_of_issue" => "",
-                "passport_organization" => "",
-            ]),
-            'shipment_point' => $from->office["code"],
-            'delivery_point' => $to->office->code,
-          //   'from_location' => BaseTypes\Location::create((array)$from),
-          //  'to_location' => BaseTypes\Location::create((array)$to),
-            'packages' => $tmpPackages
-        ]);
+            "shipment_point" => $from->office["code"],
+            "delivery_point" => $to->office->code,
+            /*  "delivery_recipient_cost" => [
+                  "value" => 100
+              ],*/
+            "sender" => [
+                "company" => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
+                "name" => $data["sender_name"] ?? 'CashMan',
+                //"tin" => "753608673461",
+                // "email" => "exxxar@gmail.com",
+                "phones" => $s_phones
+            ],
+            "recipient" => [
+                "name" => $data["recipient_name"],
+                //  "email" => "exxxar@gmail.com",
+                "phones" => $r_phones,
+            ],
+            "packages" => $tmpPackages
+        ];
 
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->token,
+        ])->post($this->authUrl . '/v2/orders', $data);
 
-        $cdek = $this->auth();
-        $result = $cdek->orders()
-            ->add($order);
-
-        Log::info("test cdek order=>" . print_r($result, true));
-
-        return $result->isOk() ?
-            $cdek->formatResponse($result, BaseTypes\Order::class)->entity :
-            null;
-
+        return $response->json();
     }
 
 
@@ -572,12 +544,12 @@ class CDEKLogicFactory extends BaseLogicFactory
      * @throws ValidationException
      * @throws RequestException
      */
-    public function getOffices($cityCode, $countryCode = 'ru', $page = 0, $size = 100): mixed
+    public function getOffices($cityCode, $countryCode = 'ru'): mixed
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        return $this->officeList($cityCode, $countryCode, $page, $size);
+        return $this->officeList($cityCode, $countryCode);
     }
 
     /**
@@ -596,12 +568,12 @@ class CDEKLogicFactory extends BaseLogicFactory
      * @throws ValidationException
      * @throws RequestException
      */
-    public function getRegions($countryCode = null, $size = 2): mixed
+    public function getRegions(): mixed
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        return $this->regions($countryCode, $size);
+        return $this->regions();
     }
 
     /**

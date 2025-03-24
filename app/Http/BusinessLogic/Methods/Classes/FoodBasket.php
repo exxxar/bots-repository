@@ -85,6 +85,7 @@ trait FoodBasket
     private function fsSendResult($message)
     {
 
+        sleep(1);
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
@@ -159,6 +160,7 @@ trait FoodBasket
         $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
 
 
+        sleep(1);
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendDocument(
