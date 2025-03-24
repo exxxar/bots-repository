@@ -469,7 +469,7 @@ class CDEKLogicFactory extends BaseLogicFactory
                     $packageItem = (object)$packageItem;
                     $packageItems[] = [
                         'name' => $packageItem->name ?? 'Товар', //описание товара
-                        'ware_key' => $packageItem->ware_key ??  Str::uuid()->toString(), //артикул товара
+                        'ware_key' => $packageItem->ware_key ?? "Товар".($package->id ?? $index), //артикул товара
                         'payment' => ['value' => $packageItem->payment ?? 0],
                         'cost' => $packageItem->price ?? 0, //объявленная стоимость (ценность)
                         'weight' => $packageItem->weight ?? 0, //вес
@@ -481,7 +481,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             else {
                 $packageItems[] = [
                     'name' => $package->title ?? 'Товар', //описание товара
-                    'ware_key' => $package->ware_key ?? Str::uuid()->toString(), //артикул товара
+                    'ware_key' => $package->ware_key ?? "Товар".($package->id ?? $index) , //артикул товара
                     'payment' => ['value' => $package->payment ?? 0],
                     'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
                     'weight' => ($package->weight ?? 0) ? 1 : $package->weight, //вес
@@ -511,7 +511,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         $data = [
             "uuid" =>  Str::uuid()->toString(),
             "type" => $type,
-            "number" => $orderId ?? Str::uuid()->toString(),
+            "number" => "БОТ".($orderId ?? Str::uuid()->toString()),
             "tariff_code" => $tariffCode,
             "comment" => $data["comment"] ?? '-',
             "shipment_point" => $from->office["code"],
