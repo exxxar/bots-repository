@@ -531,10 +531,14 @@ class CDEKLogicFactory extends BaseLogicFactory
             "packages" => $tmpPackages
         ];
 
+        Log::info(print_r($data, true));
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,
         ])->post($this->authUrl . '/v2/orders', $data);
+
+        Log::info(print_r($response->json(), true));
 
         return $response->json();
     }
