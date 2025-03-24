@@ -322,7 +322,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,
-        ])->post($this->authUrl."/v2/calculator/tarifflist", $data);
+        ])->post($this->authUrl."/v2/calculator/tariff", $data);
 
         return $response->json();
     }
