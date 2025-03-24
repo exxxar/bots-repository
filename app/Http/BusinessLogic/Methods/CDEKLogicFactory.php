@@ -472,11 +472,11 @@ class CDEKLogicFactory extends BaseLogicFactory
                         'ware_key' => $packageItem->ware_key ?? "Товар".($package->id ?? $index), //артикул товара
                         'payment' => ['value' => $packageItem->payment ?? 0],
                         'cost' => $packageItem->price ?? 0, //объявленная стоимость (ценность)
-                        'weight' => $packageItem->weight ?? 0, //вес
+                        'weight' => (($packageItem->weight ?? 0) ==0 ? 1 : $packageItem->weight)*1000, //вес
                         'amount' => $packageItem->amount ?? 1, //кол-во
                     ];
 
-                    $weight += $packageItem->weight ?? 0;
+                    $weight += (($packageItem->weight ?? 0) ==0 ? 1 : $packageItem->weight)*1000;
                 }
             else {
                 $packageItems[] = [
@@ -484,11 +484,11 @@ class CDEKLogicFactory extends BaseLogicFactory
                     'ware_key' => $package->ware_key ?? "Товар".($package->id ?? $index) , //артикул товара
                     'payment' => ['value' => $package->payment ?? 0],
                     'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
-                    'weight' => ($package->weight ?? 0) ? 1 : $package->weight, //вес
+                    'weight' => (($package->weight ?? 0) ==0  ? 1 : $package->weight)*1000, //вес
                     'amount' => $package->count ?? 1, //кол-во
                 ];
 
-                $weight += ($package->weight ?? 0) ? 1 : $package->weight;
+                $weight += (($package->weight ?? 0) ==0  ? 1 : $package->weight)*1000;
             }
 
 
