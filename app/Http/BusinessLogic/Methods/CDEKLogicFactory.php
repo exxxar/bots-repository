@@ -219,7 +219,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $data = [
             "type" => 1,
-            "date" => now()->toDateString(),
+            "date" => (new \DateTime())->format(\DateTime::ISO8601),
             "currency" => 1,
             "lang" => "rus",
             "from_location" => $from,
@@ -311,7 +311,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         $data = [
             "type" => 1,
             "tariff_code" => $tariffCode,
-            "date" => now()->toDateString(),
+            "date" => (new \DateTime())->format(\DateTime::ISO8601),
             "currency" => 1,
             "lang" => "rus",
             "from_location" =>$from,
