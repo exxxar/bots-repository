@@ -433,13 +433,13 @@ class CDEKLogicFactory extends BaseLogicFactory
 
 
         foreach (($company->phones ?? []) as $item) {
-            $s_phones[] = ['number' => $item];
+            $s_phones[] = ['number' => '+'.preg_replace('/\D+/', '', $item)];
         }
 
         $r_phones = [];
 
         foreach (($data["recipient_phones"] ?? []) as $item) {
-            $r_phones[] = ['number' => $item];
+            $r_phones[] = ['number' => '+'.preg_replace('/\D+/', '', $item)];
         }
 
         $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config ?? null : null;
@@ -524,12 +524,12 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "name" => $data["sender_name"] ?? 'CashMan',
                // "tin" => "753608673461",
                  //"email" => "exxxar@gmail.com",
-                "phones" => [["number"=>"+79263183806"]]
+                "phones" => $s_phones,//[["number"=>"+79263183806"]]
             ],
             "recipient" => [
                 "name" => $data["recipient_name"],
                  // "email" => "exxxar@gmail.com",
-                "phones" => [["number"=>"+79494320661"]]//$r_phones,
+                "phones" =>$r_phones// [["number"=>"+79494320661"]]//$r_phones,
             ],
             "packages" => $tmpPackages
         ];
