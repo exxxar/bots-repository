@@ -494,7 +494,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             $tmp = [
                 "number" => $index,
-                'weight' => (($weight ?? 0) == 0 ? $baseDimensions["weight"] : $weight) * 1000,
+                'weight' => (($weight ?? 0) == 0 ? $baseDimensions["weight"] : $weight),
                 'length' => ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $package->length,
                 'width' => ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $package->width,
                 'height' => ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $package->height,
