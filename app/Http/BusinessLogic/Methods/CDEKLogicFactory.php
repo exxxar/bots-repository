@@ -524,12 +524,12 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "name" => $data["sender_name"] ?? 'CashMan',
                // "tin" => "753608673461",
                  //"email" => "exxxar@gmail.com",
-                "phones" => $s_phones
+                "phones" => [["number"=>"+79263183806"]]
             ],
             "recipient" => [
                 "name" => $data["recipient_name"],
                  // "email" => "exxxar@gmail.com",
-                "phones" => $r_phones,
+                "phones" => [["number"=>"+79494320661"]]//$r_phones,
             ],
             "packages" => $tmpPackages
         ];
