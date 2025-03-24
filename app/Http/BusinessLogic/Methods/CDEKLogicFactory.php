@@ -417,11 +417,12 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
         $tariff = $data["tariff"];
+        Log::info("tariff=>".print_r($tariff, true));
         $from = $data["from"];
         $to = $data["to"];
         $packages = $data["packages"];
 
-        $tariffCode = $tariff->tariff_code ?? 1;
+        $tariffCode = $tariff->tariff_code ?? 136;
 
         if ($validator->fails())
             throw new ValidationException($validator);
