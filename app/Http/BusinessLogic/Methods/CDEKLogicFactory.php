@@ -230,7 +230,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,
-        ])->post($this->authUrl.'/v2/calculator/tarifflist', $data);
+        ])->post($this->authUrl . '/v2/calculator/tarifflist', $data);
 
         return $response->json();
     }
@@ -314,15 +314,15 @@ class CDEKLogicFactory extends BaseLogicFactory
             "date" => (new \DateTime())->format(\DateTime::ISO8601),
             "currency" => 1,
             "lang" => "rus",
-            "from_location" =>$from,
-            "to_location" =>$to,
+            "from_location" => $from,
+            "to_location" => $to,
             "packages" => $packages,
         ];
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,
-        ])->post($this->authUrl."/v2/calculator/tariff", $data);
+        ])->post($this->authUrl . "/v2/calculator/tariff", $data);
 
         return $response->json();
     }
@@ -416,7 +416,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         }
 
         $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
-        $tariff = $data["tariff"];
+        $tariff = $data["tariff"]["total_sum"] ?? 0;
 
         $from = $data["from"];
         $to = $data["to"];
@@ -433,13 +433,13 @@ class CDEKLogicFactory extends BaseLogicFactory
 
 
         foreach (($company->phones ?? []) as $item) {
-            $s_phones[] = ['number' => '+'.preg_replace('/\D+/', '', $item)];
+            $s_phones[] = ['number' => '+' . preg_replace('/\D+/', '', $item)];
         }
 
         $r_phones = [];
 
         foreach (($data["recipient_phones"] ?? []) as $item) {
-            $r_phones[] = ['number' => '+'.preg_replace('/\D+/', '', $item)];
+            $r_phones[] = ['number' => '+' . preg_replace('/\D+/', '', $item)];
         }
 
         $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config ?? null : null;
@@ -469,26 +469,26 @@ class CDEKLogicFactory extends BaseLogicFactory
                     $packageItem = (object)$packageItem;
                     $packageItems[] = [
                         'name' => $packageItem->name ?? 'Товар', //описание товара
-                        'ware_key' => $packageItem->ware_key ?? "Товар".($package->id ?? $index), //артикул товара
+                        'ware_key' => $packageItem->ware_key ?? "Товар" . ($package->id ?? $index), //артикул товара
                         'payment' => ['value' => $packageItem->payment ?? 0],
                         'cost' => $packageItem->price ?? 0, //объявленная стоимость (ценность)
-                        'weight' => (($packageItem->weight ?? 0) ==0 ? 1 : $packageItem->weight)*1000, //вес
+                        'weight' => (($packageItem->weight ?? 0) == 0 ? 1 : $packageItem->weight) * 1000, //вес
                         'amount' => $packageItem->amount ?? 1, //кол-во
                     ];
 
-                    $weight += (($packageItem->weight ?? 0) ==0 ? 1 : $packageItem->weight)*1000;
+                    $weight += (($packageItem->weight ?? 0) == 0 ? 1 : $packageItem->weight) * 1000;
                 }
             else {
                 $packageItems[] = [
                     'name' => $package->title ?? 'Товар', //описание товара
-                    'ware_key' => $package->ware_key ?? "Товар".($package->id ?? $index) , //артикул товара
+                    'ware_key' => $package->ware_key ?? "Товар" . ($package->id ?? $index), //артикул товара
                     'payment' => ['value' => $package->payment ?? 0],
                     'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
-                    'weight' => (($package->weight ?? 0) ==0  ? 1 : $package->weight)*1000, //вес
+                    'weight' => (($package->weight ?? 0) == 0 ? 1 : $package->weight) * 1000, //вес
                     'amount' => $package->count ?? 1, //кол-во
                 ];
 
-                $weight += (($package->weight ?? 0) ==0  ? 1 : $package->weight)*1000;
+                $weight += (($package->weight ?? 0) == 0 ? 1 : $package->weight) * 1000;
             }
 
 
@@ -509,27 +509,27 @@ class CDEKLogicFactory extends BaseLogicFactory
 
 
         $data = [
-            "uuid" =>  Str::uuid()->toString(),
+            "uuid" => Str::uuid()->toString(),
             "type" => $type,
-            "number" => "bot".($orderId ?? Str::uuid()->toString()),
+            "number" => "bot" . ($orderId ?? Str::uuid()->toString()),
             "tariff_code" => $tariffCode,
             "comment" => $data["comment"] ?? '-',
             "shipment_point" => $from->office["code"],
             "delivery_point" => $to->office->code,
-            /*  "delivery_recipient_cost" => [
-                  "value" => 100
-              ],*/
+            "delivery_recipient_cost" => [
+                "value" => $tariff
+            ],
             "sender" => [
                 "company" => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
                 "name" => $data["sender_name"] ?? 'CashMan',
-               // "tin" => "753608673461",
-                 //"email" => "exxxar@gmail.com",
+                // "tin" => "753608673461",
+                //"email" => "exxxar@gmail.com",
                 "phones" => $s_phones,//[["number"=>"+79263183806"]]
             ],
             "recipient" => [
                 "name" => $data["recipient_name"],
-                 // "email" => "exxxar@gmail.com",
-                "phones" =>$r_phones// [["number"=>"+79494320661"]]//$r_phones,
+                // "email" => "exxxar@gmail.com",
+                "phones" => $r_phones// [["number"=>"+79494320661"]]//$r_phones,
             ],
             "packages" => $tmpPackages
         ];
