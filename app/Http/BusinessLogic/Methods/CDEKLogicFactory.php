@@ -469,7 +469,7 @@ class CDEKLogicFactory extends BaseLogicFactory
                     $packageItem = (object)$packageItem;
                     $packageItems[] = [
                         'name' => $packageItem->name ?? 'Товар', //описание товара
-                        'ware_key' => $packageItem->ware_key ?? '', //артикул товара
+                        'ware_key' => $packageItem->ware_key ??  Str::uuid()->toString(), //артикул товара
                         'payment' => ['value' => $packageItem->payment ?? 0],
                         'cost' => $packageItem->price ?? 0, //объявленная стоимость (ценность)
                         'weight' => $packageItem->weight ?? 0, //вес
@@ -481,7 +481,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             else {
                 $packageItems[] = [
                     'name' => $package->title ?? 'Товар', //описание товара
-                    'ware_key' => $package->ware_key ?? Str::uuid(), //артикул товара
+                    'ware_key' => $package->ware_key ?? Str::uuid()->toString(), //артикул товара
                     'payment' => ['value' => $package->payment ?? 0],
                     'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
                     'weight' => ($package->weight ?? 0) ? 1 : $package->weight, //вес
@@ -509,9 +509,9 @@ class CDEKLogicFactory extends BaseLogicFactory
 
 
         $data = [
-            "uuid" => Str::uuid(),
+            "uuid" =>  Str::uuid()->toString(),
             "type" => $type,
-            "number" => $orderId ?? Str::uuid(),
+            "number" => $orderId ?? Str::uuid()->toString(),
             "tariff_code" => $tariffCode,
             "comment" => $data["comment"] ?? '-',
             "shipment_point" => $from->office["code"],
@@ -522,13 +522,13 @@ class CDEKLogicFactory extends BaseLogicFactory
             "sender" => [
                 "company" => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
                 "name" => $data["sender_name"] ?? 'CashMan',
-                //"tin" => "753608673461",
-                // "email" => "exxxar@gmail.com",
+                "tin" => "753608673461",
+                 "email" => "exxxar@gmail.com",
                 "phones" => $s_phones
             ],
             "recipient" => [
                 "name" => $data["recipient_name"],
-                //  "email" => "exxxar@gmail.com",
+                  "email" => "exxxar@gmail.com",
                 "phones" => $r_phones,
             ],
             "packages" => $tmpPackages
