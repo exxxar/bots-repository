@@ -322,7 +322,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->token,
-        ])->post($this->authUrl."/v2/calculator/tariff", $data);
+        ])->post($this->authUrl."/v2/calculator/tarifflist", $data);
 
         return $response->json();
     }
@@ -422,8 +422,6 @@ class CDEKLogicFactory extends BaseLogicFactory
         $to = $data["to"];
         $packages = $data["packages"];
 
-        $tariffCode = $tariff->tariff_code ?? 136;
-
         if ($validator->fails())
             throw new ValidationException($validator);
 
@@ -444,7 +442,11 @@ class CDEKLogicFactory extends BaseLogicFactory
             $r_phones[] = ['number' => $item];
         }
 
-        $baseDimensions = $this->bot->cdek->config->base_dimensions ?? [
+        $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config ?? null : null;
+
+        $tariffCode = $cdekSettings->tariff_code ?? null;
+
+        $baseDimensions = $cdekSettings->base_dimensions ?? [
             "height" => 15,
             "width" => 15,
             "length" => 15,
