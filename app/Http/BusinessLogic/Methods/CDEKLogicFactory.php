@@ -147,7 +147,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
-        ])->get($this->authUrl . '/v2/location/regions', $query);
+        ])->get($this->authUrl . '/v2/location/cities', $query);
 
         return $response->json();
     }
