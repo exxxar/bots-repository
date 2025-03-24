@@ -673,7 +673,7 @@ class Basket
             ->prepareReviews($order->id, $ids);
 
         $productMessage .= $discountItem->message ?? '';
-        $productMessage .= "\n\nТовар можно забрать в: <b>" . $cdek->to->office->location->address_full . "</b> (ваш тариф: " . $cdek->tariff->tariff_name . ")\n";
+        $productMessage .= "\n\nТовар можно забрать в: <b>" . $cdek->to->office->location->address_full . "</b> (ваш тариф: " . ($cdek->tariff->tariff_name ?? '-') . ")\n";
         $productMessage .= "График работы: <b>" . $cdek->to->office->work_time . "</b>\n";
         $productMessage .= "Срок доставки от <b>" . $cdek->tariff->calendar_min . "</b> до <b>" . $cdek->tariff->calendar_max . "</b> дней\n";
 
