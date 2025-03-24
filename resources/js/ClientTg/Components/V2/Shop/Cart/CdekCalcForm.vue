@@ -10,10 +10,10 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
 
     <div class="alert alert-light my-2" v-if="calcTariffForm.tariff">
         <p class="mb-0">Доставка от <span
-            class="fw-bold text-primary">{{ calcTariffForm.tariff.period_min }}</span> до <span
-            class="fw-bold text-primary">{{ calcTariffForm.tariff.period_max }}</span> рабочих дней</p>
+            class="fw-bold text-primary">{{ calcTariffForm.tariff.period_min || 0 }}</span> до <span
+            class="fw-bold text-primary">{{ calcTariffForm.tariff.period_max || 0 }}</span> рабочих дней</p>
         <p class="mb-0">Стоимость доставки <span
-            class="fw-bold text-primary">{{ calcTariffForm.tariff.delivery_sum }}</span> руб.</p>
+            class="fw-bold text-primary">{{ calcTariffForm.tariff.delivery_sum || 0 }}</span> руб.</p>
 
     </div>
 

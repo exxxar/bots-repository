@@ -520,8 +520,8 @@ class CDEKLogicFactory extends BaseLogicFactory
                   "value" => 100
               ],*/
             "sender" => [
-                "company" => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
-                "name" => $data["sender_name"] ?? 'CashMan',
+                "company" => "Гараев Иван Александрович",//$this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
+                "name" => "Гараев Иван Александрович",//$data["sender_name"] ?? 'CashMan',
                 "tin" => "753608673461",
                  "email" => "exxxar@gmail.com",
                 "phones" => $s_phones
