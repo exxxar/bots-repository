@@ -584,7 +584,7 @@ class Basket
                     ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
                     ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
                     ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
-                    ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
+                    (($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight)*1000,
 
                 );
 
@@ -699,14 +699,14 @@ class Basket
             ->setBot($this->bot)
             ->setBotUser($this->botUser)
             ->addContact([
-                "name"=> $this->data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id,
-                "phone"=>$this->data["phone"]
+                "name"=> $data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id,
+                "phone"=>$data["phone"]
             ]);
 
         $bitrixLeadId = BusinessLogic::bitrix()
             ->setBot($this->bot)
             ->setBotUser($this->botUser)
-            ->addLead(contactId:$bitrixContactId);
+            ->createDeal(contactId:$bitrixContactId);
 
          BusinessLogic::bitrix()
             ->setBot($this->bot)

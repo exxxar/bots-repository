@@ -135,7 +135,7 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         Log::info("products to lead ".($data["lead_id"]??'-')." =>".print_r($productsForBitrix, true));
 
-        $result = $bitrix->addProductToLead($data["lead_id"], $productsForBitrix);
+        $result = $bitrix->addProductToDeal($data["lead_id"], $productsForBitrix);
 
 
     }
@@ -258,6 +258,7 @@ class BitrixLogicFactory extends BaseLogicFactory
         $url = $connection->url ?? null;
 
         $bitrix = new BitrixService($url);
+
         $contactData = [
             'NAME' => $data["name"],
             'SECOND_NAME' => $data["sname"] ?? '',
@@ -274,6 +275,61 @@ class BitrixLogicFactory extends BaseLogicFactory
         return $bitrix->upsertContact($contactData)["result"];
 
 
+    }
+
+    public function createDeal($contactId = null){
+        $tmp = [
+            "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
+            "NAME" => $name[0] ?? $this->botUser->name ?? $this->botUser->telegram_chat_id,
+            "LAST_NAME" => $name[1] ?? $this->botUser->username ?? $this->botUser->telegram_chat_id,
+            "ADDRESS" => $this->botUser->address ?? null,
+            "ADDRESS_CITY" => $this->botUser->city ?? null,
+            "ADDRESS_COUNTRY" => $this->botUser->country ?? null,
+            "BIRTHDATE" => $this->botUser->birthday ?? null,
+
+            "EMAIL" => [
+                (object)[
+                    "VALUE" => $this->botUser->email ?? null,
+                    "VALUE_TYPE" => "CLIENT"
+                ]
+            ],
+            "PHONE" => [
+                (object)[
+                    "VALUE" => $this->botUser->phone ?? null,
+                    "VALUE_TYPE" => "CLIENT"
+                ]
+            ],
+            "WEB" => [
+
+                (object)[
+                    "VALUE" => "https://t.me/" . $this->bot->bot_domain . "?start=" . base64_encode("003" . $this->botUser->telegram_chat_id),
+                    "VALUE_TYPE" => "BOT"
+                ],
+                (object)[
+                    "VALUE" => !is_null($this->botUser->username) ? "https://t.me/" . $this->botUser->username : null,
+                    "VALUE_TYPE" => "TELEGRAM"
+                ]
+
+            ],
+        ];
+
+        if (!is_null($contactId))
+            $tmp["CONTACT_ID"] = [$contactId];
+
+
+        $connection = Bitrix::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("is_active", true)
+            ->first();
+
+
+        $url = $connection->url ?? null;
+
+        $bitrix = new BitrixService($url);
+
+        $result = $bitrix->createDeal($tmp);
+
+        return $result["result"] ?? null;
     }
 
     public function addLead(string $title = null, $contactId = null)
