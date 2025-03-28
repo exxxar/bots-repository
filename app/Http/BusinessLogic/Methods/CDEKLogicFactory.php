@@ -419,7 +419,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         $data = json_decode(json_encode($data, JSON_UNESCAPED_UNICODE), false);
 
         $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
-        $tariff = $data["tariff"]->total_sum ?? 0;
+        $tariff = $data->tariff->total_sum ?? 0;
 
         $from = $data->from;
         $to = $data->to;
