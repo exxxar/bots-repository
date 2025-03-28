@@ -234,20 +234,12 @@ class BitrixLogicFactory extends BaseLogicFactory
     /**
      * @throws ValidationException
      */
-    public function addContact(array $data)
+    public function addContact()
     {
 
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");
 
-
-        $validator = Validator::make($data, [
-            "name" => "required",
-            "phone" => "required",
-        ]);
-
-        if ($validator->fails())
-            throw new ValidationException($validator);
 
         $connection = Bitrix::query()
             ->where("bot_id", $this->bot->id)
@@ -260,16 +252,16 @@ class BitrixLogicFactory extends BaseLogicFactory
         $bitrix = new BitrixService($url);
 
         $contactData = [
-            'NAME' => $data["name"],
-            'SECOND_NAME' => $data["sname"] ?? '',
-            'LAST_NAME' => $data["lname"] ?? '',
+            'NAME' => $this->botUser->name ?? $this->botUser->telegram_chat_id,
+            'SECOND_NAME' => $this->botUser->username ?? $this->botUser->telegram_chat_id,
+            'LAST_NAME' => $this->botUser->telegram_chat_id,
             'TYPE_ID' => "CLIENT",
-            'PHONE' => [['VALUE' => $data["phone"], 'VALUE_TYPE' => 'WORK']],
+            'PHONE' => [['VALUE' => $this->botUser->phone, 'VALUE_TYPE' => 'WORK']],
 
         ];
 
-        if (!is_null($data["email"] ?? null)){
-            $contactData['EMAIL'] =  [['VALUE' => $data["email"], 'VALUE_TYPE' => 'WORK']];
+        if (!is_null($this->botUser->email ?? null)){
+            $contactData['EMAIL'] =  [['VALUE' => $this->botUser->email, 'VALUE_TYPE' => 'WORK']];
         }
 
         return $bitrix->upsertContact($contactData)["result"];
@@ -280,8 +272,8 @@ class BitrixLogicFactory extends BaseLogicFactory
     public function createDeal($contactId = null){
         $tmp = [
             "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
-            "NAME" => $name[0] ?? $this->botUser->name ?? $this->botUser->telegram_chat_id,
-            "LAST_NAME" => $name[1] ?? $this->botUser->username ?? $this->botUser->telegram_chat_id,
+            "NAME" => $this->botUser->name ?? $this->botUser->telegram_chat_id,
+            "LAST_NAME" => $this->botUser->username ?? $this->botUser->telegram_chat_id,
             "ADDRESS" => $this->botUser->address ?? null,
             "ADDRESS_CITY" => $this->botUser->city ?? null,
             "ADDRESS_COUNTRY" => $this->botUser->country ?? null,
