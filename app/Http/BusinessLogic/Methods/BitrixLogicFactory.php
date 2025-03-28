@@ -288,7 +288,7 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         $name = mb_split(" ", $this->botUser->name);
 
-        $tmp = (object)[
+        $tmp = [
             "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
             "NAME" => $name[0] ?? $this->botUser->name ?? $this->botUser->telegram_chat_id,
             "LAST_NAME" => $name[1] ?? $this->botUser->username ?? $this->botUser->telegram_chat_id,
@@ -329,7 +329,7 @@ class BitrixLogicFactory extends BaseLogicFactory
         try {
             $result = Http::asJson()
                 ->post("$url/crm.lead.add.json", [
-                    'fields' => $tmp
+                    'fields' => (object)$tmp
                 ]);
 
 
