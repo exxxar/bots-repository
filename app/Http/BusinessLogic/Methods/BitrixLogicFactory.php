@@ -70,14 +70,14 @@ class BitrixLogicFactory extends BaseLogicFactory
             $bitrix->refresh();
         }
 
-        if ($bitrix->is_active) {
+        if ($tmp->is_active) {
             $tmps = Bitrix::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("is_active", true)
                 ->get();
 
             foreach ($tmps as $tmp)
-                if ($tmp->id != !$bitrix->id) {
+                if ($tmp->id != $bitrix->id) {
                     $tmp->is_active = false;
                     $tmp->save();
                 }
