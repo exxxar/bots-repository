@@ -2283,18 +2283,16 @@ class BotLogicFactory extends BaseLogicFactory
     public function sendToCroneQueue(array $data): QueueResource
     {
 
-        Log::info("test 1");
+
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
-        Log::info("test 2");
+
         $validator = Validator::make($data, [
             "message" => "required",
         ]);
-        Log::info("test 3");
+
         if ($validator->fails())
             throw new ValidationException($validator);
-
-        Log::info(print_r($data, true));
 
         $id = $data["id"] ?? null;
         $tmp = [
@@ -2310,8 +2308,6 @@ class BotLogicFactory extends BaseLogicFactory
                 ->subHours(3) ?? null,
         ];
 
-        Log::info(print_r($tmp, true));
-
         if (is_null($id))
             $queue = Queue::query()
                 ->create($tmp);
@@ -2321,7 +2317,6 @@ class BotLogicFactory extends BaseLogicFactory
             $queue->update($tmp);
         }
 
-        Log::info(print_r($queue->toArray() ?? '-', true));
 
         return new QueueResource($queue);
 

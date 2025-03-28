@@ -46,11 +46,11 @@ class QueueController extends Controller
         ]);
 
         $bot = $request->bot ?? null;
-        Log::info("test 0".print_r($request->all(), true));
+
         BusinessLogic::bots()
             ->setBot($bot)
             ->sendToCroneQueue($request->all());
-        Log::info("test 5");
+
         return response()->noContent();
     }
 
