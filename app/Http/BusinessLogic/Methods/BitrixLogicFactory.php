@@ -124,6 +124,7 @@ class BitrixLogicFactory extends BaseLogicFactory
             ];
 
             $productId = $bitrix->addProduct($productData)["result"] ?? null;
+            Log::info("prod ".($productId??'-')." =>".print_r($productData, true));
 
             $productsForBitrix[] = [
                 "PRODUCT_ID" => $productId,
@@ -131,6 +132,8 @@ class BitrixLogicFactory extends BaseLogicFactory
                 "QUANTITY" => $product->count ?? 0,
             ];
         }
+
+        Log::info("products to lead ".($data["lead_id"]??'-')." =>".print_r($productsForBitrix, true));
 
         $result = $bitrix->addProductToLead($data["lead_id"], $productsForBitrix);
 
