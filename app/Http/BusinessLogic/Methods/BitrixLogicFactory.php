@@ -115,20 +115,20 @@ class BitrixLogicFactory extends BaseLogicFactory
         $productsForBitrix = [];
         foreach ($data["products"] as $product) {
             $productData = [
-                'NAME' => $product["title"] ?? '-',
+                'NAME' => $product->title ?? '-',
                 'CURRENCY_ID' => 'RUB',
-                'PRICE' => $product["price"] ?? 0,
-                'DESCRIPTION' => $product["description"] ?? '-',
+                'PRICE' => $product->price ?? 0,
+                'DESCRIPTION' => $product->description ?? '-',
                 'MEASURE' => 6,
-                'QUANTITY' => $product["count"] ?? 0 // Единица измерения (шт.)
+                'QUANTITY' => $product->count ?? 0 // Единица измерения (шт.)
             ];
 
             $productId = $bitrix->addProduct($productData)["result"] ?? null;
 
             $productsForBitrix[] = [
                 "PRODUCT_ID" => $productId,
-                "PRICE" => $product["price"] ?? 0,
-                "QUANTITY" => $product["count"] ?? 0,
+                "PRICE" => $product->price ?? 0,
+                "QUANTITY" => $product->count ?? 0,
             ];
         }
 
