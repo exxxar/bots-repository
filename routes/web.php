@@ -35,7 +35,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\HTMLParserMode;
 use Mpdf\Mpdf;
 use Telegram\Bot\FileUpload\InputFile;
-use Yclients\YclientsApi;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +47,11 @@ use Yclients\YclientsApi;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get("/test", function (){
+   $bitrix = new \App\Http\BusinessLogic\BitrixService("https://dpnrouter.bitrix24.ru/rest/2780/phx3xrawy6h08sus/");
+   return $bitrix->getStatusList();
+});
 Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);
 Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
 Route::view("/page-not-found", "error-node")->name("error-node");

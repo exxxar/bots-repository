@@ -270,7 +270,7 @@ class BitrixLogicFactory extends BaseLogicFactory
             'NAME' => $this->botUser->name ?? $this->botUser->telegram_chat_id,
             'SECOND_NAME' => $this->botUser->username ?? $this->botUser->telegram_chat_id,
             'LAST_NAME' => $this->botUser->telegram_chat_id,
-            'TYPE_ID' => "CLIENT",
+            'TYPE_ID' => 35,//заменить на справочник
             'PHONE' => [['VALUE' => $this->botUser->phone, 'VALUE_TYPE' => 'WORK']],
 
         ];
