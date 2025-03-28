@@ -630,6 +630,8 @@ class Basket
                         'iiko_article' => $product->iiko_article ?? null,
                     ];
 
+                    $dimension = $product->dimension ?? (object)[];
+
                     $package[] = (object)[
                         "title" => "Коллекция `" . $collection->title . "`: " . $product->title,
                         "count" => 1,
@@ -711,7 +713,8 @@ class Basket
              ->setBotUser($this->botUser)
             ->addProducts([
                 "lead_id"=>$bitrixLeadId,
-                "products"=>$package
+                "products"=>$package,
+                "delivery"=>$deliverySum
             ]);
 
 

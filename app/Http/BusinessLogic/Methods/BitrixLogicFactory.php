@@ -133,6 +133,22 @@ class BitrixLogicFactory extends BaseLogicFactory
             ];
         }
 
+        $productData = [
+            'NAME' => "Доставка товара",
+            'CURRENCY_ID' => 'RUB',
+            'PRICE' => $data["delivery"],
+            'DESCRIPTION' => '-',
+            'MEASURE' => 6,
+            'QUANTITY' => 1
+        ];
+
+        $productId = $bitrix->addProduct($productData)["result"] ?? null;
+
+        $productsForBitrix[] = [
+            "PRODUCT_ID" => $productId,
+            "PRICE" => $data["delivery"],
+            "QUANTITY" => 1,
+        ];
 
         $result = $bitrix->addProductToDeal($data["lead_id"], $productsForBitrix);
 
