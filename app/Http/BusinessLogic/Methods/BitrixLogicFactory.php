@@ -273,7 +273,7 @@ class BitrixLogicFactory extends BaseLogicFactory
 
     }
 
-    public function addLead(string $title = null, $contactId = null): ?array
+    public function addLead(string $title = null, $contactId = null)
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");
