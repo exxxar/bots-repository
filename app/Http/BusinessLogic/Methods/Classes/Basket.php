@@ -699,8 +699,8 @@ class Basket
             ->setBot($this->bot)
             ->setBotUser($this->botUser)
             ->addContact([
-                "name"=> $data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id,
-                "phone"=>$data["phone"]
+                "name"=> $this->data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id,
+                "phone"=>$this->data["phone"]
             ]);
 
         $bitrixLeadId = BusinessLogic::bitrix()
