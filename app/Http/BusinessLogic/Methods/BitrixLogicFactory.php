@@ -59,7 +59,7 @@ class BitrixLogicFactory extends BaseLogicFactory
         ];
 
         $bitrix = Bitrix::query()
-            ->where($id ?? null)->first();
+            ->where("id",$id ?? null)->first();
 
         if (is_null($bitrix))
             $bitrix = Bitrix::query()->create($tmp);
