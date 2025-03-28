@@ -441,7 +441,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $r_phones = [];
 
-        foreach (($data["recipient_phones"] ?? []) as $item) {
+        foreach (($data->recipient_phones ?? []) as $item) {
             $r_phones[] = ['number' => '+' . preg_replace('/\D+/', '', $item)];
         }
 
@@ -524,7 +524,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             ],
             "sender" => [
                 "company" => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
-                "name" => $data["sender_name"] ?? 'CashMan',
+                "name" => $data->sender_name ?? 'CashMan',
                 // "tin" => "753608673461",
                 //"email" => "exxxar@gmail.com",
                 "phones" => $s_phones,//[["number"=>"+79263183806"]]
