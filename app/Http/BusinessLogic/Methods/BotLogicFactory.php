@@ -2288,13 +2288,12 @@ class BotLogicFactory extends BaseLogicFactory
 
         $validator = Validator::make($data, [
             "message" => "required",
-            "inline_keyboard" => "",
-            "images" => "",
         ]);
 
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        Log::info(print_r($data, true));
 
         $id = $data["id"] ?? null;
         $tmp = [
@@ -2311,6 +2310,7 @@ class BotLogicFactory extends BaseLogicFactory
         ];
 
         Log::info(print_r($tmp, true));
+
         if (is_null($id))
             $queue = Queue::query()
                 ->create($tmp);
@@ -2319,6 +2319,8 @@ class BotLogicFactory extends BaseLogicFactory
 
             $queue->update($tmp);
         }
+
+        Log::info(print_r($queue->toArray() ?? '-', true));
 
         return new QueueResource($queue);
 
