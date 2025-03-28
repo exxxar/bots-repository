@@ -2283,13 +2283,14 @@ class BotLogicFactory extends BaseLogicFactory
     public function sendToCroneQueue(array $data): QueueResource
     {
 
+        Log::info("test 1");
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
-
+        Log::info("test 2");
         $validator = Validator::make($data, [
             "message" => "required",
         ]);
-
+        Log::info("test 3");
         if ($validator->fails())
             throw new ValidationException($validator);
 

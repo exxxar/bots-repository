@@ -13,6 +13,7 @@ use App\Models\Bot;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class QueueController extends Controller
@@ -45,11 +46,11 @@ class QueueController extends Controller
         ]);
 
         $bot = $request->bot ?? null;
-
+        Log::info("test 0".print_r($request->all(), true));
         BusinessLogic::bots()
             ->setBot($bot)
             ->sendToCroneQueue($request->all());
-
+        Log::info("test 5");
         return response()->noContent();
     }
 
