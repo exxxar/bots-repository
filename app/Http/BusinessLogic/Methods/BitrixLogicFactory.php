@@ -261,8 +261,12 @@ class BitrixLogicFactory extends BaseLogicFactory
             'LAST_NAME' => $data["lname"] ?? '',
             'TYPE_ID' => "CLIENT",
             'PHONE' => [['VALUE' => $data["phone"], 'VALUE_TYPE' => 'WORK']],
-            'EMAIL' => [['VALUE' => $data["email"], 'VALUE_TYPE' => 'WORK']]
+
         ];
+
+        if (!is_null($data["email"] ?? null)){
+            $contactData['EMAIL'] =  [['VALUE' => $data["email"], 'VALUE_TYPE' => 'WORK']];
+        }
 
         return $bitrix->upsertContact($contactData)["result"];
 
