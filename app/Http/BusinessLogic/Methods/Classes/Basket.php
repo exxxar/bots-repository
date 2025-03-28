@@ -15,6 +15,7 @@ use App\Models\BotMenuSlug;
 use App\Models\BotUser;
 use App\Models\Order;
 use Carbon\Carbon;
+use CdekSDK2\Exceptions\RequestException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -539,6 +540,10 @@ class Basket
 
     }
 
+    /**
+     * @throws RequestException
+     * @throws ValidationException
+     */
     private function goodsShopCheckout()
     {
         $paymentType = $this->data["payment_type"] ?? 4;
@@ -695,18 +700,11 @@ class Basket
                 "packages" => $package,
             ], $order->id);
 
-        $bitrixContactId = BusinessLogic::bitrix()
-            ->setBot($this->bot)
-            ->setBotUser($this->botUser)
-            ->addContact([
-                "name"=> $this->data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id,
-                "phone"=>$this->data["phone"]
-            ]);
 
         $bitrixLeadId = BusinessLogic::bitrix()
             ->setBot($this->bot)
             ->setBotUser($this->botUser)
-            ->createDeal(contactId:$bitrixContactId);
+            ->createDeal();
 
          BusinessLogic::bitrix()
             ->setBot($this->bot)

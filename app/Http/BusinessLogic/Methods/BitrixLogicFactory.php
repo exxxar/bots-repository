@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\BitrixService;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\BitrixCollection;
@@ -124,7 +125,6 @@ class BitrixLogicFactory extends BaseLogicFactory
             ];
 
             $productId = $bitrix->addProduct($productData)["result"] ?? null;
-            Log::info("prod ".($productId??'-')." =>".print_r($productData, true));
 
             $productsForBitrix[] = [
                 "PRODUCT_ID" => $productId,
@@ -133,7 +133,6 @@ class BitrixLogicFactory extends BaseLogicFactory
             ];
         }
 
-        Log::info("products to lead ".($data["lead_id"]??'-')." =>".print_r($productsForBitrix, true));
 
         $result = $bitrix->addProductToDeal($data["lead_id"], $productsForBitrix);
 
@@ -269,7 +268,19 @@ class BitrixLogicFactory extends BaseLogicFactory
 
     }
 
-    public function createDeal($contactId = null){
+    /**
+     * @throws ValidationException
+     */
+    public function createDeal(){
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $bitrixContactId = BusinessLogic::bitrix()
+            ->setBot($this->bot)
+            ->setBotUser($this->botUser)
+            ->addContact();
+
         $tmp = [
             "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
             "NAME" => $this->botUser->name ?? $this->botUser->telegram_chat_id,
@@ -305,8 +316,8 @@ class BitrixLogicFactory extends BaseLogicFactory
             ],
         ];
 
-        if (!is_null($contactId))
-            $tmp["CONTACT_ID"] = [$contactId];
+        if (!is_null($bitrixContactId))
+            $tmp["CONTACT_ID"] = [$bitrixContactId];
 
 
         $connection = Bitrix::query()
