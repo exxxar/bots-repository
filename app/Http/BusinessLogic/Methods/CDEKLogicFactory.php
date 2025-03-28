@@ -415,6 +415,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             $this->auth();
         }
 
+        Log::info(print_r("data cdek=>".print_r($data, true)));
         $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
         $tariff = $data["tariff"]["total_sum"] ?? 0;
 

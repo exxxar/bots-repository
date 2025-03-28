@@ -70,7 +70,7 @@ class BitrixLogicFactory extends BaseLogicFactory
             $bitrix->refresh();
         }
 
-        if ($tmp->is_active) {
+        if ($bitrix->is_active) {
             $tmps = Bitrix::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("is_active", true)
@@ -330,7 +330,7 @@ class BitrixLogicFactory extends BaseLogicFactory
 
 
         } catch (\Exception $exception) {
-            Log::info("Что-то не так с Bitrix");
+            Log::info("Что-то не так с Bitrix".print_r($exception, true));
         }
 
 
