@@ -2310,6 +2310,7 @@ class BotLogicFactory extends BaseLogicFactory
                 ->subHours(3) ?? null,
         ];
 
+        Log::info(print_r($tmp, true));
         if (is_null($id))
             $queue = Queue::query()
                 ->create($tmp);

@@ -14,11 +14,13 @@ export default defineConfig({
                 'resources/js/AdminPanel/app.js',
                 'resources/js/ClientTg/app.js',
                 'resources/js/Landing/app.js',
+                'resources/js/Mobile/app.js',
 
 
                 'resources/css/AdminPanel/app.css',
                 'resources/css/ClientTg/app.css',
                 'resources/css/Landing/app.css',
+
 
             ],
 
@@ -40,6 +42,7 @@ export default defineConfig({
             'AdminPanel@':path.resolve(__dirname, './resources/js/AdminPanel'),
             'ClientTg@': path.resolve(__dirname, './resources/js/ClientTg'),
             'Landing@': path.resolve(__dirname, './resources/js/Landing'),
+            'Mobile@': path.resolve(__dirname, './resources/js/Mobile'),
         },
     },
 });

@@ -8,6 +8,7 @@ use App\Enums\OrderTypeEnum;
 use App\Events\CashBackEvent;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
+use App\Http\BusinessLogic\Methods\BitrixLogicFactory;
 use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
@@ -559,6 +560,13 @@ class Basket
         $deliverySum = $cdek->tariff->delivery_sum ?? 0;
         $tmpOrderProductInfo = [];
 
+        $baseDimensions = $cdekSettings->base_dimensions ?? [
+            "height" => 15,
+            "width" => 15,
+            "length" => 15,
+            "weight" => 1,
+        ];
+
         foreach ($basket as $item) {
             $product = $item->product ?? null;
             $collection = $item->collection ?? null;
@@ -573,23 +581,32 @@ class Basket
                     $product->title,
                     $item->count,
                     $price,
-                    $dimension->width ?? 0,
-                    $dimension->height ?? 0,
-                    $dimension->length ?? 0,
-                    $dimension->weight ?? 0
+                    ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
+                    ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
+                    ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
+                    ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
+
                 );
 
                 $package[] = (object)[
                     "title" => $product->title,
                     "count" => $item->count,
                     "price" => $price,
-                    "width" => $dimension->width ?? 0,
-                    "height" => $dimension->height ?? 0,
-                    "length" => $dimension->length ?? 0,
-                    "weight" => $dimension->weight ?? 0,
+                    "width" =>   ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
+                    "height" => ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
+                    "length" => ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
+                    "weight" =>  ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
                 ];
 
                 $ids[] = $product->id;
+
+                $tmpOrderProductInfo[] = (object)[
+                    "title" => "Информация о товаре: " . $product->title,
+                    "count" => $item->count,
+                    "price" => $product->current_price ?? 0,
+                    'frontpad_article' => $product->frontpad_article ?? null,
+                    'iiko_article' => $product->iiko_article ?? null,
+                ];
             }
 
             if (!is_null($collection)) {
@@ -607,6 +624,17 @@ class Basket
                         'frontpad_article' => $product->frontpad_article ?? null,
                         'iiko_article' => $product->iiko_article ?? null,
                     ];
+
+                    $package[] = (object)[
+                        "title" => "Коллекция `" . $collection->title . "`: " . $product->title,
+                        "count" => 1,
+                        "price" => $product->current_price ?? 0,
+                        "width" =>   ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
+                        "height" => ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
+                        "length" => ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
+                        "weight" =>  ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
+                    ];
+
                     $price += $product->current_price ?? 0;
                     $ids[] = $product->id;
                 }
@@ -666,6 +694,28 @@ class Basket
                 ],
                 "packages" => $package,
             ], $order->id);
+
+        $bitrixContactId = BusinessLogic::bitrix()
+            ->setBot($this->bot)
+            ->setBotUser($this->botUser)
+            ->addContact([
+                "name"=> $this->data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id,
+                "phone"=>$this->data["phone"]
+            ]);
+
+        $bitrixLeadId = BusinessLogic::bitrix()
+            ->setBot($this->bot)
+            ->setBotUser($this->botUser)
+            ->addLead(contactId:$bitrixContactId);
+
+         BusinessLogic::bitrix()
+            ->setBot($this->bot)
+             ->setBotUser($this->botUser)
+            ->addProducts([
+                "lead_id"=>$bitrixLeadId,
+                "products"=>$package
+            ]);
+
 
         BusinessLogic::review()
             ->setBotUser($this->botUser)

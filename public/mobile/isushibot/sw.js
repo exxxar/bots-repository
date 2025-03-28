@@ -1,10 +1,10 @@
 const CACHE_NAME = 'laravel-pwa-v1';
 const ASSETS = [
     '/',
-    '/css/app.css',
+   /* '/css/app.css',
     '/js/app.js',
     '/icons/icon-192x192.png',
-    '/icons/icon-512x512.png'
+    '/icons/icon-512x512.png'*/
 ];
 
 // Установка Service Worker

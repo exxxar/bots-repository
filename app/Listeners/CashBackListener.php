@@ -148,7 +148,12 @@ class CashBackListener
                     ->sendMessage(
                         $botUserAdmin->telegram_chat_id,
                         "На счету клиента недостаточно CashBack для списания. На балансе <b>$cashBack->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>"
-                    )
+                    );
+
+                sleep(1);
+
+                BotMethods::bot()
+                    ->whereBot($bot)
                     ->sendMessage(
                         $botUserUser->telegram_chat_id,
                         "На вашем счету недостаточно CashBack для списания. У вас <b>$cashBack->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>",
@@ -184,11 +189,17 @@ class CashBackListener
                 ->sendMessage(
                     $botUserAdmin->telegram_chat_id,
                     "Вы успешно списали <b>  $event->amount руб.</b> CashBak у пользователя $tmpUser",
-                )
+                );
+            sleep(1);
+            BotMethods::bot()
+                ->whereId($event->botId)
                 ->sendMessage(
                     $botUserUser->telegram_chat_id,
                     "С вашего счета успешно списано <b>$event->amount руб.</b> CashBak. Списание произвел администратор $tmpAdmin",
-                )
+                );
+            sleep(1);
+            BotMethods::bot()
+                ->whereId($event->botId)
                 ->sendMessage(
                     $channel,
                     "Администратор $tmpAdmin успешно списал <b>  $event->amount руб.</b> CashBak у пользователя $tmpUser", $thread
@@ -203,7 +214,7 @@ class CashBackListener
             $nameUser = BotMethods::prepareUserName($botUserUser);
 
             $thread = $bot->topics["cashback"] ?? null;
-
+            sleep(1);
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -249,17 +260,24 @@ class CashBackListener
             'employee_id' => $adminBotUser->user_id,
         ]);
 
-        if (!is_null($bot))
+        if (!is_null($bot)) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
                     $userBotUser->telegram_chat_id,
                     "Вам начислили <b>$tmpAmount руб.</b> CashBack $levelIndex уровня",
-                )
+                );
+
+            sleep(1);
+
+            BotMethods::bot()
+                ->whereBot($bot)
                 ->sendMessage(
                     $channel,
                     "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> ($levelIndex уровня) CashBaсk пользователю $name", $thread
                 );
+        }
+
 
     }
 

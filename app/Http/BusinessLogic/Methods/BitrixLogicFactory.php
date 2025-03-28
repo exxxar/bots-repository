@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Http\BusinessLogic\BitrixService;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\BitrixCollection;
 use App\Http\Resources\BitrixResource;
@@ -57,7 +58,8 @@ class BitrixLogicFactory extends BaseLogicFactory
             'bot_id' => $this->bot->id,
         ];
 
-        $bitrix = Bitrix::query()->find($id ?? null);
+        $bitrix = Bitrix::query()
+            ->where($id ?? null)->first();
 
         if (is_null($bitrix))
             $bitrix = Bitrix::query()->create($tmp);
@@ -68,8 +70,71 @@ class BitrixLogicFactory extends BaseLogicFactory
             $bitrix->refresh();
         }
 
+        if ($bitrix->is_active) {
+            $tmps = Bitrix::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("is_active", true)
+                ->get();
+
+            foreach ($tmps as $tmp)
+                if ($tmp->id != !$bitrix->id) {
+                    $tmp->is_active = false;
+                    $tmp->save();
+                }
+
+        }
+
 
         return new BitrixResource($bitrix);
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function addProducts(array $data)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "lead_id" => "required",
+            "products" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $connection = Bitrix::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("is_active", true)
+            ->first();
+
+
+        $bitrix = new BitrixService($connection->url);
+        $productsForBitrix = [];
+        foreach ($data["products"] as $product) {
+            $productData = [
+                'NAME' => $product["title"] ?? '-',
+                'CURRENCY_ID' => 'RUB',
+                'PRICE' => $product["price"] ?? 0,
+                'DESCRIPTION' => $product["description"] ?? '-',
+                'MEASURE' => 6,
+                'QUANTITY' => $product["count"] ?? 0 // Единица измерения (шт.)
+            ];
+
+            $productId = $bitrix->addProduct($productData)["result"] ?? null;
+
+            $productsForBitrix[] = [
+                "PRODUCT_ID" => $productId,
+                "PRICE" => $product["price"] ?? 0,
+                "QUANTITY" => $product["count"] ?? 0,
+            ];
+        }
+
+        $result = $bitrix->addProductToLead($data["lead_id"], $productsForBitrix);
+
+
     }
 
     /**
@@ -131,10 +196,9 @@ class BitrixLogicFactory extends BaseLogicFactory
 
                 ]);
 
-            Log::info("Bitrix result=>" . print_r($result->body(), true));
             return $result->status();
         } catch (\Exception $exception) {
-            Log::info("Что-то не так с Bitrix");
+
             return 400;
         }
 
@@ -164,72 +228,112 @@ class BitrixLogicFactory extends BaseLogicFactory
 
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function addContact(array $data)
+    {
 
-    public function addLead(string $title = null): void
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+
+        $validator = Validator::make($data, [
+            "name" => "required",
+            "phone" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $connection = Bitrix::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("is_active", true)
+            ->first();
+
+
+        $url = $connection->url ?? null;
+
+        $bitrix = new BitrixService($url);
+        $contactData = [
+            'NAME' => $data["name"],
+            'SECOND_NAME' => $data["sname"] ?? '',
+            'LAST_NAME' => $data["lname"] ?? '',
+            'TYPE_ID' => "CLIENT",
+            'PHONE' => [['VALUE' => $data["phone"], 'VALUE_TYPE' => 'WORK']],
+            'EMAIL' => [['VALUE' => $data["email"], 'VALUE_TYPE' => 'WORK']]
+        ];
+
+        return $bitrix->upsertContact($contactData)["result"];
+
+
+    }
+
+    public function addLead(string $title = null, $contactId = null): ?array
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");
 
-        $bs = Bitrix::query()
+        $connection = Bitrix::query()
             ->where("bot_id", $this->bot->id)
-            ->get();
-
-        if (count($bs) == 0)
-            return;
-
-        foreach ($bs as $bitrix) {
-            $url = $bitrix->url ?? null;
-            $isActive = $bitrix->is_active ?? false;
-
-            if (is_null($url) || !$isActive)
-                continue;
-
-            $name = mb_split(" ", $this->botUser->name);
-
-            try {
-                $result = Http::asJson()
-                    ->post("$url/crm.lead.add.json", [
-                        'fields' => (object)[
-                            "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
-                            "NAME" => $name[0] ?? $this->botUser->name ?? $this->botUser->telegram_chat_id,
-                            "LAST_NAME" => $name[1] ?? $this->botUser->username ?? $this->botUser->telegram_chat_id,
-                            "ADDRESS" => $this->botUser->address ?? null,
-                            "ADDRESS_CITY" => $this->botUser->city ?? null,
-                            "ADDRESS_COUNTRY" => $this->botUser->country ?? null,
-                            "BIRTHDATE" => $this->botUser->birthday ?? null,
-                            "EMAIL" => [
-                                (object)[
-                                    "VALUE" => $this->botUser->email ?? null,
-                                    "VALUE_TYPE" => "CLIENT"
-                                ]
-                            ],
-                            "PHONE" => [
-                                (object)[
-                                    "VALUE" => $this->botUser->phone ?? null,
-                                    "VALUE_TYPE" => "CLIENT"
-                                ]
-                            ],
-                            "WEB" => [
-
-                                (object)[
-                                    "VALUE" => "https://t.me/" . $this->bot->bot_domain . "?start=" . base64_encode("003" . $this->botUser->telegram_chat_id),
-                                    "VALUE_TYPE" => "BOT"
-                                ],
-                                (object)[
-                                    "VALUE" => !is_null($this->botUser->username) ? "https://t.me/" . $this->botUser->username : null,
-                                    "VALUE_TYPE" => "TELEGRAM"
-                                ]
-
-                            ],
-                        ],
-
-                    ]);
-            } catch (\Exception $exception) {
-                Log::info("Что-то не так с Bitrix");
-            }
+            ->where("is_active", true)
+            ->first();
 
 
+        $url = $connection->url ?? null;
+
+        $name = mb_split(" ", $this->botUser->name);
+
+        $tmp = (object)[
+            "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
+            "NAME" => $name[0] ?? $this->botUser->name ?? $this->botUser->telegram_chat_id,
+            "LAST_NAME" => $name[1] ?? $this->botUser->username ?? $this->botUser->telegram_chat_id,
+            "ADDRESS" => $this->botUser->address ?? null,
+            "ADDRESS_CITY" => $this->botUser->city ?? null,
+            "ADDRESS_COUNTRY" => $this->botUser->country ?? null,
+            "BIRTHDATE" => $this->botUser->birthday ?? null,
+
+            "EMAIL" => [
+                (object)[
+                    "VALUE" => $this->botUser->email ?? null,
+                    "VALUE_TYPE" => "CLIENT"
+                ]
+            ],
+            "PHONE" => [
+                (object)[
+                    "VALUE" => $this->botUser->phone ?? null,
+                    "VALUE_TYPE" => "CLIENT"
+                ]
+            ],
+            "WEB" => [
+
+                (object)[
+                    "VALUE" => "https://t.me/" . $this->bot->bot_domain . "?start=" . base64_encode("003" . $this->botUser->telegram_chat_id),
+                    "VALUE_TYPE" => "BOT"
+                ],
+                (object)[
+                    "VALUE" => !is_null($this->botUser->username) ? "https://t.me/" . $this->botUser->username : null,
+                    "VALUE_TYPE" => "TELEGRAM"
+                ]
+
+            ],
+        ];
+
+        if (!is_null($contactId))
+            $tmp["CONTACT_ID"] = [$contactId];
+
+        try {
+            $result = Http::asJson()
+                ->post("$url/crm.lead.add.json", [
+                    'fields' => $tmp
+                ]);
+
+
+        } catch (\Exception $exception) {
+            Log::info("Что-то не так с Bitrix");
         }
 
+
+        return $result["result"] ?? null;
     }
 }

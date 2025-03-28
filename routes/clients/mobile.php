@@ -25,11 +25,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("mobile")
     ->group(function () {
 
-        Route::get("/{domain}/guest", [MobileController::class, "guestMobileHomePage"])
-            ->name("mobile.guest");
+    /*    Route::get("/{domain}/guest", [MobileController::class, "guestMobileHomePage"])
+            ->name("mobile.guest");*/
 
-        Route::get("/{botDomain}", [MobileController::class, "mobileHomePage"])
-            ->middleware(["mobile.auth:mobile.guest"])
+        Route::get("/{botDomain}/{page}", [MobileController::class, "mobileHomePage"])
+            //->middleware(["mobile.auth:mobile.guest"])
             ->name("mobile.base");
 
     });

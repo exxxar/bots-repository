@@ -447,12 +447,16 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
         ));
 
         if (isset($data["message"]))
+        {
+            sleep(1);
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMessage(
                     $userBotUser->telegram_chat_id,
                     $data["message"] ?? "Спасибо за использование нашего сервиса!"
                 );
+        }
+
     }
 
     /**
