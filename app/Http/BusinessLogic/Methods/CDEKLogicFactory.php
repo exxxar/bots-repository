@@ -415,13 +415,15 @@ class CDEKLogicFactory extends BaseLogicFactory
             $this->auth();
         }
 
-        Log::info("data cdek=>".print_r($data, true));
-        $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
-        $tariff = $data["tariff"]["total_sum"] ?? 0;
 
-        $from = $data["from"];
-        $to = $data["to"];
-        $packages = $data["packages"];
+        $data = json_decode(json_encode($data, JSON_UNESCAPED_UNICODE), false);
+
+        $type = 1;//($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
+        $tariff = $data["tariff"]->total_sum ?? 0;
+
+        $from = $data->from;
+        $to = $data->to;
+        $packages = $data->packages;
 
         if ($validator->fails())
             throw new ValidationException($validator);
@@ -514,8 +516,8 @@ class CDEKLogicFactory extends BaseLogicFactory
             "type" => $type,
             "number" => "bot" . ($orderId ?? Str::uuid()->toString()),
             "tariff_code" => $tariffCode,
-            "comment" => $data["comment"] ?? '-',
-            "shipment_point" => $from->office["code"],
+            "comment" => $data->comment ?? '-',
+            "shipment_point" => $from->office->code,
             "delivery_point" => $to->office->code,
             "delivery_recipient_cost" => [
                 "value" => $tariff
@@ -528,7 +530,7 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "phones" => $s_phones,//[["number"=>"+79263183806"]]
             ],
             "recipient" => [
-                "name" => $data["recipient_name"],
+                "name" => $data->recipient_name,
                 // "email" => "exxxar@gmail.com",
                 "phones" => $r_phones// [["number"=>"+79494320661"]]//$r_phones,
             ],
