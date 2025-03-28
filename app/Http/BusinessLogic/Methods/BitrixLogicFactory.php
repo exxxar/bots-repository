@@ -334,7 +334,8 @@ class BitrixLogicFactory extends BaseLogicFactory
 
 
         } catch (\Exception $exception) {
-            Log::info("Что-то не так с Bitrix".print_r($exception, true));
+            Log::info($exception->getMessage());
+            Log::info($exception->getLine());
         }
 
 
