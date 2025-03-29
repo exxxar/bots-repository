@@ -483,6 +483,7 @@ import StatisticV2 from '@/ClientTg/Pages/V2/Admin/Statistic.vue';
 import PromoCodesV2 from '@/ClientTg/Pages/V2/Admin/Promocodes.vue';
 import PagePasswordV2 from '@/ClientTg/Pages/V2/Shop/PagePassword.vue';
 import InstaQuestV2 from "@/ClientTg/Pages/V2/Shop/InstaQuest.vue";
+import RequestPhotoV2 from "@/ClientTg/Pages/V2/Shop/RequestPhoto.vue";
 import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
 import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
 import VipProfileV2_1 from "@/ClientTg/Pages/V2/Shop/VipProfileV1.vue";
@@ -723,7 +724,12 @@ export const simpleRoutes = [
         component: InstaQuestV2,
         meta: {title: 'Квест', hide_menu: true}
     },
-
+    {
+        name: 'RequestPhotoV2',
+        path: simplePrefix + '/request-photo',
+        component: RequestPhotoV2,
+        meta: {title: 'Запрос фото', hide_menu: true}
+    },
     {
         name: 'FriendsGameV2',
         path: simplePrefix + '/new-friends-game',

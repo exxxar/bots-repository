@@ -230,6 +230,14 @@ Route::prefix("bot-client")
                 Route::post('/callback', "instagramQuestCallback");
             });
 
+        Route::prefix("request-photo")
+            ->controller(\App\Http\Controllers\Globals\RequestPhotoScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post('/load-data', "loadData");
+                Route::post('/callback', "RequestPhotoCallback");
+            });
+
         Route::prefix("schedule")
             ->controller(\App\Http\Controllers\Globals\ScheduleBotScriptController::class)
             ->middleware(["tgAuth.any", "slug"])

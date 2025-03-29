@@ -60,7 +60,7 @@ class BitrixLogicFactory extends BaseLogicFactory
         ];
 
         $bitrix = Bitrix::query()
-            ->where("id",$id ?? null)->first();
+            ->where("id", $id ?? null)->first();
 
         if (is_null($bitrix))
             $bitrix = Bitrix::query()->create($tmp);
@@ -266,17 +266,22 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         $bitrix = new BitrixService($url);
 
+        $name = explode(" ", $this->botUser->name);
         $contactData = [
-            'NAME' => $this->botUser->name ?? $this->botUser->telegram_chat_id,
-            'SECOND_NAME' => $this->botUser->username ?? $this->botUser->telegram_chat_id,
+            'NAME' => $name[0] ?? $this->botUser->name ?? $this->botUser->telegram_chat_id,
+            'SECOND_NAME' => $name[1] ?? $this->botUser->username ?? $this->botUser->telegram_chat_id,
             'LAST_NAME' => $this->botUser->telegram_chat_id,
             'TYPE_ID' => 35,//заменить на справочник
+            'OPENED' => 'Y',//заменить на справочник
             'PHONE' => [['VALUE' => $this->botUser->phone, 'VALUE_TYPE' => 'WORK']],
 
         ];
 
-        if (!is_null($this->botUser->email ?? null)){
-            $contactData['EMAIL'] =  [['VALUE' => $this->botUser->email, 'VALUE_TYPE' => 'WORK']];
+        if (!is_null($this->botUser->username ?? null))
+            $contactData['IM'] = [['VALUE' => "https://t.me/" . $this->botUser->username, 'VALUE_TYPE' => 'WORK']];
+
+        if (!is_null($this->botUser->email ?? null)) {
+            $contactData['EMAIL'] = [['VALUE' => $this->botUser->email, 'VALUE_TYPE' => 'WORK']];
         }
 
         return $bitrix->upsertContact($contactData)["result"];
@@ -287,7 +292,8 @@ class BitrixLogicFactory extends BaseLogicFactory
     /**
      * @throws ValidationException
      */
-    public function createDeal(){
+    public function createDeal()
+    {
 
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");

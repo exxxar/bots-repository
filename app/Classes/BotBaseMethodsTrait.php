@@ -955,13 +955,16 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendMediaGroup($chatId, $media)
+    public function sendMediaGroup($chatId, $media, $thread = null)
     {
 
         $tmp = [
             "chat_id" => $chatId,
             "media" => $media,
         ];
+
+        if (!is_null($thread))
+            $tmp["message_thread_id"] = $thread;
 
 
         if ($this->isWebMode) {

@@ -15,6 +15,7 @@ import wheelOfFortuneV3 from "./modules/globals/wheelOfFortuneV3";
 import friendsGame from "./modules/globals/friendsGame";
 import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
+import requestPhoto from "./modules/globals/requestPhoto";
 import schedule from "./modules/globals/schedule";
 import cashOut from "./modules/globals/cashOut";
 import cart from "./modules/shop/basket";
@@ -158,6 +159,7 @@ export default createStore({
         wheelOfFortuneCustom,
         wheelOfFortuneV3,
         instagramQuest,
+        requestPhoto,
         schedule,
         cashOut,
         cart,
