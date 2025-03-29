@@ -3,6 +3,9 @@
 use App\Facades\BotManager;
 use App\Http\Controllers\Bots\NewsBotController;
 
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\RequestPhotoScriptController::class)
+    ->slug("global_request_photo", "requestPhoto");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\WheelOfFortuneScriptController::class)
