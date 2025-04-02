@@ -51,7 +51,7 @@ class BotController extends Controller
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
             ->where(function ($q) use ($pageName) {
-                $q->where("command", "like", "%$pageName%");
+                $q->where("command", "like", "%$pageName");
                     //->orWhere("command", "/$pageName");
             })->first();
 
