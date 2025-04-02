@@ -23,6 +23,7 @@ use App\Models\ReferralHistory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -54,8 +55,12 @@ class BotController extends Controller
                     ->orWhere("command", "/$pageName");
             })->first();
 
+        Log::info("switch-to-page=>".$request->page);
+
         if (is_null($slug))
             return response()->noContent(404);
+
+        Log::info("switch-to-page(slug)=>".($slug->toArray()??'-'));
 
         $page = BotPage::query()
             ->where("bot_menu_slug_id", $slug->id)
@@ -64,6 +69,7 @@ class BotController extends Controller
 
         if (is_null($page))
             return response()->noContent(404);
+        Log::info("switch-to-page(page)=>".($page->toArray()??'-'));
 
         BotManager::bot()
             ->runPage($page->id,
