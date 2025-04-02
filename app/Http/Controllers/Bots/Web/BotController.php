@@ -60,7 +60,7 @@ class BotController extends Controller
         if (is_null($slug))
             return response()->noContent(404);
 
-        Log::info("switch-to-page(slug)=>".($slug->toArray()??'-'));
+        Log::info("switch-to-page(slug)=>".print_r($slug->toArray()??'-', true));
 
         $page = BotPage::query()
             ->where("bot_menu_slug_id", $slug->id)
@@ -69,7 +69,7 @@ class BotController extends Controller
 
         if (is_null($page))
             return response()->noContent(404);
-        Log::info("switch-to-page(page)=>".($page->toArray()??'-'));
+        Log::info("switch-to-page(page)=>".print_r($page->toArray()??'-', true));
 
         BotManager::bot()
             ->runPage($page->id,
