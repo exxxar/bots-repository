@@ -44,15 +44,15 @@ class BotController extends Controller
             "page" => "required"
         ]);
 
-        $pageName = $request->page ?? null;
+        $pageName = mb_trim($request->page);
 
         $bot = $request->bot ?? null;
 
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
             ->where(function ($q) use ($pageName) {
-                $q->where("command", ".*$pageName")
-                    ->orWhere("command", "/$pageName");
+                $q->where("command", "like", "%$pageName%");
+                    //->orWhere("command", "/$pageName");
             })->first();
 
         Log::info("switch-to-page=>".$request->page);
