@@ -33,9 +33,9 @@ export default {
                 'Понедельник': 1, 'Вторник': 2, 'Среда': 3, 'Четверг': 4, 'Пятница': 5, 'Суббота': 6, 'Воскресенье': 7
             };
 
-            return this.schedule.sort((a, b) => {
+            return this.schedule?.sort((a, b) => {
                 return map[a.day] - map[b.day];
-            })
+            })||[]
         }
     }
 }
