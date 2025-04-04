@@ -49,7 +49,7 @@ use Telegram\Bot\FileUpload\InputFile;
 */
 
 Route::get("/test", function (){
-   $bitrix = new \App\Http\BusinessLogic\BitrixService("https://dpnrouter.bitrix24.ru/rest/2780/phx3xrawy6h08sus/");
+   $bitrix = new \App\Http\BusinessLogic\BitrixService("");
    return $bitrix->getStatusList();
 });
 Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);
