@@ -215,13 +215,15 @@ class CashBackListener
 
             $thread = $bot->topics["cashback"] ?? null;
             sleep(1);
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendMessage(
-                    $bot->order_channel ?? null,
-                    "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
-                    $thread
-                );
+
+
+                BotMethods::bot()
+                    ->whereBot($bot)
+                    ->sendMessage(
+                        $bot->order_channel ?? null,
+                        "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
+                        $thread
+                    );
         }
 
 

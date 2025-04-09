@@ -45,7 +45,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
     }
 
@@ -106,10 +106,12 @@ trait BotBaseMethodsTrait
 
         $tmp = [
             "chat_id" => $chatId,
-            "message_thread_id" => $messageThreadId,
             "text" => $message,
             "parse_mode" => "HTML"
         ];
+
+        if (!is_null($messageThreadId))
+            $tmp["message_thread_id"] = $messageThreadId;
 
         return $this->extractedMessage($message, $tmp, $chatId, $messageThreadId, $delay);
     }
@@ -166,7 +168,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -197,7 +199,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -229,7 +231,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -256,7 +258,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
     }
 
@@ -285,7 +287,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -321,7 +323,7 @@ trait BotBaseMethodsTrait
                 $e->getLine());
         }
 
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -349,7 +351,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -380,7 +382,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -539,7 +541,7 @@ trait BotBaseMethodsTrait
 
             Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -574,7 +576,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
     }
 
@@ -607,7 +609,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
     }
 
@@ -641,7 +643,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
     }
 
@@ -675,7 +677,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
     }
 
@@ -724,7 +726,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
     }
 
@@ -800,7 +802,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -847,7 +849,7 @@ trait BotBaseMethodsTrait
 
             $tmp["caption"] = "$subMessage...";
 
-         sleep(0.4);
+            sleep(0.4);
             $data = $this->bot->sendPhoto($tmp);
 
             return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
@@ -867,7 +869,7 @@ trait BotBaseMethodsTrait
                 $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
                 $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -905,7 +907,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -926,7 +928,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -950,7 +952,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -977,7 +979,7 @@ trait BotBaseMethodsTrait
         } catch (\Exception $e) {
             Log::error($e);
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -999,7 +1001,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-     sleep(0.4);
+        sleep(0.4);
         return $this;
 
     }
@@ -1061,7 +1063,7 @@ trait BotBaseMethodsTrait
                 ->delay(now()
                     ->addSeconds($delay ?? 2));*/
 
-            return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId, $delay+2);
+            return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId, $delay + 2);
 
         }
 

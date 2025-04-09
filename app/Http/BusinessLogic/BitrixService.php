@@ -306,6 +306,9 @@ class BitrixService
     // Вспомогательный метод для запросов к API
     protected function request($method, $params = [])
     {
+        if (is_null($this->webhookUrl) || is_null($method))
+            return [];
+
         $response = Http::post("{$this->webhookUrl}{$method}.json", $params);
 
         return $response->json();
