@@ -17,6 +17,16 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             </button>
         </div>
     </div>
+    <div class="form-check form-switch my-2">
+        <input class="form-check-input"
+               v-model="silent_mode"
+               type="checkbox" role="switch" id="switchCheckDefault">
+        <label
+
+            class="form-check-label" for="switchCheckDefault">
+            Тихий режим (не оповещать пользователя о смене статуса)
+        </label>
+    </div>
     <div class="row" v-if="bot_users.length>0">
         <div class="col-12 col-md-12 mb-3">
 
@@ -122,6 +132,7 @@ export default {
     props: ["simple"],
     data() {
         return {
+            silent_mode:false,
             bot: null,
             loading: true,
             bot_users: [],
@@ -158,7 +169,8 @@ export default {
                 dataObject: {
                     bot_user_id: this.bot_users[index].id,
                     status: status,
-                    type: type
+                    type: type,
+                    silent_mode: this.silent_mode
                 }
             }).then(() => {
                 this.$notify({

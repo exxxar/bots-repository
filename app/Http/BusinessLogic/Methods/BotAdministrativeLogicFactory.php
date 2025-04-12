@@ -446,8 +446,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             $needUserReview
         ));
 
-        if (isset($data["message"]))
-        {
+        if (isset($data["message"])) {
             sleep(1);
             BotMethods::bot()
                 ->whereBot($this->bot)
@@ -755,6 +754,8 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        $silentMode = ($data["silent_mode"] ?? false) == "true";
+
         $info = $data["info"] ?? '-';
 
         $userBotUser = BotUser::query()
@@ -770,12 +771,13 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
         $userBotUser->is_admin = true;
         $userBotUser->save();
 
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendMessage(
-                $userBotUser->telegram_chat_id,
-                "Вас назначили администратором данного бота!Повторно запустите команду /start:\n$info"
-            );
+        if (!$silentMode)
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $userBotUser->telegram_chat_id,
+                    "Вас назначили администратором данного бота!Повторно запустите команду /start:\n$info"
+                );
 
 
         $name = BotMethods::prepareUserName($userBotUser);
@@ -923,7 +925,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             foreach ($actions as $action) {
 
                 $tmpData = (array)$action->data;
-                $success = array_key_exists("cashback_at",$tmpData) && is_null($tmpData["cashback_at"] ?? null);
+                $success = array_key_exists("cashback_at", $tmpData) && is_null($tmpData["cashback_at"] ?? null);
 
                 if ($success) {
                     $page = BotPage::query()

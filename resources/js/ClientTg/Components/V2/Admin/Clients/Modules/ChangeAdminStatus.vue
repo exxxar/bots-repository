@@ -22,6 +22,17 @@
 
                     <div class="modal-body">
 
+                        <div class="form-check form-switch my-2">
+                            <input class="form-check-input"
+                                   v-model="silent_mode"
+                                   type="checkbox" role="switch" id="switchCheckDefault">
+                            <label
+
+                                class="form-check-label" for="switchCheckDefault">
+                                Тихий режим (не оповещать пользователя о смене статуса)
+                            </label>
+                        </div>
+
                         <p>
                             Вы хотите  <span v-if="botUser.is_admin">удалить из администраторов</span>
                             <span v-else>назначить администратором</span>
@@ -64,6 +75,7 @@ export default {
     props: ["botUser"],
     data() {
         return {
+            silent_mode:false,
             loading: false,
             adminForm: {
                 info: null
@@ -83,6 +95,7 @@ export default {
             this.loading = true;
             this.$store.dispatch(!this.botUser.is_admin ? "addAdmin" : "removeAdmin", {
                 dataObject: {
+                    silent_mode: this.silent_mode,
                     user_telegram_chat_id: this.botUser.telegram_chat_id,
                     ...this.adminForm
                 }

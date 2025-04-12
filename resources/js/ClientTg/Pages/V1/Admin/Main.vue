@@ -360,6 +360,18 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
                 </a>
 
                 <form v-on:submit.prevent="addAdmin" v-if="section===3">
+                    <div class="form-check form-switch my-2">
+                        <input class="form-check-input"
+                               v-model="adminForm.silent_mode"
+                               type="checkbox" role="switch" id="switchCheckDefault">
+                        <label
+
+                            class="form-check-label" for="switchCheckDefault">
+                            Тихий режим (не оповещать пользователя о смене статуса)
+                        </label>
+                    </div>
+
+
                     <div class="mb-3">
                         <label for="bill-info" class="form-label">Причина добавления администратора</label>
                         <textarea class="form-control"
@@ -485,7 +497,8 @@ export default {
             },
 
             adminForm: {
-                info: null
+                info: null,
+                silent_mode:false,
             },
 
             pageForm: {

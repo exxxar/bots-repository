@@ -1268,6 +1268,8 @@ class BotLogicFactory extends BaseLogicFactory
             throw new ValidationException($validator);
 
 
+        $silentMode = ($data["silent_mode"] ?? false) == "true";
+
         $botUser = BotUser::query()
             ->where("id", $data["bot_user_id"])
             ->first();
@@ -1287,11 +1289,12 @@ class BotLogicFactory extends BaseLogicFactory
             default => "неизвестный статус",
         };
 
-        BotMethods::bot()
-            ->whereId($botUser->bot_id)
-            ->sendMessage($botUser->telegram_chat_id,
-                "Вам изменили статус учетной записи на \"$status\""
-            );
+        if (!$silentMode)
+            BotMethods::bot()
+                ->whereId($botUser->bot_id)
+                ->sendMessage($botUser->telegram_chat_id,
+                    "Вам изменили статус учетной записи на \"$status\""
+                );
 
     }
 
