@@ -14,6 +14,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                     style="font-size:12px;">
                     <i class="fa-regular fa-pen-to-square "></i> Редактор скрипта
                 </button>
+
             </div>
             <div class="col-12" v-if="(script_data.wheel_of_fortune||{rules:null}).rules">
                 <div class="alert alert-light mb-2">
@@ -21,12 +22,13 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                 </div>
             </div>
             <div class="col-12">
+
                 <WheelOfFortuneShopVariant
                     :can-play="canPlay"
                     :is-admin="false"
                     :interval="script_data.interval || 1"
                     :action-data="action"
-                    v-if="(script_data.wheel_of_fortune.items||[]).length>=3"
+                    v-if="(script_data.wheel_of_fortune?.items||[]).length>=3"
                     v-on:win="winHandler"
                     v-model="script_data.wheel_of_fortune.items"></WheelOfFortuneShopVariant>
             </div>
@@ -97,11 +99,15 @@ export default {
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
                 this.script_data = []
 
+                const items = resp.data
+
+                console.log("Resp data", items)
                 this.$nextTick(() => {
-                    if (resp)
-                        Object.keys(resp).forEach(item => {
+                    if (items)
+                        Object.keys(items).forEach(item => {
+
                             if (item)
-                                this.script_data[item] = resp[item]
+                                this.script_data[item] = items[item]
                         })
 
                     /*const items = this.shuffle(this.script_data.wheel_of_fortune.items)

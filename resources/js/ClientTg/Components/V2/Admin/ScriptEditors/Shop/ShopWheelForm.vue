@@ -5,6 +5,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 <template>
 
     <div v-if="loaded_params">
+
         <div class="form-check form-switch mb-2">
             <input class="form-check-input"
                    type="checkbox"
@@ -39,8 +40,8 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
                           id="script-settings-wheel-of-fortune-can_play"></textarea>
             <label for="script-settings-disabled_text">Правила колеса фортуны
                 <span
-                    v-if="(form.wheel_of_fortune.rules||'').length>0">{{
-                        (form.wheel_of_fortune.rules || '').length
+                    v-if="(form?.wheel_of_fortune.rules||'').length>0">{{
+                        (form?.wheel_of_fortune.rules || '').length
                     }}/4000</span>
             </label>
         </div>
@@ -110,6 +111,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
                                        v-model="form.wheel_of_fortune.items[index].description"
                                        maxlength="4000"
                                        style="min-height:100px;"
+                                       :name="'script-settings-description-'+index"
                                        placeholder="Leave a comment here"
                                        :id="'script-settings-description-'+index" required>
                              </textarea>
@@ -224,7 +226,7 @@ export default {
                             bgColor: "#fac600",
                             color: "#ffffff",
                             mark: 'в заведении',
-                            description: null,
+                            description: 'Приз 1',
                         },
                         {
                             id: 2,
@@ -232,14 +234,14 @@ export default {
                             bgColor: "#ffffff",
                             color: "#000000",
                             mark: 'в заведении & на доставке',
-                            description: null,
+                            description: 'Приз 2',
                         },
                         {
                             id: 3,
                             value: "🍦",
                             bgColor: "#ff2e55",
                             color: "#ffffff",
-                            description: null,
+                            description: 'Приз 3',
                             mark: 'на доставке',
                         },
                         {
@@ -247,7 +249,7 @@ export default {
                             value: "🍓",
                             bgColor: "#a1043a",
                             color: "#ffffff",
-                            description: null,
+                            description: 'Приз 4',
                             mark: 'в заведении',
                         },
                         {
@@ -255,7 +257,7 @@ export default {
                             value: "☕",
                             bgColor: "#ffffff",
                             color: "#000000",
-                            description: null,
+                            description: 'Приз 5',
                             mark: 'в заведении',
                         },
                         {
@@ -263,7 +265,7 @@ export default {
                             value: "🍕",
                             bgColor: "#c92729",
                             color: "#ffffff",
-                            description: null,
+                            description: 'Приз 6',
                             mark: 'на доставке',
                         },
                         {
@@ -271,7 +273,7 @@ export default {
                             value: "⭐",
                             bgColor: "#ffffff",
                             color: "#000000",
-                            description: null,
+                            description: 'Приз 7',
                             mark: 'в заведении & на доставке',
                         },
                         {
@@ -279,7 +281,7 @@ export default {
                             value: "🎁",
                             bgColor: "#c92729",
                             color: "#ffffff",
-                            description: null,
+                            description: 'Приз 8',
                             mark: 'в заведении & на доставке',
                         },
                         {
@@ -287,7 +289,7 @@ export default {
                             value: "🚀",
                             bgColor: "#ffffff",
                             color: "#ffffff",
-                            description: null,
+                            description: 'Приз 9',
                             mark: 'в заведении & на доставке',
                         },
                     ]
@@ -315,7 +317,30 @@ export default {
     mounted() {
         this.loaded_params = false
         this.$nextTick(() => {
-            this.form = this.modelValue
+            function deepMerge(defaultObj, sourceObj) {
+                if (typeof defaultObj !== 'object' || defaultObj === null) return sourceObj ?? defaultObj;
+
+                const result = Array.isArray(defaultObj) ? [] : {};
+
+                for (const key in defaultObj) {
+                    if (defaultObj.hasOwnProperty(key)) {
+                        const defaultValue = defaultObj[key];
+                        const sourceValue = sourceObj?.[key];
+
+                        if (typeof defaultValue === 'object' && defaultValue !== null && !Array.isArray(defaultValue)) {
+                            result[key] = deepMerge(defaultValue, sourceValue);
+                        } else {
+                            result[key] = sourceValue !== undefined ? sourceValue : defaultValue;
+                        }
+                    }
+                }
+
+                return result;
+            }
+
+// Применение
+            this.form = deepMerge(this.form, this.modelValue);
+
             this.loaded_params = true
             this.loaded = true
         })

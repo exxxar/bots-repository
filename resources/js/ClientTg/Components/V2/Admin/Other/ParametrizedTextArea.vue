@@ -19,7 +19,7 @@
         <div class="form-floating">
                 <textarea class="form-control"
                           v-model="message"
-
+                            :name="'script-settings-text'+uuid"
                           :maxlength="maxlength||'4000'"
                           style="min-height:150px;"
                           :required="required||false"
@@ -80,7 +80,7 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            this.message = this.modelValue
+            this.message = this.modelValue || '-'
 
             if (this.params)
                 this.settings = this.params

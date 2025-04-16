@@ -25,7 +25,7 @@ const actions = {
     async loadShopModuleData(context) {
 
 
-        let link = `${ BASE_PRODUCTS_LINK}/load-data`
+        let link = `${BASE_PRODUCTS_LINK}/load-data`
 
         let _axios = util.makeAxiosFactory(link, 'POST')
 

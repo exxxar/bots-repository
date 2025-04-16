@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Middleware\Service\Utilities;
 use App\Models\Bot;
 use App\Models\BotUser;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -43,6 +44,30 @@ class TelegramAuthCheck
                 ->where("bot_id", $bot->id)
                 ->where("telegram_chat_id", $debugBotUser)
                 ->first();
+
+            if (is_null($botUser)) {
+                $user = User::query()->
+                    where("email","admin@admin.com")
+                    ->first();
+
+                $botUser = BotUser::query()
+                    ->create([
+                        'user_id'=>$user->id,
+                        'bot_id'=>$bot->id,
+                        'telegram_chat_id'=>$debugBotUser,
+                        'is_vip'=>true,
+                        'is_admin'=>true,
+                        'is_work'=>true,
+                        'is_manager'=>true,
+                        'is_deliveryman'=>true,
+                        'name'=>"Test",
+                        'username'=>"testuser",
+                        'phone'=>"+79490000000",
+                        'email'=>"testuser@gmail.com",
+                        'fio_from_telegram'=>"testtesttest",
+                    ]);
+            }
+
 
             $request->botUser = $botUser;
             $request->bot = $bot;
