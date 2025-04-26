@@ -89,7 +89,7 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] !== 'CONFIRMED') {
 
-            if (($data["Status"] ?? 'REFUNDED') == 'REFUNDED') {
+            if (($data["Status"] ?? 'REFUNDED') == 'REFUNDED' || ($data["Status"] ?? 'REJECTED') == 'REJECTED') {
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage(
@@ -360,7 +360,6 @@ class PaymentLogicFactory extends BaseLogicFactory
         $currency = "RUB";
         $isRecurrent = ($data["is_recurrent"] ?? false) == "true";
 
-        Log:info("is_recurrent=>".print_r($isRecurrent, true));
 
         $config = $slug->config ?? null;
 
