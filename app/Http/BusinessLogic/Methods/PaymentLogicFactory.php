@@ -91,7 +91,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                     ->whereBot($this->bot)
                     ->sendMessage(
                         $callbackChannel,
-                        "⛔Оплата по заказу #$orderId в размере $amount руб. НЕ прошла!",
+                        "⛔Оплата СБП по заказу #$orderId в размере $amount руб. НЕ прошла!",
                         $thread
                     );
                 sleep(1);
@@ -105,7 +105,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                             ->whereBot($this->bot)
                             ->sendMessage(
                                 $botUser->telegram_chat_id,
-                                "⛔Оплата по заказу #$orderId в размере $amount руб. НЕ прошла!"
+                                "⛔Оплата СБП по заказу #$orderId в размере $amount руб. НЕ прошла!"
                             );
 
 
@@ -130,7 +130,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendMessage(
                 $callbackChannel,
-                "✅Оплата клиента по заказу #$order->id в размере $amount (в заказе $order->summary_price) руб. прошла успешно!",
+                "✅Оплата СБП по заказу #$order->id в размере $amount (в заказе $order->summary_price) руб. прошла успешно!",
                 $thread
             );
 
@@ -149,7 +149,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                     ->whereBot($this->bot)
                     ->sendMessage(
                         $clientBotUser->telegram_chat_id,
-                        "✅Ваша оплата в размере $amount руб. прошла успешно!"
+                        "✅Ваша СБП-оплата в размере $amount руб. прошла успешно!"
                     );
             }
         }
@@ -355,7 +355,7 @@ class PaymentLogicFactory extends BaseLogicFactory
         $botUser = $this->botUser;
         $slug = $this->slug;
         $currency = "RUB";
-        $isRecurrent = ($data["recurrent"] ?? false) == "true";
+        $isRecurrent = ($data["is_recurrent"] ?? false) == "true";
 
         $config = $slug->config ?? null;
 
