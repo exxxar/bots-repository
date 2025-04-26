@@ -89,7 +89,6 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] !== 'CONFIRMED') {
 
-            if (($data["Status"] ?? 'REFUNDED') == 'REFUNDED') {
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage(
@@ -112,7 +111,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                             );
 
 
-                }
+
 
             }
 
