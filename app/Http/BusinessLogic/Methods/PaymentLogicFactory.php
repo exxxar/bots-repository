@@ -57,6 +57,8 @@ class PaymentLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Бот не найден!");
         }
 
+
+        Log::info("test sbp=>".print_r($data, true));
         if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] !== 'CONFIRMED') {
             throw new HttpException(400, "Ошибка обработки данных!");
         }
