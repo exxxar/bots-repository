@@ -117,12 +117,12 @@ class PaymentLogicFactory extends BaseLogicFactory
             }
 
 
-            throw new HttpException(400, "Ошибка обработки данных!");
+            return "ok";
         }
 
 
         if (!$orderId || $amount <= 0) {
-            throw new HttpException(400, "Некорректные данные заказа!");
+            return "ok";
         }
 
         $order->payed_at = Carbon::now();
