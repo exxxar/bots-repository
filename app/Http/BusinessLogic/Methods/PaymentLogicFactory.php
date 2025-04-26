@@ -65,7 +65,7 @@ class PaymentLogicFactory extends BaseLogicFactory
         $thread = $this->bot->topics["orders"] ?? null;
 
         $customerKey = $data['CustomerKey'] ?? null;
-        $rebillId  = $data['RebillId'] ?? null;
+        $rebillId = $data['RebillId'] ?? null;
 
         Log::info("test sbp=>" . print_r($data, true));
 
@@ -73,7 +73,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ->where("id", $orderId)
             ->first();
 
-        if (!$order) {
+        if (is_null($order)) {
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMessage(
@@ -83,6 +83,9 @@ class PaymentLogicFactory extends BaseLogicFactory
                 );
             return "ok";
         }
+
+        if (is_null($customerKey))
+            $customerKey = $order->customer_id;
 
         if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] !== 'CONFIRMED') {
 
@@ -97,7 +100,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                 sleep(1);
                 if (!is_null($customerKey)) {
                     $botUser = BotUser::query()
-                        ->where("id",$customerKey)
+                        ->where("id", $customerKey)
                         ->first();
 
                     if (!is_null($botUser))
@@ -402,7 +405,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             'Phone' => $data["phone"] ?? '',   //телефон покупателя
             'Name' => $data["name"] ?? '', //Имя покупателя
             'Taxation' => $tax,     //Налогооблажение
-            'CustomerKey'=>$botUser->id
+            'CustomerKey' => $botUser->id
         ];
 
         if ($isRecurrent)
@@ -417,18 +420,18 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         $payment_id = $tinkoff->payment_id ?? null;
 
-      /*  $keyboard = [
-            [
-                ["text" => "Проверить оплату СБП", "callback_data" => "/test_invoice_sbp_tinkoff_automatic $payment_id $slug->id"]
-            ],
-        ];*/
+        /*  $keyboard = [
+              [
+                  ["text" => "Проверить оплату СБП", "callback_data" => "/test_invoice_sbp_tinkoff_automatic $payment_id $slug->id"]
+              ],
+          ];*/
 
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage(
                 $botUser->telegram_chat_id,
                 "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>" . ($data["phone"] ?? '') . "</code>. Сумма платежа " . $data["amount"] . " руб."
-             //   $keyboard
+            //   $keyboard
             );
     }
 
