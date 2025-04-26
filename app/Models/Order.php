@@ -85,6 +85,7 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+
     public function geo(): BelongsTo
     {
         return $this->belongsTo(Geo::class);

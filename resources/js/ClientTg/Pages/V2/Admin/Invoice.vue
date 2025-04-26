@@ -6,6 +6,13 @@
         <h6><i class="fa-solid fa-money-bill-transfer"></i> Генерация ссылок на оплату</h6>
         <form v-on:submit.prevent="submit">
 
+            <div class="form-check form-switch">
+                <input class="form-check-input"
+                       v-model="linkForm.is_recurrent"
+                       type="checkbox" role="switch" id="is-recurent-payment">
+                <label class="form-check-label" for="is-recurent-payment">Является рекурентным</label>
+            </div>
+
             <div class="form-floating mb-2">
                 <input type="number"
                        min="0"
@@ -85,6 +92,7 @@ export default {
                 name: null,
                 email: null,
                 amount: 0,
+                is_recurrent:false,
                 description: "Оплата заказа"
             }
         }
@@ -119,6 +127,7 @@ export default {
                     this.linkForm.name = null
                     this.linkForm.phone = null
                     this.linkForm.email = null
+                    this.linkForm.recurrent = false
                     this.linkForm.description = "Оплата заказа"
                     this.linkForm.amount = 0
 

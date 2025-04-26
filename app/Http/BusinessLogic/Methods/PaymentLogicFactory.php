@@ -28,7 +28,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PaymentLogicFactory extends BaseLogicFactory
 {
 
-    public function setBotBalance($amount){
+    public function setBotBalance($amount)
+    {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(400, "Критерии функции не выполнены!");
 
@@ -46,7 +47,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendMessage(
                 $this->botUser->telegram_chat_id,
-                "Баланс бота <b>".$this->bot->bot_domain."</b> успешно пополнен на <b>$amount руб</b>. И составляет теперь <b>".$this->bot->balance." руб.</b>");
+                "Баланс бота <b>" . $this->bot->bot_domain . "</b> успешно пополнен на <b>$amount руб</b>. И составляет теперь <b>" . $this->bot->balance . " руб.</b>");
 
     }
 
@@ -57,45 +58,79 @@ class PaymentLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Бот не найден!");
         }
 
-
-        Log::info("test sbp=>".print_r($data, true));
-        if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] !== 'CONFIRMED') {
-            throw new HttpException(400, "Ошибка обработки данных!");
-        }
-
         $orderId = $data['OrderId'] ?? null;
         $amount = isset($data['Amount']) && is_numeric($data['Amount']) ? $data['Amount'] / 100 : 0;
-        $customerKey = $data['CustomerKey'] ?? null;
 
-        if (!$orderId || $amount <= 0) {
-            throw new HttpException(400, "Некорректные данные заказа!");
-        }
+        $callbackChannel = $this->bot->order_channel ?? $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
+        $thread = $this->bot->topics["orders"] ?? null;
+
+        $customerKey = $data['CustomerKey'] ?? null;
+        $rebillId  = $data['RebillId'] ?? null;
+
+        Log::info("test sbp=>" . print_r($data, true));
 
         $order = Order::query()
             ->where("id", $orderId)
             ->first();
 
         if (!$order) {
-            throw new HttpException(404, "Заказ не найден!");
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $callbackChannel,
+                    "⚠Заказ #$orderId не найден в системе!",
+                    $thread
+                );
+            return "ok";
+        }
+
+        if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] !== 'CONFIRMED') {
+
+            if (($data["Status"] ?? 'REFUNDED') == 'REFUNDED') {
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMessage(
+                        $callbackChannel,
+                        "⛔Оплата по заказу #$orderId в размере $amount руб. НЕ прошла!",
+                        $thread
+                    );
+                sleep(1);
+                if (!is_null($customerKey)) {
+                    $botUser = BotUser::query()
+                        ->where("id",$customerKey)
+                        ->first();
+
+                    if (!is_null($botUser))
+                        BotMethods::bot()
+                            ->whereBot($this->bot)
+                            ->sendMessage(
+                                $botUser->telegram_chat_id,
+                                "⛔Оплата по заказу #$orderId в размере $amount руб. НЕ прошла!"
+                            );
+
+
+                }
+
+            }
+
+
+            throw new HttpException(400, "Ошибка обработки данных!");
+        }
+
+
+        if (!$orderId || $amount <= 0) {
+            throw new HttpException(400, "Некорректные данные заказа!");
         }
 
         $order->payed_at = Carbon::now();
         $order->status = OrderStatusEnum::Completed->value;
         $order->save();
 
-        $callbackChannel = $this->bot->order_channel ?? $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
-
-        if (!$callbackChannel) {
-            return response()->json(['message' => 'Error processing payment'], 400);
-        }
-
-        $thread = $this->bot->topics["orders"] ?? null;
-
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage(
                 $callbackChannel,
-                "Оплата клиента по заказу #$order->id в размере $amount (в заказе $order->summary_price) руб. прошла успешно!",
+                "✅Оплата клиента по заказу #$order->id в размере $amount (в заказе $order->summary_price) руб. прошла успешно!",
                 $thread
             );
 
@@ -105,11 +140,16 @@ class PaymentLogicFactory extends BaseLogicFactory
                 ->first();
 
             if (!is_null($clientBotUser)) {
+                $config = $clientBotUser->config ?? [];
+                $config["tinkoff_rebill_id"] = $rebillId;
+                $clientBotUser->config = $config;
+                $clientBotUser->save();
+
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage(
                         $clientBotUser->telegram_chat_id,
-                        "Ваша оплата в размере $amount руб. прошла успешно!"
+                        "✅Ваша оплата в размере $amount руб. прошла успешно!"
                     );
             }
         }
@@ -315,6 +355,7 @@ class PaymentLogicFactory extends BaseLogicFactory
         $botUser = $this->botUser;
         $slug = $this->slug;
         $currency = "RUB";
+        $isRecurrent = ($data["recurrent"] ?? false) == "true";
 
         $config = $slug->config ?? null;
 
@@ -339,16 +380,33 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
+        $order = Order::query()
+            ->create([
+                'bot_id' => $this->bot->id,
+                'customer_id' => $this->botUser->id,
+                'product_count' => 1,
+                'summary_price' => $data["amount"],
+                'delivery_note' => $data["description"],
+                'receiver_name' => $data["name"],
+                'receiver_phone' => $data["phone"],
+                'status' => OrderStatusEnum::NewOrder->value,
+                'order_type' => OrderTypeEnum::InternalStore->value,
+            ]);
+
         $payment = [
-            'OrderId' => $data["order_id"] ?? Str::uuid(),        //Ваш идентификатор платежа
+            'OrderId' => $order->id ?? Str::uuid(),        //Ваш идентификатор платежа
             'Amount' => $data["amount"],           //сумма всего платежа в рублях
             'Language' => 'ru',            //язык - используется для локализации страницы оплаты
             'Description' => $data["description"],   //описание платежа
             'Email' => $data["email"] ?? '',//email покупателя
             'Phone' => $data["phone"] ?? '',   //телефон покупателя
             'Name' => $data["name"] ?? '', //Имя покупателя
-            'Taxation' => $tax     //Налогооблажение
+            'Taxation' => $tax,     //Налогооблажение
+            'CustomerKey'=>$this->botUser->id
         ];
+
+        if ($isRecurrent)
+            $payment["Recurrent"] = 'Y';
 
 
 //Получение url для оплаты
@@ -503,7 +561,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
                 $bot->order_channel,
-                "<b>Внимание! № заказа: $order->id\nЕсли информация по оплате не поступит в ближашие 5 минут, то...</b>\nВам необходимо подтвердить факт платежа клиента. Сумма платежа <b>" . ($order->summary_price + $deliveryPrice) . " руб. ($order->summary_price руб - цена заказа и $deliveryPrice руб - цена доставки)</b>. Это можно сделать несколькими способами:",
+                "<b>⚠Внимание заказ СБП! № заказа: $order->id\n</b>\nОжидаемая сумма платежа <b>" . ($order->summary_price + $deliveryPrice) . " руб. ($order->summary_price руб - цена заказа и $deliveryPrice руб - цена доставки)</b>. Клиент еще не оплатил.",
                 $keyboard
             );
     }

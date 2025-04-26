@@ -51,6 +51,8 @@ class BotUser extends Model
         'blocked_at',
         'blocked_message',
 
+        'config'
+
     ];
 
     /**
@@ -71,6 +73,7 @@ class BotUser extends Model
         'in_dialog_mode' => 'boolean',
         'sex' => 'boolean',
         'user_in_location' => 'boolean',
+        'config' => 'array',
     ];
 
     protected $with = ["cashBack","manager","fields"];
