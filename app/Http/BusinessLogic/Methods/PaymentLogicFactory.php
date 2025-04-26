@@ -152,7 +152,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                     ->whereBot($this->bot)
                     ->sendMessage(
                         $clientBotUser->telegram_chat_id,
-                        "✅Ваша СБП-оплата в размере $amount руб. прошла успешно!"
+                        "✅Ваша СБП-оплата в размере $amount руб. прошла успешно (заказ №$orderId)!"
                     );
             }
         }
@@ -430,7 +430,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendMessage(
                 $botUser->telegram_chat_id,
-                "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>" . ($data["phone"] ?? '') . "</code>. Сумма платежа " . $data["amount"] . " руб."
+                "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>" . ($data["phone"] ?? '') . "</code>. Сумма платежа " . $data["amount"] . " руб. (Зака №$order->id)"
             //   $keyboard
             );
     }
