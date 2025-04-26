@@ -402,7 +402,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             'Phone' => $data["phone"] ?? '',   //телефон покупателя
             'Name' => $data["name"] ?? '', //Имя покупателя
             'Taxation' => $tax,     //Налогооблажение
-            'CustomerKey'=>$this->botUser->id
+            'CustomerKey'=>$botUser->id
         ];
 
         if ($isRecurrent)
@@ -417,18 +417,18 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         $payment_id = $tinkoff->payment_id ?? null;
 
-        $keyboard = [
+      /*  $keyboard = [
             [
                 ["text" => "Проверить оплату СБП", "callback_data" => "/test_invoice_sbp_tinkoff_automatic $payment_id $slug->id"]
             ],
-        ];
+        ];*/
 
         BotMethods::bot()
             ->whereBot($this->bot)
-            ->sendInlineKeyboard(
+            ->sendMessage(
                 $botUser->telegram_chat_id,
-                "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>" . ($data["phone"] ?? '') . "</code>. Сумма платежа " . $data["amount"] . " руб.",
-                $keyboard
+                "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>" . ($data["phone"] ?? '') . "</code>. Сумма платежа " . $data["amount"] . " руб."
+             //   $keyboard
             );
     }
 
