@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class BitrixService
 {
@@ -309,8 +310,13 @@ class BitrixService
         if (is_null($this->webhookUrl) || is_null($method))
             return [];
 
-        $response = Http::post("{$this->webhookUrl}{$method}.json", $params);
+        try {
+            $response = Http::post("{$this->webhookUrl}{$method}.json", $params);
 
-        return $response->json();
+            return $response->json();
+        }catch (\Exception $e){
+            Log::info($e);
+        }
+
     }
 }
