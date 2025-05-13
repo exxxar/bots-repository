@@ -251,18 +251,18 @@ class Basket
             );
 
         $userProfileLink = "https://t.me/" . ($this->bot->bot_domain) . "?start=" .
-                base64_encode("003" . $botUserTelegramChatId);
+            base64_encode("003" . $botUserTelegramChatId);
 
         $channel = $this->bot->order_channel ?? $this->bot->main_channel ?? null;
 
         $userLink = "<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n";
         if ($hasPhoto)
-        $tmpMessage = "#оплатачеком\n" .
-            ($whenReady ? "🟢" : "🟡") . "Заказ №:" . ($order->id ?? '-') . "\n" .
-            "Идентификатор клиента: " . ($botUserTelegramChatId ?? '-') . "\n" .
-            "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
-            "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
-            "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано');
+            $tmpMessage = "#оплатачеком\n" .
+                ($whenReady ? "🟢" : "🟡") . "Заказ №:" . ($order->id ?? '-') . "\n" .
+                "Идентификатор клиента: " . ($botUserTelegramChatId ?? '-') . "\n" .
+                "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
+                "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
+                "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано');
 
         sleep(1);
         if ($hasPhoto)
@@ -273,9 +273,9 @@ class Basket
                     $tmpMessage,
                     InputFile::create(storage_path() . "/app/$imageName"),
                     [
-                     /*   [
-                            ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                        ],*/
+                        /*   [
+                               ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                           ],*/
                         [
                             ["text" => "✉Работа с пользователем", "url" => $userProfileLink]
                         ],
@@ -287,9 +287,9 @@ class Basket
                 ->whereBot($this->bot)
                 ->sendInlineKeyboard($channel, "#оплатаналичными\n$message\n$userLink",
                     [
-                      /*  [
-                            ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                        ],*/
+                        /*  [
+                              ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                          ],*/
                         [
                             ["text" => "✉Работа с пользователем", "url" => $userProfileLink]
                         ],
@@ -589,7 +589,7 @@ class Basket
                     ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
                     ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
                     ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
-                    (($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight)*1000,
+                    (($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight) * 1000,
 
                 );
 
@@ -597,10 +597,10 @@ class Basket
                     "title" => $product->title,
                     "count" => $item->count,
                     "price" => $price,
-                    "width" =>   ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
+                    "width" => ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
                     "height" => ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
                     "length" => ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
-                    "weight" =>  ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
+                    "weight" => ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
                 ];
 
                 $ids[] = $product->id;
@@ -636,10 +636,10 @@ class Basket
                         "title" => "Коллекция `" . $collection->title . "`: " . $product->title,
                         "count" => 1,
                         "price" => $product->current_price ?? 0,
-                        "width" =>   ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
+                        "width" => ($package->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
                         "height" => ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
                         "length" => ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
-                        "weight" =>  ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
+                        "weight" => ($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight,
                     ];
 
                     $price += $product->current_price ?? 0;
@@ -708,14 +708,15 @@ class Basket
             ->setBotUser($this->botUser)
             ->createDeal();
 
-         BusinessLogic::bitrix()
-            ->setBot($this->bot)
-             ->setBotUser($this->botUser)
-            ->addProducts([
-                "lead_id"=>$bitrixLeadId,
-                "products"=>$package,
-                "delivery"=>$deliverySum
-            ]);
+        if (!is_null($bitrixLeadId))
+            BusinessLogic::bitrix()
+                ->setBot($this->bot)
+                ->setBotUser($this->botUser)
+                ->addProducts([
+                    "lead_id" => $bitrixLeadId,
+                    "products" => $package,
+                    "delivery" => $deliverySum
+                ]);
 
 
         BusinessLogic::review()
