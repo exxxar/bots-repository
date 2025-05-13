@@ -284,7 +284,7 @@ class BitrixLogicFactory extends BaseLogicFactory
             $contactData['EMAIL'] = [['VALUE' => $this->botUser->email, 'VALUE_TYPE' => 'WORK']];
         }
 
-        return $bitrix->upsertContact($contactData)["result"];
+        return $bitrix->upsertContact($contactData)["result"] ?? null;
 
 
     }

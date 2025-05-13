@@ -81,7 +81,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                     "⚠Заказ #$orderId не найден в системе!",
                     $thread
                 );
-            return "ok";
+            return "OK";
         }
 
         if (is_null($customerKey))
@@ -117,12 +117,12 @@ class PaymentLogicFactory extends BaseLogicFactory
             }
 
 
-            return "ok";
+            return "OK";
         }
 
 
         if (!$orderId || $amount <= 0) {
-            return "ok";
+            return "OK";
         }
 
         $order->payed_at = Carbon::now();
@@ -157,7 +157,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             }
         }
 
-        return "ok";
+        return "OK";
     }
 
     /**
