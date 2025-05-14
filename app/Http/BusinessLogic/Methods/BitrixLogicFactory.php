@@ -310,10 +310,10 @@ class BitrixLogicFactory extends BaseLogicFactory
             "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
             "NAME" => $this->botUser->name ?? $this->botUser->telegram_chat_id,
             "LAST_NAME" => $this->botUser->username ?? $this->botUser->telegram_chat_id,
-            "ADDRESS" => $this->botUser->address ?? '',
+            /*"ADDRESS" => $this->botUser->address ?? '',
             "ADDRESS_CITY" => $this->botUser->city ?? '',
             "ADDRESS_COUNTRY" => $this->botUser->country ?? '',
-            "BIRTHDATE" => $this->botUser->birthday ?? '',
+            "BIRTHDATE" => $this->botUser->birthday ?? '',*/
 
 
             "PHONE" => [

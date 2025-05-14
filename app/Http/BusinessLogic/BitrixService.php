@@ -296,6 +296,7 @@ class BitrixService
 
         $existingContact = $this->findContactByPhone($phone);
 
+        Log::info("find contact=>".print_r($existingContact, true));
         if (!empty($existingContact['result'])) {
             $contactId = $existingContact['result'][0]['ID'];
             return $this->updateContact($contactId, $contactData);
