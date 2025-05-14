@@ -3,7 +3,7 @@
 namespace App\Classes;
 
 use App\Models\Bot;
-use App\Models\BotTextContent;
+
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 

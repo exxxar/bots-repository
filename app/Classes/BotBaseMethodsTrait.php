@@ -447,6 +447,12 @@ trait BotBaseMethodsTrait
                 $e->getLine());
 
             if (preg_match('/chat not found/i',  $e->getMessage())) {
+                $this->bot->sendMessage([
+                    "chat_id" =>   $this->currentBotUser()->telegram_chat_id,
+                    "text" => "Ошибочка... сообщение не было доставлено!",
+                    "parse_mode" => "HTML"
+                ]);
+
                 Log::error("Chat not found: ".$tmp["chat_id"]);
                 return;
             }
