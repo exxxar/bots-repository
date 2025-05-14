@@ -354,6 +354,8 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         $result = $bitrix->createDeal($tmp);
 
+        Log::info("test deal bitrix=>".print_r($result, true));
+
         return $result["result"] ?? null;
     }
 
@@ -416,7 +418,7 @@ class BitrixLogicFactory extends BaseLogicFactory
                     'fields' => (object)$tmp
                 ]);
 
-
+            Log::info("test create lead bitrix=>".print_r($result, true));
         } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             Log::info($exception->getLine());
