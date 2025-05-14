@@ -354,6 +354,7 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         $result = $bitrix->createDeal($tmp);
 
+        Log::info("test deal bitrix data=>".print_r($tmp, true));
         Log::info("test deal bitrix=>".print_r($result, true));
 
         return $result["result"] ?? null;
