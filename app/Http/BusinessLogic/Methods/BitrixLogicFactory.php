@@ -174,6 +174,9 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         $url = $data["url"];
 
+        if (is_null($url ?? null))
+            return 400;
+
         try {
             $result = Http::asJson()
                 ->post("$url/crm.lead.add.json", [
@@ -378,6 +381,9 @@ class BitrixLogicFactory extends BaseLogicFactory
 
 
         $url = $connection->url ?? null;
+
+        if (is_null($url))
+            return null;
 
         $name = mb_split(" ", $this->botUser->name);
 

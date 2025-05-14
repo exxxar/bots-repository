@@ -517,8 +517,8 @@ class CDEKLogicFactory extends BaseLogicFactory
             "number" => "bot" . ($orderId ?? Str::uuid()->toString()),
             "tariff_code" => $tariffCode,
             "comment" => $data->comment ?? '-',
-            "shipment_point" => $from->office->code,
-            "delivery_point" => $to->office->code,
+            "shipment_point" => $from->office->code ?? '-',
+            "delivery_point" => $to->office->code ?? '-',
             "delivery_recipient_cost" => [
                 "value" => $tariff
             ],
