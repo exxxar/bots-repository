@@ -447,13 +447,11 @@ trait BotBaseMethodsTrait
                 $e->getLine());
 
             if (preg_match('/chat not found/i',  $e->getMessage())) {
-                $this->bot->sendMessage([
+               /* $this->bot->sendMessage([
                     "chat_id" =>     \App\Facades\BotManager::bot()->getCurrentChatId(),
                     "text" => "Ошибочка... сообщение не было доставлено!",
                     "parse_mode" => "HTML"
-                ]);
-
-
+                ]);*/
 
                 Log::error("Chat not found: ".$tmp["chat_id"]);
                 return;
