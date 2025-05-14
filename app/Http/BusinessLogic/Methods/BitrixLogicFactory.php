@@ -284,7 +284,10 @@ class BitrixLogicFactory extends BaseLogicFactory
             $contactData['EMAIL'] = [['VALUE' => $this->botUser->email, 'VALUE_TYPE' => 'WORK']];
         }
 
-        return $bitrix->upsertContact($contactData)["result"] ?? null;
+        $tmp = $bitrix->upsertContact($contactData)["result"] ?? null;
+        Log::info("contact bitrix data=>".print_r($contactData, true));
+        Log::info("contact bitrix=>".print_r($tmp, true));
+        return $tmp;
 
 
     }
@@ -307,17 +310,12 @@ class BitrixLogicFactory extends BaseLogicFactory
             "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
             "NAME" => $this->botUser->name ?? $this->botUser->telegram_chat_id,
             "LAST_NAME" => $this->botUser->username ?? $this->botUser->telegram_chat_id,
-            "ADDRESS" => $this->botUser->address ?? null,
-            "ADDRESS_CITY" => $this->botUser->city ?? null,
-            "ADDRESS_COUNTRY" => $this->botUser->country ?? null,
-            "BIRTHDATE" => $this->botUser->birthday ?? null,
+            "ADDRESS" => $this->botUser->address ?? '',
+            "ADDRESS_CITY" => $this->botUser->city ?? '',
+            "ADDRESS_COUNTRY" => $this->botUser->country ?? '',
+            "BIRTHDATE" => $this->botUser->birthday ?? '',
 
-            "EMAIL" => [
-                (object)[
-                    "VALUE" => $this->botUser->email ?? null,
-                    "VALUE_TYPE" => "CLIENT"
-                ]
-            ],
+
             "PHONE" => [
                 (object)[
                     "VALUE" => $this->botUser->phone ?? null,
@@ -338,6 +336,16 @@ class BitrixLogicFactory extends BaseLogicFactory
             ],
         ];
 
+
+        if (!is_null($this->botUser->email ?? null))
+            $tmp["EMAIL"] = [
+                (object)[
+                    "VALUE" => $this->botUser->email ?? null,
+                    "VALUE_TYPE" => "CLIENT"
+                ]
+            ];
+
+
         if (!is_null($bitrixContactId))
             $tmp["CONTACT_ID"] = [$bitrixContactId];
 
@@ -354,8 +362,8 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         $result = $bitrix->createDeal($tmp);
 
-        Log::info("test deal bitrix data=>".print_r($tmp, true));
-        Log::info("test deal bitrix=>".print_r($result, true));
+        Log::info("test deal bitrix data=>" . print_r($tmp, true));
+        Log::info("test deal bitrix=>" . print_r($result, true));
 
         return $result["result"] ?? null;
     }
@@ -419,7 +427,7 @@ class BitrixLogicFactory extends BaseLogicFactory
                     'fields' => (object)$tmp
                 ]);
 
-            Log::info("test create lead bitrix=>".print_r($result, true));
+            Log::info("test create lead bitrix=>" . print_r($result, true));
         } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             Log::info($exception->getLine());

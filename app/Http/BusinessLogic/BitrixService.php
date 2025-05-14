@@ -183,13 +183,13 @@ class BitrixService
     // Создание лида
     public function createLead(array $leadData)
     {
-        return $this->request('crm.lead.add', ['fields' => $leadData]);
+        return $this->request('crm.lead.add', ['FIELDS' => $leadData]);
     }
 
     // Создание лида
     public function createDeal(array $leadData)
     {
-        return $this->request('crm.deal.add', ['fields' => $leadData]);
+        return $this->request('crm.deal.add', ['FIELDS' => $leadData]);
     }
 
 
