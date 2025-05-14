@@ -1088,8 +1088,7 @@ trait BotBaseMethodsTrait
             $data = $this->bot->sendMessage($tmp);
             sleep(0.4);
         } catch (\Exception $e) {
-            Log::info("error in extractedMessage" . $e);
-            //$this->sendMessageOnCrash($tmp, "sendMessage");
+            $this->sendMessageOnCrash($tmp, "sendMessage");
         }
         return $this;
     }
