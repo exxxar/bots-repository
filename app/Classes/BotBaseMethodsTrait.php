@@ -446,6 +446,11 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
 
+            if (preg_match('/chat not found/i',  $e->getMessage())) {
+                $this->reply("Ошибочка... в данный момент мы не можем принять ваше сообщение!");
+                return;
+            }
+
             try {
                 $this->bot->sendMessage([
                     "chat_id" => $tmp["chat_id"],
