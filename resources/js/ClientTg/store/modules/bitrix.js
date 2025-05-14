@@ -33,6 +33,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async removeBitrixItem(context, payload = {id:null}) {
+        let link = `${BASE_BITRIX_LINK}/remove/${payload.id}`
+
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async storeBitrix(context, payload) {
         let link = `${BASE_BITRIX_LINK}/store`
 

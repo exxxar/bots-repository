@@ -285,8 +285,8 @@ class BitrixLogicFactory extends BaseLogicFactory
         }
 
         $tmp = $bitrix->upsertContact($contactData)["result"] ?? null;
-        Log::info("contact bitrix data=>".print_r($contactData, true));
-        Log::info("contact bitrix=>".print_r($tmp, true));
+        Log::info("contact bitrix data=>" . print_r($contactData, true));
+        Log::info("contact bitrix=>" . print_r($tmp, true));
         return $tmp;
 
 
@@ -310,10 +310,10 @@ class BitrixLogicFactory extends BaseLogicFactory
             "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
             "NAME" => $this->botUser->name ?? $this->botUser->telegram_chat_id,
             "LAST_NAME" => $this->botUser->username ?? $this->botUser->telegram_chat_id,
-            /*"ADDRESS" => $this->botUser->address ?? '',
+            "ADDRESS" => $this->botUser->address ?? '',
             "ADDRESS_CITY" => $this->botUser->city ?? '',
             "ADDRESS_COUNTRY" => $this->botUser->country ?? '',
-            "BIRTHDATE" => $this->botUser->birthday ?? '',*/
+            "BIRTHDATE" => $this->botUser->birthday ?? '',
 
 
             "PHONE" => [
@@ -362,8 +362,6 @@ class BitrixLogicFactory extends BaseLogicFactory
 
         $result = $bitrix->createDeal($tmp);
 
-        Log::info("test deal bitrix data=>" . print_r($tmp, true));
-        Log::info("test deal bitrix=>" . print_r($result, true));
 
         return $result["result"] ?? null;
     }
@@ -427,7 +425,7 @@ class BitrixLogicFactory extends BaseLogicFactory
                     'fields' => (object)$tmp
                 ]);
 
-            Log::info("test create lead bitrix=>" . print_r($result, true));
+
         } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             Log::info($exception->getLine());
@@ -435,5 +433,21 @@ class BitrixLogicFactory extends BaseLogicFactory
 
 
         return $result["result"] ?? null;
+    }
+
+    public function removeConnectionItem($id): void
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $connection = Bitrix::query()
+            ->where("id", $id)
+            ->first();
+
+        if (!is_null($connection))
+
+            $connection->delete();
+
+
     }
 }

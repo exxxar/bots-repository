@@ -395,6 +395,7 @@ Route::prefix("bot-client")
                 Route::post('/load-connections', "index");
                 Route::post('/store', "store");
                 Route::post('/check', "check");
+                Route::delete('/remove/{id}', "remove");
             });
 
         Route::prefix("cdek")

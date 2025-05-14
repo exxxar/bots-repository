@@ -251,7 +251,7 @@ export default {
             )
         },
         nextStep() {
-            this.$emit("change-tab", 2)
+            this.$emit("change-tab", 3)
         }
     }
 }

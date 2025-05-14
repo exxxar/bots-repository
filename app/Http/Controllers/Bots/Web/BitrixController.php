@@ -57,5 +57,15 @@ class BitrixController extends Controller
         return response()->noContent($status ?? 400);
     }
 
+    public function remove(Request $request, $id): Response
+    {
+        BusinessLogic::bitrix()
+            ->setBotUser($request->botUser ?? null)
+            ->setBot($request->bot ?? null)
+            ->removeConnectionItem($id);
+
+        return response()->noContent();
+    }
+
 
 }
