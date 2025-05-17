@@ -1944,7 +1944,7 @@ export default  {
                         prefetch: true,
                         prefetchOn: 'mouseover',
                         cacheLength: 100,
-                        scroll: true,
+                        scroll: false,
                         blacklist: '.default-link',
                         forms: 'contactForm',
                         onStart: {
@@ -1972,9 +1972,9 @@ export default  {
                             }, 150);
                         }
                     };
-                    var smoothState = $('#page').smoothState(options).data('smoothState');
+                    /*var smoothState = $('#page').smoothState(options).data('smoothState');
                     if (smoothState)
-                        smoothState.clear();
+                        smoothState.clear();*/
                 });
             }
 

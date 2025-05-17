@@ -259,7 +259,11 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tariffCode = $cdekSettings->tariff_code ?? null;
 
-        $tmpFrom = (object)($cdekSettings->office["location"]);
+        $tmpFrom = (object)($cdekSettings->office["location"] ?? null);
+
+        if (is_null($tmpFrom))
+            throw new HttpException(404, "Не указан адрес отправления!");
+
         $from = [
             "country_code" => "RU",
             "code" => $cdekSettings->city["code"],
@@ -293,10 +297,10 @@ class CDEKLogicFactory extends BaseLogicFactory
         ];
 
         foreach ($basket as $item) {
-            $item = $item->product;
+            $item = (object)($item->product);
 
             $dimension = !is_null($item->dimension ?? null) ?
-                (object)$item->dimension ?? null : null;
+                (object)($item->dimension ?? null) : null;
 
             $packages[] = [
                 'number' => $item->id,

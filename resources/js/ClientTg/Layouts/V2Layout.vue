@@ -351,9 +351,9 @@ export default {
 
 
             this.$preloader.show();
-            this.$nextTick(() => {
+          /*  this.$nextTick(() => {
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
-            })
+            })*/
         },
     },
     computed: {

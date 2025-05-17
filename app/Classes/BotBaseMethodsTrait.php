@@ -45,7 +45,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -140,7 +140,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -168,7 +168,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -199,7 +199,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -231,7 +231,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -258,7 +258,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -287,7 +287,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -323,7 +323,7 @@ trait BotBaseMethodsTrait
                 $e->getLine());
         }
 
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -351,7 +351,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -382,7 +382,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -417,6 +417,9 @@ trait BotBaseMethodsTrait
         unset($tmp['reply_markup']);
         unset($tmp['message_thread_id']);
 
+        if (is_null($tmp["chat_id"]))
+            return;
+
         if (isset($tmp["message"])) {
             if (is_null($tmp["message"] ?? null))
                 return;
@@ -442,31 +445,34 @@ trait BotBaseMethodsTrait
             $this->bot->{$func}($tmp);
         } catch (\Exception $e) {
 
-            Log::error("[1]$func=>" . $e->getMessage() . " " .
+            Log::error("[if error in sending]$func=>" . $e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
 
-            if (preg_match('/chat not found/i',  $e->getMessage())) {
-               /* $this->bot->sendMessage([
-                    "chat_id" =>     \App\Facades\BotManager::bot()->getCurrentChatId(),
-                    "text" => "Ошибочка... сообщение не было доставлено!",
-                    "parse_mode" => "HTML"
-                ]);*/
 
+             if (preg_match('/Forbidden/i',  $e->getMessage())) {
+                 Log::error("Forbidden: ".$tmp["chat_id"]);
+                 return;
+             }
+
+            if (preg_match('/Unauthorized/i',  $e->getMessage())) {
+                Log::error("Unauthorized: ".$tmp["chat_id"]);
+                return;
+            }
+
+            if (preg_match('/chat not found/i',  $e->getMessage())) {
                 Log::error("Chat not found: ".$tmp["chat_id"]);
                 return;
             }
 
-            try {
-                $this->bot->sendMessage([
-                    "chat_id" => $tmp["chat_id"],
-                    "text" => $tmp["caption"] ?? "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
-                    "parse_mode" => "HTML"
-                ]);
-            } catch (\Exception $exception) {
-                Log::error("[2]$func=>" . $exception->getMessage() . " " .
-                    $exception->getFile() . " " .
-                    $exception->getLine());
+            if (preg_match('/Too Many Requests: retry after/i',  $e->getMessage())) {
+                Log::error("Too Many Requests: ".$tmp["chat_id"]);
+                return;
+            }
+
+            if (preg_match('/Bad Request: chat_id is empty/i',  $e->getMessage())) {
+                Log::error("Bad Request: chat_id is empty");
+                return;
             }
 
 
@@ -552,7 +558,7 @@ trait BotBaseMethodsTrait
 
             Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -587,7 +593,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -620,7 +626,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -654,7 +660,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -688,7 +694,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -737,7 +743,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
     }
 
@@ -813,7 +819,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -860,7 +866,7 @@ trait BotBaseMethodsTrait
 
             $tmp["caption"] = "$subMessage...";
 
-            sleep(0.4);
+            sleep(0.5);
             $data = $this->bot->sendPhoto($tmp);
 
             return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
@@ -880,7 +886,7 @@ trait BotBaseMethodsTrait
                 $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
                 $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -918,7 +924,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -939,7 +945,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -963,7 +969,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -990,7 +996,7 @@ trait BotBaseMethodsTrait
         } catch (\Exception $e) {
             Log::error($e);
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -1012,7 +1018,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(0.4);
+        sleep(0.5);
         return $this;
 
     }
@@ -1062,17 +1068,16 @@ trait BotBaseMethodsTrait
 
             $tmp["text"] = "$subMessage...";
 
-            sleep(0.4);
-            $data = $this->bot->sendMessage($tmp);
+            sleep(0.5);
 
-            /*SendMessageJob::dispatch(
-                botId: $this->getSelf()->id,
-                chatId: $chatId,
-                message: $subMessage,
-                messageThreadId: $messageThreadId,
-            )
-                ->delay(now()
-                    ->addSeconds($delay ?? 2));*/
+
+            try {
+                $data = $this->bot->sendMessage($tmp);
+            } catch (\Exception $e) {
+                $this->sendMessageOnCrash($tmp, "sendMessage");
+                return $this;
+
+            }
 
             return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId, $delay + 2);
 
@@ -1086,7 +1091,7 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendMessage($tmp);
-            sleep(0.4);
+            sleep(0.5);
         } catch (\Exception $e) {
             $this->sendMessageOnCrash($tmp, "sendMessage");
         }

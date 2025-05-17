@@ -48,10 +48,10 @@ use Telegram\Bot\FileUpload\InputFile;
 |
 */
 
-Route::get("/test", function (){
+/*Route::get("/test", function (){
    $bitrix = new \App\Http\BusinessLogic\BitrixService("");
    return $bitrix->getStatusList();
-});
+});*/
 Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);
 Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
 Route::view("/page-not-found", "error-node")->name("error-node");

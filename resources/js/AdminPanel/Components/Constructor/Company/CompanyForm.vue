@@ -635,6 +635,7 @@ import Location from "@/AdminPanel/Components/Constructor/Location/Location.vue"
             </div>
 
             <div class="col-12 ">
+
                 <div class="card mb-3">
                     <div class="card-header">
                         <h6>График работы</h6>

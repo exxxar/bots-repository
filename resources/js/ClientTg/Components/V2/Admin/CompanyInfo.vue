@@ -32,6 +32,19 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
     <form
         v-if="tab===0"
         v-on:submit.prevent="submitCompanyForm">
+
+        <div class="card mb-2">
+            <div class="card-body">
+                <button type="button"
+                        @click="goToEditor"
+                        class="w-100 btn btn-primary mb-2">Редактор магазина</button>
+                <button type="button"
+                        data-bs-dismiss="modal"
+                        @click="goToIntegrations"
+                        class="w-100 btn btn-primary">Интеграции</button>
+            </div>
+        </div>
+
         <div class="form-floating mb-2">
             <input type="text"
                    v-model="companyForm.title"
@@ -745,6 +758,31 @@ export default {
         this.companyForm.schedule = isCorrectSchedule(company.schedule) ? company.schedule : this.companyForm.schedule
     },
     methods: {
+        goToEditor(){
+            this.$router.push({ name: 'MenuV2' })
+
+            setTimeout(()=>{
+                const openModal = document.querySelector('.modal.show');
+                if (openModal) {
+                    const modalInstance = bootstrap.Modal.getInstance(openModal);
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                }
+
+                const modal = new bootstrap.Modal('#script-setting-editor', {})
+                modal.show();
+
+            }, 300)
+
+        },
+        goToIntegrations(){
+
+            this.$preloader.show();
+            this.$router.push({ name: 'IntegrationsV2' })
+
+
+        },
         getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },

@@ -970,7 +970,7 @@ class BotManager extends BotCore
     }
 
 
-    public function runPage(int $pageId, $bot = null, $botUser = null): bool
+    public function runPage($pageId, $bot = null, $botUser = null): bool
     {
 
         if (!is_null($bot)) {
