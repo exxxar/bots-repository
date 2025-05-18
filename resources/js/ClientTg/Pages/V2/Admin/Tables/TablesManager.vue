@@ -6,7 +6,6 @@ import TablesList from "@/ClientTg/Components/V2/Admin/Shop/Tables/TablesList.vu
     <div class="container py-2">
         <h6>Управление столиками</h6>
         <TablesList></TablesList>
-
     </div>
 
 

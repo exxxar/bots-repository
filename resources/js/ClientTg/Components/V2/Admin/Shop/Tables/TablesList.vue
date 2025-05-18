@@ -13,7 +13,9 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                     <div class="card-body">
                         <h6 class="text-center">Столик #{{ table.number || '-' }}</h6>
                         <div class="btn-group w-100">
+
                             <button type="button"
+                                    @click="changeTableWaiter(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
                                     class="btn btn-outline-primary "><i
                                 class="fa-solid fa-right-to-bracket"></i></button>
@@ -63,6 +65,28 @@ export default {
 
     },
     methods: {
+        changeTableWaiter(id) {
+            this.$store.dispatch("changeTableWaiter", {
+                dataObject: {
+                    table_id: id
+                }
+            }).then(resp => {
+
+                this.$notify({
+                    title: 'Смена официанта',
+                    text: "Официант успешно изменен",
+                    type: 'success'
+                })
+
+                this.table = resp.data
+            }).catch(() => {
+                this.$notify({
+                    title: 'Упс!',
+                    text: "Ошибка смены официанта",
+                    type: 'error'
+                })
+            })
+        },
         goToTable(tableId) {
             this.$router.push({name: 'TableV2', params: {tableId: tableId}})
         },

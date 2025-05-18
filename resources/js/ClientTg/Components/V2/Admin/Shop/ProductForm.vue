@@ -57,7 +57,10 @@
                           v-model="productForm.description"
                           style="min-height:200px;"
                           v-on:invalid="openInvalidTab(0)"
-                          placeholder="Напишите полное описание товара" id="description" required></textarea>
+                          placeholder="Напишите полное описание товара" id="description">
+
+                </textarea>
+
                                 <label for="description">Описание товара</label>
                             </div>
 
@@ -109,7 +112,7 @@
                                        v-model="productForm.dimension.height"
                                        class="form-control" id="vk-product-id"
                                        placeholder="Идентификатор">
-                                <label for="vk-product-id">Высота</label>
+                                <label for="vk-product-id">Высота, см</label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -117,7 +120,7 @@
                                        v-model="productForm.dimension.width"
                                        class="form-control" id="vk-product-id"
                                        placeholder="Идентификатор">
-                                <label for="vk-product-id">Ширина</label>
+                                <label for="vk-product-id">Ширина, см</label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -125,7 +128,7 @@
                                        v-model="productForm.dimension.length"
                                        class="form-control" id="vk-product-id"
                                        placeholder="Идентификатор">
-                                <label for="vk-product-id">Длина</label>
+                                <label for="vk-product-id">Длина, см</label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -133,7 +136,7 @@
                                        v-model="productForm.dimension.weight"
                                        class="form-control" id="vk-product-id"
                                        placeholder="Идентификатор">
-                                <label for="vk-product-id">Вес</label>
+                                <label for="vk-product-id">Вес, грамм</label>
                             </div>
                         </div>
                     </div>

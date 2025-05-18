@@ -121,7 +121,7 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                                     v-bind:class="{'text-secondary':basketItem.table_approved_at==null,
                                     'text-success':basketItem.table_approved_at!=null}"
                                     class="fa-solid fa-check-double"></i>
-                                    {{ basketItem.product.title }}
+                                    {{ basketItem.product?.title || '-'}}
                             </span>
 
                             <span class="fw-bold" style="font-size:10px;">{{
@@ -293,7 +293,7 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                                         v-for="(service, index) in services">
 
                                         <span>
-                                            {{ service.title }}
+                                            {{ service?.title||'-' }}
                                             <strong class="fw-bold">{{ service.price }} ₽</strong>
                                         </span>
                                         <a
