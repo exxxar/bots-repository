@@ -116,7 +116,8 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                             @click="selectBasketItem(basketItem)"
                             v-bind:class="{'bg-warning text-white fw-bold':(selected||[]).indexOf(basketItem.id)!=-1}"
                         >
-                            <span>
+                            <template v-if="basketItem.product">
+                             <span>
                                 <i
                                     v-bind:class="{'text-secondary':basketItem.table_approved_at==null,
                                     'text-success':basketItem.table_approved_at!=null}"
@@ -124,10 +125,12 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                                     {{ basketItem.product?.title || '-'}}
                             </span>
 
-                            <span class="fw-bold" style="font-size:10px;">{{
-                                    basketItem.count
-                                }}ед. x {{ basketItem.product.current_price }}₽
+                                <span class="fw-bold" style="font-size:10px;">{{
+                                        basketItem.count
+                                    }}ед. x {{ basketItem.product.current_price }}₽
                             = {{ basketItem.count * basketItem.product.current_price }}₽</span>
+                            </template>
+                            <span v-else>товар не найден</span>
                         </li>
 
                     </ul>

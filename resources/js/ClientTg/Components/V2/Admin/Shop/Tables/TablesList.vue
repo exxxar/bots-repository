@@ -78,7 +78,8 @@ export default {
                     type: 'success'
                 })
 
-                this.table = resp.data
+                this.goToTable(id)
+
             }).catch(() => {
                 this.$notify({
                     title: 'Упс!',
