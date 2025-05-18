@@ -304,10 +304,10 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             $packages[] = [
                 'number' => $item->id,
-                'weight' => (($dimension->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight) * 1000,
-                'length' => ($dimension->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
-                'width' => ($dimension->width ?? 0) == 0 ? $baseDimensions["width"] : $dimension->width,
-                'height' => ($dimension->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
+                'weight' => (($dimension->weight ?? 0) == 0 || !is_numeric($dimension->weight) ? $baseDimensions["weight"] : $dimension->weight ?? 0) * 1000,
+                'length' => ($dimension->length ?? 0) == 0 || !is_numeric($dimension->length) ? $baseDimensions["length"] : $dimension->length ?? 0,
+                'width' => ($dimension->width ?? 0) == 0 || !is_numeric($dimension->width) ? $baseDimensions["width"] : $dimension->width ?? 0,
+                'height' => ($dimension->height ?? 0) == 0 || !is_numeric($dimension->height) ? $baseDimensions["height"] : $dimension->height ?? 0,
             ];
         }
 

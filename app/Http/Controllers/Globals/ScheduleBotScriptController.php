@@ -148,7 +148,7 @@ class ScheduleBotScriptController extends SlugController
             ->where("key", "schedule")
             ->first()["value"] ?? null;
 
-        $day = Carbon::now("+3:00")->dayOfWeek - 1;
+        $day = min(0,Carbon::now("+3:00")->dayOfWeek - 1);
 
         $hour = Carbon::now("+3:00")->hour;
 
