@@ -8,7 +8,7 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
     <h6>Офис получения</h6>
     <SelectOffice v-on:callback="selectOffice"/>
 
-    <div class="alert alert-light my-2" v-if="calcTariffForm.tariff">
+    <div class="alert alert-light my-2" v-if="calcTariffForm.tariff&&needDeliveryPrice">
         <p class="mb-0">Доставка от <span
             class="fw-bold text-primary">{{ calcTariffForm.tariff.period_min || 0 }}</span> до <span
             class="fw-bold text-primary">{{ calcTariffForm.tariff.period_max || 0 }}</span> рабочих дней</p>
@@ -24,7 +24,7 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
 import {mapGetters} from "vuex";
 
 export default {
-
+    props:["needDeliveryPrice"],
     data() {
         return {
             calcTariffForm: {

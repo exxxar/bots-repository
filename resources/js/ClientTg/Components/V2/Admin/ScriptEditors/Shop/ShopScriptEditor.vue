@@ -15,7 +15,7 @@ import ShopForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopForm
             <a class="nav-link "
                v-bind:class="{'active fw-bold':tab===1}"
                @click="tab=1"
-               href="javascript:void(0)">Колесо фортуны</a>
+               href="javascript:void(0)">Интерактив в магазине</a>
         </li>
     </ul>
 

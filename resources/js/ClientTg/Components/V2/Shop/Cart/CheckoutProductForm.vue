@@ -84,6 +84,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                 <a href="javascript:void(0)"
                    v-bind:class="{'active':modelValue.payment_type === 2}"
                    @click="modelValue.payment_type = 2"
+                   v-if="settings.can_use_cash"
                    class="list-group-item list-group-item-action p-3"><i
                     class="fa-solid fa-file-invoice mr-2"></i>Переводом</a>
                 <a href="javascript:void(0)"
@@ -95,7 +96,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             </div>
         </template>
 
-        <template v-if="settings.need_bonuses_section||false">
+        <template v-if="(settings.need_bonuses_section||false)&&cashbackLimit>0">
             <h6 class="opacity-75">Бонусы <small>(нажми для использования)</small></h6>
 
             <div class="card my-3"
@@ -113,7 +114,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
 
         <h6 class="opacity-75 mb-3">Информация</h6>
 
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <input type="text"
                    v-model="modelValue.name"
                    class="form-control" id="modelValue-name"
@@ -121,7 +122,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             <label for="modelValue-name">Ф.И.О. <span class="fw-bold text-danger">*</span></label>
         </div>
 
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <input type="text"
                    v-mask="'+7(###)###-##-##'"
                    v-model="modelValue.phone"
@@ -133,7 +134,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
         <template v-if="!modelValue.need_pickup">
             <div
 
-                class="form-floating mb-3">
+                class="form-floating mb-2">
                 <input type="text"
                        v-model="modelValue.city"
                        class="form-control" id="modelValue-city"
@@ -142,7 +143,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             </div>
 
             <div
-                class="form-floating mb-3">
+                class="form-floating mb-2">
                 <input type="text"
                        v-model="modelValue.street"
                        class="form-control" id="modelValue-street"
@@ -152,7 +153,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
 
 
             <div
-                class="form-floating mb-3">
+                class="form-floating mb-2">
                 <input type="text"
                        v-model="modelValue.building"
                        class="form-control" id="modelValue-building"
@@ -161,7 +162,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             </div>
 
             <div
-                class="form-floating mb-3">
+                class="form-floating mb-2">
                 <input type="text"
                        v-model="modelValue.flat_number"
                        class="form-control" id="modelValue-flat-number"
@@ -170,7 +171,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             </div>
 
             <div
-                class="form-floating mb-3">
+                class="form-floating mb-2">
                 <input type="text"
                        v-model="modelValue.entrance_number"
                        class="form-control" id="modelValue-entrance-number"
@@ -179,7 +180,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             </div>
 
             <div
-                class="form-floating mb-3">
+                class="form-floating mb-2">
                 <input type="text"
                        v-model="modelValue.floor_number"
                        class="form-control" id="modelValue-floor-number"
@@ -462,7 +463,7 @@ export default {
         'modelValue.need_pickup': {
             handler: function (newValue) {
 
-                this.delivery_price_request_step = (this.modelValue.need_pickup === true ? 1 : 0)||(this.settings.need_automatic_delivery_request ? 0 : 1)
+                this.delivery_price_request_step = (this.modelValue.need_pickup === true ? 1 : 0) || (this.settings.need_automatic_delivery_request ? 0 : 1)
 
             },
             deep: true
@@ -548,7 +549,7 @@ export default {
         if (this.modelValue.disabilities.length > 0)
             this.modelValue.has_disability = true
 
-        this.delivery_price_request_step = (this.modelValue.need_pickup === true ? 1 : 0)||(this.settings.need_automatic_delivery_request ? 0 : 1)
+        this.delivery_price_request_step = (this.modelValue.need_pickup === true ? 1 : 0) || (this.settings.need_automatic_delivery_request ? 0 : 1)
     },
     methods: {
         goToProductCart() {

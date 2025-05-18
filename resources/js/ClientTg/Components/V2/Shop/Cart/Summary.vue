@@ -7,7 +7,9 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
         <div class="card-body p-2">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <p class="mb-0 d-flex justify-content-between">Суммарно, ед. <strong>{{ cartTotalCount }}
+                    <p class="mb-0 d-flex justify-content-between">Суммарно, ед. <strong
+                        class="text-decoration-underline text-primary"
+                        @click="goToProductCart">{{ cartTotalCount }}
                         шт.</strong></p>
                 </li>
                 <li class="list-group-item">
@@ -90,7 +92,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     </div>
                 </template>
 
-                <template v-if="settings.shop_display_type  == 1 && data.cdek.tariff">
+                <template v-if="settings.shop_display_type  == 1 && data.cdek.tariff && settings.need_automatic_delivery_request">
                     <li class="list-group-item">
                         <p
                             class="mb-0 d-flex justify-content-between">Тариф <strong
@@ -280,6 +282,9 @@ export default {
     },
 
     methods: {
+        goToProductCart() {
+            document.dispatchEvent(new Event('switch-to-cart'));
+        },
         recalcDeliveryPrice(){
             this.$emit("calc-delivery-price")
         },

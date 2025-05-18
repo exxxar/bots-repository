@@ -306,6 +306,8 @@ export default {
                                 this.settings[item] = data[item]
                         })
 
+
+                    this.deliveryForm.payment_type = this.settings.can_use_sbp ? 4 : 2
                     this.loaded_settings = true
                 })
             })

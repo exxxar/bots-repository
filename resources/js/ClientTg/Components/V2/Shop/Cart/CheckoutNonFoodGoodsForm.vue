@@ -42,6 +42,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                class="list-group-item list-group-item-action p-3"><i
                 class="fa-regular fa-credit-card mr-2"></i>Картой</a>
             <a href="javascript:void(0)"
+               v-if="settings.can_use_cash"
                v-bind:class="{'active':modelValue.payment_type === 2}"
                @click="modelValue.payment_type = 2"
                class="list-group-item list-group-item-action p-3"><i
@@ -54,7 +55,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                 class="fa-regular fa-money-bill-1 mr-2"></i> Наличными</a>
         </div>
 
-        <template v-if="settings.need_bonuses_section||false">
+        <template v-if="(settings.need_bonuses_section||false)&&cashbackLimit>0">
             <h6 class="opacity-75">Бонусы <small>(нажми для использования)</small></h6>
 
             <div class="card my-3"
@@ -70,12 +71,18 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             </div>
         </template>
 
-        <h6 class="opacity-75 my-3">Расчёт цены доставки CDEK</h6>
-        <CdekCalcForm v-on:calc="calcTariff"></CdekCalcForm>
+
+        <h6
+            v-if="settings.need_automatic_delivery_request"
+            class="opacity-75 my-3">Расчёт цены доставки CDEK</h6>
+        <CdekCalcForm
+            :need-delivery-price="settings.need_automatic_delivery_request"
+            v-on:calc="calcTariff"></CdekCalcForm>
+
 
         <h6 class="opacity-75 my-3">Общая информация</h6>
 
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <input type="text"
                    v-model="modelValue.name"
                    class="form-control" id="modelValue-name"
@@ -83,7 +90,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             <label for="modelValue-name">Ф.И.О. <span class="fw-bold text-danger">*</span></label>
         </div>
 
-        <div class="form-floating mb-3">
+        <div class="form-floating mb-2">
             <input type="text"
                    v-mask="'+7(###)###-##-##'"
                    v-model="modelValue.phone"
@@ -99,42 +106,53 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                  :settings="settings">
         </Summary>
 
-        <template v-if="modelValue.cdek.tariff!=null">
-            <button
-                v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
-                type="button"
-                @click="startCheckout"
-                :disabled="!canSubmitForm"
+        <button type="button"
+                @click="goToProductCart"
+                class="btn btn-primary w-100 p-3">
+            <i class="fa-solid fa-cart-shopping"></i> Корзина с товаром
+        </button>
 
-                class="btn btn-primary p-3 w-100 mb-2">
+        <nav
+            class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+            style="border-radius:10px 10px 0px 0px;">
 
-                <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
-                <i v-else class="fa-solid fa-hourglass  mr-2"></i>
+            <template v-if="modelValue.cdek.tariff!=null||!settings.need_automatic_delivery_request">
+                <button
+                    v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
+                    type="button"
+                    @click="startCheckout"
+                    :disabled="!canSubmitForm"
 
-                Оформить
-            </button>
+                    class="btn btn-primary p-3 w-100 mb-2">
 
-            <button
-                v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
-                type="button"
-                @click="startCheckout"
-                :disabled="!canSubmitForm"
-                class="btn btn-primary p-3 w-100">
-                <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
-            </button>
+                    <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                    <i v-else class="fa-solid fa-hourglass  mr-2"></i>
 
-            <button
-                v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
-                type="button"
-                @click="nextStep"
-                :disabled="!canSubmitForm"
-                class="btn btn-primary p-3 w-100">
-                <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
-            </button>
-        </template>
-        <div v-else class="alert alert-info">
-            Для оформления выберите офис доставки СДЭК
-        </div>
+                    Оформить
+                </button>
+
+                <button
+                    v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
+                    type="button"
+                    @click="startCheckout"
+                    :disabled="!canSubmitForm"
+                    class="btn btn-primary p-3 w-100">
+                    <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
+                </button>
+
+                <button
+                    v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
+                    type="button"
+                    @click="nextStep"
+                    :disabled="!canSubmitForm"
+                    class="btn btn-primary p-3 w-100">
+                    <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+                </button>
+            </template>
+            <div v-else class="alert alert-info">
+                Для оформления выберите офис доставки СДЭК
+            </div>
+        </nav>
     </form>
 </template>
 <script>
@@ -170,7 +188,6 @@ export default {
             },
             deep: true
         },
-
 
 
     },
@@ -224,8 +241,10 @@ export default {
 
     },
     methods: {
-
-        calcTariff(item){
+        goToProductCart() {
+            document.dispatchEvent(new Event('switch-to-cart'));
+        },
+        calcTariff(item) {
             this.modelValue.cdek.tariff = item.tariff || null
             this.modelValue.cdek.to.region = item.to?.region || null
             this.modelValue.cdek.to.city = item.to?.city || null

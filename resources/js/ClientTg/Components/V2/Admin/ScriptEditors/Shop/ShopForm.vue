@@ -85,18 +85,21 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             <label for="script-settings-disabled_text">Текст доставки</label>
         </div>
 
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_automatic_delivery_request"
+                   role="switch" id="script-settings-need_automatic_delivery_request">
+            <label class="form-check-label" for="script-settings-need_automatic_delivery_request">Автоматический
+                расчет
+                цены доставки: <span
+                    v-bind:class="{'text-primary fw-bold':form.need_automatic_delivery_request}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.need_automatic_delivery_request}">выкл</span>
+                <span v-if="form.shop_display_type===1"> (через СДЭК)</span>
+            </label>
+        </div>
+
         <template v-if="form.shop_display_type===0">
-            <div class="form-check form-switch mb-2">
-                <input class="form-check-input"
-                       type="checkbox"
-                       v-model="form.need_automatic_delivery_request"
-                       role="switch" id="script-settings-need_automatic_delivery_request">
-                <label class="form-check-label" for="script-settings-need_automatic_delivery_request">Автоматический
-                    расчет
-                    цены доставки: <span
-                        v-bind:class="{'text-primary fw-bold':form.need_automatic_delivery_request}">вкл</span> \ <span
-                        v-bind:class="{'text-primary fw-bold':!form.need_automatic_delivery_request}">выкл</span></label>
-            </div>
 
             <template v-if="form.need_automatic_delivery_request">
 
@@ -226,7 +229,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                    type="checkbox"
                    v-model="form.need_bonuses_section"
                    role="switch" id="script-settings-need_bonuses_section">
-            <label class="form-check-label" for="script-settings-need_bonuses_section">Оплата бонусами: <span
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Использовать бонусы при оплате: <span
                 v-bind:class="{'text-primary fw-bold':form.need_bonuses_section}">вкл</span> \ <span
                 v-bind:class="{'text-primary fw-bold':!form.need_bonuses_section}">выкл</span></label>
         </div>

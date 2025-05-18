@@ -149,6 +149,21 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
 
                     </button>
                 </div>
+
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('TablesManagerV2')"
+                            style="min-height:250px;"
+                            v-if="script_data.need_table_list||false"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/clients.png'" class="menu-item-img img-fluid" alt="">
+
+                            <p class="my-2">Управление столиками</p>
+                        </div>
+
+                    </button>
+                </div>
             </div>
             <h6 class="opacity-75 my-3 text-center"><i
                 class="fa-solid fa-house-lock mr-2 text-primary"></i>Другие админ сервисы</h6>

@@ -5,7 +5,9 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 <template>
 
     <div v-if="loaded_params">
-
+        <p class="alert alert-warning mb-2">
+           Данный интерактивный розыгрыш относится только к магазину!
+        </p>
         <div class="form-check form-switch mb-2">
             <input class="form-check-input"
                    type="checkbox"
