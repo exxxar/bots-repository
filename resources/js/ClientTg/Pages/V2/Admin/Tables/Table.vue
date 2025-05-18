@@ -7,7 +7,7 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 
     <div class="container">
         <template v-if="table">
-            <div class="alert alert-danger my-2 text-black" v-if="table.closed_at!=null">
+            <div class="alert alert-danger my-2" v-if="table.closed_at!=null">
                 Внимание! Данный столик уже <strong class="fw-bold text-primary">закрыт</strong>! Операции со столиком недоступны!
             </div>
             <ul class="list-group list-group-flush">
@@ -391,7 +391,7 @@ export default {
 
                 this.$notify({
                     title: 'Заказ',
-                    text: "Заказ успешно передан на кухню",
+                    text: "Статус заказа успешно изменен",
                     type: 'success'
                 })
 
@@ -399,7 +399,7 @@ export default {
             }).catch(() => {
                 this.$notify({
                     title: 'Упс!',
-                    text: "Ошибка передачи заказа",
+                    text: "Ошибка изменения статуса заказа",
                     type: 'error'
                 })
             })
