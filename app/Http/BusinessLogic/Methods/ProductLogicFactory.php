@@ -196,7 +196,6 @@ class ProductLogicFactory extends BaseLogicFactory
         $validator = Validator::make($data, [
             "article" => "",
             "title" => "required",
-            "description" => "required",
             "type" => "required",
             "current_price" => "required",
             "in_stop_list_at" => "",

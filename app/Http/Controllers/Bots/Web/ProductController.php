@@ -458,7 +458,6 @@ class ProductController extends Controller
         $request->validate([
             "article" => "",
             "title" => "required",
-            "description" => "required",
             "type" => "required",
             "current_price" => "required",
         ]);
