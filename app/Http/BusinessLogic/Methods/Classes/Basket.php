@@ -725,9 +725,9 @@ class Basket
             ->prepareReviews($order->id, $ids);
 
         $productMessage .= $discountItem->message ?? '';
-        $productMessage .= "\n\nТовар можно забрать в: <b>" . $cdek->to->office->location->address_full . "</b>\n";
-        $productMessage .= "График работы: <b>" . $cdek->to->office->work_time . "</b>\n";
-        $productMessage .= "Срок доставки от <b>" . $cdek->tariff->calendar_min . "</b> до <b>" . $cdek->tariff->calendar_max . "</b> дней\n";
+        $productMessage .= "\n\nТовар можно забрать в: <b>" . ($cdek->to->office->location->address_full ?? 'Неизвестный адрес') . "</b>\n";
+        $productMessage .= "График работы: <b>" . ($cdek->to->office->work_time ?? 'время не указано') . "</b>\n";
+        $productMessage .= "Срок доставки от <b>" . ($cdek->tariff->calendar_min ?? 1) . "</b> до <b>" . ($cdek->tariff->calendar_max ?? 7) . "</b> дней\n";
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
 
