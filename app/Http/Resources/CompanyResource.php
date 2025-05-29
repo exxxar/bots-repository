@@ -25,6 +25,7 @@ class CompanyResource extends JsonResource
             'links' => $this->links,
             'email' => $this->email,
             'schedule' => $this->schedule,
+            'law_params' => $this->law_params ?? null,
             'manager' => $this->manager,
             'is_active' => $this->is_active,
             'creator_id' => $this->creator_id ?? null,

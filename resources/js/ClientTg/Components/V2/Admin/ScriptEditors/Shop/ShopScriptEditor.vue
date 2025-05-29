@@ -1,6 +1,7 @@
 <script setup>
 import ShopWheelForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopWheelForm.vue";
 import ShopForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopForm.vue";
+import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/CompanyForm.vue";
 </script>
 <template>
     <ul class="nav nav-tabs">
@@ -10,6 +11,13 @@ import ShopForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopForm
                v-bind:class="{'active fw-bold':tab===0}"
                aria-current="page"
                href="javascript:void(0)">Магазин</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"
+               @click="tab=2"
+               v-bind:class="{'active fw-bold':tab===2}"
+               aria-current="page"
+               href="javascript:void(0)">Юридические данные</a>
         </li>
         <li class="nav-item">
             <a class="nav-link "
@@ -24,19 +32,31 @@ import ShopForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopForm
             <ShopForm
                 v-if="form"
                 v-model="form"></ShopForm>
+
+            <button
+                style="z-index: 100;"
+                type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
+            </button>
         </div>
 
         <div v-if="tab===1" class="py-3">
             <ShopWheelForm
                 v-if="form"
                 v-model="form"></ShopWheelForm>
+
+            <button
+                style="z-index: 100;"
+                type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
+            </button>
         </div>
 
-        <button
-            style="z-index: 100;"
-            type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
-        </button>
     </form>
+
+    <template v-if="tab===2">
+        <CompanyForm class="py-3"></CompanyForm>
+    </template>
+
+
 </template>
 <script>
 export default {

@@ -2,6 +2,7 @@
 import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
 import MainMenuItem from "@/ClientTg/Components/V2/Shop/MainMenuItem.vue";
 import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopScriptEditor.vue";
+import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 </script>
 <template>
 
@@ -12,6 +13,17 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
             class="alert alert-danger mb-3">
             <p class="mb-0" v-html="script_data.disabled_text||'-'"></p>
         </div>
+
+        <StoryList
+            v-if="(stories||[]).length>0"
+            :stories="stories||[]"/>
+
+        <template v-if="getSelf.is_admin&&(stories||[]).length>0">
+            <a href="javascript:void(0)"
+               style="font-size:10pt;"
+               class="text-center d-block my-2"
+               @click="goTo('StoryManagerV2')">Редактировать</a>
+        </template>
 
         <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-house-chimney mr-2 text-primary"></i>Доступные
             сервисы</h6>
@@ -152,6 +164,20 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
 
                 <div class="col">
                     <button type="button"
+                            @click="goTo('StoryManagerV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Управление историями</p>
+                        </div>
+
+                    </button>
+                </div>
+
+                <div class="col">
+                    <button type="button"
                             @click="goTo('TablesManagerV2')"
                             style="min-height:250px;"
                             v-if="script_data.need_table_list||false"
@@ -164,6 +190,8 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
 
                     </button>
                 </div>
+
+
             </div>
             <h6 class="opacity-75 my-3 text-center"><i
                 class="fa-solid fa-house-lock mr-2 text-primary"></i>Другие админ сервисы</h6>
@@ -340,6 +368,9 @@ export default {
     data() {
         return {
             loadScriptData: false,
+            stories: [
+            ],
+
             script_data: {
                 is_disabled: true,
                 wheel_of_fortune: {
@@ -349,7 +380,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getSelf', 'cartTotalCount']),
+        ...mapGetters(['getSelf', 'cartTotalCount', 'getStories']),
         preparedMenuItem() {
             if (!this.bot.config)
                 return []
@@ -380,7 +411,9 @@ export default {
     mounted() {
         this.tg.BackButton.show()
 
-        this.loadScriptModuleData()
+        this.loadScriptModuleData().then(()=>{
+            this.loadStories()
+        })
 
         this.tg.BackButton.onClick(() => {
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
@@ -414,7 +447,14 @@ export default {
 
 
         },
+        loadStories() {
+            this.$store.dispatch("loadStories")
+                .then((resp) => {
 
+                    this.stories = this.getStories || []
+
+                })
+        },
         loadScriptModuleData() {
             this.loadScriptData = false
             return this.$store.dispatch("loadShopModuleData").then((resp) => {

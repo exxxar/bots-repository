@@ -562,7 +562,11 @@ class Basket
         $summaryCount = 0;
         $package = [];
         $ids = [];
-        $deliverySum = $cdek->tariff->delivery_sum ?? 0;
+
+
+        $needAutomaticDeliveryRequest = ($data["need_automatic_delivery_request"] ?? false) == "true";
+
+        $deliverySum = $needAutomaticDeliveryRequest ? $cdek->tariff->delivery_sum ?? 0 : 0;
         $tmpOrderProductInfo = [];
 
         $baseDimensions = $cdekSettings->base_dimensions ?? [

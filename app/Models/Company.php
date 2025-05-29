@@ -32,6 +32,7 @@ class Company extends Model
         'creator_id',
         'owner_id',
         'blocked_message',
+        'law_params',
         'blocked_at',
     ];
 
@@ -45,6 +46,7 @@ class Company extends Model
         'phones' => 'array',
         'links' => 'array',
         'schedule' => 'array',
+        'law_params' => 'array',
         'is_active' => 'boolean',
         'blocked_at' => 'datetime:Y-m-d H:i:s',
         'created_at' => 'datetime:Y-m-d H:i:s',

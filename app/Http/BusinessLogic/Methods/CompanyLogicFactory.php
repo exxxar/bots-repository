@@ -44,7 +44,7 @@ class CompanyLogicFactory extends BaseLogicFactory
 
         $companies = Company::query()
             //->withTrashed()
-           // ->whereNotNull("image");
+            // ->whereNotNull("image");
             ->where("creator_id", $this->botUser->id);
 
         if (!is_null($search))
@@ -152,6 +152,45 @@ class CompanyLogicFactory extends BaseLogicFactory
         return new CompanyResource($company);
     }
 
+
+    /**
+     * @throws ValidationException
+     */
+    public function editLawParams(array $data): CompanyResource
+    {
+        if (is_null($this->botUser) || is_null($this->bot))
+            throw new HttpException(400, "Неверно заданы параметры!");
+
+        $company = Company::query()
+            ->find($this->bot->company_id);
+
+        if (is_null($company))
+            throw new HttpException(404, "Компания (клиент) не найдена!");
+
+        $lawParams = (array)(json_decode($data["law_params"]));
+
+        $config = (array)($company->law_params ?? []);
+
+        $config["selected_type"] = $lawParams["selected_type"] ?? 2;
+        $config["full_name"] = $lawParams["full_name"] ?? $config["full_name"] ?? null;
+        $config["inn"] = $lawParams["inn"] ?? $config["inn"] ?? null;
+        $config["ogrnip"] = $lawParams["ogrnip"] ?? $config["ogrnip"] ?? null;
+        $config["name"] = $lawParams["name"] ?? $config["name"] ?? null;
+        $config["kpp"] = $lawParams["kpp"] ?? $config["kpp"] ?? null;
+        $config["ogrn"] = $lawParams["ogrn"] ?? $config["ogrn"] ?? null;
+        $config["phisical_adress"] = $lawParams["phisical_adress"] ?? $config["phisical_adress"] ?? null;
+        $config["passport_number"] = $lawParams["passport_number"] ?? $config["passport_number"] ?? null;
+        $config["passport_date"] = $lawParams["passport_date"] ?? $config["passport_date"] ?? null;
+        $config["agreement"] = $lawParams["agreement"] ?? $config["agreement"] ?? false;
+        $config["offer_link"] = $lawParams["offer_link"] ?? $config["offer_link"] ?? null;
+
+        $company->law_params = $config;
+
+        $company->save();
+
+        return new CompanyResource($company->refresh());
+    }
+
     /**
      * @throws ValidationException
      * @throws HttpException
@@ -164,11 +203,11 @@ class CompanyLogicFactory extends BaseLogicFactory
         $validator = Validator::make($data, [
             'id' => "required",
             'title' => "required|string:255",
-         //   'slug' => "required|string:190",
+            //   'slug' => "required|string:190",
             'description' => "required|string:1000",
             // 'address' => "required|string:255",
             //   'email' => "required|string:255",
-           // 'vat_code' => "required|integer",
+            // 'vat_code' => "required|integer",
         ]);
 
         if ($validator->fails())
@@ -192,7 +231,7 @@ class CompanyLogicFactory extends BaseLogicFactory
         $tmp->schedule = json_decode($tmp->schedule);
         $tmp->phones = json_decode($tmp->phones);
         $tmp->image = $imageName;
-       // $tmp->creator_id = $this->botUser->id;
+        // $tmp->creator_id = $this->botUser->id;
         //$tmp->owner_id = $this->botUser->id;
 
 

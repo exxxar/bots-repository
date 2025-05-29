@@ -1,0 +1,18 @@
+models:
+  Story:
+    bot_id: id foreign:bots
+    title: string:255 nullable
+    thumbnail: string:255 nullable
+    image: string:255 nullable
+    description: longtext nullable
+    config: json nullable
+    relationships:
+      belongsTo: Bot
+
+seeders:  Story
+
+controllers:
+  Story:
+    resource: api
+
+

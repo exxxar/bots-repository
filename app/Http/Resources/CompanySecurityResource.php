@@ -23,6 +23,7 @@ class CompanySecurityResource extends JsonResource
             'links' => $this->links,
             'email' => $this->email,
             'schedule' => $this->schedule,
+            'law_params' => $this->law_params ?? null,
             'manager' => $this->manager,
            // 'transactions' => TransactionCollection::make($this->whenLoaded('transactions')),
         ];

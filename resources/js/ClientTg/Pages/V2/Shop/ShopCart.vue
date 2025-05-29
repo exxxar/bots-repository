@@ -360,6 +360,8 @@ export default {
                 data.append("type", this.type)
 
 
+            data.append("need_automatic_delivery_request", this.settings.need_automatic_delivery_request)
+
             if (this.deliveryForm.payment_type === 0 && this.settings.can_use_card) {
                 this.$store.dispatch("createCheckoutLink", {
                     deliveryForm: data

@@ -114,6 +114,7 @@ class StartCodesHandlerController extends Controller
 
         $slugId = $data[2] ?? null;
         $tableNumber = $data[3] ?? null;
+        $tmpNum = $tableNumber+1;
 
         if (is_null($slugId) || is_null($tableNumber)) {
             BotManager::bot()
@@ -180,11 +181,13 @@ class StartCodesHandlerController extends Controller
                 })->first();
 
             if (is_null($tableWithClient)) {
+
+
                 BotMethods::bot()
                     ->whereBot($bot)
                     ->sendInlineKeyboard(
                         $botUser->telegram_chat_id,
-                        "Вы хотите присоединиться за столик №$tableNumber. За этим столиком уже сидят, запросить разрешение?",
+                        "Вы хотите присоединиться за столик №$tmpNum. За этим столиком уже сидят, запросить разрешение?",
                         [
                             [
                                 ["text" => "🛎️Запросить", "callback_data" => "/request_table_join $tableNumber $slugId"],
@@ -200,7 +203,7 @@ class StartCodesHandlerController extends Controller
             ->whereBot($bot)
             ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
-                "Добро пожаловать за столик №$tableNumber",
+                "Добро пожаловать за столик №$tmpNum",
                 [
                     [
                         ["text" => "🛎️Открыть меню",

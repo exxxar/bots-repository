@@ -38,6 +38,15 @@ class CompanyController extends Controller
 
     }
 
+    public function editLawParamsCompany(Request $request) {
+        $botUser = $request->botUser ?? null;
+        $bot = $request->bot ?? null;
+
+        return BusinessLogic::companies()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->editLawParams($request->all());
+    }
     /**
      * @throws ValidationException
      */
@@ -53,9 +62,11 @@ class CompanyController extends Controller
            // 'vat_code' => "required|integer",
         ]);
 
-        $botUser = $request->botUser;
+        $botUser = $request->botUser ?? null;
+        $bot= $request->bot ?? null;
 
         return BusinessLogic::companies()
+            ->setBot($bot ?? null)
             ->setBotUser($botUser ?? null)
             ->editCompany($request->all(),
                 $request->hasFile('company_logo') ? $request->file('company_logo') : null);

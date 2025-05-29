@@ -1,5 +1,5 @@
 <template>
-    <form v-on:submit.prevent="addCategory">
+    <form v-on:submit.prevent="storyCategory">
         <div class="form-floating mb-2">
             <input type="text"
                    v-model="categoryForm.title"
@@ -49,7 +49,7 @@ export default {
         }
     },
     methods: {
-        addCategory() {
+        storyCategory() {
             this.$store.dispatch("addProductCategory", {
                 category: this.categoryForm
             }).then(() => {
@@ -58,10 +58,11 @@ export default {
                     text: "Данные успешно сохранены!",
                     type: 'success'
                 });
+             //   document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+              /*  this.$emit("callback")
 
+*/
                 this.$emit("callback")
-                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
-
             }).catch(() => {
                 this.$notify({
                     title: "Категории товаров",
@@ -69,7 +70,7 @@ export default {
                     type: 'error'
                 });
 
-                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+             //   document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
             })
         },
     }

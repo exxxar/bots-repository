@@ -113,12 +113,12 @@ class BotUserLogicFactory extends BaseLogicFactory
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
-        Excel::store(new BotUsersExport($statistics), "$name.xls", "public", \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store(new BotUsersExport($statistics), "$name.xls", "public", \Maatwebsite\Excel\Excel::XLS);
 
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendDocument($this->botUser->telegram_chat_id,
-                "Пользователи бота с CashBack",
+                "Пользователи бота с бонусами",
                 InputFile::create(
                     storage_path("app/public") . "/$name.xls",
                     "bot-users-$date.xls"

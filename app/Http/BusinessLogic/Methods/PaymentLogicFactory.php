@@ -67,20 +67,12 @@ class PaymentLogicFactory extends BaseLogicFactory
         $customerKey = $data['CustomerKey'] ?? null;
         $rebillId = $data['RebillId'] ?? null;
 
-        Log::info("test sbp=>" . print_r($data, true));
 
         $order = Order::query()
             ->where("id", $orderId)
             ->first();
 
         if (is_null($order)) {
-            BotMethods::bot()
-                ->whereBot($this->bot)
-                ->sendMessage(
-                    $callbackChannel,
-                    "⚠Заказ #$orderId не найден в системе!",
-                    $thread
-                );
             return "OK";
         }
 

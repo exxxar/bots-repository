@@ -475,6 +475,7 @@ import OneArmedBanditV2 from '@/ClientTg/Components/V2/Games/OneArmedBanditPage.
 import CashBackV2 from '@/ClientTg/Pages/V2/Shop/MyCashBack.vue';
 import FriendsV2 from '@/ClientTg/Pages/V2/Shop/MyFriends.vue';
 import WheelOfFortuneV2 from '@/ClientTg/Pages/V2/Shop/WheelOfFortune.vue';
+import StoryManagerV2 from '@/ClientTg/Pages/V2/Admin/StoryManager.vue';
 import MailingV2 from '@/ClientTg/Pages/V2/Admin/Mailing.vue';
 import ClientsV2 from '@/ClientTg/Pages/V2/Admin/Clients.vue';
 import ShopV2 from '@/ClientTg/Pages/V2/Admin/Shop.vue';
@@ -640,6 +641,12 @@ export const simpleRoutes = [
         path: simplePrefix + '/wheel',
         component: WheelOfFortuneV2,
         meta: {title: 'Колесо фортуны'}
+    },
+    {
+        name: 'StoryManagerV2',
+        path: simplePrefix + '/stories',
+        component: StoryManagerV2,
+        meta: {title: 'Истории'}
     },
 
     {

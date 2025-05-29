@@ -17,6 +17,7 @@ use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory;
 use App\Http\BusinessLogic\Methods\ReviewLogicFactory;
 use App\Http\BusinessLogic\Methods\StatisticLogicFactory;
+use App\Http\BusinessLogic\Methods\StoryLogicFactory;
 use App\Http\BusinessLogic\Methods\TableLogicFactory;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory;
@@ -66,6 +67,7 @@ class BusinessLogic
     protected StatisticLogicFactory $stat;
     protected CDEKLogicFactory $cdek;
     protected BasketLogicFactory $basket;
+    protected StoryLogicFactory $story;
 
     public function __construct()
     {
@@ -74,6 +76,7 @@ class BusinessLogic
         $this->payment = new PaymentLogicFactory();
         $this->quiz = new QuizLogicFactory();
         $this->appointment = new AppointmentLogicFactory();
+        $this->story = new StoryLogicFactory();
         $this->yClient = new YClientLogicFactory();
         $this->bot = new BotLogicFactory();
         $this->botUser = new BotUserLogicFactory();
@@ -110,6 +113,12 @@ class BusinessLogic
     {
         return $this->basket;
     }
+
+    public function story(): StoryLogicFactory
+    {
+        return $this->story;
+    }
+
 
     public function cdek(): CDEKLogicFactory
     {

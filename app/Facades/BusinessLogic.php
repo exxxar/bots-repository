@@ -33,6 +33,7 @@ use App\Http\BusinessLogic\Methods\MailingLogicFactory as QueueLogic;
 use App\Http\BusinessLogic\Methods\BitrixLogicFactory as BitrixLogic;
 use App\Http\BusinessLogic\Methods\BasketLogicFactory as BasketLogic;
 use App\Http\BusinessLogic\Methods\TableLogicFactory as TableLogic;
+use App\Http\BusinessLogic\Methods\StoryLogicFactory as StoryLogic;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -66,6 +67,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static StatisticLogic stat()
  * @method static CDEKLogic cdek()
  * @method static BasketLogic basket()
+ * @method static StoryLogic story()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

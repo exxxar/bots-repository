@@ -59,7 +59,6 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
                             <span class="fw-bold">  {{ item.title }}</span>
 
                             <a href="javascript:void(0)"
-                               data-bs-toggle="modal" :data-bs-target="'#category-item-form-'+index"
                                class="text-secondary"><i class="fa-regular fa-pen-to-square"></i></a>
                         </p>
 
@@ -83,56 +82,14 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
 
                             <button
                                 title="Удалить товар"
-                                data-bs-toggle="modal" :data-bs-target="'#remove-category-modal-'+index"
+                                @click="openRemoveModal(item)"
 
                                 class="btn border-light ">
                                 <i class="fa-solid fa-trash-can text-danger"></i>
                             </button>
                         </div>
 
-                        <div class="modal fade" :id="'category-item-form-'+index" tabindex="-1"
-                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-fullscreen">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <CategoryForm
-                                            v-on:callback="loadProductCategories(0)"
-                                            :item="item"></CategoryForm>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Modal -->
-                        <div class="modal fade" :id="'remove-category-modal-'+index" tabindex="-1"
-                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление категории</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Вы действительно хотите удалить <strong
-                                        class="text-primary fw-bold">{{ item.title || '-' }}?</strong>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть
-                                        </button>
-                                        <button type="button"
-                                                @click="removeProductCategory(item)"
-                                                class="btn btn-primary">Да, удалить
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </li>
                 </ul>
             </div>
@@ -161,6 +118,50 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
         </button>
     </nav>
 
+    <div class="modal fade" :id="'category-edit-item-form'" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <CategoryForm
+                        v-if="selectedCategory"
+                        v-on:callback="categoryFormCallback"
+                        :item="selectedCategory"></CategoryForm>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" :id="'remove-category-modal'" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление категории</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body" v-if="selectedCategory">
+                    Вы действительно хотите удалить <strong
+                    class="text-primary fw-bold">{{ selectedCategory.title || '-' }}?</strong>
+                </div>
+                <div class="modal-footer" v-if="selectedCategory">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть
+                    </button>
+                    <button type="button"
+                            @click="removeProductCategory(selectedCategory)"
+                            class="btn btn-primary">Да, удалить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="category-form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
@@ -170,7 +171,9 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <CategoryForm v-on:callback="loadProductCategories(0)"></CategoryForm>
+                    <CategoryForm
+
+                        v-on:callback="categoryFormCallback"></CategoryForm>
                 </div>
             </div>
         </div>
@@ -182,6 +185,9 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+            selectedCategory: null,
+            categoryEditorModal: null,
+            removeModal: null,
             search: null,
             categories: [],
             paginate: null,
@@ -213,7 +219,8 @@ export default {
     },
     mounted() {
         this.loadProductCategories()
-
+        this.categoryEditorModal = new bootstrap.Modal(document.getElementById('category-edit-item-form'), {})
+        this.removeModal = new bootstrap.Modal(document.getElementById('remove-category-modal'), {})
     },
     methods: {
         changeDirection(direction) {
@@ -232,12 +239,18 @@ export default {
                     text: "Данные сохранены!",
                     type: 'success'
                 });
+
+                this.loadProductCategories()
+                this.categoryEditorModal.hide()
+
             }).catch(err => {
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Ошибка сохранения данных!",
                     type: 'error'
                 });
+
+                this.categoryEditorModal.hide()
             })
         },
         changeCategoryStatus(item) {
@@ -258,12 +271,28 @@ export default {
             })
         },
         selectProductCategory(product) {
-            this.$emit("select", product)
+
+
+            this.selectedCategory = null
+
+            this.$nextTick(() => {
+                this.selectedCategory = product
+                this.categoryEditorModal.show()
+            })
+
+            //  this.$emit("select", product)
         },
         nextProductCategories(index) {
             this.loadProductCategories(index)
         },
+        openRemoveModal(item) {
+            this.selectedCategory = null
+            this.$nextTick(() => {
+                this.selectedCategory = item
+                this.removeModal.show()
+            })
 
+        },
         removeProductCategory(item) {
             this.$store.dispatch("removeProductCategory", {
                 category_id: item.id
@@ -276,8 +305,8 @@ export default {
                 });
 
                 this.loadProductCategories()
-
-                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+                this.removeModal.hide()
+                this.selectedCategory = null
             }).catch(err => {
                 this.loadProductCategories()
                 this.$notify({
@@ -285,11 +314,14 @@ export default {
                     text: "Ошибка удаления категории!",
                     type: 'error'
                 });
-
-                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+                this.selectedCategory = null
+                this.removeModal.hide()
             })
         },
-
+        categoryFormCallback(){
+            this.categoryEditorModal.hide()
+            this.loadProductCategories()
+        },
         loadProductCategories(page = 0) {
             return this.$store.dispatch("loadCategories", {
                 dataObject: {

@@ -194,3 +194,6 @@ Route::apiResource('folders', App\Http\Controllers\FolderController::class);
 
 
 Route::apiResource('tables', App\Http\Controllers\TableController::class);
+
+
+Route::apiResource('stories', App\Http\Controllers\StoryController::class);

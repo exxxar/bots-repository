@@ -18,6 +18,7 @@ use App\Http\Controllers\Globals\ProfileFormScriptController;
 use App\Http\Controllers\Globals\ShopScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneCustomScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
+use App\Http\Controllers\StoryController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -258,6 +259,7 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/company-update", "editCompany");
+                Route::post("/company-law-update", "editLawParamsCompany");
                 Route::post("/company", "loadCompany");
                 Route::post("/location-list", "loadLocations");
                 Route::post("/location", "createLocation");
@@ -310,6 +312,15 @@ Route::prefix("bot-client")
                 Route::delete("/remove-appointment", "removeAppointment");
             });
 
+        Route::prefix("stories")
+            ->middleware(["tgAuth.any"])
+            ->group(function () {
+                Route::get("/", [App\Http\Controllers\Bots\Web\StoryController::class, "index"]); // Получить список историй
+                Route::get("/{id}", [App\Http\Controllers\Bots\Web\StoryController::class, "show"]); // Получить историю по ID
+                Route::post("/", [App\Http\Controllers\Bots\Web\StoryController::class, "store"]); // Создать или обновить историю
+                Route::delete("/{id}", [App\Http\Controllers\Bots\Web\StoryController::class, "destroy"]); // Удалить историю
+            });
+
         Route::prefix("shop")
             ->middleware(["tgAuth.any"])
             ->group(function () {
@@ -347,6 +358,8 @@ Route::prefix("bot-client")
 
 
                     });
+
+
 
                 Route::post("/products", [ProductController::class, "index"]);
                 Route::post("/products-by-category", [ProductController::class, "listByCategories"]);
