@@ -35,7 +35,7 @@ class CheckTables extends Command
         ini_set('max_execution_time', 30000);
 
         $tables = Table::query()
-            ->whereNotNull("closed_at")
+            ->whereNull("closed_at")
             ->get();
 
         foreach ($tables as $table) {
