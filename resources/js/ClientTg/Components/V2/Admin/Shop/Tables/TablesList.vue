@@ -11,10 +11,13 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                     v-bind:class="{'bg-primary text-white':table.officiant_id!=null}"
                     class="card">
                     <div class="card-body">
-                        <div class="row row-cols-3">
-                            <div class="col"> #{{ (parseInt(table.number || '0') + 1) }}</div>
-                            <div class="col" v-if="table.officiant"><i class="fa-solid fa-bell-concierge"></i> {{ table.officiant?.name || table.officiant?.fio_from_telegram || 'Официант' }}</div>
-                            <div class="col"><i class="fa-solid fa-people-group"></i>  {{ table.clients?.length || 0 }}</div>
+                        <div class="row">
+                            <div class="col-4">Столик #{{ (parseInt(table.number || '0') + 1) }}</div>
+                            <div class="col-8" v-if="table.officiant"><i class="fa-solid fa-bell-concierge"></i> {{ table.officiant?.name || table.officiant?.fio_from_telegram || 'Официант' }}</div>
+                            <div class="col-12"><i class="fa-solid fa-people-group"></i> Клиентов за столиком  <strong class="fw-bold">{{ table.clients?.length || 0 }}</strong></div>
+                            <div class="col-12">
+                                <p class="mb-0">Начало обслуживания {{ timeAgo(table.start_at) }}</p>
+                            </div>
                         </div>
 
                         <div class="btn-group w-100 mb-0">
@@ -39,7 +42,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                                     class="btn btn-outline-primary "  style="font-size:10px;"><i class="fa-solid fa-xmark"></i> Закрыть</button>
 
                         </div>
-                        <p class="mb-0" style="font-size:8px;">Начало обслуживания: {{ timeAgo(table.start_at) }}</p>
+
                     </div>
                 </div>
             </div>
@@ -61,7 +64,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 import {mapGetters} from "vuex";
 import moment from 'moment'
 import 'moment/locale/ru'
-moment.locale('ru')
+
 
 export default {
     props: ["selected"],
@@ -95,7 +98,9 @@ export default {
     },
     methods: {
         timeAgo(datetime) {
-            return moment(datetime).fromNow() // например: "3 минуты назад"
+            moment.locale('ru')
+            //return moment(datetime).fromNow() // например: "3 минуты назад"
+            return moment(date).format('D MMMM YYYY [в] HH:mm')
         },
         closeTable(tableId) {
             this.$store.dispatch("closeTableOrder", {
