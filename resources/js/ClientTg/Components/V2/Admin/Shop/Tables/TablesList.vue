@@ -11,31 +11,35 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                     v-bind:class="{'bg-primary text-white':table.officiant_id!=null}"
                     class="card">
                     <div class="card-body">
-                        <h6 class="text-center mb-2">Столик #{{ (parseInt(table.number || '0') + 1) }}</h6>
-                        <p class="text-center mb-2" v-if="table.officiant">Обслуживает столик {{ table.officiant?.name || '-' }}</p>
-                        <p class="text-center mb-2">Клиентов за столиком {{ table.clients?.length || 0 }}</p>
-                        <div class="btn-group w-100">
+                        <div class="row row-cols-3">
+                            <div class="col"> #{{ (parseInt(table.number || '0') + 1) }}</div>
+                            <div class="col" v-if="table.officiant"><i class="fa-solid fa-bell-concierge"></i> {{ table.officiant?.name || table.officiant?.fio_from_telegram || 'Официант' }}</div>
+                            <div class="col"><i class="fa-solid fa-people-group"></i>  {{ table.clients?.length || 0 }}</div>
+                        </div>
+
+                        <div class="btn-group w-100 mb-0">
                             <button type="button"
                                     v-if="table.officiant_id == null"
                                     @click="takeATable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "><i class="fa-solid fa-arrow-right-to-bracket"></i> В работу</button>
+                                    class="btn btn-outline-primary " style="font-size:10px;"><i class="fa-solid fa-arrow-right-to-bracket"></i> В работу</button>
                             <button type="button"
                                     v-if="self.id === table.officiant_id"
                                     @click="changeTableWaiter(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "><i class="fa-solid fa-arrow-right-to-bracket"></i> Выйти</button>
+                                    class="btn btn-outline-primary "  style="font-size:10px;"><i class="fa-solid fa-arrow-right-to-bracket"></i> Выйти</button>
                             <button type="button"
                                     @click="goToTable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "><i class="fa-solid fa-eye"></i> Просмотр</button>
+                                    class="btn btn-outline-primary "  style="font-size:10px;"><i class="fa-solid fa-eye"></i> Просмотр</button>
                             <button type="button"
                                     v-if="self.id === table.officiant_id"
                                     @click="closeTable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "><i class="fa-solid fa-xmark"></i> Закрыть</button>
+                                    class="btn btn-outline-primary "  style="font-size:10px;"><i class="fa-solid fa-xmark"></i> Закрыть</button>
 
                         </div>
+                        <p class="mb-0" style="font-size:8px;">Начало обслуживания: {{ timeAgo(table.start_at) }}</p>
                     </div>
                 </div>
             </div>
@@ -55,6 +59,9 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
+import moment from 'moment'
+import 'moment/locale/ru'
+moment.locale('ru')
 
 export default {
     props: ["selected"],
@@ -78,8 +85,18 @@ export default {
     mounted() {
         this.loadTables()
 
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
     },
     methods: {
+        timeAgo(datetime) {
+            return moment(datetime).fromNow() // например: "3 минуты назад"
+        },
         closeTable(tableId) {
             this.$store.dispatch("closeTableOrder", {
                 dataObject: {

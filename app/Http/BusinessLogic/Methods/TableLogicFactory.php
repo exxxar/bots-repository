@@ -295,6 +295,7 @@ class TableLogicFactory extends BaseLogicFactory
                 $query->where('officiant_id', $this->botUser->id)
                     ->orWhereNull("officiant_id");
             })
+            ->orderBy("number","asc")
             ->paginate($size);
 
         return new TableCollection($tables);

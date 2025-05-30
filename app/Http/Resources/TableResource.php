@@ -19,6 +19,7 @@ class TableResource extends JsonResource
             'officiant_id' => $this->officiant_id,
             'number' => $this->number,
             'closed_at' => $this->closed_at,
+            'start_at' => $this->created_at,
             'config' => $this->config,
             'additional_services' => $this->additional_services,
             'bot_user_id' => $this->bot_user_id,
