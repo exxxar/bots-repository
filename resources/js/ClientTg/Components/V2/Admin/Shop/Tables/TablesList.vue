@@ -8,7 +8,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
         <div class="row row-cols-1">
             <div class="col mb-2" v-for="(table,index) in tables">
                 <div
-                    v-bind:class="{'bg-primary text-white':table.officiant_id!=null&&table.officiant_id===self.id}"
+                    v-bind:class="{'border-primary':table.officiant_id!=null&&table.officiant_id===self.id}"
                     class="card">
                     <div class="card-body">
                         <div class="row">
@@ -27,7 +27,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                                         class="fw-bold">{{ table.clients?.length || 0 }}</strong></p>
                             </div>
                             <div class="col-12">
-                                <p class="mb-0" style="font-size:12px;">Начало обслуживания {{
+                                <p class="mb-2" style="font-size:12px;">Начало обслуживания {{
                                         timeAgo(table.start_at)
                                     }}</p>
                             </div>
