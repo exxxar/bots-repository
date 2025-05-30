@@ -5,24 +5,31 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 <template>
 
     <template v-if="tables.length>0">
-        <div class="row row-cols-2">
-            <div class="col" v-for="(table,index) in tables">
+        <div class="row row-cols-1">
+            <div class="col mb-2" v-for="(table,index) in tables">
                 <div
                     v-bind:class="{'bg-primary text-white':table.officiant_id!=null}"
                     class="card">
                     <div class="card-body">
                         <h6 class="text-center">Столик #{{ table.number || '-' }}</h6>
+                        <p class="text-center">Обслуживает столик {{ table.officiant?.name || '-' }}</p>
+                        <p class="text-center">Клиентов за столиком {{ table.clients?.length || 0 }}</p>
                         <div class="btn-group w-100">
-
                             <button type="button"
-                                    @click="changeTableWaiter(table.id)"
+                                    v-if="table.officiant_id == null"
+                                    @click="takeATable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
                                     class="btn btn-outline-primary "><i
-                                class="fa-solid fa-right-to-bracket"></i></button>
+                                class="fa-solid fa-right-to-bracket"></i> </button>
                             <button type="button"
                                     @click="goToTable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
                                     class="btn btn-outline-primary "><i class="fa-solid fa-eye"></i></button>
+                            <button type="button"
+                                    v-if="self.id === table.officiant_id"
+                                    @click="changeTableWaiter(table.id)"
+                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
+                                    class="btn btn-outline-primary "><i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>
                 </div>
@@ -59,14 +66,22 @@ export default {
     },
     computed: {
         ...mapGetters(['getTables', 'getTablesPaginateObject']),
+        self() {
+            return window.self || null
+        },
     },
     mounted() {
         this.loadTables()
 
     },
     methods: {
+        takeATable(id){
+            this.changeTableWaiter(id).then(()=>{
+                this.goToTable(id)
+            })
+        },
         changeTableWaiter(id) {
-            this.$store.dispatch("changeTableWaiter", {
+           return this.$store.dispatch("changeTableWaiter", {
                 dataObject: {
                     table_id: id
                 }
@@ -77,9 +92,6 @@ export default {
                     text: "Официант успешно изменен",
                     type: 'success'
                 })
-
-                this.goToTable(id)
-
             }).catch(() => {
                 this.$notify({
                     title: 'Упс!',

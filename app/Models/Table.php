@@ -41,6 +41,7 @@ class Table extends Model
         'additional_services' => 'array',
     ];
 
+    protected $with = ["officiant", "clients"];
 
     public function bot(): BelongsTo
     {
