@@ -56,7 +56,7 @@ class TableController extends Controller
                 ->whereBot($bot)
                 ->sendInlineKeyboard(
                     $botUser->telegram_chat_id,
-                    "Добро пожаловать за столик №$tableNumber",
+                    "Добро пожаловать за столик №".($tableNumber+1),
                     [
                         [
                             ["text" => "🛎️Открыть меню",
@@ -83,7 +83,7 @@ class TableController extends Controller
             ->whereBot($bot)
             ->sendInlineKeyboard(
                 $creator->telegram_chat_id,
-                "К вашему столику №$tableNumber хочет присоединиться $userName. Подтвердить приглашение?",
+                "К вашему столику №".($tableNumber+1)." хочет присоединиться $userName. Подтвердить приглашение?",
                 [
                     [
                         ["text" => "Да, подтвердить", "callback_data" => "/accept_table_join $tableNumber $slugId $botUser->id"],
@@ -130,7 +130,7 @@ class TableController extends Controller
             ->whereBot($bot)
             ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
-                "Добро пожаловать за столик №$tableNumber",
+                "Добро пожаловать за столик №".($tableNumber+1),
                 [
                     [
                         ["text" => "🛎️Открыть меню",
@@ -229,7 +229,7 @@ class TableController extends Controller
             }
 
             BotManager::bot()
-                ->reply("Столик $table->number закрыт, спасибо! Все заказы столика отмечены как оплаченные.");
+                ->reply("Столик #".($table->number+1)." закрыт, спасибо! Все заказы столика отмечены как оплаченные.");
 
             return;
         }

@@ -17,7 +17,7 @@ BotManager::bot()
     ->slug("slug_product_categories_1", "productCategories");
 
 BotManager::bot()
-    ->controller(\App\Http\Controllers\TableController::class)
+    ->controller(\App\Http\Controllers\Bots\TableController::class)
     ->route("/request_table_join ([0-9]+) ([0-9]+)", "requestTableJoin")
     ->route("/test_sbp_tinkoff_automatic ([0-9]+) ([0-9]+)", "testSbpTinkoffAutomatic")
     ->route("/test_table_manual_payment ([0-9]+) ([0-9]{1})", "testTableManualPayment")

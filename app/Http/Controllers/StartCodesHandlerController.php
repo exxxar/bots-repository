@@ -153,7 +153,7 @@ class StartCodesHandlerController extends Controller
                 ->whereBot($bot)
                 ->sendInlineKeyboard(
                     $bot->order_channel,
-                    "Столик №$tableNumber занял новый клиент! Подойдите к нему!",
+                    "Столик №$tmpNum занял новый клиент! Подойдите к нему!",
                     [
                         [
                             ["text" => "🛎️Работа со столиком",

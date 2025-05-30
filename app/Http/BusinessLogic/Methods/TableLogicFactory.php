@@ -367,7 +367,7 @@ class TableLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendMessage(
                 $table->officiant->telegram_chat_id,
-                "Вас просят подойти к столику №$table->number! " . ($needPayment ? "Клиент просит принести счет" : "")
+                "Вас просят подойти к столику №".($table->number+1)."! " . ($needPayment ? "Клиент просит принести счет" : "")
             );
     }
 
@@ -395,7 +395,7 @@ class TableLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
                 $table->officiant->telegram_chat_id,
-                "Один из клиентов за столиком №$table->number сделал заказ и просит вас подтвердить его!", [
+                "Один из клиентов за столиком №".($table->number+1)." сделал заказ и просит вас подтвердить его!", [
                     [
                         ["text" => "🍽️Перейти к столику",
                             "web_app" => [
