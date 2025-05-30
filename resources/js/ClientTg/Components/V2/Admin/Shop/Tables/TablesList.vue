@@ -11,25 +11,30 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                     v-bind:class="{'bg-primary text-white':table.officiant_id!=null}"
                     class="card">
                     <div class="card-body">
-                        <h6 class="text-center">Столик #{{ table.number || '-' }}</h6>
-                        <p class="text-center">Обслуживает столик {{ table.officiant?.name || '-' }}</p>
-                        <p class="text-center">Клиентов за столиком {{ table.clients?.length || 0 }}</p>
+                        <h6 class="text-center mb-2">Столик #{{ (parseInt(table.number || '0') + 1) }}</h6>
+                        <p class="text-center mb-2" v-if="table.officiant">Обслуживает столик {{ table.officiant?.name || '-' }}</p>
+                        <p class="text-center mb-2">Клиентов за столиком {{ table.clients?.length || 0 }}</p>
                         <div class="btn-group w-100">
                             <button type="button"
                                     v-if="table.officiant_id == null"
                                     @click="takeATable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "><i
-                                class="fa-solid fa-right-to-bracket"></i> </button>
-                            <button type="button"
-                                    @click="goToTable(table.id)"
-                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "><i class="fa-solid fa-eye"></i></button>
+                                    class="btn btn-outline-primary "><i class="fa-solid fa-arrow-right-to-bracket"></i> В работу</button>
                             <button type="button"
                                     v-if="self.id === table.officiant_id"
                                     @click="changeTableWaiter(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "><i class="fa-solid fa-xmark"></i></button>
+                                    class="btn btn-outline-primary "><i class="fa-solid fa-arrow-right-to-bracket"></i> Выйти</button>
+                            <button type="button"
+                                    @click="goToTable(table.id)"
+                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
+                                    class="btn btn-outline-primary "><i class="fa-solid fa-eye"></i> Просмотр</button>
+                            <button type="button"
+                                    v-if="self.id === table.officiant_id"
+                                    @click="closeTable(table.id)"
+                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
+                                    class="btn btn-outline-primary "><i class="fa-solid fa-xmark"></i> Закрыть</button>
+
                         </div>
                     </div>
                 </div>
@@ -75,13 +80,35 @@ export default {
 
     },
     methods: {
-        takeATable(id){
-            this.changeTableWaiter(id).then(()=>{
+        closeTable(tableId) {
+            this.$store.dispatch("closeTableOrder", {
+                dataObject: {
+                    table_id: tableId,
+                }
+            }).then(resp => {
+
+                this.$notify({
+                    title: 'Заказ',
+                    text: "Столик успешно закрыт",
+                    type: 'success'
+                })
+
+                this.loadTable()
+            }).catch(() => {
+                this.$notify({
+                    title: 'Упс!',
+                    text: "Ошибка завершения работы столика",
+                    type: 'error'
+                })
+            })
+        },
+        takeATable(id) {
+            this.changeTableWaiter(id).then(() => {
                 this.goToTable(id)
             })
         },
         changeTableWaiter(id) {
-           return this.$store.dispatch("changeTableWaiter", {
+            return this.$store.dispatch("changeTableWaiter", {
                 dataObject: {
                     table_id: id
                 }
