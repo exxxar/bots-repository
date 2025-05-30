@@ -37,27 +37,23 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                             <button type="button"
                                     v-if="table.officiant_id == null"
                                     @click="takeATable(table.id)"
-                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
                                     class="btn btn-outline-primary " style="font-size:12px;"><i
                                 class="fa-solid fa-arrow-right-to-bracket"></i> В работу
                             </button>
                             <button type="button"
                                     v-if="self.id === table.officiant_id"
                                     @click="changeTableWaiter(table.id)"
-                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
                                     class="btn btn-outline-primary " style="font-size:12px;"><i
                                 class="fa-solid fa-arrow-right-to-bracket"></i> Выйти
                             </button>
                             <button type="button"
                                     @click="goToTable(table.id)"
-                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
                                     class="btn btn-outline-primary " style="font-size:12px;"><i
                                 class="fa-solid fa-eye"></i> Просмотр
                             </button>
                             <button type="button"
                                     v-if="self.id === table.officiant_id"
                                     @click="closeTable(table.id)"
-                                    v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
                                     class="btn btn-outline-primary " style="font-size:12px;"><i
                                 class="fa-solid fa-xmark"></i> Закрыть
                             </button>
@@ -151,9 +147,7 @@ export default {
             })
         },
         takeATable(id) {
-            this.changeTableWaiter(id).then(() => {
-                this.goToTable(id)
-            })
+            this.changeTableWaiter(id)
         },
         changeTableWaiter(id) {
             return this.$store.dispatch("changeTableWaiter", {
@@ -167,6 +161,8 @@ export default {
                     text: "Официант успешно изменен",
                     type: 'success'
                 })
+
+                this.loadTables()
             }).catch(() => {
                 this.$notify({
                     title: 'Упс!',
