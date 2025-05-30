@@ -13,8 +13,11 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">Столик #{{ (parseInt(table.number || '0') + 1) }}</div>
-                            <div class="col-8" v-if="table.officiant"><i class="fa-solid fa-bell-concierge"></i> {{ table.officiant?.name || table.officiant?.fio_from_telegram || 'Официант' }}</div>
-                            <div class="col-12"><i class="fa-solid fa-people-group"></i> Клиентов за столиком  <strong class="fw-bold">{{ table.clients?.length || 0 }}</strong></div>
+                            <div class="col-8" v-if="table.officiant"><i class="fa-solid fa-bell-concierge"></i>
+                                {{ table.officiant?.name || table.officiant?.fio_from_telegram || 'Официант' }}
+                            </div>
+                            <div class="col-12"><i class="fa-solid fa-people-group"></i> Клиентов за столиком <strong
+                                class="fw-bold">{{ table.clients?.length || 0 }}</strong></div>
                             <div class="col-12">
                                 <p class="mb-0">Начало обслуживания {{ timeAgo(table.start_at) }}</p>
                             </div>
@@ -25,21 +28,29 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                                     v-if="table.officiant_id == null"
                                     @click="takeATable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary " style="font-size:10px;"><i class="fa-solid fa-arrow-right-to-bracket"></i> В работу</button>
+                                    class="btn btn-outline-primary " style="font-size:10px;"><i
+                                class="fa-solid fa-arrow-right-to-bracket"></i> В работу
+                            </button>
                             <button type="button"
                                     v-if="self.id === table.officiant_id"
                                     @click="changeTableWaiter(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "  style="font-size:10px;"><i class="fa-solid fa-arrow-right-to-bracket"></i> Выйти</button>
+                                    class="btn btn-outline-primary " style="font-size:10px;"><i
+                                class="fa-solid fa-arrow-right-to-bracket"></i> Выйти
+                            </button>
                             <button type="button"
                                     @click="goToTable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "  style="font-size:10px;"><i class="fa-solid fa-eye"></i> Просмотр</button>
+                                    class="btn btn-outline-primary " style="font-size:10px;"><i
+                                class="fa-solid fa-eye"></i> Просмотр
+                            </button>
                             <button type="button"
                                     v-if="self.id === table.officiant_id"
                                     @click="closeTable(table.id)"
                                     v-bind:class="{'btn-light text-primary':table.officiant_id!=null}"
-                                    class="btn btn-outline-primary "  style="font-size:10px;"><i class="fa-solid fa-xmark"></i> Закрыть</button>
+                                    class="btn btn-outline-primary " style="font-size:10px;"><i
+                                class="fa-solid fa-xmark"></i> Закрыть
+                            </button>
 
                         </div>
 
@@ -84,6 +95,11 @@ export default {
         self() {
             return window.self || null
         },
+
+        tg() {
+            return window.Telegram.WebApp;
+        },
+
     },
     mounted() {
         this.loadTables()
@@ -100,7 +116,7 @@ export default {
         timeAgo(datetime) {
             moment.locale('ru')
             //return moment(datetime).fromNow() // например: "3 минуты назад"
-            return moment(date).format('D MMMM YYYY [в] HH:mm')
+            return moment(datetime).format('D MMMM YYYY [в] HH:mm')
         },
         closeTable(tableId) {
             this.$store.dispatch("closeTableOrder", {

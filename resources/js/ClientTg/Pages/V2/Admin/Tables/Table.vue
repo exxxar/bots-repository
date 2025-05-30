@@ -326,6 +326,8 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data() {
         return {
@@ -343,6 +345,12 @@ export default {
             clients: [],
             basket: [],
         }
+    },
+    computed: {
+        ...mapGetters(['getSelf']),
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
     mounted() {
         this.loadTable()
