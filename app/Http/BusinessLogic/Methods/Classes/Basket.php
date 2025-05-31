@@ -17,6 +17,7 @@ use App\Models\Order;
 use Carbon\Carbon;
 use CdekSDK2\Exceptions\RequestException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Mpdf\Mpdf;
@@ -569,6 +570,7 @@ class Basket
         $deliverySum = $needAutomaticDeliveryRequest ? $cdek->tariff->delivery_sum ?? 0 : 0;
         $tmpOrderProductInfo = [];
 
+        Log::info("цена доставки $deliverySum рублей");
         $baseDimensions = $cdekSettings->base_dimensions ?? [
             "height" => 15,
             "width" => 15,

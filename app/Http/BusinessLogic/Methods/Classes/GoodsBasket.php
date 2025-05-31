@@ -183,7 +183,7 @@ trait GoodsBasket
             "orderId" => $order->id,
             "name" => $order->receiver_name,
             "phone" => $order->receiver_phone,
-            "address" => $address . "," . ($this->data["flat_number"] ?? ""),
+            "address" => ($address ?? '-') . "," . ($this->data["flat_number"] ?? ""),
             "message" => ($this->data["info"] ?? 'Не указано'),
             "entranceNumber" => ($this->data["entrance_number"] ?? 'Не указано'),
             "floorNumber" => ($this->data["floor_number"] ?? 'Не указано'),

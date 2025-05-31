@@ -3,6 +3,77 @@ import ProductCard from "@/ClientTg/Components/V2/Admin/Shop/AdminProductCard.vu
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 </script>
 <template>
+    <!-- Кнопка -->
+    <button type="button" class="btn btn-primary p-3 w-100 mb-2"
+            data-bs-toggle="modal" data-bs-target="#statistic-modal">
+        <i class="fa-solid fa-chart-pie"></i> Статистика
+    </button>
+
+    <!-- Модальное окно -->
+    <div class="modal fade" id="statistic-modal" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fullscreenModalLabel">Статистика по столикам</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        Статистика в данный момент находится на стадии разработки!
+                        Параметры и значения не соответствуют реальным
+                    </div>
+                    <table class="table table-bordered mb-2">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Параметр</th>
+                            <th>Значение</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Среднее время ожидания заказа</td>
+                            <td>12 минут</td>
+                        </tr>
+                        <tr>
+                            <td>Количество обслуженных столиков за день</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <td>Средний чек</td>
+                            <td>1 250 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Уровень удовлетворенности клиентов</td>
+                            <td>92%</td>
+                        </tr>
+                        <tr>
+                            <td>Среднее время на обслуживание одного столика</td>
+                            <td>35 минут</td>
+                        </tr>
+                        <tr>
+                            <td>Процент повторных заказов</td>
+                            <td>28%</td>
+                        </tr>
+                        <tr>
+                            <td>Количество официантов в смену</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+                            <td>Процент просроченных заказов</td>
+                            <td>3%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <button type="button" class="btn btn-primary w-100 p-3">Скачать файл статистики</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-100 p-3" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <template v-if="tables.length>0">
         <div class="row row-cols-1">
