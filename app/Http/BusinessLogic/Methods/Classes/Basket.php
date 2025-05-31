@@ -570,7 +570,6 @@ class Basket
         $deliverySum = $needAutomaticDeliveryRequest ? $cdek->tariff->delivery_sum ?? 0 : 0;
         $tmpOrderProductInfo = [];
 
-        Log::info("цена доставки $deliverySum рублей");
         $baseDimensions = $cdekSettings->base_dimensions ?? [
             "height" => 15,
             "width" => 15,

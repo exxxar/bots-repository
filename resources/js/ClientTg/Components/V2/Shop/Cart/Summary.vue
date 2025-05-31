@@ -110,7 +110,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                             дней
                         </p>
                     </li>
-                    <li class="list-group-item">
+                    <li class="list-group-item" v-if="settings.need_automatic_delivery_request">
                         <p
                             class="mb-0 d-flex justify-content-between">Стоимость доставки <strong
                             class="fw-bold">{{ data.cdek.tariff.delivery_sum }} ₽</strong>
@@ -252,8 +252,10 @@ export default {
 
             let computedPriceWithDiscount = isPercentDiscount ? price * ((100 - discountValue) / 100) : price - discountValue;
 
+            let deliveryCdekPrice = this.settings.need_automatic_delivery_request ? (this.data.cdek.tariff?.delivery_sum || 0) + (this.data.delivery_price || 0) : 0;
+
             return (computedPriceWithDiscount >= activationDiscountPrice ?
-                computedPriceWithDiscount : price) + (this.data.cdek.tariff?.delivery_sum || 0) + (this.data.delivery_price || 0)
+                computedPriceWithDiscount : price) + deliveryCdekPrice
         },
         canSubmitForm() {
             return (this.spent_time_counter || 0) === 0
