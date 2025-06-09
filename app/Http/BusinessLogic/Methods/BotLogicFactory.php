@@ -1541,7 +1541,6 @@ class BotLogicFactory extends BaseLogicFactory
             throw new HttpException(403, "Условия функции не выполнены!");
 
         $data = json_decode($data["items"] ?? '[]');
-
         $config = $this->bot->config ?? [];
 
         if (count($files ?? []) > 0) {
@@ -1557,6 +1556,7 @@ class BotLogicFactory extends BaseLogicFactory
                         if (file_exists($oldPath))
                             unlink($oldPath);
                         $data[$i]->image_url = $this->bot->bot_domain . "/" . $filename;
+
                     }
 
                 }
@@ -1564,9 +1564,11 @@ class BotLogicFactory extends BaseLogicFactory
 
             }
 
-            $config["icons"] = $data;
+
         }
 
+
+        $config["icons"] = $data;
         $this->bot->config = $config;
         $this->bot->save();
 

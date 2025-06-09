@@ -1,5 +1,6 @@
 <script setup>
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
+import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 </script>
 <template>
     <h2 class="mb-2">Истории</h2>
@@ -23,7 +24,9 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
         aria-hidden="true"
     >
         <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-            <form class="modal-content" @submit.prevent="saveStory">
+            <form class="modal-content"
+                  id="story-form"
+                  @submit.prevent="saveStory">
                 <div class="modal-header">
                     <h5 class="modal-title" id="storyModalLabel">
                         {{ isEditing ? 'Редактировать историю' : 'Создать историю' }}
@@ -66,27 +69,33 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                                                     </label>
                                                 </div>-->
 
-                        <div v-if="!useThumbnailFile" class="form-floating">
-                            <input
-                                v-model="formStory.thumbnail"
-                                type="url"
-                                class="form-control"
-                                id="thumbnail"
-                                placeholder="Введите URL миниатюры"
-                                required
-                            />
-                            <label for="thumbnail">URL миниатюры</label>
-                        </div>
+                        <template v-if="formStory.thumbnail">
+                            <img
+                                class="img-thumbnail w-100 mb-2"
+                                v-lazy="getPhoto(formStory.thumbnail).imageUrl">
+                        </template>
 
-                        <div v-else>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                class="form-control"
-                                @change="handleThumbnailUpload"
-                                required
-                            />
-                        </div>
+                        <!--                        <div v-if="!useThumbnailFile" class="form-floating">
+                                                    <input
+                                                        @change="onChangePhotos($event, formStory.thumbnail)"
+                                                        type="url"
+                                                        class="form-control"
+                                                        id="thumbnail"
+                                                        placeholder="Введите URL миниатюры"
+                                                        required
+                                                    />
+                                                    <label for="thumbnail">URL миниатюры</label>
+                                                </div>-->
+
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            class="form-control"
+                            @change="handleThumbnailUpload($event, 'thumbnail')"
+                            required
+                        />
+
                     </div>
 
                     <!-- Изображение -->
@@ -104,27 +113,36 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                                                     </label>
                                                 </div>-->
 
-                        <div v-if="!useImageFile" class="form-floating">
-                            <input
-                                v-model="formStory.image"
-                                type="url"
-                                class="form-control"
-                                id="image"
-                                placeholder="Введите URL изображения"
-                                required
-                            />
-                            <label for="image">URL изображения</label>
-                        </div>
+                        <template v-if="formStory.image">
+                            test
+                            <img
+                                class="img-thumbnail w-100 mb-2"
+                                v-lazy="getPhoto(formStory.image).imageUrl">
 
-                        <div v-else>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                class="form-control"
-                                @change="handleImageUpload"
-                                required
-                            />
-                        </div>
+                        </template>
+
+                        <!--                        <div v-if="!useImageFile" class="form-floating">
+                                                    <input
+                                                        @change="onChangePhotos($event, formStory.image)"
+                                                        type="url"
+                                                        class="form-control"
+                                                        id="image"
+                                                        placeholder="Введите URL изображения"
+                                                        required
+                                                    />
+                                                    <label for="image">URL изображения</label>
+                                                </div>-->
+
+
+                        <input
+                            type="file"
+                            id="image"
+                            accept="image/*"
+                            class="form-control"
+                            @change="handleThumbnailUpload($event, 'image')"
+                            required
+                        />
+
                     </div>
 
                     <!-- Описание -->
@@ -151,58 +169,89 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
     </div>
 
 
-    <!-- Карточки историй -->
-    <div class="row row-cols-2 row-cols-md-3 g-4">
-        <div v-for="story in stories" :key="story.id" class="col">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <div
-                        class="story-item rounded-circle overflow-hidden cursor-pointer border mx-auto"
-                        :class="{
+    <template v-if="loadingStories">
+        <div
+            class="alert alert-light d-flex flex-column align-items-center justify-content-center">
+            Подготавливаем данные...
+            <div class="spinner-border text-primary my-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </template>
+
+    <template v-else>
+        <!-- Карточки историй -->
+        <div class="row row-cols-2 row-cols-md-3 g-4">
+            <div v-for="(story, index) in stories" :key="story.id" class="col">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div
+                            class="story-item rounded-circle overflow-hidden cursor-pointer border mx-auto"
+                            :class="{
               'border-primary': !isStoryViewed(story.id),
               'border-secondary': isStoryViewed(story.id),
             }"
-                        style="width: 80px; height: 80px"
-                        @click="viewStory(story.id)"
-                    >
-                        <img
-                            :src="story.thumbnail"
-                            class="w-100 h-100 object-fit-cover"
-                            :class="{ 'filter-grayscale': isStoryViewed(story.id) }"
-                            :alt="story.title"
-                        />
-                    </div>
-                    <h5 class="card-title mt-3">{{ story.title }}</h5>
-                    <p class="card-text">{{ story.description }}</p>
-                </div>
-                <div class="card-footer d-flex flex-column align-items-center">
-                    <div class="d-flex mb-2">
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-sm me-2"
-                            data-bs-toggle="modal"
-                            data-bs-target="#storyModal"
-                            @click="editStory(story)"
+                            style="width: 80px; height: 80px"
+                            @click="openStory(index)"
                         >
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
+                            <img
+                                :src="story.thumbnail"
+                                class="w-100 h-100 object-fit-cover"
+                                :class="{ 'filter-grayscale': isStoryViewed(story.id) }"
+                                :alt="story.title"
+                            />
+                        </div>
+                        <h5 class="card-title mt-3">{{ story.title }}</h5>
+                        <p class="card-text">{{ story.description }}</p>
+                    </div>
+                    <div class="card-footer d-flex flex-column align-items-center">
                         <button
                             type="button"
-                            class="btn btn-info btn-sm" @click="duplicateStory(story)">
-                            <i class="fa-solid fa-clone"></i>
+                            class="btn btn-link text-danger" @click="deleteStory(story.id)">Удалить
                         </button>
                     </div>
-                    <button
-                        type="button"
-                        class="btn btn-link text-danger" @click="deleteStory(story.id)">Удалить
-                    </button>
-
                 </div>
             </div>
         </div>
 
-
-    </div>
+        <!-- Модальное окно -->
+        <div
+            v-if="currentStory !== null"
+            class="modal fade show d-block"
+            style="background-color: rgba(0, 0, 0, 0.9);"
+            @click.self="closeStory"
+        >
+            <div class="modal-dialog modal-dialog-centered w-100 mw-100 m-0 h-100 mh-100">
+                <div class="modal-content bg-transparent border-0 h-100 position-relative">
+                    <!-- Полоска времени -->
+                    <div class="progress position-absolute top-0 start-0 end-0" style="height: 4px; z-index: 10;">
+                        <div
+                            class="progress-bar bg-primary"
+                            role="progressbar"
+                            :style="{ width: `${progress}%` }"
+                        ></div>
+                    </div>
+                    <!-- Контент истории -->
+                    <img
+                        :src="stories[currentStory].image"
+                        class="w-100 h-100 object-fit-cover"
+                        alt="Story"
+                    />
+                    <!-- Текстовая информация -->
+                    <div class="text-white p-3 bg-black bg-opacity-50 position-absolute bottom-0 start-0 end-0">
+                        <h5 class="mb-1">{{ stories[currentStory].title }}</h5>
+                        <p class="mb-0">{{ stories[currentStory].description }}</p>
+                    </div>
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white position-absolute top-0 end-0 m-2"
+                        style="z-index: 10;"
+                        @click="closeStory"
+                    ></button>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <template v-if="stories_paginate_object">
         <div class="row" v-if="stories_paginate_object.meta.last_page>1">
@@ -224,7 +273,10 @@ export default {
 
     data() {
         return {
-
+            currentStory: null,
+            progress: 0,
+            timer: null,
+            loadingStories: false,
             stories: [],
             stories_paginate_object: null,
             formStory: {
@@ -234,8 +286,8 @@ export default {
                 description: null,
             },
             isEditing: false,
-            useThumbnailFile: false,
-            useImageFile: false,
+            useThumbnailFile: true,
+            useImageFile: true,
             viewedStories: JSON.parse(localStorage.getItem('viewedStories')) || [],
         };
     },
@@ -243,13 +295,50 @@ export default {
         this.loadStoriesList()
     },
     methods: {
+        openStory(index) {
+            this.currentStory = index;
+            this.progress = 0;
+            this.startTimer();
+            this.markAsViewed(this.stories[index].id);
+        },
+        closeStory() {
+            this.currentStory = null;
+            this.progress = 0;
+            clearInterval(this.timer);
+        },
+        nextStory() {
+            if (this.currentStory < this.stories.length - 1) {
+                // Переход к следующей истории
+                this.currentStory++;
+                this.progress = 0;
+                this.markAsViewed(this.stories[this.currentStory].id);
+                this.startTimer();
+            } else {
+                // Закрытие модального окна, если это последняя история
+                this.closeStory();
+            }
+        },
+        startTimer() {
+            clearInterval(this.timer);
+            this.timer = setInterval(() => {
+                this.progress += 2;
+                if (this.progress >= 100) {
+                    this.nextStory();
+                }
+            }, 100); // 5 seconds total (100ms * 50 = 5000ms)
+        },
         loadStoriesList(page = 1) {
+            this.loadingStories = true
             return this.$store.dispatch("loadStories", {
                 page: page,
                 size: 20
             }).then(() => {
+
                 this.stories = this.$store.getters["getStories"]
                 this.stories_paginate_object = this.$store.getters["getStoriesPaginateObject"]
+                this.loadingStories = false
+            }).catch(() => {
+                this.loadingStories = false
             })
         },
 
@@ -264,15 +353,10 @@ export default {
                 description: null,
             };
             this.isEditing = false;
-            this.useThumbnailFile = false;
-            this.useImageFile = false;
+            this.useThumbnailFile = true;
+            this.useImageFile = true;
         },
-        editStory(story) {
-            this.formStory = {...story};
-            this.isEditing = true;
-            this.useThumbnailFile = false;
-            this.useImageFile = false;
-        },
+
         saveStory() {
 
             let data = new FormData();
@@ -288,6 +372,9 @@ export default {
             data.append("media_thumbnail", this.useThumbnailFile)
             data.append("media_image", this.useImageFile)
 
+            data.append('thumbnail[]', this.formStory.thumbnail)
+            data.append('image[]', this.formStory.image)
+
             this.$store.dispatch('saveStory', {
                 storyForm: data
             })
@@ -300,6 +387,8 @@ export default {
                         text: "История успешно сохранена",
                         type: "success",
                     });
+                    document.getElementById("story-form").reset();
+                    this.loadStoriesList()
                 })
                 .catch(() => {
                     this.$notify({
@@ -315,14 +404,17 @@ export default {
             this.startCreateStory()
             this.closeModal();
         },
-        handleThumbnailUpload(event) {
+        handleThumbnailUpload(event, param) {
             const file = event.target.files[0];
             if (file && file.size <= 5 * 1024 * 1024) {
-                this.formStory.thumbnail = file;
+                this.formStory[param] = file;
             } else {
                 alert('Размер файла миниатюры не должен превышать 5 МБ');
                 event.target.value = null;
             }
+        },
+        getPhoto(imgObject) {
+            return {imageUrl: URL.createObjectURL(imgObject)}
         },
         handleImageUpload(event) {
             const file = event.target.files[0];

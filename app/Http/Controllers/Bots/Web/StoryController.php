@@ -41,7 +41,7 @@ class StoryController extends Controller
         return BusinessLogic::story()
             ->setBot($bot)
             ->setBotUser($botUser)
-            ->store($request->all());
+            ->store($request->all(), $request->files ?? []);
     }
 
     public function destroy(Request $request, $storyId): StoryResource

@@ -52,7 +52,7 @@ class StoryLogicFactory extends BaseLogicFactory
     /**
      * Создание или обновление истории
      */
-    public function store(array $data): StoryResource
+    public function store(array $data, $files = []): StoryResource
     {
         if (is_null($this->bot)) {
             throw new HttpException(404, "Бот не найден.");
@@ -61,8 +61,8 @@ class StoryLogicFactory extends BaseLogicFactory
         $validator = Validator::make($data, [
             'id' => 'nullable|integer',
             'title' => 'required|string|max:255',
-            'thumbnail' => 'nullable|string',
-            'image' => 'nullable|string',
+            //  'thumbnail' => 'nullable|string',
+            // 'image' => 'nullable|string',
             'description' => 'nullable|string',
             'config' => 'nullable|array',
         ]);
@@ -84,6 +84,35 @@ class StoryLogicFactory extends BaseLogicFactory
         } else {
             $story = Story::create($storyData);
         }
+
+        if (count($files ?? []) > 0) {
+            $thumbnail = $files->get("thumbnail");
+            $image = $files->get("image");
+
+            $filename = time() . '_' . $thumbnail[0]->getClientOriginalName();
+            $thumbnail[0]->move(public_path('images/shop-v2-2/' . $this->bot->bot_domain), $filename);
+
+            if (!is_null($story->thumbnail ?? null)) {
+                $oldPath = public_path('images/shop-v2-2/' . $this->bot->bot_domain . "/" . $story->thumbnail);
+                if (file_exists($oldPath))
+                    unlink($oldPath);
+            }
+
+            $story->thumbnail = '/images/shop-v2-2/'.$this->bot->bot_domain . "/" . $filename;
+
+            $filename = time() . '_' . $image[0]->getClientOriginalName();
+            $image[0]->move(public_path('images/shop-v2-2/' . $this->bot->bot_domain), $filename);
+
+            if (!is_null($story->image ?? null)) {
+                $oldPath = public_path('images/shop-v2-2/' . $this->bot->bot_domain . "/" . $story->image);
+                if (file_exists($oldPath))
+                    unlink($oldPath);
+            }
+            $story->image = '/images/shop-v2-2/'.$this->bot->bot_domain . "/" . $filename;
+
+            $story->save();
+        }
+
 
         return new StoryResource($story);
     }

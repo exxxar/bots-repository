@@ -102,19 +102,24 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
         <div class="divider my-3"> Дополнительно</div>
         <button
+            v-if="preparedMenuItem['wheel_of_fortune_btn']?.is_visible"
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
             @click="switchToPage('Колесо фортуны')"
             class="btn btn-outline-light text-primary w-100 p-3 rounded-3 shadow-sm mb-2">
 
-            <i class="fa fa-dot-circle"></i> Колесо фортуны
+            <i class="fa fa-dot-circle"></i>
+            {{preparedMenuItem['wheel_of_fortune_btn'].title||'Колесо фортуны'}}
+
         </button>
 
         <button
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            v-if="preparedMenuItem['friends_btn']?.is_visible"
             @click="switchToPage('Пригласить друзей')"
             class="btn  btn-outline-light text-primary mb-2 w-100 p-3 rounded-3 shadow-sm ">
 
-            <i class="fa fa-people-carry "></i> Пригласить друзей
+            <i class="fa fa-people-carry "></i>
+            {{preparedMenuItem['friends_btn'].title||'Пригласить друзей'}}
         </button>
 
         <template v-if="getSelf.is_admin">
@@ -312,12 +317,14 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
         class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
         style="border-radius:10px 10px 0px 0px;">
+
         <button
+            v-if="preparedMenuItem['main_menu_btn']?.is_visible"
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
             @click="startMenu"
             class="btn btn-primary w-100 p-3 rounded-3 shadow-lg">
 
-            <i class="fa-brands fa-telegram"></i> Главное меню
+            <i class="fa-brands fa-telegram"></i>  {{preparedMenuItem['main_menu_btn'].title||'Главное меню'}}
         </button>
     </nav>
 

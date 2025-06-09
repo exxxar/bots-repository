@@ -412,39 +412,42 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             <label for="floatingInput">Название меню</label>
         </div>
 
-        <div v-if="iconForm.items[selected_menu_item_index].image_url &&
+        <template v-if="iconForm.items[selected_menu_item_index].image_url">
+            <div v-if="iconForm.items[selected_menu_item_index].image_url &&
         !photos_for_upload[iconForm.items[selected_menu_item_index].slug] ">
-<!--            <a
-                class="w-100 text-center mb-2"
-                @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
-                href="javascript:void(0)">Вернуть стандартное фото</a>-->
-            <img
-                v-lazy="'/images/shop-v2-2/'+iconForm.items[selected_menu_item_index].image_url"
-                class="img-thumbnail w-100" alt="...">
-        </div>
-        <div v-else>
-            <img
-                class="img-thumbnail w-100"
-                v-lazy="getPhoto(photos_for_upload[iconForm.items[selected_menu_item_index].slug]).imageUrl">
-        </div>
+                <!--            <a
+                                class="w-100 text-center mb-2"
+                                @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
+                                href="javascript:void(0)">Вернуть стандартное фото</a>-->
+                <img
+                    v-lazy="'/images/shop-v2-2/'+iconForm.items[selected_menu_item_index].image_url"
+                    class="img-thumbnail w-100" alt="...">
+            </div>
+            <div v-else>
+                <img
+                    class="img-thumbnail w-100"
+                    v-lazy="getPhoto(photos_for_upload[iconForm.items[selected_menu_item_index].slug]).imageUrl">
+            </div>
 
-        <p
-            class="mb-0 w-100 text-center bg-success text-white rounded-2 my-2 p-3"
-            v-if="photos_for_upload[iconForm.items[selected_menu_item_index].slug]">Фото добавлено в очередь,
-            <a
-                class="text-white"
-                @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
-                href="javascript:void(0)">отменить?</a>
-        </p>
-        <div v-if="iconConfig.errorMessage" class="alert alert-danger my-2" v-html="iconConfig.errorMessage"></div>
-        <div class="form-floating my-2">
-            <input type="file" :id="'menu-photos-'+selected_menu_item_index" accept="image/*"
-                   required
-                   class="form-control"
-                   @change="onChangePhotos($event, selected_menu_item_index)"
-            />
-            <label for="floatingInput">Изображение</label>
-        </div>
+            <p
+                class="mb-0 w-100 text-center bg-success text-white rounded-2 my-2 p-3"
+                v-if="photos_for_upload[iconForm.items[selected_menu_item_index].slug]">Фото добавлено в очередь,
+                <a
+                    class="text-white"
+                    @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
+                    href="javascript:void(0)">отменить?</a>
+            </p>
+            <div v-if="iconConfig.errorMessage" class="alert alert-danger my-2" v-html="iconConfig.errorMessage"></div>
+            <div class="form-floating my-2">
+                <input type="file" :id="'menu-photos-'+selected_menu_item_index" accept="image/*"
+                       required
+                       class="form-control"
+                       @change="onChangePhotos($event, selected_menu_item_index)"
+                />
+                <label for="floatingInput">Изображение</label>
+            </div>
+
+        </template>
 
 
         <button
@@ -585,6 +588,21 @@ export default {
                         title: 'О Нас & Контакты',
                         image_url: 'contacts.png',
 
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'wheel_of_fortune_btn',
+                        title: 'Колесо фортуны',
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'friends_btn',
+                        title: 'Друзья',
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'main_menu_btn',
+                        title: 'Главное меню',
                         is_visible: true,
                     }
                 ]
@@ -787,8 +805,10 @@ export default {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
         selectMenuItem(index) {
-            let img = document.querySelector("#menu-photos-" + this.selected_menu_item_index)
-            img.value = null
+            if (this.iconForm.items[index].image_url) {
+                let img = document.querySelector("#menu-photos-" + this.selected_menu_item_index)
+                img.value = null
+            }
 
             this.selected_menu_item_index = index
         },
