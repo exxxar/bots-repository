@@ -53,7 +53,17 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                     </div>
                 </div>
             </div>
+            <div class="p-2 alert alert-warning mt-2"
+                 v-if="item.delivery_terms">
+                <p class="mb-0 fw-bold">Особенности доставки данного товара</p>
+                <h6
+                    v-if="item.delivery_terms"
+                    class="d-flex justify-content-between mb-3">
+                    {{item.delivery_terms}}
+                </h6>
+                <p v-else class="mb-0">Дополнительных условий доставки нет</p>
 
+            </div>
         </div>
     </div>
 
