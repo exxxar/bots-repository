@@ -24,6 +24,7 @@ class Product extends Model
         'frontpad_article',
         'iiko_article',
         'title',
+        'delivery_terms',
         'description',
         'images',
         'type',

@@ -5,6 +5,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 <template v-if="item">
 
     <div class="card  border-0 product-card">
+
         <div
             @click="showProductDetails"
             class="img-container">
@@ -17,6 +18,12 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     <div class="rating w-100 p-2">
                         <span class="text-white fw-bold"><i
                             class="fa-regular fa-star text-primary mr-1"></i> {{ item.rating || 0 }}</span>
+                    </div>
+
+                    <div class="terms p-2" v-if="item.delivery_terms">
+                         <span class="text-white fw-bold">
+                        <i class="fa-solid fa-clock text-primary"></i>
+                         </span>
                     </div>
                     <span
                         v-if="item.old_price>0"
@@ -75,7 +82,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                         </button>
                         <button type="button"
                                 v-bind:class="{'btn-secondary':!canProductAction}"
-                                class="btn btn-sm btn-primary ">{{ checkInCart }}</button>
+                                class="btn btn-sm btn-primary ">{{ checkInCart }}
+                        </button>
                         <button type="button"
                                 v-bind:class="{'btn-secondary':!canProductAction}"
                                 :disabled="item.in_stop_list_at!=null|| !canProductAction"
@@ -93,7 +101,10 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                 </div>
             </template>
 
+
         </div>
+
+
     </div>
 
 
@@ -153,6 +164,19 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
                     </div>
 
+
+                    <div class="p-2 alert alert-warning"
+                         v-if="item.delivery_terms">
+                        <p class="mb-0 fw-bold">Особенности доставки</p>
+                        <h6
+                            v-if="item.delivery_terms"
+                            class="d-flex justify-content-between mb-3">
+                          {{item.delivery_terms}}
+                        </h6>
+                        <p v-else class="mb-0">Дополнительных условий доставки нет</p>
+
+                    </div>
+
                     <div
                         v-if="item.dimension"
                         class="p-2">
@@ -204,7 +228,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
                     <div v-if="tab===0">
                         <p v-if="item.description" v-html="item.description"
-                            class="text-justify py-2 fst-italic"></p>
+                           class="text-justify py-2 fst-italic"></p>
                         <p v-else
                            class="text-justify py-2 fst-italic">Нет описания</p>
                     </div>
@@ -275,7 +299,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                             </button>
                             <button type="button"
                                     v-bind:class="{'btn-secondary':!canProductAction}"
-                                    class="btn btn-md btn-primary">{{ checkInCart }}</button>
+                                    class="btn btn-md btn-primary">{{ checkInCart }}
+                            </button>
                             <button type="button"
                                     v-bind:class="{'btn-secondary':!canProductAction}"
                                     :disabled="item.in_stop_list_at!=null|| !canProductAction"
@@ -310,8 +335,8 @@ export default {
             loading_reviews: false,
             reviews: [],
             paginate: null,
-            sending:false,
-            is_online:true,
+            sending: false,
+            is_online: true,
         }
     },
     computed: {
@@ -331,7 +356,7 @@ export default {
         uuid() {
             return uuidv4();
         },
-        canProductAction(){
+        canProductAction() {
             return this.is_online && !this.sending
         }
 
@@ -489,6 +514,15 @@ export default {
         width: 100%;
         height: 100%;
         z-index: 2;
+    }
+}
+
+.terms {
+    span {
+        background: #00000069;
+        padding: 5px 6px;
+        border-radius: 5px;
+        font-size: 10px;
     }
 }
 

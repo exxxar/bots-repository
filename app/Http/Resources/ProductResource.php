@@ -20,6 +20,7 @@ class ProductResource extends JsonResource
             'iiko_article' => $this->iiko_article,
             'title' => $this->title,
             'description' => $this->description,
+            'delivery_terms' => $this->delivery_terms,
             'dimension' => $this->dimension,
             'images' => $this->images,
             'type' => $this->type,

@@ -99,6 +99,20 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             <label for="modelValue-phone">Номер телефона <span class="fw-bold text-danger">*</span></label>
         </div>
 
+        <template v-if="bot.company.law_params?.offer_link">
+            <div class="alert alert-light my-2">
+                <div class="form-check form-switch">
+                    <p class="mb-2">
+                        Нажимая кнопку, вы соглашаетесь с условиями
+                        <a :href="bot.company.law_params.offer_link" target="_blank">договора оферты</a>.
+                    </p>
+                    <input
+                        v-model="offer_agreement"
+                        class="form-check-input" type="checkbox" role="switch" id="offerSwitch" checked>
+                    <label class="form-check-label fw-bold" for="offerSwitch">Я соглашаюсь</label>
+                </div>
+            </div>
+        </template>
 
         <h6 class="opacity-75 my-3">Сводка</h6>
 
@@ -113,6 +127,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
         </button>
 
         <nav
+            v-if="offer_agreement"
             class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
             style="border-radius:10px 10px 0px 0px;">
 
@@ -164,7 +179,7 @@ export default {
     data() {
         return {
             spent_time_counter: 0,
-
+            offer_agreement:true,
             need_request_delivery_price: true,
             moneyVariants: [
                 500, 1000, 2000, 5000

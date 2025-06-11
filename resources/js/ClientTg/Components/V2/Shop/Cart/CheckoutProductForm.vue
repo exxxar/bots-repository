@@ -2,6 +2,7 @@
 import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
 </script>
 <template>
+
     <form
         id="basket"
         class="container py-3"
@@ -232,6 +233,21 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             <label v-else for="modelValue-info">Информация для сотрудника</label>
         </div>
 
+        <template v-if="bot.company.law_params?.offer_link">
+          <div class="alert alert-light my-2">
+              <div class="form-check form-switch">
+                  <p class="mb-2">
+                      Нажимая кнопку, вы соглашаетесь с условиями
+                      <a :href="bot.company.law_params.offer_link" target="_blank">договора оферты</a>.
+                  </p>
+                  <input class="form-check-input"
+                         v-model="offer_agreement"
+                         type="checkbox" role="switch" id="offerSwitch" checked>
+                  <label class="form-check-label" for="offerSwitch">Я соглашаюсь</label>
+              </div>
+          </div>
+        </template>
+
         <template v-if="!modelValue.need_pickup">
             <h6 class="opacity-75 mt-3">К какому времени приготовить?</h6>
 
@@ -362,6 +378,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
         </button>
 
         <nav
+            v-if="offer_agreement"
             class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
             style="border-radius:10px 10px 0px 0px;">
 
@@ -441,6 +458,7 @@ export default {
     props: ["settings", "modelValue"],
     data() {
         return {
+            offer_agreement:true,
             delivery_price_request_step: 0,
             spent_time_counter: 0,
             need_select_table_by_number: false,

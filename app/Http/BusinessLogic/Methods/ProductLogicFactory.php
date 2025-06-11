@@ -252,6 +252,7 @@ class ProductLogicFactory extends BaseLogicFactory
             'vk_product_id' => $data["vk_product_id"] ?? null,
             'title' => $data["title"] ?? null,
             'description' => $data["description"] ?? null,
+            'delivery_terms' => $data["delivery_terms"] ?? null,
             'images' => $images,
             'type' => $data["type"] ?? 0,
             'old_price' => $data["old_price"] ?? 0,

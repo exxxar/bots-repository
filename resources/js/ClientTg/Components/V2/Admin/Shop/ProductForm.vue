@@ -41,6 +41,8 @@
                                 <label for="title">Название товара</label>
                             </div>
 
+
+
                             <div class="form-floating mb-2">
                                 <input type="number"
                                        min="0"
@@ -62,6 +64,17 @@
                 </textarea>
 
                                 <label for="description">Описание товара</label>
+                            </div>
+
+                            <div class="form-floating mb-2">
+                                <textarea class="form-control font-12"
+                                              v-model="productForm.delivery_terms"
+                                              style="min-height:200px;"
+                                              v-on:invalid="openInvalidTab(0)"
+                                              placeholder="Укажите особенности доставки товара" id="delivery_terms">
+
+                                </textarea>
+                                <label for="description"><i class="fa-solid fa-clock text-primary"></i> Особенности доставки товара</label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -436,6 +449,7 @@ export default {
                 title: null,
                 rating: 5,
                 description: null,
+                delivery_terms: null,
                 images: [],
                 type: 1,
                 old_price: null,
@@ -472,6 +486,7 @@ export default {
                 title: this.modelValue.title || null,
                 rating: this.modelValue.rating || 5,
                 description: this.modelValue.description || null,
+                delivery_terms: this.modelValue.delivery_terms || null,
                 images: this.modelValue.images || null,
                 type: this.modelValue.type || 1,
                 old_price: this.modelValue.old_price || null,
@@ -663,6 +678,7 @@ export default {
                 vk_product_id: null,
                 title: null,
                 description: null,
+                delivery_terms: null,
                 images: [],
                 type: 1,
                 old_price: null,
