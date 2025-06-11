@@ -4,7 +4,7 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 <template>
 
     <div class="card border-0" v-if="item">
-        <div class="card-body p-1">
+        <div class="card-body">
             <div class="d-flex">
                 <div class="mr-auto"
                      @click="addToCart"
@@ -53,7 +53,7 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                     </div>
                 </div>
             </div>
-            <div class="p-2 alert alert-warning mt-2"
+            <div class="p-2 alert alert-warning mt-2 mb-0"
                  v-if="item.delivery_terms">
                 <p class="mb-0 fw-bold">Особенности доставки данного товара</p>
                 <h6
