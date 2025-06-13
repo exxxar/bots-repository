@@ -6,10 +6,25 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
 import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
+import CategorySlider from "@/ClientTg/Components/V2/Shop/CategorySlider.vue";
 </script>
 <template>
-    <div v-touch:swipe.left="doSwipeLeft"
-         v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
+
+    <menu
+        id="category-slider"
+        class="d-block w-100 p-0 m-0">
+        <CategorySlider
+            :settings="settings"
+            :categories="filteredCategories"
+            :collections="collections"
+            @select="selectCategory"
+            @search="findProducts"
+        />
+
+    </menu>
+
+    <div
+         class="d-flex flex-column">
 
         <template v-if="settings">
             <div class="p-2" v-if="settings.is_disabled">
@@ -20,28 +35,29 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
         </template>
 
 
-        <menu
-            v-bind:style="colorTheme"
-            class="d-block position-sticky w-100 header-category-slider">
 
-            <ul class="nav nav-tabs justify-content-center catalog-tabs">
-                <li class="nav-item">
-                    <a class="nav-link"
-                       @click="openTab(0)"
-                       style="font-weight:bold;"
-                       v-bind:class="{'active':tab===0}"
-                       aria-current="page" href="javascript:void(0)"><i class="fa-solid fa-tag mr-2"></i>Категории</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link"
-                       @click="openTab(1)"
-                       style="font-weight:bold;"
-                       v-bind:class="{'active':tab===1}"
-                       href="javascript:void(0)"><i class="fa-solid fa-bag-shopping mr-2"></i>Товары</a>
-                </li>
+        <!--        <menu
+                    v-bind:style="colorTheme"
+                    class="d-block position-sticky w-100 header-category-slider">
 
-            </ul>
-        </menu>
+                    <ul class="nav nav-tabs justify-content-center catalog-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               @click="openTab(0)"
+                               style="font-weight:bold;"
+                               v-bind:class="{'active':tab===0}"
+                               aria-current="page" href="javascript:void(0)"><i class="fa-solid fa-tag mr-2"></i>Категории</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               @click="openTab(1)"
+                               style="font-weight:bold;"
+                               v-bind:class="{'active':tab===1}"
+                               href="javascript:void(0)"><i class="fa-solid fa-bag-shopping mr-2"></i>Товары</a>
+                        </li>
+
+                    </ul>
+                </menu>-->
 
         <div
             v-show="tab===0"
@@ -108,6 +124,8 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
             class="album">
             <template v-if="settings">
                 <div class="container g-2">
+
+
                     <template
                         v-if="collections.length>0">
                         <h5 class="my-4 divider" id="cat-combo">Комбо меню</h5>
@@ -274,13 +292,32 @@ export default {
             return Math.min(cashBackAmount, maxUserCashback)
         },
         filteredCategories() {
-            if (this.products.length === 0)
+            if (!this.products || this.products.length === 0) {
                 return []
+            }
 
-            if ((this.search || '').length === 0)
+            if (this.search instanceof Event)
                 return this.products
 
-            return this.products.filter(item => item.products.filter(sub => sub.title.toLowerCase().indexOf(this.search.toLowerCase()) != -1).length > 0)
+            if (!this.search)
+                return this.products
+
+            console.log("search", this.search)
+
+            const query = this.search.toLowerCase()
+
+            return this.products
+                .map(category => {
+                    const filteredProducts = category.products.filter(product =>
+                        product.title?.toLowerCase().includes(query)
+                    )
+
+                    return {
+                        ...category,
+                        products: filteredProducts
+                    }
+                })
+                .filter(category => category.products.length > 0)
 
         },
         filteredProducts() {
@@ -305,12 +342,40 @@ export default {
     },
 
     mounted() {
+
+        const slider = document.getElementById('category-slider')
+
+        const handleScroll = () => {
+            if (!slider) return
+
+            if (window.scrollY > 70) {
+                slider.style.position = 'fixed'
+                slider.style.top = '0'
+                slider.style.left = '0'
+                slider.style.right = '0'
+                slider.style.zIndex = '1000'
+               // slider.style.backgroundColor = 'white'
+              //  slider.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
+            } else {
+                slider.style.position = 'relative'
+                slider.style.top = ''
+                slider.style.left = ''
+                slider.style.right = ''
+                slider.style.zIndex = ''
+                slider.style.backgroundColor = ''
+                slider.style.boxShadow = ''
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll)
+
+
         //this.clearCart();
         this.loadProducts()
         this.loadCollections()
 
-      /*  if (this.cartProducts.length > 0)
-            this.loadActualProducts()*/
+        /*  if (this.cartProducts.length > 0)
+              this.loadActualProducts()*/
 
 
         this.tg.BackButton.show()
@@ -323,14 +388,17 @@ export default {
         })
     },
     methods: {
-     /*   checkCollectionInCart(item){
-            return this.inCollectionCart(item.id, null) > 0
-        },*/
+        findProducts(text){
+          this.search = text
+        },
+        /*   checkCollectionInCart(item){
+               return this.inCollectionCart(item.id, null) > 0
+           },*/
         scroll(id) {
             // document.getElementById(id).scrollIntoView();
             var element = document.getElementById(id);
             var headerOffset = 70;
-            var elementPosition = element.getBoundingClientRect().top;
+            var elementPosition = element?.getBoundingClientRect().top||70;
             var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
             window.scroll({
                 top: offsetPosition,
@@ -402,9 +470,9 @@ export default {
             this.tab = 1
             this.$store.dispatch("clearCart").then(() => {
                 this.$notify({
-                    title:'Корзина',
+                    title: 'Корзина',
                     text: "Корзина успешно очищена!",
-                    type:'success'
+                    type: 'success'
                 })
 
             })

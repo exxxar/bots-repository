@@ -7,6 +7,8 @@
     "require": {
         "php": "^8.1",
         "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-http": "*",
         "ext-mbstring": "*",
         "andrey-tech/amocrm-api-php": "2.7",
         "carlos-meneses/laravel-mpdf": "^2.1",
@@ -24,12 +26,12 @@
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpword": "^1.2",
         "predis/predis": "^2.3",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/image": "^2.2",
         "spatie/laravel-permission": "^6.4",
         "tightenco/ziggy": "^1.0",
         "vkcom/vk-php-sdk": "^5.131",
-        "yandex/geo": "^1.2",
-      "ext-http": "*"
+        "yandex/geo": "^1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

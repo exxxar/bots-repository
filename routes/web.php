@@ -36,7 +36,7 @@ use Mpdf\HTMLParserMode;
 use Mpdf\Mpdf;
 use Telegram\Bot\FileUpload\InputFile;
 
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,10 +48,88 @@ use Telegram\Bot\FileUpload\InputFile;
 |
 */
 
-/*Route::get("/test", function (){
-   $bitrix = new \App\Http\BusinessLogic\BitrixService("");
-   return $bitrix->getStatusList();
-});*/
+Route::get("/test", function (){
+    $name ='Шипилов Егор Олегович';
+    $course ='Вы выиграли сертификат на бургер!';
+    $date =  date('d.m.Y');
+
+    $templatePath = storage_path('app/public/certificates/certificate_template.png');
+
+    // Загружаем изображение
+    $image = imagecreatefrompng($templatePath);
+
+    // Получаем размеры изображения
+    $imageWidth = imagesx($image);
+    $imageHeight = imagesy($image);
+
+    // Устанавливаем цвет текста (черный)
+    $textColor = imagecolorallocate($image, 0, 0, 0);
+
+    // Указываем путь к шрифту (TrueType)
+    $fontPath = storage_path('app/public/certificates/Ura Bum Bum SP.ttf'); // Добавь свой шрифт в public/fonts
+
+    // Размеры шрифта
+    $fontSizeName = 30;
+    $fontSizeInfo = 20;
+
+    // Высоты строк
+    $yName = $imageHeight / 2 - 30;
+    $yCourse = $yName + 40;
+    $yDate = $yCourse + 30;
+
+    // Функция для отцентровки текста
+    $centerText = function($text, $fontSize, $y) use ($image, $imageWidth, $textColor, $fontPath) {
+        $box = imagettfbbox($fontSize, 0, $fontPath, $text);
+        $textWidth = abs($box[2] - $box[0]);
+        $x = ($imageWidth - $textWidth) / 2;
+        imagettftext($image, $fontSize, 0, $x, $y, $textColor, $fontPath, $text);
+    };
+
+    $centerText($name, $fontSizeName, $yName);
+    $centerText("Ваш приз: $course", $fontSizeInfo, $yCourse);
+    $centerText("Дата выигрыша: $date", $fontSizeInfo, $yDate);
+
+    $qrText = "https://t.me/exxxar";
+    // Генерируем QR в PNG и получаем как строку
+    $qrPng = QrCode::format('png')->size(100)->margin(1)->generate($qrText);
+
+    // Создаём изображение QR-кода из строки
+    $qrImage = imagecreatefromstring($qrPng);
+
+    // Координаты для размещения (правый нижний угол с отступами)
+    $qrWidth = imagesx($qrImage);
+    $qrHeight = imagesy($qrImage);
+    $padding = 30;
+
+    $qrX = ($imageWidth/2) - $qrWidth + 50;
+    $qrY = ($imageHeight/2) - $qrHeight + 200;
+
+    // Накладываем QR-код
+    imagecopy($image, $qrImage, $qrX, $qrY, 0, 0, $qrWidth, $qrHeight);
+    // Буферизуем вывод
+    ob_start();
+    imagepng($image);
+    $imageData = ob_get_clean();
+
+    // Освобождаем память
+    imagedestroy($image);
+
+    $bot = Bot::query()
+        ->where("bot_domain",'nextitgroup_bot')
+        ->first();
+
+    BotMethods::bot()
+        ->whereBot($bot)
+        ->sendPhoto(
+            484698703,
+            "Информация о сертификате",
+            InputFile::createFromContents($imageData, "certificate.png")
+        );
+   /* // Возвращаем как ответ с правильными заголовками
+    return response($imageData)
+        ->header('Content-Type', 'image/png')
+        ->header('Content-Disposition', 'attachment; filename="certificate.png"');*/
+});
 Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);
 Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
 Route::view("/page-not-found", "error-node")->name("error-node");
