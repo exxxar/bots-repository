@@ -410,7 +410,7 @@ export default {
                 this.sending = false
                 this.$notify({
                     title: "Добавление товара",
-                    text: 'Товар успешно добавлен',
+                    text: 'Товар "'+this.item.title+'" успешно добавлен',
                     type: 'success'
                 })
             }).catch(() => {
@@ -432,7 +432,7 @@ export default {
                 this.sending = false
                 this.$notify({
                     title: "Удаление товара",
-                    text: 'Товар успешно удален',
+                    text:  'Товар "'+this.item.title+'" успешно убран из корзины',
                     type: 'success'
                 })
             }).catch(() => {

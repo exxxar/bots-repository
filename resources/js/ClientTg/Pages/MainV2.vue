@@ -18,7 +18,7 @@ import Layout from "@/ClientTg/Layouts/V2Layout.vue";
             <notifications position="top right"
                            ignoreDuplicates="true"
                            max="3"
-                           width="100%" speed="10" duration="100"/>
+                           width="100%" speed="10" />
 
             <router-view
                 :bot="bot"/>
@@ -154,7 +154,38 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+.vue-notification {
+    margin: 0 10px 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #000;
+    background: #f1f3f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #007aff; // iOS blue
+
+    transition: all 0.3s ease;
+
+    &.success {
+        background: #e6f9ec;
+        border-left-color: #34c759; // iOS green
+        color: #1c1c1e;
+    }
+
+    &.warn {
+        background: #fff7e5;
+        border-left-color: #ffcc00; // iOS yellow
+        color: #1c1c1e;
+    }
+
+    &.error {
+        background: #fce8e6;
+        border-left-color: #ff3b30; // iOS red
+        color: #1c1c1e;
+    }
+}
 
 </style>
 
