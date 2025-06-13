@@ -348,7 +348,7 @@ export default {
         const handleScroll = () => {
             if (!slider) return
 
-            if (window.scrollY > 70) {
+            if (window.scrollY > 50) {
                 slider.style.position = 'fixed'
                 slider.style.top = '0'
                 slider.style.left = '0'

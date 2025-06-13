@@ -5,7 +5,7 @@
     >
         <div
             v-bind:style="colorTheme"
-            class="container-slider-wrapper p-2" >
+            class="container-slider-wrapper p-2">
             <div class="d-flex overflow-auto category-slider gap-2">
                 <!-- Все категории -->
                 <button
@@ -61,7 +61,6 @@
             </div>
 
 
-
         </template>
 
     </div>
@@ -70,26 +69,39 @@
 <script>
 
 export default {
-    data(){
-      return {
-          search:null,
-          need_search:false,
-      }
+    data() {
+        return {
+            search: null,
+            need_search: false,
+        }
     },
-    props:{
+    props: {
         settings: Object,
         categories: Array,
         collections: Array,
     },
-    computed:{
+    computed: {
         colorTheme() {
             const theme = document.querySelector("[data-bs-theme]").getAttribute('data-bs-theme')
             return "background-color:" + (theme === "light" ? "white" : "#212529");
         },
     },
-    methods:{
-        findProducts(){
-          this.$emit("search",this.search)
+    watch: {
+        'need_search': {
+            handler: function (newValue) {
+                if (!this.need_search) {
+                    this.search = null
+                    this.findProducts()
+                }
+
+            },
+            deep: true
+        },
+    },
+
+    methods: {
+        findProducts() {
+            this.$emit("search", this.search)
         },
         selectCategory(item) {
             this.$emit('select', item)
@@ -108,12 +120,11 @@ export default {
             // Найти якорь и прокрутить плавно
             const el = document.getElementById(anchorId)
             if (el) {
-                el.scrollIntoView({ behavior: 'auto', block: 'start' })
+                el.scrollIntoView({behavior: 'auto', block: 'start'})
             }
         }
     }
 }
-
 
 
 </script>
