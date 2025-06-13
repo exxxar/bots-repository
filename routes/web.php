@@ -36,7 +36,7 @@ use Mpdf\HTMLParserMode;
 use Mpdf\Mpdf;
 use Telegram\Bot\FileUpload\InputFile;
 
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+//use SimpleSoftwareIO\QrCode\Facades\QrCode;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,7 +48,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 |
 */
 
-Route::get("/test", function (){
+/*Route::get("/test", function (){
     $name ='Шипилов Егор Олегович';
     $course ='Вы выиграли сертификат на бургер!';
     $date =  date('d.m.Y');
@@ -129,7 +129,7 @@ Route::get("/test", function (){
     return response($imageData)
         ->header('Content-Type', 'image/png')
         ->header('Content-Disposition', 'attachment; filename="certificate.png"');*/
-});
+});*/
 Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);
 Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
 Route::view("/page-not-found", "error-node")->name("error-node");
