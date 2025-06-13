@@ -69,7 +69,9 @@ createInertiaApp({
             .use(plugin)
             .use(store)
             .use(VueTheMask)
-            .use(Notifications)
+            .use(Notifications, {
+                duration: 500 // по умолчанию 5 секунд для всех уведомлений
+            })
             .use(Popper)
             .use(router)
             .use(VueSocialSharing)
