@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use PhpOffice\PhpWord\Style\Tab;
+use Telegram\Bot\FileUpload\InputFile;
 
 class StartCodesHandlerController extends Controller
 {
@@ -128,14 +129,16 @@ class StartCodesHandlerController extends Controller
             ->where("id", $productId)
             ->first();
 
+
+
         BotMethods::bot()
             ->whereBot($bot)
-            ->sendInlineKeyboard(
+            ->sendPhoto(
                 $botUser->telegram_chat_id,
                 "<b>" . ($product->title ?? 'Название товара') . "</b>\n" .
                 "<em>" . ($product->description ?? 'Описание товара') . "</em>\n" .
-                "Цена товара <b>" . ($product->current_price ?? '-') . " руб</b>"
-                ,
+                "Цена товара <b>" . ($product->current_price ?? '-') . " руб</b>",
+                InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                 [
                     [
                         ["text" => "Открыть товар",
