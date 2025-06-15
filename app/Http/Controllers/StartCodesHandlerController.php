@@ -122,7 +122,7 @@ class StartCodesHandlerController extends Controller
             return;
         }
 
-        $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s&hide_menu#/s/product/%s";
+        $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s#/s/product/%s";
 
         $product = Product::query()
             ->where("id", $productId)
