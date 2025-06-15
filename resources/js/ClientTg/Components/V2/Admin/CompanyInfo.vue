@@ -412,7 +412,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             <label for="floatingInput">Название меню</label>
         </div>
 
-        <template v-if="iconForm.items[selected_menu_item_index].image_url">
+        <template v-if="iconForm.items[selected_menu_item_index].has_icon">
             <div v-if="iconForm.items[selected_menu_item_index].image_url &&
         !photos_for_upload[iconForm.items[selected_menu_item_index].slug] ">
                 <!--            <a
@@ -594,16 +594,19 @@ export default {
                         slug: 'wheel_of_fortune_btn',
                         title: 'Колесо фортуны',
                         is_visible: true,
+                        has_icon: false,
                     },
                     {
                         slug: 'friends_btn',
                         title: 'Друзья',
                         is_visible: true,
+                        has_icon: false,
                     },
                     {
                         slug: 'main_menu_btn',
                         title: 'Главное меню',
                         is_visible: true,
+                        has_icon: false,
                     }
                 ]
             },
@@ -805,7 +808,7 @@ export default {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
         selectMenuItem(index) {
-            if (this.iconForm.items[index].image_url) {
+            if (this.iconForm.items[index].has_icon) {
                 let img = document.querySelector("#menu-photos-" + this.selected_menu_item_index)
                 img.value = null
             }

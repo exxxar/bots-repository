@@ -550,7 +550,7 @@ class Basket
         $paymentType = $this->data["payment_type"] ?? 4;
         $cdek = json_decode($this->data["cdek"] ?? '{}');
 
-        $productMessage = "#заказдоставка\n\n";
+        $productMessage = "#заказдоставка\n";
         $productMessage .= $this->checkWheelOfFortuneAction();
 
         $basket = \App\Models\Basket::query()
@@ -688,6 +688,8 @@ class Basket
             'order_type' => OrderTypeEnum::InternalStore->value,
             'payed_at' => Carbon::now(),
         ]);
+
+        $productMessage = "Заказ #$order->id\n";
 
         $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config : null;
 

@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\StoryCollection;
 use App\Http\Resources\StoryResource;
@@ -112,6 +113,10 @@ class StoryLogicFactory extends BaseLogicFactory
 
             $story->save();
         }
+
+        /*BusinessLogic::bots()
+            ->setBot($bot)
+            ->sendToCroneQueue($request->all());*/
 
 
         return new StoryResource($story);

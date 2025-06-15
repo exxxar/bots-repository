@@ -328,6 +328,11 @@ class BotSlugLogicFactory extends BaseLogicFactory
         $data["is_disabled"] = (($data["is_disabled"] ?? false) == "true");
         $data["can_buy_after_closing"] = (($data["can_buy_after_closing"] ?? false) == "true");
         $data["need_pay_after_call"] = (($data["need_pay_after_call"] ?? false) == "true");
+        $data["need_hide_disabled_products"] = (($data["need_hide_disabled_products"] ?? false) == "true");
+        $data["need_hide_delivery_period"] = (($data["need_hide_delivery_period"] ?? false) == "true");
+        $data["need_auto_send_stories"] = (($data["need_auto_send_stories"] ?? false) == "true");
+
+
         $data["price_per_km"] = (int)($data["price_per_km"] ?? 0);
         $data["interval"] = (int)($data["interval"] ?? 1);
         $data["free_shipping_starts_from"] = (int)($data["free_shipping_starts_from"] ?? 0);

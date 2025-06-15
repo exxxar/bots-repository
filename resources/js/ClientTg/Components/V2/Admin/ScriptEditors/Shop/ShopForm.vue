@@ -64,6 +64,17 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                           id="script-settings-disabled_text"></textarea>
             <label for="script-settings-disabled_text">Текст при выключении</label>
         </div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_hide_disabled_products"
+                   role="switch" id="script-settings-need_bonuses_section">
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Скрывать товары, которых нет в наличии: <span
+                v-bind:class="{'text-primary fw-bold':form.need_hide_disabled_products}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.need_hide_disabled_products}">выкл</span></label>
+        </div>
+
         <p class="alert alert-light mb-2">Сумма, от которой будет доступен заказа в магазине</p>
         <div class="form-floating mb-2">
             <input type="number"
@@ -97,6 +108,16 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     v-bind:class="{'text-primary fw-bold':!form.need_automatic_delivery_request}">выкл</span>
                 <span v-if="form.shop_display_type===1"> (через СДЭК)</span>
             </label>
+        </div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_hide_delivery_period"
+                   role="switch" id="script-settings-need_bonuses_section">
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Скрывать период доставки при расчете СДЭК: <span
+                v-bind:class="{'text-primary fw-bold':form.need_hide_delivery_period}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.need_hide_delivery_period}">выкл</span></label>
         </div>
 
         <template v-if="form.shop_display_type===0">
@@ -395,6 +416,18 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
 
         </ul>
 
+        <div class="divider my-3">Настройка историй</div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_auto_send_stories"
+                   role="switch" id="script-settings-can_use_cash">
+            <label class="form-check-label" for="script-settings-can_use_cash">Автоматическая рассылка оповещения про новую историю: <span
+                v-bind:class="{'text-primary fw-bold':form.need_auto_send_stories}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.need_auto_send_stories}">выкл</span></label>
+        </div>
+
     </div>
 
 </template>
@@ -476,6 +509,12 @@ export default {
                 can_use_card: true,
                 payment_token: null,
                 need_pay_after_call: false,
+
+                need_hide_disabled_products: false,
+                need_hide_delivery_period: false,
+                need_auto_send_stories: true,
+
+
                 disabled_text: null,
 
                 shop_display_type: 0,

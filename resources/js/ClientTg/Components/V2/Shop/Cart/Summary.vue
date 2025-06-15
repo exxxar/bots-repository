@@ -99,7 +99,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                             class="fw-bold">{{ data.cdek.tariff.tariff_name }} </strong>
                         </p>
                     </li>
-                    <li class="list-group-item">
+                    <li class="list-group-item" v-if="!settings.need_hide_delivery_period">
                         <p
                             class="mb-0 d-flex justify-content-between">Время доставки займет от
                             <strong

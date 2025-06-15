@@ -55,6 +55,8 @@ class ProductLogicFactory extends BaseLogicFactory
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
+        //need_hide_disabled_products
+
         $categories = ProductCategory::query()
             ->with(["products"])
             ->whereHas("products", function ($q) {
@@ -80,6 +82,7 @@ class ProductLogicFactory extends BaseLogicFactory
 
         $size = $size ?? config('app.results_per_page');
 
+        //need_hide_disabled_products
         $products = Product::query()
             ->with(["productCategories", "productOptions"])
             ->where("bot_id", $this->bot->id);

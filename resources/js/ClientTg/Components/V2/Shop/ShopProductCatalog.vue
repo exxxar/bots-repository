@@ -310,6 +310,7 @@ export default {
                 .map(category => {
                     const filteredProducts = category.products.filter(product =>
                         product.title?.toLowerCase().includes(query)
+                        && (this.settings.need_hide_disabled_products ? product.in_stop_list_at == null : true)
                     )
 
                     return {
