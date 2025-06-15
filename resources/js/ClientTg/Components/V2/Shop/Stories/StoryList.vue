@@ -36,6 +36,23 @@
                 <div class="text-white p-3 bg-black bg-opacity-50 position-absolute bottom-0 start-0 end-0">
                     <h5 class="mb-1">{{ sortedStories[currentStory].title }}</h5>
                     <p class="mb-0">{{ sortedStories[currentStory].description }}</p>
+
+                    <template v-if="sortedStories[currentStory].link">
+                        <a :href="sortedStories[currentStory].link"
+                           v-if="sortedStories[currentStory].link_type==='url'||sortedStories[currentStory].link_type==='bot'"
+                           target="_blank" class="btn btn-primary rounded-5 w-100 p-3">
+                            Перейти по ссылке
+                        </a>
+
+                        <a
+                            href="javascript:void(0)"
+                            @click="goToProductLink(sortedStories[currentStory].link)"
+                            v-if="sortedStories[currentStory].link_type==='product'"
+                            class="btn btn-primary rounded-5 w-100 p-3">
+                            Открыть товар
+                        </a>
+
+                    </template>
                 </div>
                 <button
                     type="button"
@@ -82,6 +99,26 @@ export default {
         },
     },
     methods: {
+        goToProductLink(url) {
+            try {
+                const urlObj = new URL(url);
+                const startParam = urlObj.searchParams.get("start");
+                const decoded = atob(startParam);
+
+                // Пример: "001slug123product456"
+                const slugMatch = decoded.match(/^001slug(\d+)product(\d+)$/);
+                if (!slugMatch) {
+                    this.$router.push({name: 'CatalogV2'})
+                }
+
+                const productId = slugMatch[2];
+
+                this.$router.push({name: 'ProductV2', params: {productId: productId}})
+
+            } catch (e) {
+                this.$router.push({name: 'CatalogV2'})
+            }
+        },
         openStory(index) {
             this.currentStory = index;
             this.progress = 0;

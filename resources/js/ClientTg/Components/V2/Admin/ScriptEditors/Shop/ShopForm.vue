@@ -416,17 +416,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
 
         </ul>
 
-        <div class="divider my-3">Настройка историй</div>
 
-        <div class="form-check form-switch mb-2">
-            <input class="form-check-input"
-                   type="checkbox"
-                   v-model="form.need_auto_send_stories"
-                   role="switch" id="script-settings-can_use_cash">
-            <label class="form-check-label" for="script-settings-can_use_cash">Автоматическая рассылка оповещения про новую историю: <span
-                v-bind:class="{'text-primary fw-bold':form.need_auto_send_stories}">вкл</span> \ <span
-                v-bind:class="{'text-primary fw-bold':!form.need_auto_send_stories}">выкл</span></label>
-        </div>
 
     </div>
 
@@ -512,7 +502,7 @@ export default {
 
                 need_hide_disabled_products: false,
                 need_hide_delivery_period: false,
-                need_auto_send_stories: true,
+
 
 
                 disabled_text: null,

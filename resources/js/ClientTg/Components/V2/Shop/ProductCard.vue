@@ -155,6 +155,10 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                         </div>
                     </div>
 
+                    <a href="javascript:void(0)"
+                       @click="copyToClipBoard"
+                       class="d-block w-100 text-center py-3"><i class="fa-solid fa-link"></i> Скопировать ссылку на товар</a>
+
                     <div class="p-2">
                         <p class="mb-0">Рейтинг товара</p>
                         <h6 class="d-flex justify-content-between mb-3">
@@ -358,6 +362,18 @@ export default {
         },
         canProductAction() {
             return this.is_online && !this.sending
+        },
+        currentScriptId(){
+          return window.currentScript
+        },
+        currentBot() {
+            return window.currentBot
+        },
+        qr() {
+            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.productLink
+        },
+        productLink() {
+            return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("001slug" + this.currentScriptId+"product"+this.item.id);
         }
 
     },
@@ -447,7 +463,22 @@ export default {
         selectInCollection(product) {
             if (this.canSelect)
                 this.$emit("select-in-collection", product)
-        }
+        },
+        copyToClipBoard() {
+            const link = this.productLink
+            navigator.clipboard.writeText(link).then(() => {
+                this.$notify({
+                    title: "Копирование",
+                    text: "Ссылка скопирована в буфер"
+                })
+            }).catch((err) => {
+                this.$notify({
+                    title: "Копирование",
+                    text: "Ошибка копирования",
+                    type: "error"
+                })
+            });
+        },
     }
 }
 </script>

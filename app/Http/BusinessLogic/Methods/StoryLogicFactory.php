@@ -72,18 +72,22 @@ class StoryLogicFactory extends BaseLogicFactory
             throw new ValidationException($validator);
         }
 
-        $storyData = array_merge($validator->validated(), [
-            'bot_id' => $this->bot->id,
-        ]);
+        $data["bot_id"] = $this->bot->id;
+
+        $needAutoSendStories = $data["need_auto_send_stories"] ?? false;
+
+        unset($data["need_auto_send_stories"]);
+        unset($data["thumbnail"]);
+        unset($data["image"]);
 
         if (!empty($data['id'])) {
             $story = Story::query()->find($data['id']);
             if (!$story) {
                 throw new HttpException(404, "История не найдена.");
             }
-            $story->update($storyData);
+            $story->update($data);
         } else {
-            $story = Story::create($storyData);
+            $story = Story::create($data);
         }
 
         if (count($files ?? []) > 0) {
@@ -99,7 +103,7 @@ class StoryLogicFactory extends BaseLogicFactory
                     unlink($oldPath);
             }
 
-            $story->thumbnail = '/images/shop-v2-2/'.$this->bot->bot_domain . "/" . $filename;
+            $story->thumbnail = '/images/shop-v2-2/' . $this->bot->bot_domain . "/" . $filename;
 
             $filename = time() . '_' . $image[0]->getClientOriginalName();
             $image[0]->move(public_path('images/shop-v2-2/' . $this->bot->bot_domain), $filename);
@@ -109,14 +113,29 @@ class StoryLogicFactory extends BaseLogicFactory
                 if (file_exists($oldPath))
                     unlink($oldPath);
             }
-            $story->image = '/images/shop-v2-2/'.$this->bot->bot_domain . "/" . $filename;
+            $story->image = '/images/shop-v2-2/' . $this->bot->bot_domain . "/" . $filename;
 
             $story->save();
         }
 
-        /*BusinessLogic::bots()
-            ->setBot($bot)
-            ->sendToCroneQueue($request->all());*/
+        if ($needAutoSendStories)
+            BusinessLogic::bots()
+                ->setBot($this->bot)
+                ->sendToCroneQueue([
+                    "message" => "<b>$story->title</b>\n<em>$story->description</em>",
+                    "inline_keyboard" => json_encode(!is_null($story->link) ? [
+                        [
+                            [
+                                "text" => "💎 Перейти",
+                                "url" => $story->link
+                            ]
+                        ]
+                    ] : []),
+                    "images" => json_encode([
+                        env("app_url") . $story->image
+                    ]),
+                    "cron_time" => Carbon::now()
+                ]);
 
 
         return new StoryResource($story);

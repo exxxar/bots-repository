@@ -158,9 +158,38 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                         <label for="description">Описание</label>
                     </div>
 
+                    <!-- Ссылка -->
+                    <div class="form-floating mb-2">
+                        <input
+                            v-model="formStory.link"
+                            type="url"
+                            class="form-control"
+                            id="title"
+                            placeholder="Введите заголовок"
+                        />
+                        <label for="title"><i class="fa-solid fa-link"></i> Ссылка</label>
+                    </div>
 
+                    <div class="form-floating mb-2" v-if="formStory.link">
+                        <select
+                            required
+                            v-model="formStory.link_type"
+                            class="form-select" id="link_type" aria-label="Floating label select example">
+                            <option :value="item.key" v-for="item in link_types">{{ item.title }}</option>
+                        </select>
+                        <label for="link_type">Тип ссылки</label>
+                    </div>
                 </div>
                 <div class="modal-footer">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               v-model="formStory.need_auto_send_stories"
+                               role="switch" id="script-settings-can_use_cash">
+                        <label class="form-check-label" for="script-settings-can_use_cash">Автоматическая рассылка оповещения про новую историю: <span
+                            v-bind:class="{'text-primary fw-bold':formStory.need_auto_send_stories}">вкл</span> \ <span
+                            v-bind:class="{'text-primary fw-bold':!formStory.need_auto_send_stories}">выкл</span></label>
+                    </div>
                     <button type="submit" class="btn btn-primary p-2 w-100">Сохранить</button>
                 </div>
             </form>
@@ -181,7 +210,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
     <template v-else>
         <!-- Карточки историй -->
-        <div class="row row-cols-2 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-md-1 g-1">
             <div v-for="(story, index) in stories" :key="story.id" class="col">
                 <div class="card h-100">
                     <div class="card-body text-center">
@@ -237,10 +266,32 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                         class="w-100 h-100 object-fit-cover"
                         alt="Story"
                     />
+
+
                     <!-- Текстовая информация -->
                     <div class="text-white p-3 bg-black bg-opacity-50 position-absolute bottom-0 start-0 end-0">
+
+
                         <h5 class="mb-1">{{ stories[currentStory].title }}</h5>
-                        <p class="mb-0">{{ stories[currentStory].description }}</p>
+                        <p class="mb-2">{{ stories[currentStory].description }}</p>
+
+                        <template v-if="stories[currentStory].link">
+                            <a :href="stories[currentStory].link"
+                               v-if="stories[currentStory].link_type==='url'||stories[currentStory].link_type==='bot'"
+                               target="_blank" class="btn btn-primary rounded-5 w-100 p-3">
+                                Перейти по ссылке
+                            </a>
+
+                            <a
+                                href="javascript:void(0)"
+                                @click="goToProductLink(stories[currentStory].link)"
+                                v-if="stories[currentStory].link_type==='product'"
+                                class="btn btn-primary rounded-5 w-100 p-3">
+                                Открыть товар
+                            </a>
+
+                        </template>
+
                     </div>
                     <button
                         type="button"
@@ -281,10 +332,27 @@ export default {
             stories_paginate_object: null,
             formStory: {
                 title: null,
+                need_auto_send_stories: true,
                 thumbnail: null,
                 image: null,
                 description: null,
+                link: null,
+                link_type: "product"
             },
+            link_types: [
+                {
+                    key: "product",
+                    title: "Открывает товар в магазине"
+                },
+                {
+                    key: "bot",
+                    title: "Открывает раздел бота"
+                },
+                {
+                    key: "url",
+                    title: "Переход на внешнюю страницу"
+                },
+            ],
             isEditing: false,
             useThumbnailFile: true,
             useImageFile: true,
@@ -295,6 +363,26 @@ export default {
         this.loadStoriesList()
     },
     methods: {
+        goToProductLink(url) {
+            try {
+                const urlObj = new URL(url);
+                const startParam = urlObj.searchParams.get("start");
+                const decoded = atob(startParam);
+
+                // Пример: "001slug123product456"
+                const slugMatch = decoded.match(/^001slug(\d+)product(\d+)$/);
+                if (!slugMatch) {
+                    this.$router.push({name: 'CatalogV2'})
+                }
+
+                const productId = slugMatch[2];
+
+                this.$router.push({name: 'ProductV2', params: {productId: productId}})
+
+            } catch (e) {
+                this.$router.push({name: 'CatalogV2'})
+            }
+        },
         openStory(index) {
             this.currentStory = index;
             this.progress = 0;

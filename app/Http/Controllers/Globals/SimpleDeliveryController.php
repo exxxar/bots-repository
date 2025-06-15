@@ -317,7 +317,7 @@ class SimpleDeliveryController extends SlugController
 
             "need_hide_disabled_products" => false,
             "need_hide_delivery_period" => false,
-            "need_auto_send_stories" => true,
+
 
             "can_use_sbp" => false,
             "sbp" => (object)[

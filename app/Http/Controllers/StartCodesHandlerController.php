@@ -11,6 +11,7 @@ use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\ManagerProfile;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\ReferralHistory;
 use App\Models\Table;
 use App\Models\TrafficSource;
@@ -47,7 +48,7 @@ class StartCodesHandlerController extends Controller
         $botUser->is_manager = true;
         $botUser->save();
 
-        Log::info("Входим через регистрацию в телеге:".print_r($botUser->toArray(),true));
+        Log::info("Входим через регистрацию в телеге:" . print_r($botUser->toArray(), true));
         $managerForm = [
             'bot_user_id' => $botUser->id,
             'info' => null,
@@ -106,6 +107,54 @@ class StartCodesHandlerController extends Controller
 
     }
 
+    public function openProduct(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $slugId = $data[2] ?? null;
+        $productId = $data[3] ?? null;
+
+        if (is_null($slugId) || is_null($productId)) {
+            BotManager::bot()
+                ->reply("Упс.. сервис временно недоступен!");
+            return;
+        }
+
+        $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s&hide_menu#/s/product/%s";
+
+        $product = Product::query()
+            ->where("id", $productId)
+            ->first();
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendInlineKeyboard(
+                $botUser->telegram_chat_id,
+                "<b>" . ($product->title ?? 'Название товара') . "</b>\n" .
+                "<em>" . ($product->description ?? 'Описание товара') . "</em>\n" .
+                "Цена товара <b>" . ($product->current_price ?? '-') . " руб</b>"
+                ,
+                [
+                    [
+                        ["text" => "Открыть товар",
+                            "web_app" => [
+                                "url" => sprintf(
+                                    $path,
+                                    $bot->bot_domain,
+                                    $slugId,
+                                    $productId
+                                )
+                            ]
+                        ],
+                    ]
+                ]
+            );
+
+
+    }
+
     public function openTableMenu(...$data)
     {
         $bot = BotManager::bot()
@@ -114,7 +163,7 @@ class StartCodesHandlerController extends Controller
 
         $slugId = $data[2] ?? null;
         $tableNumber = $data[3] ?? null;
-        $tmpNum = $tableNumber+1;
+        $tmpNum = $tableNumber + 1;
 
         if (is_null($slugId) || is_null($tableNumber)) {
             BotManager::bot()

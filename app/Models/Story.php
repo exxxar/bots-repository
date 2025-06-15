@@ -22,6 +22,8 @@ class Story extends Model
         'image',
         'description',
         'config',
+        'link',
+        'link_type',
     ];
 
     /**

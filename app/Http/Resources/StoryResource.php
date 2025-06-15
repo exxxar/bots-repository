@@ -19,6 +19,8 @@ class StoryResource extends JsonResource
             'thumbnail' => $this->thumbnail,
             'image' => $this->image,
             'description' => $this->description,
+            'link' => $this->link,
+            'link_type' => $this->link_type,
             'config' => $this->config,
             'bot' => BotResource::make($this->whenLoaded('bot')),
         ];
