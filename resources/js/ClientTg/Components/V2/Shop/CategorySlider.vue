@@ -4,7 +4,7 @@
         class="container p-2 "
     >
         <div
-            v-if="collections.length > 0"
+            v-if="categories.length>0||collections.length > 0"
             v-bind:style="colorTheme"
             class="container-slider-wrapper p-2">
             <div class="d-flex overflow-auto category-slider gap-2">
@@ -21,7 +21,7 @@
                 <!-- Комбо-меню -->
                 <button
                     type="button"
-
+                    v-if="collections.length > 0"
                     class="btn btn-outline-warning flex-shrink-0"
                     @click="selectCategory({ id: 'combo' })"
                 >
