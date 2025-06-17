@@ -289,9 +289,20 @@ export default {
     computed: {
         ...mapGetters(['getProducts', 'getProductsPaginateObject']),
         filteredProducts() {
-            return this.products
+            if (!this.products || this.products.length === 0) {
+                return []
+            }
 
-            //return this.products.filter(product => product.title.toLowerCase().trim().indexOf(this.search.toLowerCase().trim()) >= 0)
+             if (this.search instanceof Event)
+                 return this.products
+
+             if (!this.search)
+                 return this.products
+
+            const query = this.search instanceof Event || !this.search? '':this.search.toLowerCase()
+
+            return this.products.filter(product =>
+                product.title?.toLowerCase().includes(query))
         },
     },
     mounted() {
