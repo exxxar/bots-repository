@@ -296,15 +296,16 @@ export default {
                 return []
             }
 
-            if (this.search instanceof Event)
+           /* if (this.search instanceof Event)
                 return this.products
 
             if (!this.search)
-                return this.products
+                return this.products*/
 
-            console.log("search", this.search)
 
-            const query = this.search.toLowerCase()
+          // console.log("search=>", this.settings)
+
+            const query = this.search instanceof Event || !this.search? '':this.search.toLowerCase()
 
             return this.products
                 .map(category => {

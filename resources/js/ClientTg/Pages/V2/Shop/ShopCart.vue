@@ -255,7 +255,7 @@ export default {
     },
 
     mounted() {
-
+        this.loadShopModuleData()
         this.loadBasketData()
 
         this.tg.BackButton.show()
@@ -265,8 +265,6 @@ export default {
 
             this.$router.back()
         })
-
-        this.loadShopModuleData()
 
         window.addEventListener("scroll-to-basket", (event) => { // (1)
             this.tab = 2
@@ -309,6 +307,8 @@ export default {
 
                     this.deliveryForm.payment_type = this.settings.can_use_sbp ? 4 : 2
                     this.loaded_settings = true
+
+                    console.log("settings=>", this.settings)
                 })
             })
         },

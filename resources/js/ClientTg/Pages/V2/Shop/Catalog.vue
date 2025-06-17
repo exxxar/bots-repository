@@ -5,8 +5,8 @@ import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog
 <template>
 
     <ShopProductCatalog
+        v-if="settings"
         :settings="settings"/>
-
 
     <nav
 
