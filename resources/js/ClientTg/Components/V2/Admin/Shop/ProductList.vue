@@ -237,6 +237,35 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
             </div>
         </div>
     </div>
+    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+         style="border-radius:10px 10px 0px 0px;">
+        <button
+            @click="openAddProductModal"
+            class="btn btn-primary w-100 p-3"
+            type="button">
+            Добавить новый товар
+        </button>
+    </nav>
+
+    <div class="modal fade" id="add-product-modal"
+         data-bs-backdrop="static"
+         tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Добавление товара</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ProductForm
+                        v-on:callback="loadProducts(null)"
+                    />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal -->
     <div class="modal fade" id="remove-modal"
@@ -276,6 +305,7 @@ export default {
             reviews: [],
             modal: null,
             accept_remove_modal: null,
+            add_product_modal: null,
             selected_product: null,
             paginate: null,
             review_paginate: null,
@@ -313,8 +343,13 @@ export default {
         this.loadProducts(page)
         this.modal = new bootstrap.Modal(document.getElementById('product-modal-admin-info'), {})
         this.accept_remove_modal = new bootstrap.Modal(document.getElementById('remove-modal'), {})
+        this.add_product_modal = new bootstrap.Modal(document.getElementById('add-product-modal'), {})
     },
     methods: {
+
+        openAddProductModal(){
+            this.add_product_modal.show()
+        },
         openRemoveModal() {
             this.accept_remove_modal.show();
         },

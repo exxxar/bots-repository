@@ -550,6 +550,7 @@ class Basket
         $paymentType = $this->data["payment_type"] ?? 4;
         $cdek = json_decode($this->data["cdek"] ?? '{}');
 
+
         $productMessage = "#заказдоставка\n";
         $productMessage .= $this->checkWheelOfFortuneAction();
 
@@ -689,7 +690,7 @@ class Basket
             'payed_at' => Carbon::now(),
         ]);
 
-        $productMessage = "Заказ #$order->id\n";
+        $productMessage .= "Заказ <b>#$order->id</b>\n";
 
         $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config : null;
 

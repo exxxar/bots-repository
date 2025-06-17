@@ -149,7 +149,7 @@
                                        v-model="productForm.dimension.weight"
                                        class="form-control" id="vk-product-id"
                                        placeholder="Идентификатор">
-                                <label for="vk-product-id">Вес, грамм</label>
+                                <label for="vk-product-id">Вес, кг</label>
                             </div>
                         </div>
                     </div>

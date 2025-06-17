@@ -57,11 +57,11 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                 </a>
             </div>
 
-            <div class="col-12 py-2">
+            <div class="col-12 py-2" style="position: sticky; top: 0px;z-index: 1000;">
                 <div class="btn-group w-100 px-3 catalog-tabs py-2" style="overflow-x:auto;">
                     <button
                         type="button"
-                        class="btn-outline-primary btn p-3"
+                        class="btn-info   btn p-3"
                         @click="tab=0"
                         style="min-width:150px;line-height:100%;"
                         v-bind:class="{'active':tab===0}"
@@ -69,7 +69,7 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                     </button>
                     <button
                         type="button"
-                        class="btn-outline-primary btn p-3"
+                        class="btn-info   btn p-3"
                         @click="tab=2"
                         style="min-width:150px;line-height:100%"
                         v-bind:class="{'active':tab===2}"
@@ -77,7 +77,7 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                     </button>
                     <button
                         type="button"
-                        class="btn-outline-primary btn p-3"
+                        class="btn-info  btn p-3"
                         @click="tab=3"
                         style="min-width:300px;line-height:100%;"
                         v-bind:class="{'active':tab===3}"

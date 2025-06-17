@@ -144,7 +144,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                     ->whereBot($this->bot)
                     ->sendMessage(
                         $clientBotUser->telegram_chat_id,
-                        "✅Ваша СБП-оплата в размере $amount руб. прошла успешно (заказ №$orderId)!"
+                        "✅Ваша СБП-оплата в размере $amount руб. прошла успешно (заказ №$orderId)!\nЗаказ принят в работу!"
                     );
             }
         }
