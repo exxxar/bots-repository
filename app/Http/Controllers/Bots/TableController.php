@@ -41,7 +41,7 @@ class TableController extends Controller
             return;
         }
 
-        if (is_null($table->officiant_id)) {
+        if (is_null($table->officiant_id ?? null)) {
             $thread = $bot->topics["orders"] ?? null;
 
             $botDomain = $bot->bot_domain;

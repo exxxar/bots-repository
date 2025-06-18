@@ -116,7 +116,6 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 
 
                 <button
-                    :disabled="table.officiant_id==null"
                     type="button"
                     @click="callWaiter(false)"
                     class="btn btn-outline-primary p-3 w-100 my-3">

@@ -347,8 +347,8 @@ class TableLogicFactory extends BaseLogicFactory
 
     public function callWaiter($tableId, $needPayment = false): void
     {
-        if (is_null($this->bot))
-            throw new HttpException(404, "Бот не найден!");
+        if (is_null($this->bot)||is_null($this->botUser))
+            throw new HttpException(404, "Не все параметры заданы!");
 
         $table = Table::query()
             ->with(["creator", "officiant"])
@@ -360,16 +360,40 @@ class TableLogicFactory extends BaseLogicFactory
         if (is_null($table))
             throw new HttpException(404, "Столик в данный момент не занят!");
 
-        if (is_null($table->officiant_id ?? null))
-            throw new HttpException(404, "В данный момент у столика нет официанта!");
+        $tableNumber = $table->number ?? null;
 
+        if (is_null($table->officiant_id ?? null)) {
+            $thread = $this->bot->topics["orders"] ?? null;
 
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendMessage(
-                $table->officiant->telegram_chat_id,
-                "Вас просят подойти к столику №".($table->number+1)."! " . ($needPayment ? "Клиент просит принести счет" : "")
-            );
+            $botDomain = $this->bot->bot_domain;
+
+            $chatId = $this->botUser->telegram_chat_id;
+
+            $link = "https://t.me/$botDomain?start=" .
+                base64_encode("001" . $chatId . "table$tableNumber");
+
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendInlineKeyboard(
+                    $this->bot->order_channel,
+                    "Клиент ждет официанта за столиком №" . ($tableNumber + 1) . ". Официант еще не назначен!",
+                    [
+                        [
+                            ["text" => "🍽️Взять в работу", "url" => $link],
+                        ]
+                    ],
+                    $thread
+                );
+
+        } else {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $table->officiant->telegram_chat_id,
+                    "Клиент ждет вас за столиком №" . ($tableNumber + 1) . "!". ($needPayment ? "Клиент просит принести счет" : ""),
+                );
+        }
+
     }
 
     public function requestApproveTable($tableId): void
