@@ -28,6 +28,57 @@ use Telegram\Bot\FileUpload\InputFile;
 class StartCodesHandlerController extends Controller
 {
 
+    public function addTableOfficiant(...$data){
+        $bot = BotManager::bot()
+            ->getSelf();
+
+        $tableNumber = $data[2] ?? null;
+        $slugId = $data[3] ?? null;
+
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        $table = Table::query()
+            ->with(["creator"])
+            ->where("bot_id", $bot->id)
+            ->where("number", $tableNumber)
+            ->whereNull("closed_at")
+            ->first();
+
+        if (is_null($table)) {
+            BotManager::bot()
+                ->reply("Упс... что-то пошло не так!");
+            return;
+        }
+
+        $table->officiant_id = $botUser->id;
+        $table->save();
+
+        $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s&hide_menu#/s/table-menu";
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendInlineKeyboard(
+                $botUser->telegram_chat_id,
+                "Вы обслуживаете столик №" . ($tableNumber + 1),
+                [
+                    [
+                        ["text" => "🛎️Открыть столик",
+                            "web_app" => [
+                                "url" => sprintf(
+                                    $path,
+                                    $bot->bot_domain,
+                                    $slugId
+                                )
+                            ]
+                        ],
+                    ],
+
+                ]
+
+            );
+    }
+
     public function confirmRegistrationAndLogin(...$data)
     {
 

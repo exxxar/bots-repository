@@ -21,6 +21,7 @@ BotManager::bot()
     ->route("/request_table_join ([0-9]+) ([0-9]+)", "requestTableJoin")
     ->route("/test_sbp_tinkoff_automatic ([0-9]+) ([0-9]+)", "testSbpTinkoffAutomatic")
     ->route("/test_table_manual_payment ([0-9]+) ([0-9]{1})", "testTableManualPayment")
+    ->route("/officiant_call ([0-9]+)", "callTableOfficiant")
     ->route("/accept_table_join ([0-9]+) ([0-9]+) ([0-9]+)", "acceptTableJoin");
 
 BotManager::bot()

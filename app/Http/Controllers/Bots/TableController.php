@@ -17,6 +17,68 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TableController extends Controller
 {
+    public function callTableOfficiant(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+
+        $tableNumber = $data[2] ?? null;
+        $slugId = $data[3] ?? null;
+
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        $table = Table::query()
+            ->with(["creator"])
+            ->where("bot_id", $bot->id)
+            ->where("number", $tableNumber)
+            ->whereNull("closed_at")
+            ->first();
+
+        if (is_null($table)) {
+            BotManager::bot()
+                ->reply("Упс... что-то пошло не так!");
+            return;
+        }
+
+        if (is_null($table->officiant_id)) {
+            $thread = $bot->topics["orders"] ?? null;
+
+            $botDomain = $bot->bot_domain;
+
+            $link = "https://t.me/$botDomain?start=" .
+                base64_encode("001" . BotManager::bot()->getCurrentChatId() . "table$tableNumber");
+
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendInlineKeyboard(
+                    $bot->order_channel,
+                    "Клиент ждет официанта за столиком №" . ($tableNumber + 1) . ". Официант еще не назначен!",
+                    [
+                        [
+                            ["text" => "🍽️Взять в работу", "url" => $link],
+                        ]
+                    ],
+                    $thread
+                );
+
+        } else {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $table->officiant->telegram_chat_id,
+                    "Клиент ждет вас за столиком №" . ($tableNumber + 1) . "!",
+                );
+        }
+
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                "Спасибо! Официант скоро подойдет к вашему столику!");
+    }
+
     public function requestTableJoin(...$data)
     {
         $bot = BotManager::bot()
@@ -56,7 +118,7 @@ class TableController extends Controller
                 ->whereBot($bot)
                 ->sendInlineKeyboard(
                     $botUser->telegram_chat_id,
-                    "Добро пожаловать за столик №".($tableNumber+1),
+                    "Добро пожаловать за столик №" . ($tableNumber + 1),
                     [
                         [
                             ["text" => "🛎️Открыть меню",
@@ -67,6 +129,11 @@ class TableController extends Controller
                                         $slugId
                                     )
                                 ]
+                            ],
+                        ],
+                        [
+                            ["text" => "🍽️Позвать официанта",
+                                "callback_data" => "/officiant_call " . $tableNumber
                             ],
                         ]
                     ]
@@ -83,7 +150,7 @@ class TableController extends Controller
             ->whereBot($bot)
             ->sendInlineKeyboard(
                 $creator->telegram_chat_id,
-                "К вашему столику №".($tableNumber+1)." хочет присоединиться $userName. Подтвердить приглашение?",
+                "К вашему столику №" . ($tableNumber + 1) . " хочет присоединиться $userName. Подтвердить приглашение?",
                 [
                     [
                         ["text" => "Да, подтвердить", "callback_data" => "/accept_table_join $tableNumber $slugId $botUser->id"],
@@ -130,7 +197,7 @@ class TableController extends Controller
             ->whereBot($bot)
             ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
-                "Добро пожаловать за столик №".($tableNumber+1),
+                "Добро пожаловать за столик №" . ($tableNumber + 1),
                 [
                     [
                         ["text" => "🛎️Открыть меню",
@@ -141,6 +208,12 @@ class TableController extends Controller
                                     $slugId
                                 )
                             ]
+                        ],
+
+                    ],
+                    [
+                        ["text" => "🍽️Позвать официанта",
+                            "callback_data" => "/officiant_call " . $table->id
                         ],
                     ]
                 ]
@@ -229,7 +302,7 @@ class TableController extends Controller
             }
 
             BotManager::bot()
-                ->reply("Столик #".($table->number+1)." закрыт, спасибо! Все заказы столика отмечены как оплаченные.");
+                ->reply("Столик #" . ($table->number + 1) . " закрыт, спасибо! Все заказы столика отмечены как оплаченные.");
 
             return;
         }
