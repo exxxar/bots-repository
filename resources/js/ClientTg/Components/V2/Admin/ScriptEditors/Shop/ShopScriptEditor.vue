@@ -4,28 +4,44 @@ import ShopForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopForm
 import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/CompanyForm.vue";
 </script>
 <template>
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link"
-               @click="tab=0"
-               v-bind:class="{'active fw-bold':tab===0}"
-               aria-current="page"
-               href="javascript:void(0)">Магазин</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link"
-               @click="tab=2"
-               v-bind:class="{'active fw-bold':tab===2}"
-               aria-current="page"
-               href="javascript:void(0)">Юридические данные</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link "
-               v-bind:class="{'active fw-bold':tab===1}"
-               @click="tab=1"
-               href="javascript:void(0)">Интерактив в магазине</a>
-        </li>
-    </ul>
+
+    <div class="row" style="position: sticky; top: 0px;z-index: 1000;">
+        <div class="col-12">
+
+            <div class="btn-group w-100 px-3 py-2" style="overflow-x:auto;">
+                <button
+                    type="button"
+                    class="btn-info   btn p-3"
+                    @click="tab=0"
+                    style="line-height:100%;white-space: nowrap;"
+                    v-bind:class="{'active':tab===0}"
+                    aria-current="page"><i class="fa-solid fa-scroll mr-2"></i>Магазин
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-info  btn p-3"
+                    @click="tab=2"
+                    style=";line-height:100%;white-space: nowrap;"
+                    v-bind:class="{'active':tab===2}"
+                    aria-current="page"><i class="fa-solid fa-coins mr-2"></i>Юридические данные
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-info d-block btn p-3"
+                    @click="tab=1"
+                    style="line-height:100%;white-space: nowrap;"
+                    v-bind:class="{'active':tab===1}"
+                    aria-current="page"><i class="fa-solid fa-users mr-2"></i>Интерактив в магазине
+                </button>
+
+
+            </div>
+        </div>
+    </div>
+
+
 
     <form v-on:submit.prevent="submit">
         <div v-if="tab===0" class="py-3">

@@ -314,11 +314,8 @@ class SimpleDeliveryController extends SlugController
             "need_prizes_from_wheel_of_fortune" => true,
             "selected_script_id" => null,
             "payment_token" => null,
-
             "need_hide_disabled_products" => false,
             "need_hide_delivery_period" => false,
-
-
             "can_use_sbp" => false,
             "sbp" => (object)[
                 "selected_sbp_bank" => "tinkoff",
@@ -354,7 +351,6 @@ class SimpleDeliveryController extends SlugController
                 if (!isset($tmp[$key]))
                     $tmp[$key] = $item;
             }
-
 
             $tmp["is_admin"] = $botUser->is_admin || $botUser->is_manager;
 

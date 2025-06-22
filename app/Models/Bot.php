@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Facades\BusinessLogic;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -98,6 +99,12 @@ class Bot extends Model
     protected $with = ["company", "amo", "warnings", "fieldSettings",
         'YClients', 'frontPad','iiko', 'cdek' ];
     protected $appends = ['topics'];
+
+    public function getConfigAttribute(){
+        return BusinessLogic::bots()
+            ->setBot($this)
+            ->getConfig();
+    }
 
     public function getTopicsAttribute()
     {

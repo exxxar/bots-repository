@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Facades\BusinessLogic;
 use App\Http\Resources\BotMenuSlugCollection;
 use App\Http\Resources\BotMenuSlugResource;
 use App\Models\ActionStatus;
@@ -373,6 +374,9 @@ class BotSlugLogicFactory extends BaseLogicFactory
         $slug->config = $tmp;
         $slug->save();
 
+        BusinessLogic::bots()
+            ->setBot($this->bot)
+            ->setConfig($tmp);
 
         return new BotMenuSlugResource($slug);
     }

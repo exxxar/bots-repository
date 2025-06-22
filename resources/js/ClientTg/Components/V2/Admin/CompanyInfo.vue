@@ -2,48 +2,66 @@
 import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
 </script>
 <template>
-    <ul class="nav nav-tabs mb-2">
-        <li class="nav-item">
-            <a class="nav-link"
-               @click="tab=0"
-               v-bind:class="{'active fw-bold':tab===0}"
-               aria-current="page"
-               href="javascript:void(0)">Основное</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link "
-               v-bind:class="{'active fw-bold':tab===1}"
-               @click="tab=1"
-               href="javascript:void(0)">Баллы</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link "
-               v-bind:class="{'active fw-bold':tab===2}"
-               @click="tab=2"
-               href="javascript:void(0)">Друзья</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link "
-               v-bind:class="{'active fw-bold':tab===3}"
-               @click="tab=3"
-               href="javascript:void(0)">Иконки</a>
-        </li>
-    </ul>
+
+
+    <div class="row" style="position: sticky; top: 0px;z-index: 1000;">
+        <div class="col-12">
+
+            <div class="btn-group w-100 px-3 py-2" style="overflow-x:auto;">
+            <button
+                type="button"
+                class="btn-info   btn p-3"
+                @click="tab=0"
+                style="white-space: nowrap;line-height:100%;"
+                v-bind:class="{'active':tab===0}"
+                aria-current="page"><i class="fa-solid fa-scroll mr-2"></i>Основное
+            </button>
+
+            <button
+                type="button"
+                class="btn-info   btn p-3"
+                @click="tab=1"
+                style="white-space: nowrap;line-height:100%;"
+                v-bind:class="{'active':tab===1}"
+                aria-current="page"><i class="fa-solid fa-coins mr-2"></i>Баллы
+            </button>
+
+            <button
+                type="button"
+                class="btn-info   btn p-3"
+                @click="tab=2"
+                style="white-space: nowrap;line-height:100%;"
+                v-bind:class="{'active':tab===2}"
+                aria-current="page"><i class="fa-solid fa-users mr-2"></i>Друзья
+            </button>
+
+                <button
+                    type="button"
+                    class="btn-info   btn p-3"
+                    @click="tab=3"
+                    style="white-space: nowrap;line-height:100%;"
+                    v-bind:class="{'active':tab===3}"
+                    aria-current="page"><i class="fa-solid fa-icons mr-2"></i>Иконки
+                </button>
+
+                <button type="button"
+                        @click="goToEditor"
+                       style="white-space: nowrap;line-height:100%;"
+                        class="btn-primary btn p-3 "><i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> Настройки магазина</button>
+
+                <button type="button"
+                        data-bs-dismiss="modal"
+                        style="white-space: nowrap;line-height:100%;"
+                        @click="goToIntegrations"
+                        class="btn-primary  btn p-3 "><i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> Интеграции</button>
+            </div>
+        </div>
+    </div>
+
     <form
         v-if="tab===0"
         v-on:submit.prevent="submitCompanyForm">
 
-        <div class="card mb-2">
-            <div class="card-body">
-                <button type="button"
-                        @click="goToEditor"
-                        class="w-100 btn btn-primary mb-2">Редактор магазина</button>
-                <button type="button"
-                        data-bs-dismiss="modal"
-                        @click="goToIntegrations"
-                        class="w-100 btn btn-primary">Интеграции</button>
-            </div>
-        </div>
 
         <div class="form-floating mb-2">
             <input type="text"
@@ -542,73 +560,7 @@ export default {
                 errorMessage: "",
             },
             iconForm: {
-                items: [
-                    {
-                        slug: 'profile',
-                        title: 'Профиль',
-                        image_url: 'profile.png',
-
-
-                        is_visible: true,
-                    },
-                    {
-                        slug: 'shop',
-                        title: 'Магазин',
-                        image_url: 'shop.png',
-
-
-                        is_visible: true,
-                    },
-                    {
-                        slug: 'basket',
-                        title: 'Корзина',
-                        image_url: 'basket.png',
-
-
-                        is_visible: true,
-                    },
-                    {
-                        slug: 'history',
-                        title: 'История заказов',
-                        image_url: 'history.png',
-
-
-                        is_visible: true,
-                    },
-                    {
-                        slug: 'events',
-                        title: 'Розыгрыши',
-                        image_url: 'events.png',
-
-
-                        is_visible: true,
-                    },
-                    {
-                        slug: 'about',
-                        title: 'О Нас & Контакты',
-                        image_url: 'contacts.png',
-
-                        is_visible: true,
-                    },
-                    {
-                        slug: 'wheel_of_fortune_btn',
-                        title: 'Колесо фортуны',
-                        is_visible: true,
-                        has_icon: false,
-                    },
-                    {
-                        slug: 'friends_btn',
-                        title: 'Друзья',
-                        is_visible: true,
-                        has_icon: false,
-                    },
-                    {
-                        slug: 'main_menu_btn',
-                        title: 'Главное меню',
-                        is_visible: true,
-                        has_icon: false,
-                    }
-                ]
+                items: []
             },
             companyForm: {
                 id: null,
@@ -808,10 +760,10 @@ export default {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
         selectMenuItem(index) {
-            if (this.iconForm.items[index].has_icon) {
+           /* if (this.iconForm.items[index].has_icon) {
                 let img = document.querySelector("#menu-photos-" + this.selected_menu_item_index)
                 img.value = null
-            }
+            }*/
 
             this.selected_menu_item_index = index
         },

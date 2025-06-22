@@ -531,6 +531,12 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $slug->config = $tmp;
         $slug->save();
 
+        BusinessLogic::bots()
+            ->setBot($bot)
+            ->setConfig([
+                "wheel_of_fortune"=>$tmp
+            ]);
+
         return new BotMenuSlugResource($slug);
     }
 

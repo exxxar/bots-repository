@@ -48,6 +48,15 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 |
 */
 
+Route::get("/bottest", function (){
+    $bot = Bot::query()
+        ->where("bot_domain", "nextitgroup_bot")
+        ->first();
+
+    return response()->json($bot->toArray());
+
+});
+
 Route::get("/test", function (){
     $name ='Шипилов Егор Олегович';
     $course ='Вы выиграли сертификат на бургер!';
