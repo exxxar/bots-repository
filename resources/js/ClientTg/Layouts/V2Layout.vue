@@ -397,9 +397,9 @@ export default {
 
     mounted() {
 
-        this.tg.checkHomeScreenStatus((status) => {
+        this.tg.checkHomeScreenStatus((resp) => {
             let needInstall = localStorage.getItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot')) || null
-            if (status !== 'missed' && needInstall == null) {
+            if (resp.status === 'missed' && needInstall == null) {
                 this.tg.addToHomeScreen()
                 localStorage.setItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot'), "false")
             }
