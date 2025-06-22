@@ -139,10 +139,24 @@ trait HasSettings
                 $tmp[$key] = is_null($value ?? null) ? ($default[$key] ?? null) : $value;
             }
 
+
             foreach ($default as $key => $item) {
                 if (!isset($tmp[$key]))
                     $tmp[$key] = $item;
             }
+
+            if (!is_null($tmp["icons"]??null))
+            {
+                foreach ($tmp['icons'] as &$icon) {
+                    foreach ($default["icons"][0] as $key => $defaultValue) {
+                        if (!array_key_exists($key, $icon)) {
+                            $icon[$key] = $defaultValue;
+                        }
+                    }
+                }
+
+            }
+
 
         }
 
