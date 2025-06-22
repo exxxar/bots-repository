@@ -100,25 +100,27 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                     @click="goTo('ProfileV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > {{preparedMenuItem['profile']?.title || 'Профиль'}} </a></li>
+                > {{ preparedMenuItem['profile']?.title || 'Профиль' }} </a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='CatalogV2'}"
                     @click="goTo('CatalogV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > {{preparedMenuItem['shop']?.title || 'Магазин'}} </a></li>
+                > {{ preparedMenuItem['shop']?.title || 'Магазин' }} </a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='ShopCartV2'}"
                     @click="goTo('ShopCartV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > {{preparedMenuItem['basket']?.title || 'Корзина'}} <span class="fw-bold" v-if="cartTotalCount>0">({{ cartTotalCount }})</span></a></li>
+                > {{ preparedMenuItem['basket']?.title || 'Корзина' }} <span class="fw-bold" v-if="cartTotalCount>0">({{
+                        cartTotalCount
+                    }})</span></a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='OrdersV2'}"
                     @click="goTo('OrdersV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > {{preparedMenuItem['history']?.title || 'История заказов'}} </a></li>
+                > {{ preparedMenuItem['history']?.title || 'История заказов' }} </a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='CashBackV2'}"
                     @click="goTo('CashBackV2')"
@@ -180,23 +182,23 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 </ul>
             </div>
 
-                        <div class="dropdown" v-if="(getSelf||{is_admin:false}).is_admin">
-                            <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                Тема оформления
-                            </button>
-                            <ul class="dropdown-menu w-100 bg-light">
-                                <li v-for="(theme, index) in themes">
-                                    <button type="button"
-                                            @click="switchTheme(index)"
-                                            v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
-                                            class="list-group-item list-group-item-action p-2 w-100 text-primary"
-                                            aria-current="true">
-                                        {{ theme.title || '-' }}
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
+            <div class="dropdown" v-if="(getSelf||{is_admin:false}).is_admin">
+                <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Тема оформления
+                </button>
+                <ul class="dropdown-menu w-100 bg-light">
+                    <li v-for="(theme, index) in themes">
+                        <button type="button"
+                                @click="switchTheme(index)"
+                                v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
+                                class="list-group-item list-group-item-action p-2 w-100 text-primary"
+                                aria-current="true">
+                            {{ theme.title || '-' }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -223,119 +225,120 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+            install_modal: null,
             currentTheme: '',
             themes: [
                 {
-                    title:'Тема 1',
+                    title: 'Тема 1',
                     href: '/theme1.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 2',
+                    title: 'Тема 2',
                     href: '/theme2.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 3',
+                    title: 'Тема 3',
                     href: '/theme3.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 4',
+                    title: 'Тема 4',
                     href: '/theme4.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 5',
-                    href: '/theme5.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 6',
-                    href: '/theme6.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 7',
-                    href: '/theme7.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 8',
-                    href: '/theme8.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 9',
-                    href: '/theme9.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 10',
-                    href: '/theme10.bootstrap.min.css',
-                }
-                ,
-                {
-                    title:'Тема 11',
-                    href: '/theme11.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 12',
-                    href: '/theme12.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 13',
-                    href: '/theme13.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 14',
-                    href: '/theme14.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 15',
-                    href: '/theme15.bootstrap.min.css',
-                },
-                {
-                    title:'Тема 16',
-                    href: '/theme16.bootstrap.min.css',
-                }
-               /* {
-                    title: 'Тема 3',
-                    href: '/theme5.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 4',
-                    href: '/theme6.bootstrap.min.css',
-                },
-
-                {
                     title: 'Тема 5',
-                    href: '/theme8.bootstrap.min.css',
+                    href: '/theme5.bootstrap.min.css',
                 },
                 {
                     title: 'Тема 6',
-                    href: '/theme9.bootstrap.min.css',
+                    href: '/theme6.bootstrap.min.css',
                 },
                 {
                     title: 'Тема 7',
+                    href: '/theme7.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 8',
+                    href: '/theme8.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 9',
+                    href: '/theme9.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 10',
                     href: '/theme10.bootstrap.min.css',
                 }
                 ,
                 {
-                    title: 'Тема 8',
+                    title: 'Тема 11',
                     href: '/theme11.bootstrap.min.css',
                 },
                 {
-                    title: 'Тема 9',
+                    title: 'Тема 12',
                     href: '/theme12.bootstrap.min.css',
                 },
                 {
-                    title: 'Тема 10',
+                    title: 'Тема 13',
                     href: '/theme13.bootstrap.min.css',
                 },
                 {
-                    title: 'Тема 11',
+                    title: 'Тема 14',
                     href: '/theme14.bootstrap.min.css',
                 },
                 {
-                    title: 'Тема 12',
+                    title: 'Тема 15',
                     href: '/theme15.bootstrap.min.css',
                 },
                 {
-                    title: 'Тема 13',
+                    title: 'Тема 16',
                     href: '/theme16.bootstrap.min.css',
-                }*/
+                }
+                /* {
+                     title: 'Тема 3',
+                     href: '/theme5.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 4',
+                     href: '/theme6.bootstrap.min.css',
+                 },
+
+                 {
+                     title: 'Тема 5',
+                     href: '/theme8.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 6',
+                     href: '/theme9.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 7',
+                     href: '/theme10.bootstrap.min.css',
+                 }
+                 ,
+                 {
+                     title: 'Тема 8',
+                     href: '/theme11.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 9',
+                     href: '/theme12.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 10',
+                     href: '/theme13.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 11',
+                     href: '/theme14.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 12',
+                     href: '/theme15.bootstrap.min.css',
+                 },
+                 {
+                     title: 'Тема 13',
+                     href: '/theme16.bootstrap.min.css',
+                 }*/
             ]
         }
     },
@@ -351,9 +354,9 @@ export default {
 
 
             this.$preloader.show();
-          /*  this.$nextTick(() => {
-                document.body.scrollTop = document.documentElement.scrollTop = 0;
-            })*/
+            /*  this.$nextTick(() => {
+                  document.body.scrollTop = document.documentElement.scrollTop = 0;
+              })*/
         },
     },
     computed: {
@@ -378,7 +381,7 @@ export default {
 
             return arr
         },
-        needHideMenu(){
+        needHideMenu() {
             let urlParams = new URLSearchParams(window.location.search);
             return urlParams.has('hide_menu') || this.$route.meta.hide_menu
         },
@@ -394,8 +397,17 @@ export default {
 
     mounted() {
 
+        this.tg.checkHomeScreenStatus((status) => {
+            let needInstall = localStorage.getItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot')) || null
+            if (status !== 'missed' && needInstall == null) {
+                this.tg.addToHomeScreen()
+                localStorage.setItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot'), "false")
+            }
 
-        let theme = localStorage.getItem("cashman_global_client_theme_"+(this.bot.bot_domain || 'any_bot')) || null
+        })
+
+
+        let theme = localStorage.getItem("cashman_global_client_theme_" + (this.bot.bot_domain || 'any_bot')) || null
 
         if (theme) {
             this.$nextTick(() => {
@@ -414,7 +426,7 @@ export default {
         switchTheme(index) {
             let changeTheme = document.querySelector("#theme")
             changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`
-            localStorage.setItem("cashman_global_client_theme_"+(this.bot.bot_domain || 'any_bot'), changeTheme.href)
+            localStorage.setItem("cashman_global_client_theme_" + (this.bot.bot_domain || 'any_bot'), changeTheme.href)
 
 
             this.$nextTick(() => {
