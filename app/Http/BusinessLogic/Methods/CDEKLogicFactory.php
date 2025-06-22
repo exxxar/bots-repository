@@ -311,6 +311,8 @@ class CDEKLogicFactory extends BaseLogicFactory
             ];
         }
 
+        Log::info("baseDimensions ".print_r($baseDimensions, true));
+        Log::info("package Dimensions ".print_r($packages, true));
 
         $data = [
             "type" => 1,
