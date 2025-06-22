@@ -44,6 +44,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
         <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
             <div class="col">
                 <MainMenuItem
+                    v-if="preparedMenuItem['profile']?.is_visible"
                     :route="'ProfileV2'"
                     :default-image="'profile.png'"
                     :default-text="'Профиль'"
@@ -52,6 +53,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
             <div class="col">
                 <MainMenuItem
+                    v-if="preparedMenuItem['shop']?.is_visible"
                     :disabled="script_data.is_disabled"
                     :route="'CatalogV2'"
                     :default-image="'shop.png'"
@@ -61,6 +63,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
             <div class="col">
                 <MainMenuItem
+                    v-if="preparedMenuItem['basket']?.is_visible"
                     :route="'ShopCartV2'"
                     :default-image="'basket.png'"
                     :default-text="'Корзина'"
@@ -74,6 +77,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
             <div class="col">
                 <MainMenuItem
+                    v-if="preparedMenuItem['history']?.is_visible"
                     :route="'OrdersV2'"
                     :default-image="'history.png'"
                     :default-text="'История заказов'"
@@ -82,6 +86,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
             <div class="col" v-if="script_data.wheel_of_fortune">
                 <MainMenuItem
+                    v-if="preparedMenuItem['events']?.is_visible"
                     :disabled="!script_data.wheel_of_fortune.can_play"
                     :route="'WheelOfFortuneV2'"
                     :default-image="'events.png'"
@@ -93,6 +98,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
             <div class="col">
                 <MainMenuItem
+                    v-if="preparedMenuItem['about']?.is_visible"
                     :route="'ContactsV2'"
                     :default-image="'contacts.png'"
                     :default-text="'О Нас & Контакты'"
