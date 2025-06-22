@@ -817,7 +817,7 @@ export default {
                 })
                 this.$emit("callback", response.data)
 
-                window.location.reload()
+                //window.location.reload()
             }).catch(err => {
                 this.$notify({
                     title: "Иконки",
