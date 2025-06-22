@@ -337,13 +337,13 @@ export default {
         if (this.orderId)
             this.loadOrderById()
 
-        if (this.currentBot.config) {
-            this.settings.order_status_0 = this.currentBot.config.order_status_0 || "Статус вашего заказа установлен как 'Принят в работу'"
-            this.settings.order_status_1 = this.currentBot.config.order_status_1 || "Статус вашего заказа изменен на 'Доставляется'"
-            this.settings.order_status_2 = this.currentBot.config.order_status_2 || "Статус вашего заказа изменен на 'Завершен'"
-            this.settings.order_status_3 = this.currentBot.config.order_status_3 || "Статус вашего заказа изменен на 'Отменен'"
-            this.settings.order_status_4 = this.currentBot.config.order_status_4 || "Статус вашего заказа изменен на 'Готов к доставке'"
-            this.settings.order_status_5 = this.currentBot.config.order_status_5 || "Статус вашего заказа изменен на 'Передан на кухню'"
+        if (this.currentBot.settings) {
+            this.settings.order_status_0 = this.currentBot.settings.order_status_0 || "Статус вашего заказа установлен как 'Принят в работу'"
+            this.settings.order_status_1 = this.currentBot.settings.order_status_1 || "Статус вашего заказа изменен на 'Доставляется'"
+            this.settings.order_status_2 = this.currentBot.settings.order_status_2 || "Статус вашего заказа изменен на 'Завершен'"
+            this.settings.order_status_3 = this.currentBot.settings.order_status_3 || "Статус вашего заказа изменен на 'Отменен'"
+            this.settings.order_status_4 = this.currentBot.settings.order_status_4 || "Статус вашего заказа изменен на 'Готов к доставке'"
+            this.settings.order_status_5 = this.currentBot.settings.order_status_5 || "Статус вашего заказа изменен на 'Передан на кухню'"
         }
 
         if (localStorage.getItem("cashman_order_cashback_add_counter") != null) {

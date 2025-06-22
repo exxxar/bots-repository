@@ -1537,6 +1537,22 @@ class BotLogicFactory extends BaseLogicFactory
         return new BotResource($this->bot);
     }
 
+    public function updateTheme($theme)
+    {
+        if (is_null($this->bot) || is_null($this->botUser)) {
+            throw new HttpException(403, "Условия функции не выполнены!");
+        }
+
+
+        $config = $this->bot->config ?? [];
+
+        $config["theme"] = $theme;
+        $this->bot->config = $config;
+        $this->bot->save();
+
+        return new BotResource($this->bot);
+    }
+
     public function updateMenuIcons(array $data, $files = [])
     {
         if (is_null($this->bot) || is_null($this->botUser)) {

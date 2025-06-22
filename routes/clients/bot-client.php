@@ -574,6 +574,7 @@ Route::prefix("bot-client")
                 Route::post("/sync-amo", [AmoCrmController::class, "syncAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post("/bot-params-update", "updateBotParams");
+                Route::post("/bot-theme", "updateBotTheme");
                 Route::post("/bot-icons-update", "updateBotIcons");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");

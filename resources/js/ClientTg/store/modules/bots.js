@@ -188,7 +188,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async updateBotTheme(context, payload = {theme: null}) {
+        let link = `${BASE_BOTS_LINK}/bot-theme`
 
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async updateBotMenuItems(context, payload = {iconForm: null}) {
         let link = `${BASE_BOTS_LINK}/bot-icons-update`
 

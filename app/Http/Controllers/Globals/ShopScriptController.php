@@ -80,6 +80,7 @@ class ShopScriptController extends SlugController
 
             return Inertia::render('MainV2', [
                 'bot' => BotSecurityResource::make($bot),
+                'theme'=>$bot->settings["theme"] ?? null
             ]);
         }
 
@@ -105,6 +106,7 @@ class ShopScriptController extends SlugController
         return Inertia::render('MainV2', [
             'bot' => BotSecurityResource::make($bot),
             'slug_id' => $slug->id,
+            'theme'=>$bot->settings["theme"] ?? null
         ]);
 
     }

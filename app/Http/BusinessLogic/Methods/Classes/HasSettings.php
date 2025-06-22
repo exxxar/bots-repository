@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 trait HasSettings
 {
     private array $defaultConfig = [
-        "delivery_price_text1" => "Цена доставки рассчитывается курьером",
+        "theme" => "/theme6.bootstrap.min.css",
         "delivery_price_text" => "Цена доставки рассчитывается курьером",
         "disabled_text" => "Временно недоступно!",
         "min_price" => 100,
@@ -130,13 +130,26 @@ trait HasSettings
         $default = $this->getDefaultConfig();
         $config = $this->bot->config ?? [];
 
-        // Объединение с дефолтом
-        $merged = array_merge($default, $config);
+        $tmp = [];
+
+        if (!is_null($config ?? null)) {
+
+            foreach ($config ?? [] as $key=>$value) {
+
+                $tmp[$key] = is_null($value ?? null) ? ($default[$key] ?? null) : $value;
+            }
+
+            foreach ($default as $key => $item) {
+                if (!isset($tmp[$key]))
+                    $tmp[$key] = $item;
+            }
+
+        }
 
         // Признак админа
-        $merged['is_admin'] = !is_null($this->botUser) ? $this->botUser->is_admin || $this->botUser->is_manager : false;
+        $tmp['is_admin'] = !is_null($this->botUser) ? $this->botUser->is_admin || $this->botUser->is_manager : false;
 
-        return $merged;
+        return $tmp;
     }
 
     public function setConfigValue(string $key, mixed $value): void

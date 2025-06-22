@@ -389,10 +389,10 @@ export default {
     computed: {
         ...mapGetters(['getSelf', 'cartTotalCount', 'getStories']),
         preparedMenuItem() {
-            if (!this.bot.config)
+            if (!this.bot.settings)
                 return []
 
-            let data = this.bot.config["icons"] || []
+            let data = this.bot.settings["icons"] || []
 
             let arr = [];
             data.forEach(item => {

@@ -98,9 +98,9 @@ class Bot extends Model
 
     protected $with = ["company", "amo", "warnings", "fieldSettings",
         'YClients', 'frontPad','iiko', 'cdek' ];
-    protected $appends = ['topics'];
+    protected $appends = ['topics','settings'];
 
-    public function getConfigAttribute(){
+    public function getSettingsAttribute(){
         return BusinessLogic::bots()
             ->setBot($this)
             ->getConfig();

@@ -951,6 +951,23 @@ class BotController extends Controller
     /**
      * @throws ValidationException
      */
+    public function updateBotTheme(Request $request): BotResource
+    {
+        $request->validate([
+            "theme"=>"required"
+        ]);
+
+        return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->updateTheme(
+                $request->theme
+            );
+    }
+
+    /**
+     * @throws ValidationException
+     */
     public function updateBotParams(Request $request): BotResource
     {
 

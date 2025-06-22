@@ -4,6 +4,9 @@ defineProps({
     bot: {
         type: Object,
     },
+    theme:{
+      type: String,
+    },
     slug_id: {
         type: String,
     },
@@ -58,6 +61,8 @@ export default {
     },
     created() {
         window.currentBot = this.bot.data
+        window.theme = this.theme
+
 
         const schedule = window.currentBot.company.schedule || [];
 

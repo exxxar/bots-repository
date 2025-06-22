@@ -31,7 +31,7 @@ class BotResource extends JsonResource
             'welcome_message' => $this->welcome_message,
             'commands' => $this->commands ?? null,
             'menu' => $this->menu ?? null,
-            'config' => $this->config ?? null,
+            'settings' => $this->settings ?? null,
             'bot_token' => $this->bot_token ?? null,
             'bot_token_dev' => $this->bot_token_dev?? null,
             'order_channel' => $this->order_channel,

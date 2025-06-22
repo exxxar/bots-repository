@@ -368,10 +368,10 @@ export default {
             return window.currentBot
         },
         preparedMenuItem() {
-            if (!this.bot.config)
+            if (!this.bot.settings)
                 return []
 
-            let data = this.bot.config["icons"] || []
+            let data = this.bot.settings["icons"] || []
 
             let arr = [];
             data.forEach(item => {
@@ -397,14 +397,23 @@ export default {
 
     mounted() {
 
-        this.tg.checkHomeScreenStatus((resp) => {
-            let needInstall = localStorage.getItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot')) || null
-            if (resp.status === 'missed' && needInstall == null) {
-                this.tg.addToHomeScreen()
-                localStorage.setItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot'), "false")
-            }
+        /*    this.tg.checkHomeScreenStatus((resp) => {
+                let needInstall = localStorage.getItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot')) || null
+                if (resp.status === 'missed' && needInstall == null) {
+                    this.tg.addToHomeScreen()
+                    localStorage.setItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot'), "false")
+                }
 
-        })
+            })*/
+
+        console.log("theme", window.theme)
+
+        if (window.theme) {
+            let changeTheme = document.querySelector("#theme")
+            changeTheme.href = window.theme
+            localStorage.setItem("cashman_global_client_theme_" + (this.bot.bot_domain || 'any_bot'), changeTheme.href)
+
+        }
 
 
         let theme = localStorage.getItem("cashman_global_client_theme_" + (this.bot.bot_domain || 'any_bot')) || null
@@ -433,6 +442,21 @@ export default {
                 this.currentTheme = changeTheme.href
             })
 
+            this.$store.dispatch("updateBotTheme", {
+                theme: changeTheme.href
+            }).then(() => {
+                this.$notify({
+                    title: 'Изменение темы',
+                    text: 'Тема успешно обновлена',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.$notify({
+                    title: 'Изменение темы',
+                    text: 'Ошибка изменения темы',
+                    type: 'error'
+                })
+            })
 
         },
         goTo(name) {
