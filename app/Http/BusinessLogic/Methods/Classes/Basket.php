@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Mpdf\Mpdf;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
 class Basket
@@ -550,6 +551,8 @@ class Basket
         $paymentType = $this->data["payment_type"] ?? 4;
         $cdek = json_decode($this->data["cdek"] ?? '{}');
 
+       if (is_null($cdek->to->address??null))
+           throw new HttpException(400, "Не указан адрес пункта выдачи");
 
         $productMessage = "#заказдоставка\n";
         $productMessage .= $this->checkWheelOfFortuneAction();

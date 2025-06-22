@@ -976,11 +976,16 @@ trait BotBaseMethodsTrait
 
     public function sendMediaGroup($chatId, $media, $thread = null)
     {
+        if (count($media)>10){
+            $media = array_slice($media, 0, 10);
+        }
 
         $tmp = [
             "chat_id" => $chatId,
             "media" => $media,
         ];
+
+
 
         if (!is_null($thread))
             $tmp["message_thread_id"] = $thread;

@@ -942,7 +942,7 @@ class BotController extends Controller
         return BusinessLogic::bots()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->updatMenuIcons(
+            ->updateMenuIcons(
                 $request->all(),
                 $request->files
             );
