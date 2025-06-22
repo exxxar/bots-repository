@@ -976,8 +976,8 @@ trait BotBaseMethodsTrait
 
     public function sendMediaGroup($chatId, $media, $thread = null)
     {
-        if (count($media)>10){
-            $media = array_slice($media, 0, 10);
+        if (count(json_decode($media))>10){
+            $media = json_encode(array_slice(json_decode($media), 0, 10));
         }
 
         $tmp = [
