@@ -458,6 +458,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
     {
 
         $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
         $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($slug))
@@ -533,6 +534,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         BusinessLogic::bots()
             ->setBot($bot)
+            ->setBotUser($botUser)
             ->setConfig([
                 "wheel_of_fortune"=>$tmp
             ]);

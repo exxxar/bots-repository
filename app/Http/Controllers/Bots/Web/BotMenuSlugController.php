@@ -97,7 +97,7 @@ class BotMenuSlugController extends Controller
      */
     public function updateScriptParams(Request $request): BotMenuSlugResource
     {
-        Log::info("store params step 0");
+
         return BusinessLogic::slugs()
             ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)

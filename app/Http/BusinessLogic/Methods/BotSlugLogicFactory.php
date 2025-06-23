@@ -376,6 +376,7 @@ class BotSlugLogicFactory extends BaseLogicFactory
 
         BusinessLogic::bots()
             ->setBot($this->bot)
+            ->setBotUser($this->botUser)
             ->setConfig($tmp);
 
         return new BotMenuSlugResource($slug);
