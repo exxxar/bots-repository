@@ -1,0 +1,163 @@
+/* Dusty Green Theme for Bootstrap 5 */
+
+/* Monochrome green palette */
+:root {
+  --primary: #4a7043; /* Dusty pine green */
+  --secondary: #6b8e23; /* Olive green */
+  --success: #2e7d32; /* Deep forest green */
+  --info: #5c9c7d; /* Sea green */
+  --warning: #9ab348; /* Lime green */
+  --danger: #8b5a2b; /* Earthy brown for contrast */
+  --light: #e8f0e3; /* Pastel green */
+  --dark: #1a3c34; /* Dark teal green */
+  --accent: #a3c68c; /* Salat green */
+}
+
+/* Body and background */
+body {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
+  color: var(--light);
+  background-attachment: fixed;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 8px rgba(92, 156, 125, 0.3);
+}
+.btn-primary:hover {
+  background-color: #5b8054;
+  border-color: #5b8054;
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+}
+.btn-secondary:hover {
+  background-color: #7b9e33;
+  border-color: #7b9e33;
+}
+
+.btn-success {
+  background-color: var(--success);
+  border-color: var(--success);
+}
+.btn-success:hover {
+  background-color: #3d8b41;
+  border-color: #3d8b41;
+}
+
+.btn-info {
+  background-color: var(--info);
+  border-color: var(--info);
+}
+.btn-info:hover {
+  background-color: #6aa88d;
+  border-color: #6aa88d;
+}
+
+/* Cards */
+.card {
+  background-color: rgba(232, 240, 227, 0.95);
+  border: 1px solid rgba(163, 198, 140, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+.card-header {
+  background-color: var(--primary);
+  color: var(--light);
+  border-bottom: 1px solid rgba(163, 198, 140, 0.2);
+}
+
+/* Navbar */
+.navbar {
+  background-color: rgba(26, 60, 52, 0.95) !important;
+  backdrop-filter: blur(6px);
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: var(--light);
+}
+.navbar-light .navbar-nav .nav-link:hover {
+  color: var(--warning);
+}
+
+/* Alerts */
+.alert-primary {
+  background-color: rgba(92, 156, 125, 0.2);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.alert-success {
+  background-color: rgba(46, 125, 50, 0.2);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.alert-info {
+  background-color: rgba(92, 156, 125, 0.2);
+  border-color: var(--info);
+  color: var(--info);
+}
+
+/* Forms */
+.form-control {
+  background-color: rgba(232, 240, 227, 0.9);
+  border-color: rgba(26, 60, 52, 0.2);
+  color: var(--dark);
+}
+.form-control:focus {
+  border-color: var(--info);
+  box-shadow: 0 0 0 0.25rem rgba(92, 156, 125, 0.25);
+}
+
+.form-label {
+  color: var(--light);
+}
+
+/* Badges */
+.badge-primary {
+  background-color: var(--primary);
+}
+.badge-secondary {
+  background-color: var(--secondary);
+}
+.badge-success {
+  background-color: var(--success);
+}
+
+/* Tables */
+.table {
+  background-color: rgba(232, 240, 227, 0.9);
+}
+.table thead th {
+  background-color: var(--primary);
+  color: var(--light);
+  border-color: rgba(163, 198, 140, 0.2);
+}
+
+/* Modals */
+.modal-content {
+  background-color: rgba(232, 240, 227, 0.95);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(163, 198, 140, 0.2);
+}
+
+/* Hover effects */
+.btn:hover, .nav-link:hover {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Dropdowns */
+.dropdown-menu {
+  background-color: rgba(232, 240, 227, 0.95);
+  border: 1px solid rgba(163, 198, 140, 0.2);
+}
+.dropdown-item:hover {
+  background-color: var(--accent);
+  color: var(--dark);
+}

@@ -187,7 +187,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                         aria-expanded="false">
                     Тема оформления
                 </button>
-                <ul class="dropdown-menu w-100 bg-light">
+                <ul class="dropdown-menu w-100 bg-light" v-if="themes.length>0">
                     <li v-for="(theme, index) in themes">
                         <button type="button"
                                 @click="switchTheme(index)"
@@ -227,119 +227,7 @@ export default {
         return {
             install_modal: null,
             currentTheme: '',
-            themes: [
-                {
-                    title: 'Тема 1',
-                    href: '/theme1.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 2',
-                    href: '/theme2.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 3',
-                    href: '/theme3.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 4',
-                    href: '/theme4.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 5',
-                    href: '/theme5.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 6',
-                    href: '/theme6.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 7',
-                    href: '/theme7.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 8',
-                    href: '/theme8.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 9',
-                    href: '/theme9.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 10',
-                    href: '/theme10.bootstrap.min.css',
-                }
-                ,
-                {
-                    title: 'Тема 11',
-                    href: '/theme11.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 12',
-                    href: '/theme12.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 13',
-                    href: '/theme13.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 14',
-                    href: '/theme14.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 15',
-                    href: '/theme15.bootstrap.min.css',
-                },
-                {
-                    title: 'Тема 16',
-                    href: '/theme16.bootstrap.min.css',
-                }
-                /* {
-                     title: 'Тема 3',
-                     href: '/theme5.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 4',
-                     href: '/theme6.bootstrap.min.css',
-                 },
-
-                 {
-                     title: 'Тема 5',
-                     href: '/theme8.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 6',
-                     href: '/theme9.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 7',
-                     href: '/theme10.bootstrap.min.css',
-                 }
-                 ,
-                 {
-                     title: 'Тема 8',
-                     href: '/theme11.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 9',
-                     href: '/theme12.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 10',
-                     href: '/theme13.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 11',
-                     href: '/theme14.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 12',
-                     href: '/theme15.bootstrap.min.css',
-                 },
-                 {
-                     title: 'Тема 13',
-                     href: '/theme16.bootstrap.min.css',
-                 }*/
-            ]
+            themes: []
         }
     },
     watch: {
@@ -405,6 +293,10 @@ export default {
                 }
 
             })*/
+
+        if (this.bot.settings?.themes) {
+            this.themes = this.bot.settings?.themes || []
+        }
 
         console.log("theme", window.theme)
 

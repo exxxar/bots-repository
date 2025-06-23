@@ -9,6 +9,99 @@ trait HasSettings
 {
     private array $defaultConfig = [
         "theme" => "/theme6.bootstrap.min.css",
+        "themes"=>[
+            [
+                'title' => 'Тема 1',
+                'href' => '/theme1.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 2',
+                'href' => '/theme2.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 3',
+                'href' => '/theme3.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 4',
+                'href' => '/theme4.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 5',
+                'href' => '/theme5.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 6',
+                'href' => '/theme6.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 7',
+                'href' => '/theme7.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 8',
+                'href' => '/theme8.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 9',
+                'href' => '/theme9.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 10',
+                'href' => '/theme10.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 11',
+                'href' => '/theme11.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 12',
+                'href' => '/theme12.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 13',
+                'href' => '/theme13.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 14',
+                'href' => '/theme14.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 15',
+                'href' => '/theme15.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Тема 16',
+                'href' => '/theme16.bootstrap.min.css',
+            ],
+            [
+                'title' => 'Зеленая новая',
+                'href' => '/dusty-green-theme.css',
+            ],
+            [
+                'title' => 'Новогодняя',
+                'href' => '/new-year-theme.css',
+            ],
+            [
+                'title' => 'Летняя',
+                'href' => '/summer-theme.css',
+            ],
+            [
+                'title' => 'Flatly',
+                'href' => '/flatly-theme.css',
+            ],
+            [
+                'title' => 'Brite',
+                'href' => '/brite-theme.min.css',
+            ],
+            [
+                'title' => 'Litera',
+                'href' => '/litera-theme.min.css',
+            ],
+
+
+
+        ],
         "delivery_price_text" => "Цена доставки рассчитывается курьером",
         "disabled_text" => "Временно недоступно!",
         "min_price" => 100,
@@ -156,7 +249,7 @@ trait HasSettings
                 }
 
             }
-            
+
         }
 
         // Признак админа

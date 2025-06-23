@@ -1,0 +1,156 @@
+/* New Year Theme for Bootstrap 5 */
+
+/* Custom color palette */
+:root {
+  --primary: #2c3e50; /* Deep winter blue */
+  --secondary: #c0392b; /* Festive red */
+  --success: #27ae60; /* Christmas green */
+  --info: #3498db; /* Icy blue */
+  --warning: #f1c40f; /* Golden bell */
+  --danger: #e74c3c; /* Holly berry */
+  --light: #ecf0f1; /* Snow white */
+  --dark: #2d3436; /* Midnight */
+  --snow: #ffffff; /* Pure snow */
+}
+
+/* Body and background */
+body {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
+  color: var(--light);
+  background-attachment: fixed;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+}
+.btn-primary:hover {
+  background-color: #34495e;
+  border-color: #34495e;
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+}
+.btn-secondary:hover {
+  background-color: #a93226;
+  border-color: #a93226;
+}
+
+.btn-success {
+  background-color: var(--success);
+  border-color: var(--success);
+}
+.btn-success:hover {
+  background-color: #219653;
+  border-color: #219653;
+}
+
+/* Cards */
+.card {
+  background-color: rgba(236, 240, 241, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.card-header {
+  background-color: var(--primary);
+  color: var(--snow);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Navbar */
+.navbar {
+  background-color: rgba(44, 62, 80, 0.95) !important;
+  backdrop-filter: blur(8px);
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: var(--light);
+}
+.navbar-light .navbar-nav .nav-link:hover {
+  color: var(--warning);
+}
+
+/* Alerts */
+.alert-primary {
+  background-color: rgba(52, 152, 219, 0.2);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.alert-success {
+  background-color: rgba(39, 174, 96, 0.2);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+/* Forms */
+.form-control {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(44, 62, 80, 0.2);
+  color: var(--dark);
+}
+.form-control:focus {
+  border-color: var(--info);
+  box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+.form-label {
+  color: var(--light);
+}
+
+/* Badges */
+.badge-primary {
+  background-color: var(--primary);
+}
+.badge-secondary {
+  background-color: var(--secondary);
+}
+
+/* Snow effect */
+@keyframes snow {
+  0% { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+
+.snowflake {
+  position: fixed;
+  color: var(--snow);
+  font-size: 1em;
+  font-family: Arial, sans-serif;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  animation: snow 10s linear infinite;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.snowflake:nth-child(2n) { animation-duration: 12s; }
+.snowflake:nth-child(3n) { animation-duration: 15s; }
+.snowflake:nth-child(4n) { animation-duration: 8s; }
+
+/* Custom hover effects */
+.btn:hover, .nav-link:hover {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Modals */
+.modal-content {
+  background-color: rgba(236, 240, 241, 0.95);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Tables */
+.table {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.table thead th {
+  background-color: var(--primary);
+  color: var(--snow);
+  border-color: rgba(255, 255, 255, 0.2);
+}
