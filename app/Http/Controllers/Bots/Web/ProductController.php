@@ -462,7 +462,6 @@ class ProductController extends Controller
             "current_price" => "required",
         ]);
 
-
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
             ->createOrUpdate($request->all(),

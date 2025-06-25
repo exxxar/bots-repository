@@ -37,6 +37,7 @@ import Notifications from '@kyvg/vue3-notification'
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
@@ -80,7 +81,7 @@ createInertiaApp({
             .use(VueLazyLoad,
             {
                 loading: '/images/cashman.jpg',
-                error: '/images/error.png'
+                error: '/images/cashman.jpg'
             })
             .mount(el);
 

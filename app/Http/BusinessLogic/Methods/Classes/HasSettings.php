@@ -9,7 +9,7 @@ trait HasSettings
 {
     private array $defaultConfig = [
         "theme" => "/theme6.bootstrap.min.css",
-        "themes"=>[
+        "themes" => [
             [
                 'title' => 'Тема 1',
                 'href' => '/theme1.bootstrap.min.css',
@@ -100,7 +100,6 @@ trait HasSettings
             ],
 
 
-
         ],
         "delivery_price_text" => "Цена доставки рассчитывается курьером",
         "disabled_text" => "Временно недоступно!",
@@ -131,67 +130,67 @@ trait HasSettings
         "need_hide_delivery_period" => false,
         "can_use_sbp" => false,
         "icons" => [
-                [
-                    'slug' => 'profile',
-                    'title' => 'Профиль',
-                    'image_url' => 'profile.png',
-                    'is_visible' => true,
-                    'has_icon' => true,
-                ],
-                [
-                    'slug' => 'shop',
-                    'title' => 'Магазин',
-                    'image_url' => 'shop.png',
-                    'is_visible' => true,
-                    'has_icon' => true,
-                ],
-                [
-                    'slug' => 'basket',
-                    'title' => 'Корзина',
-                    'image_url' => 'basket.png',
-                    'is_visible' => true,
-                    'has_icon' => true,
-                ],
-                [
-                    'slug' => 'history',
-                    'title' => 'История заказов',
-                    'image_url' => 'history.png',
-                    'is_visible' => true,
-                    'has_icon' => true,
-                ],
-                [
-                    'slug' => 'events',
-                    'title' => 'Розыгрыши',
-                    'image_url' => 'events.png',
-                    'is_visible' => true,
-                    'has_icon' => true,
-                ],
-                [
-                    'slug' => 'about',
-                    'title' => 'О Нас & Контакты',
-                    'image_url' => 'contacts.png',
-                    'is_visible' => true,
-                    'has_icon' => true,
-                ],
-                [
-                    'slug' => 'wheel_of_fortune_btn',
-                    'title' => 'Колесо фортуны',
-                    'is_visible' => true,
-                    'has_icon' => false,
+            [
+                'slug' => 'profile',
+                'title' => 'Профиль',
+                'image_url' => 'profile.png',
+                'is_visible' => true,
+                'has_icon' => true,
+            ],
+            [
+                'slug' => 'shop',
+                'title' => 'Магазин',
+                'image_url' => 'shop.png',
+                'is_visible' => true,
+                'has_icon' => true,
+            ],
+            [
+                'slug' => 'basket',
+                'title' => 'Корзина',
+                'image_url' => 'basket.png',
+                'is_visible' => true,
+                'has_icon' => true,
+            ],
+            [
+                'slug' => 'history',
+                'title' => 'История заказов',
+                'image_url' => 'history.png',
+                'is_visible' => true,
+                'has_icon' => true,
+            ],
+            [
+                'slug' => 'events',
+                'title' => 'Розыгрыши',
+                'image_url' => 'events.png',
+                'is_visible' => true,
+                'has_icon' => true,
+            ],
+            [
+                'slug' => 'about',
+                'title' => 'О Нас & Контакты',
+                'image_url' => 'contacts.png',
+                'is_visible' => true,
+                'has_icon' => true,
+            ],
+            [
+                'slug' => 'wheel_of_fortune_btn',
+                'title' => 'Колесо фортуны',
+                'is_visible' => true,
+                'has_icon' => false,
 
-                ],
-                [
-                    'slug' => 'friends_btn',
-                    'title' => 'Друзья',
-                    'is_visible' => true,
-                    'has_icon' => false,
-                ],
-                [
-                    'slug' => 'main_menu_btn',
-                    'title' => 'Главное меню',
-                    'is_visible' => true,
-                    'has_icon' => false,
-                ],
+            ],
+            [
+                'slug' => 'friends_btn',
+                'title' => 'Друзья',
+                'is_visible' => true,
+                'has_icon' => false,
+            ],
+            [
+                'slug' => 'main_menu_btn',
+                'title' => 'Главное меню',
+                'is_visible' => true,
+                'has_icon' => false,
+            ],
         ],
         "sbp" => [
             "selected_sbp_bank" => "tinkoff",
@@ -227,7 +226,7 @@ trait HasSettings
 
         if (!is_null($config ?? null)) {
 
-            foreach ($config ?? [] as $key=>$value) {
+            foreach ($config ?? [] as $key => $value) {
 
                 $tmp[$key] = is_null($value ?? null) ? ($default[$key] ?? null) : $value;
             }
@@ -238,8 +237,7 @@ trait HasSettings
                     $tmp[$key] = $item;
             }
 
-            if (!is_null($tmp["icons"]??null))
-            {
+            if (!is_null($tmp["icons"] ?? null)) {
                 foreach ($tmp['icons'] as &$icon) {
                     foreach ($default["icons"][0] as $key => $defaultValue) {
                         if (!array_key_exists($key, $icon)) {
@@ -254,6 +252,7 @@ trait HasSettings
 
         // Признак админа
         $tmp['is_admin'] = !is_null($this->botUser) ? $this->botUser->is_admin || $this->botUser->is_manager : false;
+
 
         return $tmp;
     }
