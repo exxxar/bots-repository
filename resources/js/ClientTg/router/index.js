@@ -846,6 +846,16 @@ export const simpleRoutes = [
     },
 ];
 
+const fastoranPrefix = "/f"
+export const fastoranRoutes = [
+    {
+        name: 'YClientsV2',
+        path: fastoranPrefix + '/',
+        component: YClientsV2,
+        meta: {title: 'YClients'}
+    },
+];
+
 
 const router = createRouter({
     history: createWebHashHistory(),

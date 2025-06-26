@@ -9,7 +9,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
     <div class="container py-3" v-if="getSelf">
 
         <div
-            v-if="script_data.is_disabled||false"
+            v-if="script_data.is_disabled"
             class="alert alert-danger mb-3">
             <p class="mb-0" v-html="script_data.disabled_text||'-'"></p>
         </div>
@@ -114,7 +114,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
             class="btn btn-outline-light text-primary w-100 p-3 rounded-3 shadow-sm mb-2">
 
             <i class="fa fa-dot-circle"></i>
-            {{preparedMenuItem['wheel_of_fortune_btn'].title||'Колесо фортуны'}}
+            {{ preparedMenuItem['wheel_of_fortune_btn'].title || 'Колесо фортуны' }}
 
         </button>
 
@@ -125,7 +125,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
             class="btn  btn-outline-light text-primary mb-2 w-100 p-3 rounded-3 shadow-sm ">
 
             <i class="fa fa-people-carry "></i>
-            {{preparedMenuItem['friends_btn'].title||'Пригласить друзей'}}
+            {{ preparedMenuItem['friends_btn'].title || 'Пригласить друзей' }}
         </button>
 
         <template v-if="getSelf.is_admin">
@@ -215,7 +215,9 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                             style="min-height:250px;"
                             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                         <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                            <img v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
+                            <img
+                                style="max-width:150px;"
+                                v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
 
                             <p class="my-2">Управление клиентами</p>
                         </div>
@@ -230,7 +232,9 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                             style="min-height:250px;"
                             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                         <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                            <img v-lazy="'/images/shop-v2-2/utm.png'" class="img-fluid" alt="">
+                            <img
+                                style="max-width:150px;"
+                                v-lazy="'/images/shop-v2-2/utm.png'" class="img-fluid" alt="">
 
                             <p class="my-2">UTM-метки</p>
                         </div>
@@ -244,7 +248,9 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                             style="min-height:250px;"
                             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                         <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                            <img v-lazy="'/images/shop-v2-2/mail.png'" class="img-fluid" alt="">
+                            <img
+                                style="max-width:150px;"
+                                v-lazy="'/images/shop-v2-2/mail.png'" class="img-fluid" alt="">
 
                             <p class="my-2">Управление рассылками</p>
                         </div>
@@ -259,7 +265,9 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                             style="min-height:250px;"
                             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                         <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                            <img v-lazy="'/images/shop-v2-2/orders.png'" class="img-fluid" alt="">
+                            <img
+                                style="max-width:150px;"
+                                v-lazy="'/images/shop-v2-2/orders.png'" class="img-fluid" alt="">
 
                             <p class="my-2">Управление заказами</p>
                         </div>
@@ -273,7 +281,9 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                             style="min-height:250px;"
                             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                         <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                            <img v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
+                            <img
+                                style="max-width:150px;"
+                                v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
 
                             <p class="my-2">Управление промокодами</p>
                         </div>
@@ -288,7 +298,9 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                             style="min-height:250px;"
                             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                         <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                            <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
+                            <img
+                                style="max-width:150px;"
+                                v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
 
                             <p class="my-2">Статистика</p>
                         </div>
@@ -330,7 +342,7 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
             @click="startMenu"
             class="btn btn-primary w-100 p-3 rounded-3 shadow-lg">
 
-            <i class="fa-brands fa-telegram"></i>  {{preparedMenuItem['main_menu_btn'].title||'Главное меню'}}
+            <i class="fa-brands fa-telegram"></i> {{ preparedMenuItem['main_menu_btn'].title || 'Главное меню' }}
         </button>
     </nav>
 
@@ -381,8 +393,7 @@ export default {
     data() {
         return {
             loadScriptData: false,
-            stories: [
-            ],
+            stories: [],
 
             script_data: {
                 is_disabled: true,
@@ -424,17 +435,24 @@ export default {
     mounted() {
         this.tg.BackButton.show()
 
-        this.loadScriptModuleData().then(()=>{
+        if (this.bot.settings?.self_updated) {
+            this.script_data = this.bot.settings
             this.loadStories()
-        })
+            this.loadScriptData = true
+        } else
+            this.loadScriptModuleData().then(() => {
+                this.loadStories()
+            })
+
 
         this.tg.BackButton.onClick(() => {
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
-            if (this.$route.name === "MenuV2")
+            this.$router.back()
+            /*if (this.$route.name === "MenuV2")
                 this.tg.close()
-            else
-                this.$router.back()
+            else*/
+
         })
     },
     methods: {

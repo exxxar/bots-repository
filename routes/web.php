@@ -48,14 +48,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 |
 */
 
-Route::get("/bottest", function (){
-    $bot = Bot::query()
-        ->where("bot_domain", "nextitgroup_bot")
-        ->first();
-
-    return response()->json($bot->toArray());
-
-});
+Route::get("/bottest", [\App\Http\Controllers\Globals\FastoranController::class,"shopList"]);
 
 Route::get("/test", function (){
     $name ='Шипилов Егор Олегович';

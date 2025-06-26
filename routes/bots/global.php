@@ -16,6 +16,10 @@ BotManager::bot()
     ->slug("global_wheel_of_fortune_custom", "wheelOfFortune"); //колесо фортуны 2
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\FastoranController::class)
+    ->slug("global_fastoran_main", "fastoranScript");
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\SimpleDeliveryController::class)
     ->route("/next_order ([0-9]+)", "nextOrders")
     ->route("/watch_for_deliveryman ([0-9]+)", "watchForDeliveryman")

@@ -95,6 +95,14 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
             <label for="floatingInput">Доступен до...</label>
         </div>
 
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   v-model="promoCodeForm.need_certificate"
+                   type="checkbox" role="switch" id="need_certificate">
+            <label class="form-check-label"
+                   for="is_active">Сгенерировать красивый сертификат</label>
+        </div>
+
         <button
             type="submit" class="btn btn-primary w-100 p-3">
             <span v-if="promoCodeForm.id==null">Создать промокод</span>
@@ -121,9 +129,10 @@ export default {
                 description: null,
                 cashback_amount: 0,
                 max_activation_count: 1,
-                is_active: false,
+                is_active: true,
                 available_to: null,
                 activate_price: 0,
+                need_certificate: true,
                 config: {
                     discount_in_percent: false,
                 },
@@ -206,7 +215,8 @@ export default {
                     description: null,
                     cashback_amount: 0,
                     max_activation_count: 1,
-                    is_active: false,
+                    is_active: true,
+                    need_certificate: true,
                     config: {
                         discount_in_percent: false,
                     }

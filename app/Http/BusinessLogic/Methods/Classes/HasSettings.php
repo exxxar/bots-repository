@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 trait HasSettings
 {
     private array $defaultConfig = [
+        "self_updated"=>false,
         "theme" => "/theme6.bootstrap.min.css",
         "themes" => [
             [
@@ -103,6 +104,7 @@ trait HasSettings
         ],
         "delivery_price_text" => "Цена доставки рассчитывается курьером",
         "disabled_text" => "Временно недоступно!",
+        "can_work_in_marketplace"=>false,
         "min_price" => 100,
         "price_per_km" => 100,
         "min_price_for_cashback" => 2000,
@@ -224,6 +226,7 @@ trait HasSettings
 
         $tmp = [];
 
+
         if (!is_null($config ?? null)) {
 
             foreach ($config ?? [] as $key => $value) {
@@ -238,9 +241,10 @@ trait HasSettings
             }
 
             if (!is_null($tmp["icons"] ?? null)) {
+                $tmp['icons'] = is_string($tmp['icons'])? (array)(json_decode($tmp['icons'])):$tmp['icons'] ;
                 foreach ($tmp['icons'] as &$icon) {
                     foreach ($default["icons"][0] as $key => $defaultValue) {
-                        if (!array_key_exists($key, $icon)) {
+                        if (!array_key_exists($key, (array)$icon)) {
                             $icon[$key] = $defaultValue;
                         }
                     }
@@ -265,9 +269,9 @@ trait HasSettings
 
         $config = $this->bot->config ?? [];
         $config[$key] = $value;
-
         $this->bot->config = $config;
         $this->bot->save();
+
     }
 
     public function setConfig(array $data): void
@@ -278,9 +282,14 @@ trait HasSettings
 
         $config = $this->bot->config ?? [];
 
-        foreach ($data as $key => $value) {
-            $config[$key] = $value;
+
+
+        foreach ($data as $item) {
+            $item  = (object)$item;
+            $config[$item->key] = $item->value;
         }
+
+        $config["self_updated"]=true;
 
         $this->bot->config = $config;
         $this->bot->save();
