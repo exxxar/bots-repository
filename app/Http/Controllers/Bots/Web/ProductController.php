@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Mpdf\Mpdf;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use function Laravel\Prompts\search;
 
 class ProductController extends Controller
 {
@@ -401,14 +402,16 @@ class ProductController extends Controller
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
             ->list(
-                $request->search ?? null,
-                [
+                search: $request->search ?? null,
+                filters: [
                     "categories" => $request->categories ?? null,
                     "min_price" => $request->min_price ?? null,
                     "max_price" => $request->max_price ?? null
                 ],
 
-                $request->get("size") ?? config('app.results_per_page'),
+                size: $request->get("size") ?? config('app.results_per_page'),
+                needRemoved: $request->get("need_removed") ?? false,
+                needAll: $request->get("need_all") ?? false
             );
     }
 
@@ -476,6 +479,14 @@ class ProductController extends Controller
             ->setBot($request->bot ?? null)
             ->removeAllProducts();
     }
+
+    public function restore(Request $request, $productId): ProductResource
+    {
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->restore($productId);
+    }
+
 
     public function destroy(Request $request, $productId): ProductResource
     {

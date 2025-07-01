@@ -146,6 +146,22 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+
+    async restoreProduct(context, payload) {
+
+
+        let link = `${BASE_PRODUCTS_LINK}/restore-product/${payload}`
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadCategory(context, payload = {dataObject: {categoryId: null}}) {
 
 

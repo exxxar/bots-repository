@@ -75,7 +75,7 @@ class ProductLogicFactory extends BaseLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, array $filters = null, $size = null, $needAll = false): ProductCollection
+    public function list($search = null, array $filters = null, $size = null, $needAll = false, $needRemoved = false): ProductCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -83,8 +83,12 @@ class ProductLogicFactory extends BaseLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         //need_hide_disabled_products
-        $products = Product::query()
-            ->with(["productCategories", "productOptions"])
+        $products = Product::query();
+
+            if ($needRemoved)
+                $products = $products->withTrashed();
+
+        $products  = $products->with(["productCategories", "productOptions"])
             ->where("bot_id", $this->bot->id);
 
         if (!$needAll)
@@ -376,6 +380,25 @@ class ProductLogicFactory extends BaseLogicFactory
         }
 
         return new ProductCategoryResource($category);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function restore($productId): ProductResource
+    {
+        $product = Product::query()
+            ->withTrashed()
+            ->find($productId);
+
+        if (is_null($product))
+            throw new HttpException(404, "Продукт не найден");
+
+
+        $product->deleted_at = null;
+        $product->save();
+
+        return new ProductResource($product);
     }
 
     /**

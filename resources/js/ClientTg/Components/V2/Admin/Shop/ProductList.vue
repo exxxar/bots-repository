@@ -59,6 +59,14 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
             v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
     </p>
 
+    <div class="form-check form-switch mb-2">
+        <input class="form-check-input"
+               v-model="need_removed"
+               type="checkbox" role="switch" id="is_active">
+        <label class="form-check-label"
+               for="is_active">Отображать удаленные</label>
+    </div>
+
     <p>Всего товаров: <span v-if="paginate">{{ paginate.meta.total || 0 }}</span></p>
 
     <div
@@ -310,10 +318,19 @@ export default {
             paginate: null,
             review_paginate: null,
             loading_reviews: true,
+            need_removed:false,
             sort: {
                 param: null,
                 direction: 'asc'
             },
+        }
+    },
+    watch: {
+        'need_removed': {
+            handler: function (newValue) {
+                this.loadProducts()
+            },
+            deep: true
         }
     },
     computed: {
@@ -420,7 +437,8 @@ export default {
                 dataObject: {
                     search: this.search,
                     direction: this.sort.direction,
-                    order_by: this.sort.param
+                    order_by: this.sort.param,
+                    need_removed: this.need_removed
                 },
                 page: page
             }).then(() => {

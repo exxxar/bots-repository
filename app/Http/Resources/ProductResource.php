@@ -31,6 +31,7 @@ class ProductResource extends JsonResource
             'bot_id' => $this->bot_id,
             'rating' => $this->rating ?? 5,
             'reviews' => $this->reviews ?? [],
+            'deleted_at' => $this->deleted_at ?? null,
             "options"=> ProductOptionResource::collection($this->whenLoaded('productOptions')),
             'categories' => ProductCategoryResource::collection($this->whenLoaded('productCategories')),
         ];

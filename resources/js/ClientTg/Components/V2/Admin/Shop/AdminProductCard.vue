@@ -6,14 +6,13 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 <template>
 
     <div
-        @click="select"
+
         class="card  product-card">
         <div
             @click="showProductDetails"
             class="img-container">
             <img
                 class="rounded-3"
-
                 v-lazy="item.images[0]">
             <div class="controls">
                 <div class="top d-flex justify-content-between w-100 align-items-center">
@@ -29,7 +28,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
             </div>
         </div>
 
-        <div class="card-body">
+        <div class="card-body"
+             @click="showProductDetails">
             <p class="text-center mb-2" style="font-size: 12px;">{{ item.title.slice(0, 50) }} <span
                 v-if="item.title.length>50">...</span></p>
 
@@ -39,6 +39,14 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                       v-if="item.old_price>0">{{ item.old_price || 0 }}₽</span>
             </p>
 
+
+        </div>
+        <div class="card-footer"
+             v-if="item.deleted_at">
+            <button
+                @click="repairProduct"
+                class="btn btn-primary w-100"
+                type="button">Восстановить</button>
         </div>
     </div>
 
@@ -74,15 +82,29 @@ export default {
 
     methods: {
 
-        select() {
-            this.$emit("select", this.item)
-        },
+
 
         showProductDetails() {
             this.$emit("select", this.item)
         },
         goToProduct() {
             this.$router.push({name: 'ProductV2', params: {productId: this.item.id}})
+        },
+        repairProduct(){
+            this.$store.dispatch("restoreProduct", this.item.id).then(()=>{
+                this.$notify({
+                    title: "Восстановление товара",
+                    text: 'Товар успешно восстановлен',
+                    type: 'success'
+                })
+                this.item.deleted_at = null
+            }).catch(()=>{
+                this.$notify({
+                    title: "Восстановление товара",
+                    text: 'Товар не удалось восстановить',
+                    type: 'error'
+                })
+            })
         },
         incProductCart() {
 
