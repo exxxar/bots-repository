@@ -42,7 +42,7 @@ class VKProductController extends Controller
             $bot->bot_domain ?? null;
 
         if (is_null($botDomain))
-            throw new \HttpException("Бот не найден!",400);
+            throw new \HttpException("Бот не найден!", 400);
 
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
@@ -188,13 +188,13 @@ class VKProductController extends Controller
                 continue;
             };
 
-            $dimension = [];
+            $dimension = $product->dimension ?? [];
 
             $vkDimensions = $vkProduct->dimensions ?? null;
 
             if (!is_null($vkDimensions)) {
                 foreach ($vkDimensions as $key => $value) {
-                    $dimension[$key] = $value || 0;
+                    $dimension[$key] = $value ?? $dimension[$key] ?? 0;
                 }
 
             }
