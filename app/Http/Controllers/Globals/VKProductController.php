@@ -29,6 +29,9 @@ class VKProductController extends Controller
 
     protected $tmpProducts = [];
 
+    /**
+     * @throws \HttpException
+     */
     public function getVKAuthLink(Request $request)
     {
         $bot = $request->bot ?? null;
@@ -37,6 +40,9 @@ class VKProductController extends Controller
         $botDomain = is_null($bot) ?
             $request->bot_domain ?? $request->botDomain ?? null :
             $bot->bot_domain ?? null;
+
+        if (is_null($botDomain))
+            throw new \HttpException("Бот не найден!",400);
 
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");

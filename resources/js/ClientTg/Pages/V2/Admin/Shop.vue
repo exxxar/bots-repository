@@ -8,62 +8,16 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
 
     <div class="container py-3">
         <div class="row">
-            <div class="col-12">
-                <form
-                    v-on:submit.prevent="updateShopLink"
-                    class="mb-2">
 
 
-                    <div class="form-floating mb-2">
-                        <input type="url" class="form-control"
-                               placeholder="Ссылка на группу ВК"
-                               aria-label="ссылка на группу ВК"
-                               v-model="botForm.vk_shop_link"
-                               aria-describedby="vk_shop_link">
-                        <label for="floatingInput">Ссылка на страницу ВК с товарами</label>
-                    </div>
-
-
-                    <button
-                        :disabled="load"
-                        class="btn btn-outline-info w-100 p-3">
-                        <i class="fa-regular fa-floppy-disk mr-2"></i> Сохранить
-                    </button>
-
-                </form>
-
-                <p
-                    v-if="!link"
-                    class="btn btn-outline-warning p-3 mb-1 w-100">
-                    <i class="fa-brands fa-vk mr-2"></i>Подготовка ссылки
-                    <span class="spinner-border text-warning ml-2" style="border-width: 2px; width: 1rem;height: 1rem;" role="status"></span>
-                </p>
-                <a
-                    @click="open(link)"
-                    v-if="link"
-                    href="javascript:void(0)"
-                    target="_blank"
-                    class="btn btn-primary p-3 w-100">
-                    <i class="fa-brands fa-vk mr-2"></i> Обновить товар из ВК
-                </a>
-            </div>
-
-            <div class="col-12" v-if="currentBot.iiko">
-                <a
-                    @click="goTo('IikoV2')"
-                    href="javascript:void(0)"
-                    class="btn btn-primary p-3 w-100 my-2">
-                    <i class="fa-solid fa-gears mr-2"></i> Обновить товар из IIKO
-                </a>
-            </div>
 
             <div class="col-12 py-2" style="position: sticky; top: 0px;z-index: 1000;">
                 <div class="btn-group w-100 px-3 catalog-tabs py-2" style="overflow-x:auto;">
                     <button
                         type="button"
-                        class="btn-info   btn p-3"
+                        class="btn-info btn p-3"
                         @click="tab=0"
-                        style="min-width:150px;line-height:100%;"
+                        style="min-width:200px;line-height:100%;"
                         v-bind:class="{'active':tab===0}"
                         aria-current="page"><i class="fa-solid fa-users mr-2"></i>Товары
                     </button>
@@ -71,7 +25,7 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                         type="button"
                         class="btn-info   btn p-3"
                         @click="tab=2"
-                        style="min-width:150px;line-height:100%"
+                        style="min-width:200px;line-height:100%"
                         v-bind:class="{'active':tab===2}"
                     ><i class="fa-solid fa-user-secret mr-2"></i>Категории
                     </button>
@@ -83,7 +37,14 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                         v-bind:class="{'active':tab===3}"
                     ><i class="fa-solid fa-box-open mr-2"></i> Подборки товара (комбо)
                     </button>
-
+                    <button
+                        type="button"
+                        class="btn-info btn p-3"
+                        @click="tab=4"
+                        style="min-width:300px;line-height:100%;"
+                        v-bind:class="{'active':tab===4}"
+                        aria-current="page"><i class="fa-solid fa-arrows-rotate mr-2"></i>Обновление данных
+                    </button>
                 </div>
             </div>
 
@@ -107,6 +68,58 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                     v-on:refresh="refresh"
                 />
             </div>
+
+            <template v-if="tab===4">
+                <div class="col-12">
+                    <form
+                        v-on:submit.prevent="updateShopLink"
+                        class="mb-2">
+
+
+                        <div class="form-floating mb-2">
+                            <input type="url" class="form-control"
+                                   placeholder="Ссылка на группу ВК"
+                                   aria-label="ссылка на группу ВК"
+                                   v-model="botForm.vk_shop_link"
+                                   aria-describedby="vk_shop_link">
+                            <label for="floatingInput">Ссылка на страницу ВК с товарами</label>
+                        </div>
+
+
+                        <button
+                            :disabled="load"
+                            class="btn btn-outline-info w-100 p-3">
+                            <i class="fa-regular fa-floppy-disk mr-2"></i> Сохранить
+                        </button>
+
+                    </form>
+
+                    <p
+                        v-if="!link"
+                        class="btn btn-outline-warning p-3 mb-1 w-100">
+                        <i class="fa-brands fa-vk mr-2"></i>Подготовка ссылки
+                        <span class="spinner-border text-warning ml-2" style="border-width: 2px; width: 1rem;height: 1rem;" role="status"></span>
+                    </p>
+                    <a
+                        @click="open(link)"
+                        v-if="link"
+                        href="javascript:void(0)"
+                        target="_blank"
+                        class="btn btn-primary p-3 w-100">
+                        <i class="fa-brands fa-vk mr-2"></i> Обновить товар из ВК
+                    </a>
+                </div>
+
+                <div class="col-12" v-if="currentBot.iiko">
+                    <a
+                        @click="goTo('IikoV2')"
+                        href="javascript:void(0)"
+                        class="btn btn-primary p-3 w-100 my-2">
+                        <i class="fa-solid fa-gears mr-2"></i> Обновить товар из IIKO
+                    </a>
+                </div>
+            </template>
+
 
             <div class="col-12" v-if="tab===2">
                 <ProductCategoryList></ProductCategoryList>
