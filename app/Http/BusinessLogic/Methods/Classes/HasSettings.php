@@ -215,6 +215,38 @@ trait HasSettings
         "win_message" => "{{name}}, вы приняли участие в розыгрыше и выиграли приз {{prize}}. Наш менеджер свяжется с вами в ближайшее время!",
     ];
 
+    public function validateConfig(array $inputConfig): array
+    {
+        $normalizedConfig = [];
+
+        // Определяем формат
+        $isKeyValueArray = isset($inputConfig[0]['key']) && isset($inputConfig[0]['value']);
+
+        if ($isKeyValueArray) {
+            // Преобразуем массив формата [{"key": ..., "value": ...}, ...] в обычный ассоциативный
+            foreach ($inputConfig as $item) {
+                if (isset($item['key']) && array_key_exists('value', $item)) {
+                    $normalizedConfig[$item['key']] = $item['value'];
+                }
+            }
+        } else {
+            $normalizedConfig = $inputConfig;
+        }
+
+        // Валидируем и дополняем конфиг
+        $validatedConfig = [];
+
+        foreach ($this->defaultConfig as $key => $defaultValue) {
+            if (array_key_exists($key, $normalizedConfig)) {
+                $validatedConfig[$key] = $normalizedConfig[$key];
+            } else {
+                $validatedConfig[$key] = $defaultValue;
+            }
+        }
+
+        return $validatedConfig;
+    }
+
     public function getConfig(): array
     {
         if (is_null($this->bot)) {
@@ -280,19 +312,16 @@ trait HasSettings
             throw new HttpException(400, "Не заданы необходимые параметры функции");
         }
 
-        $config = $this->bot->config ?? [];
+        $config = $this->validateConfig($this->bot->config ?? []);
 
-
-
-        foreach ($data as $item) {
-            $item  = (object)$item;
-            $config[$item->key] = $item->value;
+        foreach ($data as $key=>$value) {
+            $config[$key] = $value;
         }
 
         $config["self_updated"]=true;
-
         $this->bot->config = $config;
         $this->bot->save();
+
     }
 
     protected function getDefaultConfig(): array

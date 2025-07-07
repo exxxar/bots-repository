@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Facades\BusinessLogic;
+use App\Http\BusinessLogic\Methods\Classes\HasSettings;
 use App\Http\Resources\BotMenuSlugCollection;
 use App\Http\Resources\BotMenuSlugResource;
 use App\Models\ActionStatus;
@@ -13,12 +14,15 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use stdClass;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BotSlugLogicFactory extends BaseLogicFactory
 {
+    use HasSettings;
 
     public function globals(): BotMenuSlugCollection
     {
@@ -340,44 +344,24 @@ class BotSlugLogicFactory extends BaseLogicFactory
         $data["wheel_of_fortune"] = json_decode($data["wheel_of_fortune"] ?? '[]');
         $data["sbp"] = json_decode($data["sbp"] ?? '[]');
 
-
         if (!is_null($data["payment_token"] ?? null)) {
             $this->bot->payment_provider_token = $data["payment_token"] ?? null;
             $this->bot->save();
 
         }
-        $config = Collection::make($slug->config ?? []);
 
         $tmp = $slug->config ?? [];
-
-        foreach ($tmp as $key => $item) {
-            $configItem = $config->where("key", $item["key"])->first() ?? null;
-            $configItem["value"] = $data[$item["key"]] ?? null;
-            $tmp[$key] = $configItem;
-        }
-
+        $tmp = $this->validateConfig($tmp);
+        $data = $this->validateConfig($data);
 
         foreach (array_keys($data) as $key) {
-
-            $configItem = $config->where("key", $key)->first() ?? null;
-
-            if (is_null($configItem)) {
-                $tmp[] = [
-                    "key" => $key,
-                    "type" => "json",
-                    "value" => $data[$key]
-                ];
-            }
-
+            $tmp[$key] = $data[$key] ?? null;
         }
 
-        $slug->config = $tmp;
-        $slug->save();
 
-        BusinessLogic::bots()
-            ->setBot($this->bot)
-            ->setBotUser($this->botUser)
-            ->setConfig($tmp);
+        $this->setConfig($tmp);
+        $slug->config = [];
+        $slug->save();
 
         return new BotMenuSlugResource($slug);
     }

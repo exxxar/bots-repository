@@ -118,6 +118,31 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                         <i class="fa-solid fa-gears mr-2"></i> Обновить товар из IIKO
                     </a>
                 </div>
+
+                <div class="col-12">
+                    <button
+                        :disabled="true"
+                        @click="exportOrders"
+                        class="btn btn-success p-3 w-100 mb-2">
+                        <i class="fa-solid fa-lock mr-2"></i> Экспортировать заказы
+                    </button>
+
+                    <button
+                        :disabled="true"
+                        @click="importProducts"
+                        class="btn btn-success p-3 w-100 mb-2">
+                        <i class="fa-solid fa-lock mr-2"></i> Импорт из XLS
+                    </button>
+
+                    <button
+
+                        @click="exportProducts"
+                        class="btn btn-success p-3 w-100 mb-2">
+                        Экспорт в XLS
+                    </button>
+
+
+                </div>
             </template>
 
 
@@ -216,6 +241,40 @@ export default {
                 this.load = false
             })
 
+        },
+        exportOrders(){
+            this.$store.dispatch("exportAllOrders").then((resp) => {
+                this.load = false
+
+                this.$notify({
+                    title:'Менеджер магазина',
+                    text: "Все заказы экспортированы в файл",
+                    type:'success'
+                })
+
+            }).catch(() => {
+                this.load = false
+            })
+        },
+        exportProducts(){
+            this.$store.dispatch("exportAllProducts").then((resp) => {
+                this.load = false
+
+                this.$notify({
+                    title:'Менеджер магазина',
+                    text: "Все продукты экспортированы в файл",
+                    type:'success'
+                })
+
+            }).catch(() => {
+                this.load = false
+            })
+        },
+        importProducts(){
+            this.$notify({
+                title:'Менеджер магазина',
+                text: "Функция недоступна",
+            })
         },
         updateProducts() {
 

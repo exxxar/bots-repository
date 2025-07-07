@@ -397,14 +397,14 @@
         </form>
 
 
-        <button
+<!--        <button
 
             @click="removeProduct"
             v-if="productForm.id"
             type="button"
             class="btn btn-link my-3 w-100">Удалить
             товар
-        </button>
+        </button>-->
 
     </div>
 

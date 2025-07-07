@@ -20,7 +20,20 @@ const getters = {
 
 const actions = {
 
+    async exportAllOrders(context) {
 
+
+        let link = `${BASE_ORDERS_LINK}/export-all-orders`
+
+        let _axios = util.makeAxiosFactory(link, 'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async sendSBPInvoice(context, payload = {dataObject: null}) {
         let link = `${BASE_ORDERS_LINK}/send-sbp-invoice`
 

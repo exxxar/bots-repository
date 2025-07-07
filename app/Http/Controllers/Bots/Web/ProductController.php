@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Bots\Web;
 
+use App\Exports\BotCashBackExport;
+use App\Exports\ProductExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
@@ -26,8 +28,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Telegram\Bot\FileUpload\InputFile;
 use function Laravel\Prompts\search;
 
 class ProductController extends Controller
@@ -234,6 +238,17 @@ class ProductController extends Controller
     }
 
 
+    public function exportAllProducts(Request $request){
+
+
+
+         BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->exportAllProducts();
+
+        return response()->noContent();
+    }
     /**
      * @throws ValidationException
      */
@@ -475,9 +490,9 @@ class ProductController extends Controller
 
     public function removeAllProducts(Request $request)
     {
-        BusinessLogic::products()
+        /*BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->removeAllProducts();
+            ->removeAllProducts();*/
     }
 
     public function restore(Request $request, $productId): ProductResource
@@ -488,11 +503,11 @@ class ProductController extends Controller
     }
 
 
-    public function destroy(Request $request, $productId): ProductResource
+    public function destroy(Request $request, $productId)
     {
-        return BusinessLogic::products()
+       /* return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->destroy($productId);
+            ->destroy($productId);*/
     }
 
     public function duplicate(Request $request, $productId): ProductResource

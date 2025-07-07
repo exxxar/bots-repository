@@ -372,6 +372,7 @@ Route::prefix("bot-client")
                 Route::post("/checkout-link", [ProductController::class, "createCheckoutLink"])
                     ->middleware(["slug"]);
                 Route::post("/products/store-category", [ProductController::class, "storeCategory"]);
+                Route::post("/products/export-all-products", [ProductController::class, "exportAllProducts"]);
                 Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
                 Route::post("/products/random", [ProductController::class, "randomProducts"]);
                 Route::post("/products/categories", [ProductController::class, "getCategories"]);

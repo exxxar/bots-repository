@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
+use App\Exports\ProductExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
@@ -85,10 +87,10 @@ class ProductLogicFactory extends BaseLogicFactory
         //need_hide_disabled_products
         $products = Product::query();
 
-            if ($needRemoved)
-                $products = $products->withTrashed();
+        if ($needRemoved)
+            $products = $products->withTrashed();
 
-        $products  = $products->with(["productCategories", "productOptions"])
+        $products = $products->with(["productCategories", "productOptions"])
             ->where("bot_id", $this->bot->id);
 
         if (!$needAll)
@@ -479,6 +481,32 @@ class ProductLogicFactory extends BaseLogicFactory
         return new ProductCategoryResource($category);
     }
 
+
+    public function exportAllProducts($data = null)
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Условия функции не выполнены!");
+
+        $name = Str::uuid();
+
+        $date = Carbon::now()->format("Y-m-d H-i-s");
+
+        Excel::store(new ProductExport($this->bot->id), "$name.xls", "public", \Maatwebsite\Excel\Excel::XLS);
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendDocument($this->botUser->telegram_chat_id,
+                "Экспорт товаров",
+                InputFile::create(
+                    storage_path("app/public") . "/$name.xls",
+                    "products-export-$date.xls"
+                )
+            );
+
+        unlink(storage_path("app/public") . "/$name.xls");
+
+    }
 
     /**
      * @throws HttpException
@@ -1134,8 +1162,8 @@ class ProductLogicFactory extends BaseLogicFactory
                     "Идентификатор клиента: " . ($this->botUser->telegram_chat_id ?? '-') . "\n" .
                     "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
                     "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
-                    "Пояснение к оплате: " . ($data["image_info"] ?? 'не указано').
-                     "\n<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n",
+                    "Пояснение к оплате: " . ($data["image_info"] ?? 'не указано') .
+                    "\n<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n",
                     InputFile::create(storage_path() . "/app/$imageName"), [
                     [
                         ["text" => "📜Заказ пользователя", "url" => $historyLink]
