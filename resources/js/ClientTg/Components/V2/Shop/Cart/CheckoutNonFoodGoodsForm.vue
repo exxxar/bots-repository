@@ -222,7 +222,7 @@ export default {
         },
 
         canSubmitForm() {
-            return this.canRequestDeliverPrice && (this.spent_time_counter || 0) === 0
+            return this.can_start_payment && (this.spent_time_counter || 0) === 0
                 && (!this.modelValue.use_cashback ?
                     this.cartTotalPrice >= this.settings.min_price :
                     this.cartTotalPrice - this.cashbackLimit > this.settings.min_price)
