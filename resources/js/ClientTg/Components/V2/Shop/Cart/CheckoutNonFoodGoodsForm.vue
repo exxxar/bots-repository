@@ -269,7 +269,8 @@ export default {
             this.modelValue.cdek.to.city = item.to?.city || null
             this.modelValue.cdek.to.office = item.to?.office || null
 
-            this.can_start_payment = true
+            if (this.modelValue.cdek.tariff)
+                this.can_start_payment = true
 
         },
         startCheckout() {
