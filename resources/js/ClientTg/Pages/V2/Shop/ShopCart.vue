@@ -117,7 +117,8 @@ export default {
         return {
             tab: 0,
             loaded_settings: true,
-            settings: {
+            settings:null,
+          /*  settings: {
                 can_use_cash: true,
                 can_use_card: true,
                 delivery_price_text: null,
@@ -155,7 +156,7 @@ export default {
                 selected_script_id: null,
             },
 
-
+*/
             deliveryForm: {
                 name: null,
                 phone: null,
@@ -255,7 +256,11 @@ export default {
     },
 
     mounted() {
-        this.loadShopModuleData()
+        if (this.bot.settings?.self_updated) {
+            this.settings = this.bot.settings
+        } else
+            this.loadShopModuleData()
+
         this.loadBasketData()
 
         this.tg.BackButton.show()
