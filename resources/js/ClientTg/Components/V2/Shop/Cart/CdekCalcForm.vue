@@ -71,6 +71,7 @@ export default {
             this.calcTariffForm.to.office = event.office
 
             this.calcTariffForm.tariff = null
+
             //this.loadCdekOffices(direction)
         },
         loadTariffForCdek() {

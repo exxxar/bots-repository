@@ -178,8 +178,9 @@ export default {
     props: ["settings", "modelValue"],
     data() {
         return {
+            can_start_payment: false,
             spent_time_counter: 0,
-            offer_agreement:true,
+            offer_agreement: true,
             need_request_delivery_price: true,
             moneyVariants: [
                 500, 1000, 2000, 5000
@@ -214,11 +215,14 @@ export default {
         },
 
         canRequestDeliverPrice() {
-            return this.need_request_delivery_price && this.modelValue.city != null && this.modelValue.street != null && this.modelValue.building != null;
+            if (!this.need_request_delivery_price)
+                return true
+
+            return this.can_start_payment
         },
 
         canSubmitForm() {
-            return (this.spent_time_counter || 0) === 0
+            return this.canRequestDeliverPrice && (this.spent_time_counter || 0) === 0
                 && (!this.modelValue.use_cashback ?
                     this.cartTotalPrice >= this.settings.min_price :
                     this.cartTotalPrice - this.cashbackLimit > this.settings.min_price)
@@ -264,6 +268,8 @@ export default {
             this.modelValue.cdek.to.region = item.to?.region || null
             this.modelValue.cdek.to.city = item.to?.city || null
             this.modelValue.cdek.to.office = item.to?.office || null
+
+            this.can_start_payment = true
 
         },
         startCheckout() {
