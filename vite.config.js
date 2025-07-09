@@ -20,11 +20,14 @@ export default defineConfig({
                 'resources/css/AdminPanel/app.css',
                 'resources/css/ClientTg/app.css',
                 'resources/css/Landing/app.css',
-
+                'resources/css/Mobile/app.css',
 
             ],
 
-            ssr: ['resources/js/ClientTg/ssr.js', 'resources/js/Landing/ssr.js'],
+            ssr: ['resources/js/ClientTg/ssr.js',
+                'resources/js/Landing/ssr.js',
+
+            ],
             refresh: true,
         }),
 

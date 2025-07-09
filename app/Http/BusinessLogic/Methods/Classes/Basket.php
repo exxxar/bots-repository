@@ -551,7 +551,8 @@ class Basket
         $paymentType = $this->data["payment_type"] ?? 4;
         $cdek = json_decode($this->data["cdek"] ?? '{}');
 
-       if (is_null($cdek->to->address??null))
+        $address = $cdek->to->address?? $cdek->to->office->location->address_full ?? null;
+       if (is_null($address))
            throw new HttpException(400, "Не указан адрес пункта выдачи");
 
         $productMessage = "#заказдоставка\n";

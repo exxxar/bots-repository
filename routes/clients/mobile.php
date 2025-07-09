@@ -19,17 +19,27 @@ use App\Http\Controllers\Globals\ShopScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneCustomScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
 use App\Http\Controllers\MobileController;
+use App\Http\Resources\BotSecurityResource;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 
 
-Route::prefix("mobile")
+Route::prefix("s")
     ->group(function () {
 
-    /*    Route::get("/{domain}/guest", [MobileController::class, "guestMobileHomePage"])
-            ->name("mobile.guest");*/
+        Route::get("/{botDomain}", function ($botDomain){
+            $bot = \App\Models\Bot::query()
+                ->with(["company"])
+                ->where("bot_domain", $botDomain)
+                ->first();
 
-        Route::get("/{botDomain}/{page}", [MobileController::class, "mobileHomePage"])
-            //->middleware(["mobile.auth:mobile.guest"])
-            ->name("mobile.base");
+            Session::put("domain",$botDomain);
+            Inertia::setRootView("mobile");
 
+            return Inertia::render('Main', [
+                'bot' => BotSecurityResource::make($bot),
+                'theme'=>$bot->settings["theme"] ?? null
+            ]);
+        });
     });

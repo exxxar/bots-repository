@@ -1,10 +1,10 @@
-const CACHE_NAME = 'laravel-pwa-v1';
+const CACHE_NAME = 'mini-shop-isushi-cache-v1';
 const ASSETS = [
     '/',
-   /* '/css/app.css',
-    '/js/app.js',
-    '/icons/icon-192x192.png',
-    '/icons/icon-512x512.png'*/
+/*    '/index.html',
+    '/src/main.js',*/
+    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
+    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
 ];
 
 // Установка Service Worker
