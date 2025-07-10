@@ -129,8 +129,7 @@ Route::prefix("bot-client")
             ->middleware(["tgAuth.any"])
             ->group(function () {
                 Route::post('/', "loadProductsInBasket");
-                Route::post('/checkout', "checkout")
-                    ->middleware(["slug"]);
+                Route::post('/checkout', "checkout");
                 Route::post('/checkout-link', "checkoutLink");
                 Route::post('/increment/{id}', "incrementItem");
                 Route::post('/decrement/{id}', "decrementItem");

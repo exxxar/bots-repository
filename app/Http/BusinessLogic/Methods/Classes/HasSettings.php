@@ -204,6 +204,22 @@ trait HasSettings
             ],
             "sber" => null
         ],
+        "base_payment_service"=>[
+            "needs"=>[
+                "need_name"=>true,
+                "need_phone_number"=>true,
+                "need_email"=>false,
+                "need_shipping_address"=>false,
+                "send_phone_number_to_provider"=>false,
+                "send_email_to_provider"=>false,
+                "is_flexible"=>false,
+                "disable_notification"=>false,
+                "protect_content"=>false,
+            ],
+            "checkout_title"=>"Заказ товара",
+            "checkout_description"=>"Ваш товар"
+
+        ],
         "free_shipping_starts_from" => 0,
         "shop_display_type" => 0,
         "payment_info" => "Текст не найден",

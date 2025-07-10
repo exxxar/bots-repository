@@ -6,6 +6,7 @@ use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Http\BusinessLogic\Methods\Classes\HasSettings;
 use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
 use App\Http\Resources\AmoCrmResource;
 use App\Models\AmoCrm;
@@ -27,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PaymentLogicFactory extends BaseLogicFactory
 {
+    use HasSettings;
 
     public function setBotBalance($amount)
     {
@@ -438,22 +440,21 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         $bot = $this->bot;
         $botUser = $this->botUser;
-        $slug = $this->slug;
+
         $currency = "RUB";
 
-        $config = $slug->config ?? null;
+        $config = $bot->config ?? null;
 
         if (is_null($config))
             throw new HttpException(400, "Система не настроена!");
 
-        $sbp = Collection::make($config)
-            ->where("key", "sbp")
-            ->first()["value"] ?? null;
+        $sbp = $config["sbp"] ?? null;
+        $selectedSBPBank = $sbp["selected_sbp_bank"] ?? "tinkoff";
 
-        $terminalKey = $sbp["tinkoff"]["terminal_key"] ?? null;
-        $terminalPassword = $sbp["tinkoff"]["terminal_password"] ?? null;
-        $tax = $sbp["tinkoff"]["tax"] ?? "osn";
-        $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
+        $terminalKey = $sbp[$selectedSBPBank]["terminal_key"] ?? null;
+        $terminalPassword = $sbp[$selectedSBPBank]["terminal_password"] ?? null;
+        $tax = $sbp[$selectedSBPBank]["tax"] ?? "osn";
+        $vat = $sbp[$selectedSBPBank]["vat"] ?? "vat20";
 
         $items[] = [
             'Name' => "Товар магазина",
@@ -567,16 +568,15 @@ class PaymentLogicFactory extends BaseLogicFactory
      */
     public function checkout(): void
     {
-        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+        if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");
 
         $bot = $this->bot;
         $botUser = $this->botUser;
-        $slug = $this->slug;
 
-        $taxSystemCode = (Collection::make($slug->config)
-            ->where("key", "tax_system_code")
-            ->first())["value"] ?? $bot->company->vat_code ?? 1;
+        $config = $this->getConfig();
+
+        $taxSystemCode =$bot->company->vat_code ?? 1;
 
 
         $basket = \App\Models\Basket::query()
@@ -684,11 +684,7 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         $payload = Str::uuid()->toString();
 
-        $paymentToken = (Collection::make($slug->config)
-            ->where("key", "payment_token")
-            ->first())["value"] ?? null;
-
-        $providerToken = $paymentToken ?? $bot->payment_provider_token;
+        $providerToken = $bot->payment_provider_token;
 
         Transaction::query()->create([
             'user_id' => $botUser->user_id,
@@ -704,40 +700,19 @@ class PaymentLogicFactory extends BaseLogicFactory
             ],
         ]);
 
-        $needs = [
-            "need_name" => (Collection::make($slug->config)
-                    ->where("key", "need_name")
-                    ->first())["value"] ?? false,
-            "need_phone_number" => (Collection::make($slug->config)
-                    ->where("key", "need_phone_number")
-                    ->first())["value"] ?? false,
-            "need_email" => (Collection::make($slug->config)
-                    ->where("key", "need_email")
-                    ->first())["value"] ?? false,
-            "need_shipping_address" => (Collection::make($slug->config)
-                    ->where("key", "need_shipping_address")
-                    ->first())["value"] ?? false,
-            "send_phone_number_to_provider" => (Collection::make($slug->config)
-                    ->where("key", "need_send_phone_number_to_provider")
-                    ->first())["value"] ?? false,
-            "send_email_to_provider" => (Collection::make($slug->config)
-                    ->where("key", "need_send_email_to_provider")
-                    ->first())["value"] ?? false,
-            "is_flexible" => (Collection::make($slug->config)
-                    ->where("key", "is_flexible")
-                    ->first())["value"] ?? false,
-            "disable_notification" => (Collection::make($slug->config)
-                    ->where("key", "disable_notification")
-                    ->first())["value"] ?? false,
-            "protect_content" => (Collection::make($slug->config)
-                    ->where("key", "protect_content")
-                    ->first())["value"] ?? false,
+        $needs = $config["base_payment_service"]["needs"] ?? [
+            "need_name"=>true,
+            "need_phone_number"=>true,
+            "need_email"=>false,
+            "need_shipping_address"=>false,
+            "send_phone_number_to_provider"=>false,
+            "send_email_to_provider"=>false,
+            "is_flexible"=>false,
+            "disable_notification"=>false,
+            "protect_content"=>false,
         ];
 
-
-        $btnPaymentText = (Collection::make($slug->config)
-            ->where("key", "btn_payment_text")
-            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Оплатить";
+        $btnPaymentText = "\xF0\x9F\x8E\xB2Оплатить";
 
         $keyboard = [
             [
@@ -746,14 +721,8 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         ];
 
-        $title = (Collection::make($slug->config)
-            ->where("key", "checkout_title")
-            ->first())["value"] ?? "Заказ товара";
-
-        $description = (Collection::make($slug->config)
-            ->where("key", "checkout_description")
-            ->first())["value"] ?? "Ваш товар";
-
+        $title =  $config["base_payment_service"]["checkout_title"] ?? "Заказ товара";
+        $description = $config["base_payment_service"]["checkout_description"] ?? "Ваш товар";
 
         \App\Facades\BotMethods::bot()
             ->whereBot($this->bot)

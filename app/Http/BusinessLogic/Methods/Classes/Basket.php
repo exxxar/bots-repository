@@ -32,18 +32,17 @@ class Basket
 
     private Bot $bot;
     private BotUser $botUser;
-    private BotMenuSlug $slug;
+  //  private BotMenuSlug $slug;
 
     private mixed $uploadedImage;
 
     private const PAYMENT_TYPES = ["Онлайн в боте", "Картой в заведении", "Переводом", "Наличными", "СБП"];
 
-    public function __construct(array $data, $bot, $botUser, $slug, $uploadedImage = null)
+    public function __construct(array $data, $bot, $botUser,  $uploadedImage = null)
     {
         $this->data = $data;
         $this->bot = $bot;
         $this->botUser = $botUser;
-        $this->slug = $slug;
         $this->uploadedImage = $uploadedImage;
 
         $this->storeClientInfoAsContact();
@@ -475,7 +474,6 @@ class Basket
                 BusinessLogic::payment()
                     ->setBot($this->bot)
                     ->setBotUser($this->botUser)
-                    ->setSlug($this->slug)
                     ->checkout();
                 //ссылка
                 break;
@@ -491,7 +489,6 @@ class Basket
                 BusinessLogic::payment()
                     ->setBot($this->bot)
                     ->setBotUser($this->botUser)
-                    ->setSlug($this->slug)
                     ->sbpForShop($order, $productMessage);
 
                 $botDomain = $this->bot->bot_domain;
@@ -531,9 +528,7 @@ class Basket
 
         $this->sendPaidReceiptToChannel($order, $productMessage);
 
-        $paymentInfo = sprintf((Collection::make($this->slug->config)
-            ->where("key", "payment_info")
-            ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
+        $paymentInfo = sprintf($this->bot->config["payment_info"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
             $userId);
 
         $productMessage .= "\n\n$paymentInfo";
@@ -747,7 +742,6 @@ class Basket
             BusinessLogic::payment()
                 ->setBot($this->bot)
                 ->setBotUser($this->botUser)
-                ->setSlug($this->slug)
                 ->sbpForShop($order, $productMessage);
 
             $botDomain = $this->bot->bot_domain;

@@ -221,30 +221,35 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
     <!-- * App Capsule -->
     <!-- App Bottom Menu -->
     <div class="appBottomMenu">
-        <a href="index.html" class="item active">
+        <a href="#" class="item">
             <div class="col">
-                <ion-icon name="home-outline"></ion-icon>
+                <ion-icon name="file-tray-full-outline" role="img" class="md hydrated" aria-label="file tray full outline"></ion-icon>
+                <strong>Today</strong>
             </div>
         </a>
-        <a href="app-components.html" class="item">
+        <a href="#" class="item active">
             <div class="col">
-                <ion-icon name="cube-outline"></ion-icon>
+                <ion-icon name="calendar-outline" role="img" class="md hydrated" aria-label="calendar outline"></ion-icon>
+                <strong>Calendar</strong>
             </div>
         </a>
-        <a href="page-chat.html" class="item">
+        <a href="#" class="item">
             <div class="col">
-                <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-                <span class="badge badge-danger">5</span>
+                <div class="action-button large">
+                    <ion-icon name="add-outline" role="img" class="md hydrated" aria-label="add outline"></ion-icon>
+                </div>
             </div>
         </a>
-        <a href="app-pages.html" class="item">
+        <a href="#" class="item">
             <div class="col">
-                <ion-icon name="layers-outline"></ion-icon>
+                <ion-icon name="document-text-outline" role="img" class="md hydrated" aria-label="document text outline"></ion-icon>
+                <strong>Docs</strong>
             </div>
         </a>
-        <a href="#sidebarPanel" class="item" data-bs-toggle="offcanvas">
+        <a href="#" class="item">
             <div class="col">
-                <ion-icon name="menu-outline"></ion-icon>
+                <ion-icon name="people-outline" role="img" class="md hydrated" aria-label="people outline"></ion-icon>
+                <strong>Profile</strong>
             </div>
         </a>
     </div>
