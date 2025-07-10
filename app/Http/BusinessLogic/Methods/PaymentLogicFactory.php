@@ -435,7 +435,7 @@ class PaymentLogicFactory extends BaseLogicFactory
      */
     public function sbpForShop($order, $message = null): void
     {
-        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+        if (is_null($this->bot) || is_null($this->botUser) )
             throw new HttpException(404, "Бот не найден!");
 
         $bot = $this->bot;
