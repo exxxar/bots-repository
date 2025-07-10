@@ -138,7 +138,6 @@ class BasketController extends Controller
         BusinessLogic::basket()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->checkout($request->all(),
                 $request->hasFile('photo') ? $request->file('photo') : null
             );
