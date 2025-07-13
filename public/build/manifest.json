@@ -851,7 +851,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-f25592ca.js",
+    "file": "assets/CashBack-2107b0e6.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-231d8426.js",
@@ -919,7 +919,7 @@
       "resources/js/ClientTg/Pages/V2/Fastoran/Main.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-03bbf8fd.js",
+    "file": "assets/app-bc67c6b2.js",
     "imports": [
       "_index.es-231d8426.js",
       "_vue3-simple-typeahead-82d7d2e3.js",

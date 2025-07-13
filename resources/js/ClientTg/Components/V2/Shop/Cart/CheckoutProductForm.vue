@@ -515,6 +515,9 @@ export default {
                 this.cartTotalPrice >= (this.settings.min_price||0) :
                 this.cartTotalPrice - (this.cashbackLimit || 0) > (this.settings.min_price||0)
 
+            console.log("this.cartTotalPrice ", this.cartTotalPrice )
+            console.log("this.settings.min_price", this.settings.min_price)
+            console.log("this.cashbackLimit ",this.cashbackLimit )
             console.log("settings", this.settings)
             console.log("sumIsValid", sumIsValid)
             console.log("canSubmitForm", sumIsValid && (this.spent_time_counter || 0) === 0)

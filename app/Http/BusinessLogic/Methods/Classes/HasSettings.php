@@ -300,6 +300,15 @@ trait HasSettings
 
             }
 
+            if (!is_null($tmp["base_payment_service"] ?? null)) {
+                $tmp['base_payment_service'] = is_string($tmp['base_payment_service'])? (array)(json_decode($tmp['base_payment_service'])):$tmp['base_payment_service'] ;
+            }
+
+            if (!is_null($tmp["themes"] ?? null)) {
+                $tmp['themes'] = is_string($tmp['themes'])? (array)(json_decode($tmp['themes'])):$tmp['themes'] ;
+            }
+
+
         }
 
         // Признак админа
