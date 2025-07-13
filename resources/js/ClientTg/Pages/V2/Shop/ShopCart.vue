@@ -243,7 +243,7 @@ export default {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
                 return true
 
-            return this.settings.can_buy_after_closing || true
+            return this.settings?.can_buy_after_closing || true
         },
 
         bot() {
