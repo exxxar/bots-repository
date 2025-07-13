@@ -512,9 +512,14 @@ export default {
 
         canSubmitForm() {
             let sumIsValid = !this.modelValue.use_cashback ?
-                this.cartTotalPrice >= this.settings.min_price :
-                this.cartTotalPrice - this.cashbackLimit > this.settings.min_price
+                this.cartTotalPrice >= (this.settings.min_price||0) :
+                this.cartTotalPrice - (this.cashbackLimit || 0) > (this.settings.min_price||0)
 
+            console.log("settings", this.settings)
+            console.log("sumIsValid", sumIsValid)
+            console.log("canSubmitForm", sumIsValid && (this.spent_time_counter || 0) === 0)
+            console.log("step 1",   this.cartTotalPrice >= (this.settings.min_price||0))
+            console.log("step 2",     this.cartTotalPrice - (this.cashbackLimit || 0) > (this.settings.min_price||0))
             return sumIsValid && (this.spent_time_counter || 0) === 0
         },
 
