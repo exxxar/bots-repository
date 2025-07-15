@@ -17,7 +17,7 @@ import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css'; //Optional defaul
 import PerfectScrollbar from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 
-import store from './store'
+import store from './Store'
 
 import mitt from 'mitt'
 import Popper from "vue3-popper";

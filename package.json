@@ -25,6 +25,7 @@
         "@kyvg/vue3-notification": "^2.9.0",
         "@lanserdi/scheduling-table": "^1.4.8",
         "@primevue/themes": "^4.2.4",
+        "@splidejs/vue-splide": "^0.6.12",
         "@toneflix-code/flickity-vue": "^1.0.1",
         "@vitejs/plugin-basic-ssl": "^1.0.1",
         "@vueform/multiselect": "^2.6.2",

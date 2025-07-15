@@ -21,8 +21,8 @@ import Layout from "@/Mobile/Layouts/MobileLayout.vue";
                            max="3"
                            width="100%" speed="10" />
 
-            <router-view
-                :bot="bot"/>
+            <router-view/>
+
         </template>
     </Layout>
 </template>
@@ -42,9 +42,6 @@ export default {
     created() {
         window.currentBot = this.bot.data
         window.theme = this.theme
-        this.$store.dispatch("loadSelf").then(() => {
-            window.self = this.getSelf
-        })
 
         this.$notify({
             title: 'Главная',
@@ -54,9 +51,7 @@ export default {
 
     },
     methods: {
-        open(url) {
-            this.tg.openLink(url)
-        },
+
     }
 
 }

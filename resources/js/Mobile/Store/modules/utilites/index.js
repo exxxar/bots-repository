@@ -9,14 +9,18 @@ export default {
 
         let result;
 
-        let tgData = window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
+        let botDomain = window.currentBot.bot_domain || null
+
+        axios.defaults.headers.common['X-CASHMAN-MOBILE-BOT-DOMAIN'] = botDomain ? btoa(botDomain) : null
+
+    /*    let tgData = window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
         axios.defaults.headers.common['X-CASHMAN-SLUG-ID'] = slugId ? btoa(slugId) : null
         axios.defaults.headers.common['X-CASHMAN-BOT-DOMAIN'] = botDomain ? btoa(botDomain) : null
         axios.defaults.headers.common['X-CASHMAN-TG-DATA'] = tgData ? btoa(tgData) : null
-
+*/
         switch (method.toUpperCase()) {
             default:
             case 'GET':
@@ -35,30 +39,6 @@ export default {
 
         return result;
     },
-    async loadActualProducts(ids = []) {
-
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
 
 
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ids: ids
-        }
-
-        let link = `/bot-client/shop/products/by-ids`
-        let method = 'POST'
-
-        let _axios = this.makeAxiosFactory(link, method, data)
-
-        return _axios.then((response) => {
-            const products = response.data.data;
-            return Promise.resolve(products);
-        }).catch(err => {
-            return Promise.reject(err);
-        })
-    },
 }
