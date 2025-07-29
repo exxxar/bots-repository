@@ -1,65 +1,66 @@
-
+<script setup>
+import {getSpentTimeCounter} from "@/ClientTg/utils/commonMethods.js";
+</script>
 <template>
     <h6 class="opacity-75 mb-2 mt-2 d-flex justify-content-between" data-bs-container="body" data-bs-toggle="popover"
         data-bs-placement="top" data-bs-content="Введи промокод и нажми на кнопку рядом чтоб узнать % скидки!">
         <span>Промокод на скидку <i class="fa-regular fa-circle-question"></i></span>
 
-        <span v-if="spent_time_counter>0">{{ spent_time_counter }} сек.</span>
+        <span v-if="getSpentTimeCounter()>0">{{ spent_time }} сек.</span>
         <div class="spinner-border spinner-border-sm text-primary" v-if="is_requested" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
 
     </h6>
 
-    <div class="alert-light alert mb-2">
+    <div class="alert-light border-primary alert mb-2">
         <span class="text-primary fw-bold">Внимание!</span> После активации промокода его нельзя использовать повторно!
     </div>
 
-    <div class="input-group mb-3">
 
-        <div class="form-floating ">
-            <input type="text"
-                   :disabled="spent_time_counter>0"
-                   @change="submit"
-                   v-model="promocodeForm.code"
-                   class="form-control border-light" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Ваш промокод
+    <div class="form-floating mb-2">
+        <input type="text"
+               :disabled="spent_time>0"
 
-            </label>
-        </div>
-
-        <button
-            v-if="discount===0"
-            @click="submit"
-            :disabled="spent_time_counter>0"
-            class="btn btn-outline-light text-primary" style="min-width:110px;font-size:12px;">
-            <i class="fa-solid fa-tags"></i> Активировать
-        </button>
-
-        <span
-            v-if="discount>0"
-            style="min-width:110px;font-size:12px;"
-            class="input-group-text bg-transparent border-light fw-bold text-primary text-center" id="basic-addon1">
-            -{{discount}}
-            <span v-if="discount_in_percent">%</span>
-            <span v-if="!discount_in_percent">руб</span>
-        </span>
+               v-model="promocodeForm.code"
+               class="form-control" id="floatingInput" placeholder="name@example.com">
+        <label for="floatingInput">Ваш промокод</label>
     </div>
+<!--
+
+    <p class="mb-2 text-center" v-if="discount>0">
+        -{{ discount }}
+        <span v-if="discount_in_percent">%</span>
+        <span v-if="!discount_in_percent">руб</span>
+    </p>
+-->
+
+    <button
+        v-if="discount===0"
+        type="button"
+        @click="submit"
+        :disabled="spent_time>0"
+        class="btn btn-primary p-3 w-100 mb-2">
+        <i class="fa-solid fa-tags"></i>
+        <span v-if="spent_time > 0">   Осталось ждать {{ spent_time }} сек.</span>
+        <span v-else> Активировать</span>
+    </button>
 
 </template>
 <script>
 
+import {startTimer, getSpentTimeCounter, checkTimer} from "@/ClientTg/utils/commonMethods.js";
 
 export default {
     name: "App",
 
     data() {
         return {
-            spent_time_counter: 0,
+            spent_time: 0,
             is_requested: false,
-            discount:0,
-            discount_in_percent:false,
-            activate_price:0,
+            discount: 0,
+            discount_in_percent: false,
+            activate_price: 0,
             promocodeForm: {
                 code: null,
             },
@@ -67,6 +68,7 @@ export default {
         };
     },
     watch: {
+
         'promocodeForm.code': {
             handler: function (newValue) {
                 this.discount = 0
@@ -75,34 +77,23 @@ export default {
         },
     },
     mounted() {
-
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
-        if (localStorage.getItem("cashman_promocode_activate_counter") != null) {
-            this.is_requested = true;
-            this.startTimer(localStorage.getItem("cashman_promocode_activate_counter"))
-        }
+        this.is_requested = checkTimer()
+
+        window.addEventListener("trigger-spent-timer", (event) => { // (1)
+            this.spent_time = event.detail
+        });
+
     }
     ,
     methods: {
-        startTimer(time) {
-            this.spent_time_counter = time != null ? Math.min(time, 10) : 10;
-
-            let counterId = setInterval(() => {
-                    if (this.spent_time_counter > 0)
-                        this.spent_time_counter--
-                    else {
-                        clearInterval(counterId)
-                        this.is_requested = false
-                        this.spent_time_counter = null
-                    }
-                    localStorage.setItem("cashman_promocode_activate_counter", this.spent_time_counter)
-                }, 1000
-            )
-        },
         submit() {
-            this.startTimer();
+            if (this.promocodeForm.code == null)
+                return;
+
+            startTimer(10);
 
             this.is_requested = true
             this.$store.dispatch("activateShopDiscountPromocode", {
@@ -119,8 +110,8 @@ export default {
                     type: "success"
                 })
 
-                this.$emit("callback",{
-                    code:this.promocodeForm.code || null,
+                this.$emit("callback", {
+                    code: this.promocodeForm.code || null,
                     discount: this.discount || 0,
                     discount_in_percent: this.discount_in_percent || false,
                     activate_price: this.activate_price || 0
@@ -131,8 +122,8 @@ export default {
                 this.discount = 0
                 this.activate_price = 0
 
-                this.$emit("callback",{
-                    code:this.promocodeForm.code || null,
+                this.$emit("callback", {
+                    code: this.promocodeForm.code || null,
                     discount: 0,
                     discount_in_percent: false,
                     activate_price: 0

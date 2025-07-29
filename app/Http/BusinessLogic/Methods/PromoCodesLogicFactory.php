@@ -432,10 +432,11 @@ class PromoCodesLogicFactory extends BaseLogicFactory
             $code->scripts()->sync($scriptsIds);
         }
 
-        $this->generateCertificate(
-            $tmp["description"] ?? 'Промокод на приз',
+        if ($needCertificate)
+            $this->generateCertificate(
+                $tmp["description"] ?? 'Промокод на приз',
                 $tmp["code"] ?? 'Промокод не найден',
-            $tmp["available_to"]);
+                $tmp["available_to"]);
 
         return new PromoCodeResource($code);
     }

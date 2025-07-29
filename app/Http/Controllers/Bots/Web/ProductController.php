@@ -505,9 +505,9 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $productId)
     {
-       /* return BusinessLogic::products()
+        return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->destroy($productId);*/
+            ->destroy($productId);
     }
 
     public function duplicate(Request $request, $productId): ProductResource

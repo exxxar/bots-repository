@@ -1,5 +1,6 @@
 <script setup>
 import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
+import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 </script>
 
 <template>
@@ -28,15 +29,19 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
 
                     <p
                         data-bs-toggle="modal" data-bs-target="#promocode-modal"
-                        class="mb-0 d-flex justify-content-between">Промокод
+                        class="mb-0 d-flex justify-content-between">
+                        Промокод
+
                         <strong v-if="data.promo.discount>0" class="fw-bold">{{ data.promo.discount }}
                             <span v-if="data.promo.discount_in_percent">%</span>
                             <span v-else>₽</span>
                         </strong>
-                        <a
+                        <strong
                             v-else
-                            class="text-primary border-dashed"
-                            href="javascript:void(0)"><i class="fa-solid fa-terminal mr-2"></i>Ввести промокод</a>
+                            class="text-primary">
+                            <i class="fa-solid fa-percent px-2"></i>
+                            <span class="text-decoration-underline">Ввести промокод</span>
+                        </strong>
                     </p>
                 </li>
 
@@ -58,7 +63,8 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                                 <span
                                     class="d-flex justify-content-end"
                                     v-if="data.delivery_price>0">{{ data.delivery_price }}
-                                    <sup>.00</sup>₽ <span class="text-primary underline fw-bold cursor-pointer" @click="recalcDeliveryPrice">(пересчитать)</span></span>
+                                    <sup>.00</sup>₽ <span class="text-primary underline fw-bold cursor-pointer"
+                                                          @click="recalcDeliveryPrice">(пересчитать)</span></span>
                                 <span v-else>не рассчитана</span>
                             </template>
                             <span v-else>Рассчитывается курьером</span>
@@ -92,7 +98,8 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     </div>
                 </template>
 
-                <template v-if="settings.shop_display_type  == 1 && data.cdek.tariff && settings.need_automatic_delivery_request">
+                <template
+                    v-if="settings.shop_display_type  == 1 && data.cdek.tariff && settings.need_automatic_delivery_request">
                     <li class="list-group-item">
                         <p
                             class="mb-0 d-flex justify-content-between">Тариф <strong
@@ -131,16 +138,14 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
     </div>
 
     <p v-if="settings.delivery_price_text" v-html="settings.delivery_price_text"></p>
-    <p v-if="settings.min_price">Минимальная цена заказа <strong class="fw-bold">{{ settings.min_price || 0 }} руб</strong></p>
+    <p v-if="settings.min_price">Минимальная цена заказа <strong class="fw-bold">{{ settings.min_price || 0 }}
+        руб</strong></p>
 
     <!-- Modal -->
     <div class="modal fade" id="promocode-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Активация промокода</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+
                 <div class="modal-body">
 
                     <PromoCodeForm
@@ -152,7 +157,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <span class="fw-bold text-primary">{{ data.promo.activate_price }}₽</span>, а также данная
                         скидка не распространяется на цену доставки!
                     </p>
-                    <h6 v-if="data.promo.discount>0" class="text-center">Скидка за промокод <strong
+                    <h6 v-if="data.promo.discount>0" class="text-center py-3 border-primary border rounded-2">Скидка за промокод <strong
                         class="fw-bold">{{ data.promo.discount }}
                         <span v-if="data.promo.discount_in_percent">%</span>
                         <span v-else>₽</span>
@@ -168,13 +173,10 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
 
     <!-- Modal -->
     <div class="modal fade" id="person-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Число персон</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content ">
+
+                <div class="modal-body ">
 
 
                     <h6 class="opacity-75 mb-3">Укажите на сколько человек добавить приборы?</h6>
@@ -185,7 +187,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <div class="col-4">
                             <button
                                 @click="decPersons"
-                                type="button" class="btn p-2 w-100 btn-light text-dark"><i
+                                type="button" class="btn p-2 w-100 btn-primary "><i
                                 class="fa-solid fa-minus font-22"></i></button>
                         </div>
 
@@ -198,7 +200,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <div class="col-4">
                             <button type="button"
                                     @click="incPersons"
-                                    class="btn p-2 w-100 btn-light text-dark"><i
+                                    class="btn p-2 w-100 btn-primary "><i
                                 class="fa-solid fa-plus font-22"></i></button>
                         </div>
 
@@ -213,9 +215,10 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
 <script>
 
 import {mapGetters} from "vuex";
+import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 
 export default {
-    props: ["settings", "data"],
+    props: ["data"],
     data() {
         return {
             moneyVariants: [
@@ -239,7 +242,9 @@ export default {
         bot() {
             return window.currentBot
         },
-
+        settings() {
+            return this.bot.settings
+        },
 
         finallyPrice() {
             let isPercentDiscount = this.data.promo.discount_in_percent || false
@@ -248,7 +253,7 @@ export default {
 
             let price = !this.data.use_cashback ?
                 Math.max(activationDiscountPrice, this.cartTotalPrice) :
-                Math.max(activationDiscountPrice, this.cartTotalPrice - this.cashbackLimit)
+                Math.max(activationDiscountPrice, this.cartTotalPrice - cashbackLimit())
 
             let computedPriceWithDiscount = isPercentDiscount ? price * ((100 - discountValue) / 100) : price - discountValue;
 
@@ -261,33 +266,18 @@ export default {
             return (this.spent_time_counter || 0) === 0
                 && (!this.data.use_cashback ?
                     this.cartTotalPrice >= this.settings.min_price :
-                    this.cartTotalPrice - this.cashbackLimit > this.settings.min_price)
+                    this.cartTotalPrice - cashbackLimit() > this.settings.min_price)
 
         },
-
-        cashbackLimit() {
-            let maxUserCashback = this.getSelf.cashBack ? this.getSelf.cashBack.amount : 0
-            let summaryPrice = this.cartTotalPrice || 0
-            let botCashbackPercent = this.bot.max_cashback_use_percent || 0
-
-            let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
-
-            return Math.min(cashBackAmount, maxUserCashback)
-        },
-
 
     },
-
     mounted() {
-
-
     },
-
     methods: {
         goToProductCart() {
             document.dispatchEvent(new Event('switch-to-cart'));
         },
-        recalcDeliveryPrice(){
+        recalcDeliveryPrice() {
             this.$emit("calc-delivery-price")
         },
         activateDiscount(item) {

@@ -197,6 +197,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         \App\Providers\BotManagerServiceProvider::class,
         \App\Providers\BusinessLogicServiceProvider::class,
+        \App\Providers\CoreLogicServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
@@ -217,6 +218,7 @@ return [
         'BotMethods' => \App\Facades\BotMethods::class,
         'StartCodesService' => \App\Facades\StartCodesService::class,
         'BusinessLogic'=>\App\Facades\BusinessLogic::class,
+        'CoreLogic'=>\App\Facades\CoreLogic::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
         'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,

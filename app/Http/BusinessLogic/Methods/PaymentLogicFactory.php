@@ -433,7 +433,7 @@ class PaymentLogicFactory extends BaseLogicFactory
     /**
      * @throws ValidationException
      */
-    public function sbpForShop($order, $message = null): void
+    public function sbpForShop($order, $message = null): ?object
     {
         if (is_null($this->bot) || is_null($this->botUser) )
             throw new HttpException(404, "Бот не найден!");
@@ -497,15 +497,14 @@ class PaymentLogicFactory extends BaseLogicFactory
 //Получение url для оплаты
         $paymentURL = $tinkoff->paymentURL($payment, $items);
 
-
         if (!$paymentURL) {
             \App\Facades\BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMessage(
                     $this->botUser->telegram_chat_id, "Ошибка формирования платежной ссылки!");
 
-            Log::info($tinkoff->error);
-            return;
+
+            return null;
 
         }
 
@@ -528,7 +527,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ],
         ]);
 
-
+/*
         $keyboard = [
             [
                 ["text" => "💳Перейти к оплате", "url" => "$paymentURL"],
@@ -542,15 +541,15 @@ class PaymentLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 $message ?? "Оплатите заказ, для того чтоб мы приступили к его выполнению:)",
                 $keyboard
-            );
+            );*/
 
         $keyboard = [
-            [
+         /*   [
                 ["text" => "Автоматическая проверка СБП", "callback_data" => "/test_foods_sbp_tinkoff_automatic $payment_id $order->id"]
             ],
             [
                 ["text" => "Клиент оплатил (прислали скриншот)", "callback_data" => "/test_foods_manual_payment $botUser->id $order->id"]
-            ]
+            ]*/
         ];
 
 
@@ -561,6 +560,10 @@ class PaymentLogicFactory extends BaseLogicFactory
                 "<b>⚠Внимание заказ СБП! № заказа: $order->id\n</b>\nОжидаемая сумма платежа <b>" . ($order->summary_price + $deliveryPrice) . " руб. ($order->summary_price руб - цена заказа и $deliveryPrice руб - цена доставки)</b>. Клиент еще не оплатил.",
                 $keyboard
             );
+
+        return (object)[
+          "url"=>$paymentURL
+        ];
     }
 
     /**

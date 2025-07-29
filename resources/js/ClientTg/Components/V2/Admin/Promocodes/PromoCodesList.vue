@@ -24,7 +24,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
     </div>
 
-    <div class="row" >
+    <div class="row">
         <div class="col-12">
             <div class="form-floating">
                 <select class="form-select"
@@ -59,7 +59,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
     <div class="row row-cols-1" v-if="codes.length>0">
         <div class="col mb-2" v-for="(code, index) in codes">
-            <div class="card"  >
+            <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center bg-transparent">
                     <span>
                         <i class="fa-solid fa-chevron-down text-success" v-if="code.is_active"></i>
@@ -68,7 +68,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     </span>
 
                     <a href="javascript:void(0)"
-                       data-bs-toggle="modal" :data-bs-target="'#remove-promo-modal'+index"
+                       @click="prepareForRemove(code)"
 
                        v-if="code.deleted_at==null"
                        style="font-size:12px;"
@@ -82,40 +82,19 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <h5 @click="selectEvent(code)" class="card-title fw-bold">{{ code.code || 'Не указано' }}</h5>
                     <p class="card-text mb-2 fst-italic">{{ code.description || 'Не указано' }}</p>
                     <p class="card-text mb-0 d-flex justify-content-between">
-                       <span> Скидка:<strong class="fw-bold">-{{ code.cashback_amount || 0}}
-                                <span  v-if="!code.config?.discount_in_percent">руб</span>
-                                <span  v-if="code.config?.discount_in_percent">%</span>
+                       <span> Скидка:<strong class="fw-bold">-{{ code.cashback_amount || 0 }}
+                                <span v-if="!code.config?.discount_in_percent">руб</span>
+                                <span v-if="code.config?.discount_in_percent">%</span>
                             </strong>
                        </span>
 
-                        <span>Активация от: <strong class="fw-bold">{{code.activate_price || 0}} руб</strong></span>
+                        <span>Активация от: <strong class="fw-bold">{{ code.activate_price || 0 }} руб</strong></span>
                     </p>
 
                 </div>
             </div>
 
-            <!-- Modal -->
-            <div class="modal fade" :id="'remove-promo-modal'+index" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление промокода</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Вы действительно хотите удалить {{code.code || code.id ||'этот промокод'}}?</p>
 
-                            <div class="d-flex justify-content-center w-100 flex-row-reverse">
-                                <button type="button" class="btn btn-secondary ml-2" data-bs-dismiss="modal">Нет, отменить</button>
-                                <button type="button"
-                                        @click="removeCode(code.id)"
-                                        class="btn btn-primary">Да, удалить</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -152,6 +131,30 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
     </div>
 
 
+    <!-- Modal -->
+    <div class="modal fade" :id="'remove-promo-modal'" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" v-if="selected">
+                <div class="modal-body">
+                    <p>Вы действительно хотите удалить {{ selected.code || selected.id || 'этот промокод' }}?</p>
+
+                    <div class="d-flex justify-content-center w-100 flex-row-reverse">
+                        <button type="button" class="btn btn-secondary ml-2"
+                                style="margin-left:10px;"
+                                data-bs-dismiss="modal">Нет, отменить
+                        </button>
+                        <button type="button"
+                                @click="removeCode"
+                                class="btn btn-primary">Да, удалить
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -161,6 +164,8 @@ export default {
         return {
             direction: 'desc',
             order: 'updated_at',
+            selected: null,
+            remove_promocode_modal: null,
             show: true,
             loading: true,
             codes: [],
@@ -171,12 +176,13 @@ export default {
 
     computed: {
         ...mapGetters(['getSelf', 'getPromoCodes', 'getPromoCodesPaginateObject']),
-        bot(){
+        bot() {
             return window.currentBot
         }
 
     },
     mounted() {
+        this.remove_promocode_modal = new bootstrap.Modal(document.getElementById('remove-promo-modal'), {})
         this.loadPromoCodes();
     },
     methods: {
@@ -184,28 +190,40 @@ export default {
             this.direction = direction
             this.loadPromoCodes(0)
         },
-        removeCode(id) {
+        prepareForRemove(code) {
+            this.selected = null
+
+            this.$nextTick(() => {
+                this.selected = code
+                this.remove_promocode_modal.show()
+            })
+        },
+        removeCode() {
+
+            if (!this.selected)
+                return;
+
             this.loading = true
             this.$store.dispatch("removePromoCodes", {
-                promoCodeId: id
+                promoCodeId: this.selected.id
 
             }).then(resp => {
                 this.loading = false
                 this.loadPromoCodes(0)
 
                 this.$notify({
-                    type:'success',
-                    text:"Промокод успешно удален",
+                    type: 'success',
+                    text: "Промокод успешно удален",
                 })
 
-                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
-
+                this.remove_promocode_modal.hide()
             }).catch(() => {
                 this.loading = false
                 this.$notify({
-                    type:'error',
-                    text:"Ошибка удаления промокода",
+                    type: 'error',
+                    text: "Ошибка удаления промокода",
                 })
+                this.remove_promocode_modal.hide()
             })
         },
 

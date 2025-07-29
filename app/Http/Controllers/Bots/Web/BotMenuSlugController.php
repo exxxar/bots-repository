@@ -95,7 +95,7 @@ class BotMenuSlugController extends Controller
     /**
      * @throws ValidationException
      */
-    public function updateScriptParams(Request $request): BotMenuSlugResource
+    public function updateScriptParams(Request $request): \App\Http\Resources\BotSecurityResource
     {
 
         return BusinessLogic::slugs()

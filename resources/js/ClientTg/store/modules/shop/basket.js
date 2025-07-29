@@ -89,6 +89,7 @@ const actions = {
         return _axios.then((response) => {
             context.commit("setBasket", [])
             context.commit('setBasketPaginateObject', null)
+            return Promise.resolve(response.data);
         }).catch(err => {
             context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);

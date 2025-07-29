@@ -66,11 +66,18 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
         <label class="form-check-label"
                for="is_active">Отображать удаленные</label>
     </div>
+    <div class="form-check form-switch mb-2">
+        <input class="form-check-input"
+               v-model="need_table"
+               type="checkbox" role="switch" id="is_active">
+        <label class="form-check-label"
+               for="is_active">Отображать в виде таблицы</label>
+    </div>
 
     <p>Всего товаров: <span v-if="paginate">{{ paginate.meta.total || 0 }}</span></p>
 
     <div
-        v-if="!isSimple"
+        v-if="!isSimple&&!need_table"
         class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
         <div class="col" v-for="(product, index) in filteredProducts">
             <ProductCard
@@ -82,16 +89,55 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
     </div>
     <div
         class="row"
-        v-else>
+        v-if="isSimple||need_table">
         <div class="col-12">
 
             <ul class="list-group">
                 <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                    @click="selectProduct(product)"
-                    v-bind:class="{'bg-success text-white fw-bold':(selected||[]).indexOf(product.id)!=-1}"
+                    class="list-group-item"
+
+                    v-bind:class="{
+                    'bg-success text-white fw-bold':(selected||[]).indexOf(product.id)!=-1,
+                    'bg-danger': product.deleted_at,
+                    'bg-warning': product.in_stop_list_at,
+
+                    }"
                     v-for="(product, index) in filteredProducts">
-                    {{ product.title }}
+
+                    <div class="row row-cols-2">
+                        <div class="col">
+                              <p
+                                  class="text-decoration-underline mb-0"
+                                  @click="selectProduct(product)">
+                        {{ product.title }}
+                   </p>
+                        </div>
+                        <div class="col  d-flex justify-content-end align-items-center">
+                            <div class="dropdown">
+                                <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-bars"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li
+                                    v-if="product.deleted_at == null"
+                                    ><a class="dropdown-item"
+                                           @click="openRemoveModal(product)"
+                                           href="javascript:void(0)">Удалить товар</a></li>
+                                    <li
+                                        v-if="product.deleted_at"
+                                    ><a class="dropdown-item"
+                                        @click="openRestoreModal(product)"
+                                        href="javascript:void(0)">Восстановить товар</a></li>
+                                    <li><a class="dropdown-item"
+
+                                           href="javascript:void(0)">Добавить в стоп-лист</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </li>
             </ul>
 
@@ -138,8 +184,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                             </div>
                         </div>
 
-                        <div class="row g-2 row-cols-5" v-if="selected_product.images.length>1">
-                            <div class="col" v-for="img in selected_product.images">
+                        <div class="row g-2 row-cols-5" v-if="(selected_product?.images||[]).length>1">
+                            <div class="col" v-for="img in selected_product?.images">
                                 <img
                                     style="min-height:60px;object-fit:contain;"
                                     @click="selected_image = img"
@@ -274,21 +320,40 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="restore-modal"
+         data-bs-backdrop="static"
+         tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6 class="text-center my-3">Восстановить данный товар?</h6>
+                    <div class="d-flex justify-content-center">
+                        <button type="button"
+                                style="margin-right:10px;"
+                                class="btn btn-primary px-3 mr-2" @click="restoreProduct">Да</button>
+                        <button type="button" class="btn btn-secondary px-3" @click="hideRestoreModal">Нет</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal -->
     <div class="modal fade" id="remove-modal"
          data-bs-backdrop="static"
          tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление товара</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body">
                     <h6 class="text-center my-3">Вы действительно хотите удалить этот товар?</h6>
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary px-3 mr-2" @click="removeProduct">Да</button>
+                        <button type="button"
+                                style="margin-right:10px;"
+                                class="btn btn-primary px-3 mr-2" @click="removeProduct">Да</button>
                         <button type="button" class="btn btn-secondary px-3" @click="hideRemoveModal">Нет</button>
                     </div>
 
@@ -313,12 +378,14 @@ export default {
             reviews: [],
             modal: null,
             accept_remove_modal: null,
+            accept_restore_modal: null,
             add_product_modal: null,
             selected_product: null,
             paginate: null,
             review_paginate: null,
             loading_reviews: true,
             need_removed:false,
+            need_table:true,
             sort: {
                 param: null,
                 direction: 'asc'
@@ -360,6 +427,7 @@ export default {
         this.loadProducts(page)
         this.modal = new bootstrap.Modal(document.getElementById('product-modal-admin-info'), {})
         this.accept_remove_modal = new bootstrap.Modal(document.getElementById('remove-modal'), {})
+        this.accept_restore_modal = new bootstrap.Modal(document.getElementById('restore-modal'), {})
         this.add_product_modal = new bootstrap.Modal(document.getElementById('add-product-modal'), {})
     },
     methods: {
@@ -367,8 +435,29 @@ export default {
         openAddProductModal(){
             this.add_product_modal.show()
         },
-        openRemoveModal() {
-            this.accept_remove_modal.show();
+        openRestoreModal(product) {
+
+            this.selected_product = null
+
+            this.$nextTick(() => {
+                this.selected_product = product
+                this.accept_restore_modal.show();
+            })
+
+
+
+        },
+        openRemoveModal(product) {
+
+            this.selected_product = null
+
+            this.$nextTick(() => {
+                this.selected_product = product
+                this.accept_remove_modal.show();
+            })
+
+
+
         },
         nextReviews(index) {
             this.loadReviews(index)
@@ -401,6 +490,9 @@ export default {
                 this.modal.hide()
             })
 
+        },
+        hideRestoreModal() {
+            this.accept_restore_modal.hide()
         },
         hideRemoveModal() {
                 this.accept_remove_modal.hide()
@@ -446,12 +538,37 @@ export default {
                 this.paginate = this.getProductsPaginateObject
             })
         },
+        restoreProduct(){
+            if (!this.selected_product)
+                return
 
+            this.$store.dispatch("restoreProduct", this.selected_product.id)
+                .then((resp) => {
+                    // this.hideModal()
+                    this.hideRemoveModal()
+
+                    this.loadProducts()
+
+                    this.$notify({
+                        title: 'Редактор товара',
+                        text: 'Товар успешно восстановлен',
+                        type: 'success'
+                    })
+
+                }).catch(() => {
+                // this.hideModal()
+                this.hideRestoreModal()
+                this.loadProducts()
+            })
+        },
         removeProduct() {
+
+            if (!this.selected_product)
+                return
 
             this.$store.dispatch("removeShopProduct", this.selected_product.id)
                 .then((resp) => {
-                    this.hideModal()
+                   // this.hideModal()
                     this.hideRemoveModal()
 
                     this.loadProducts()
@@ -463,7 +580,7 @@ export default {
                     })
 
                 }).catch(() => {
-                this.hideModal()
+               // this.hideModal()
                 this.hideRemoveModal()
                 this.loadProducts()
             })

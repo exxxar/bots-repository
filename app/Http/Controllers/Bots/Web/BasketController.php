@@ -135,7 +135,7 @@ class BasketController extends Controller
      */
     public function checkout(Request $request)
     {
-        BusinessLogic::basket()
+       return BusinessLogic::basket()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->checkout($request->all(),

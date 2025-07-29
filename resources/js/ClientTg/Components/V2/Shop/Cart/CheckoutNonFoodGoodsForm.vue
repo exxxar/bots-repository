@@ -1,80 +1,26 @@
 <script setup>
 import CdekCalcForm from "@/ClientTg/Components/V2/Shop/Cart/CdekCalcForm.vue";
 import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
+import PaymentTypes from "@/ClientTg/Components/V2/Shop/Cart/PaymentTypes.vue";
+import DeliveryForm from "@/ClientTg/Components/V2/Shop/Cart/DeliveryForm.vue";
+import OfferForm from "@/ClientTg/Components/V2/Shop/Cart/OfferForm.vue";
+
 </script>
+
 <template>
     <form
         id="basket"
+        v-if="deliveryForm"
         class="container py-3"
         v-on:submit.prevent="startCheckout">
 
         <h6 class="opacity-75">Способы оплаты</h6>
-
-
-        <div class="list-group my-3">
-
-            <a href="javascript:void(0)"
-               v-bind:class="{'active':modelValue.payment_type === 4}"
-               @click="modelValue.payment_type = 4"
-               v-if="settings.can_use_sbp"
-               class="list-group-item list-group-item-action p-3 d-flex"><i
-                class="fa-solid fa-file-invoice mr-2"></i>
-                <span class="d-inline-flex justify-content-between w-100">
-                Оплата по СБП
-                <img
-                    style="width:45px;"
-                    v-lazy="'/images/СБП_логотип.svg'" alt="">
-                </span>
-            </a>
-
-            <a href="javascript:void(0)"
-               @click="modelValue.payment_type = 0"
-               v-if="settings.can_use_card&&settings.payment_token!=null"
-               v-bind:class="{'active':modelValue.payment_type === 0}"
-               class="list-group-item list-group-item-action p-3" aria-current="true">
-                <i class="fa-solid fa-earth-americas mr-2"></i> Онлайн через бота
-            </a>
-            <a href="javascript:void(0)"
-               v-bind:class="{'active':modelValue.payment_type === 1}"
-               v-if="modelValue.pick_up_type==0&&settings.can_use_cash"
-               @click="modelValue.payment_type = 1"
-
-               class="list-group-item list-group-item-action p-3"><i
-                class="fa-regular fa-credit-card mr-2"></i>Картой</a>
-            <a href="javascript:void(0)"
-               v-if="settings.can_use_cash"
-               v-bind:class="{'active':modelValue.payment_type === 2}"
-               @click="modelValue.payment_type = 2"
-               class="list-group-item list-group-item-action p-3"><i
-                class="fa-solid fa-file-invoice mr-2"></i>Переводом</a>
-            <a href="javascript:void(0)"
-               v-bind:class="{'active':modelValue.payment_type === 3}"
-               @click="modelValue.payment_type = 3"
-               v-if="settings.can_use_cash"
-               class="list-group-item list-group-item-action p-3"><i
-                class="fa-regular fa-money-bill-1 mr-2"></i> Наличными</a>
-        </div>
-
-        <template v-if="(settings.need_bonuses_section||false)&&cashbackLimit>0">
-            <h6 class="opacity-75">Бонусы <small>(нажми для использования)</small></h6>
-
-            <div class="card my-3"
-                 v-bind:class="{'text-bg-primary':modelValue.use_cashback}"
-                 @click="modelValue.use_cashback=!modelValue.use_cashback">
-                <div
-                    class="card-body">
-                    <p class="d-flex justify-content-between mb-0">
-                        <span> Списать баллы</span>
-                        <strong>{{ cashbackLimit }}₽</strong>
-                    </p>
-                </div>
-            </div>
-        </template>
-
+        <PaymentTypes v-model="deliveryForm"></PaymentTypes>
 
         <h6
             v-if="settings.need_automatic_delivery_request"
             class="opacity-75 my-3">Расчёт цены доставки CDEK</h6>
+
         <CdekCalcForm
             :need-delivery-price="settings.need_automatic_delivery_request"
             v-on:calc="calcTariff"></CdekCalcForm>
@@ -82,43 +28,15 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
 
         <h6 class="opacity-75 my-3">Общая информация</h6>
 
-        <div class="form-floating mb-2">
-            <input type="text"
-                   v-model="modelValue.name"
-                   class="form-control" id="modelValue-name"
-                   placeholder="Иванов Иван Иванович" required>
-            <label for="modelValue-name">Ф.И.О. <span class="fw-bold text-danger">*</span></label>
-        </div>
+        <DeliveryForm
+            v-model="deliveryForm"
+            :mode="1"></DeliveryForm>
 
-        <div class="form-floating mb-2">
-            <input type="text"
-                   v-mask="'+7(###)###-##-##'"
-                   v-model="modelValue.phone"
-                   class="form-control" id="modelValue-phone"
-                   placeholder="+7(000)000-00-00" required>
-            <label for="modelValue-phone">Номер телефона <span class="fw-bold text-danger">*</span></label>
-        </div>
-
-        <template v-if="bot.company.law_params?.offer_link">
-            <div class="alert alert-light my-2">
-                <div class="form-check form-switch">
-                    <p class="mb-2">
-                        Нажимая кнопку, вы соглашаетесь с условиями
-                        <a :href="bot.company.law_params.offer_link" target="_blank">договора оферты</a>.
-                    </p>
-                    <input
-                        v-model="offer_agreement"
-                        class="form-check-input" type="checkbox" role="switch" id="offerSwitch" checked>
-                    <label class="form-check-label fw-bold" for="offerSwitch">Я соглашаюсь</label>
-                </div>
-            </div>
-        </template>
+        <OfferForm v-model="offer_agreement"></OfferForm>
 
         <h6 class="opacity-75 my-3">Сводка</h6>
 
-        <Summary :data="modelValue"
-                 :settings="settings">
-        </Summary>
+        <Summary :data="deliveryForm"></Summary>
 
         <button type="button"
                 @click="goToProductCart"
@@ -131,23 +49,23 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
             style="border-radius:10px 10px 0px 0px;">
 
-            <template v-if="modelValue.cdek.tariff!=null||!settings.need_automatic_delivery_request">
+            <template v-if="deliveryForm.cdek.tariff!=null||!settings.need_automatic_delivery_request">
                 <button
-                    v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
+                    v-if="settings.need_pay_after_call || deliveryForm.payment_type === 3"
                     type="button"
                     @click="startCheckout"
                     :disabled="!canSubmitForm"
 
                     class="btn btn-primary p-3 w-100 mb-2">
 
-                    <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                    <i v-if="spent_time<=0" class="fa-solid fa-file-invoice mr-2"></i>
                     <i v-else class="fa-solid fa-hourglass  mr-2"></i>
 
                     Оформить
                 </button>
 
                 <button
-                    v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
+                    v-if="deliveryForm.payment_type===4&&!settings.need_pay_after_call"
                     type="button"
                     @click="startCheckout"
                     :disabled="!canSubmitForm"
@@ -156,7 +74,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                 </button>
 
                 <button
-                    v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
+                    v-if="deliveryForm.payment_type===2&&!settings.need_pay_after_call"
                     type="button"
                     @click="nextStep"
                     :disabled="!canSubmitForm"
@@ -173,13 +91,14 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
 <script>
 
 import {mapGetters} from "vuex";
-
+import {cashbackLimit, startTimer, checkTimer} from "@/ClientTg/utils/commonMethods.js";
 export default {
-    props: ["settings", "modelValue"],
+    props: [ "modelValue"],
     data() {
         return {
+            spent_time:0,
+            deliveryForm:null,
             can_start_payment: false,
-            spent_time_counter: 0,
             offer_agreement: true,
             need_request_delivery_price: true,
             moneyVariants: [
@@ -191,15 +110,21 @@ export default {
 
         'modelValue': {
             handler: function (newValue) {
-                this.$emit("update:modelValue", this.modelValue)
+                this.deliveryForm = newValue
             },
             deep: true
         },
+        'deliveryForm': {
+            handler: function (newValue) {
 
+                this.$emit("update:modelValue", this.deliveryForm)
+            },
+            deep: true
+        },
         'cartTotalPrice': {
             handler: function (newValue) {
                 if (this.settings.free_shipping_starts_from <= this.cartTotalPrice) {
-                    this.modelValue.delivery_price = 0
+                    this.deliveryForm.delivery_price = 0
                 }
             },
             deep: true
@@ -213,7 +138,9 @@ export default {
         bot() {
             return window.currentBot
         },
-
+        settings(){
+            return this.bot.settings
+        },
         canRequestDeliverPrice() {
             if (!this.need_request_delivery_price)
                 return true
@@ -222,41 +149,24 @@ export default {
         },
 
         canSubmitForm() {
-            return this.can_start_payment && (this.spent_time_counter || 0) === 0
-                && (!this.modelValue.use_cashback ?
+            return this.can_start_payment && this.spent_time === 0
+                && (!this.deliveryForm.use_cashback ?
                     this.cartTotalPrice >= this.settings.min_price :
-                    this.cartTotalPrice - this.cashbackLimit > this.settings.min_price)
+                    this.cartTotalPrice - cashbackLimit() > this.settings.min_price)
 
-        },
-
-        cashbackLimit() {
-            let maxUserCashback = this.getSelf.cashBack ? this.getSelf.cashBack.amount : 0
-            let summaryPrice = this.cartTotalPrice || 0
-            let botCashbackPercent = this.bot.max_cashback_use_percent || 0
-
-            let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
-
-            return Math.min(cashBackAmount, maxUserCashback)
         },
 
 
     },
 
     mounted() {
+        this.deliveryForm = this.modelValue
 
-        if (localStorage.getItem("cashman_self_product_delivery_counter") != null) {
-            this.is_requested = true;
-            this.startTimer(localStorage.getItem("cashman_self_product_delivery_counter"))
-        }
+        this.is_requested = checkTimer()
 
-        this.modelValue.name = localStorage.getItem("cashman_self_product_delivery_form_name") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_name") : null
-
-        this.modelValue.phone = localStorage.getItem("cashman_self_product_delivery_form_phone") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_phone") : null
-
-        this.modelValue.address = localStorage.getItem("cashman_self_product_delivery_form_address") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_address") : null
+        window.addEventListener("trigger-spent-timer", (event) => { // (1)
+            this.spent_time = event.detail
+        });
 
     },
     methods: {
@@ -264,33 +174,19 @@ export default {
             document.dispatchEvent(new Event('switch-to-cart'));
         },
         calcTariff(item) {
-            this.modelValue.cdek.tariff = item.tariff || null
-            this.modelValue.cdek.to.region = item.to?.region || null
-            this.modelValue.cdek.to.city = item.to?.city || null
-            this.modelValue.cdek.to.office = item.to?.office || null
+            this.deliveryForm.cdek.tariff = item.tariff || null
+            this.deliveryForm.cdek.to.region = item.to?.region || null
+            this.deliveryForm.cdek.to.city = item.to?.city || null
+            this.deliveryForm.cdek.to.office = item.to?.office || null
 
-            if (this.modelValue.cdek.tariff)
+            if (this.deliveryForm.cdek.tariff)
                 this.can_start_payment = true
 
         },
         startCheckout() {
             this.$emit("start-checkout")
         },
-        startTimer(time) {
-            this.spent_time_counter = parseInt(time) != null ? Math.min(parseInt(time), 10) : 10;
 
-            let counterId = setInterval(() => {
-                    if (this.spent_time_counter > 0)
-                        this.spent_time_counter--
-                    else {
-                        clearInterval(counterId)
-                        this.is_requested = false
-                        this.spent_time_counter = null
-                    }
-                    localStorage.setItem("cashman_self_product_delivery_counter", this.spent_time_counter)
-                }, 1000
-            )
-        },
         nextStep() {
             this.$emit("change-tab", 3)
         }

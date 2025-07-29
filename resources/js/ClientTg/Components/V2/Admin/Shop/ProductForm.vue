@@ -507,7 +507,7 @@ export default {
             }
 
             this.options = []
-            this.modelValue.categories.forEach(category => {
+            this.modelValue.categories?.forEach(category => {
                 this.productCategories.push(category.id)
             })
         }

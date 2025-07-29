@@ -32,13 +32,13 @@ class Basket
 
     private Bot $bot;
     private BotUser $botUser;
-  //  private BotMenuSlug $slug;
+    //  private BotMenuSlug $slug;
 
     private mixed $uploadedImage;
 
     private const PAYMENT_TYPES = ["Онлайн в боте", "Картой в заведении", "Переводом", "Наличными", "СБП"];
 
-    public function __construct(array $data, $bot, $botUser,  $uploadedImage = null)
+    public function __construct(array $data, $bot, $botUser, $uploadedImage = null)
     {
         $this->data = $data;
         $this->bot = $bot;
@@ -300,7 +300,10 @@ class Basket
 
     }
 
-    private function foodShopCheckout()
+    /**
+     * @throws ValidationException
+     */
+    private function foodShopCheckout(): ?object
     {
         $needPickup = ($this->data["need_pickup"] ?? "false") == "true";
         $deliveryPrice = $this->data["delivery_price"] ?? 0;
@@ -486,10 +489,12 @@ class Basket
                 $needBill = true;
                 break;
             case 4:
-                BusinessLogic::payment()
+
+                $urlObject = BusinessLogic::payment()
                     ->setBot($this->bot)
                     ->setBotUser($this->botUser)
                     ->sbpForShop($order, $productMessage);
+
 
                 $botDomain = $this->bot->bot_domain;
                 $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $userId);
@@ -511,7 +516,9 @@ class Basket
                         $keyboard,
                         $thread
                     );
-                return;
+
+
+                return $urlObject;
 
         }
 
@@ -535,6 +542,8 @@ class Basket
 
         $this->fsSendResult($productMessage);
 
+        return null;
+
     }
 
     /**
@@ -546,9 +555,9 @@ class Basket
         $paymentType = $this->data["payment_type"] ?? 4;
         $cdek = json_decode($this->data["cdek"] ?? '{}');
 
-        $address = $cdek->to->address?? $cdek->to->office->location->address_full ?? null;
-       if (is_null($address))
-           throw new HttpException(400, "Не указан адрес пункта выдачи");
+        $address = $cdek->to->address ?? $cdek->to->office->location->address_full ?? null;
+        if (is_null($address))
+            throw new HttpException(400, "Не указан адрес пункта выдачи");
 
         $productMessage = "#заказдоставка\n";
         $productMessage .= $this->checkWheelOfFortuneAction();
@@ -739,10 +748,19 @@ class Basket
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
 
         if ($paymentType == 0 || $paymentType == 4) {
-            BusinessLogic::payment()
-                ->setBot($this->bot)
-                ->setBotUser($this->botUser)
-                ->sbpForShop($order, $productMessage);
+            $url = (object)[
+                "url" => null
+            ];
+
+            try {
+                $url = BusinessLogic::payment()
+                    ->setBot($this->bot)
+                    ->setBotUser($this->botUser)
+                    ->sbpForShop($order, $productMessage);
+            } catch (\Exception $exception) {
+
+            }
+
 
             $botDomain = $this->bot->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $userId);
@@ -766,7 +784,7 @@ class Basket
                     $thread
                 );
 
-            return;
+            return $url;
         }
 
         $productMessage .= $this->gsPrepareFromInfo($order, $discountItem->discount ?? 0);
@@ -774,13 +792,16 @@ class Basket
         //  $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
         $this->gsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order, $productMessage);
+
+        return null;
     }
 
 
     /**
      * @throws ValidationException
+     * @throws RequestException
      */
-    public function handler(): void
+    public function handler(): ?object
     {
 
         $displayType = $this->data["display_type"] ?? 0;
@@ -788,11 +809,10 @@ class Basket
         switch ($displayType) {
             default:
             case 0:
-                $this->foodShopCheckout();
-                break;
+                return $this->foodShopCheckout();
             case 1:
-                $this->goodsShopCheckout();
-                break;
+                return $this->goodsShopCheckout();
+
         }
 
     }

@@ -91,7 +91,7 @@ import 'vue3-carousel/dist/carousel.css'
 import {Carousel, Slide, Pagination, Navigation} from 'vue3-carousel'
 
 export default {
-    props: ["settings", "formData", "simpleMode"],
+    props: [ "formData", "simpleMode"],
     components: {
         Carousel, Slide, Pagination, Navigation
     },
@@ -105,7 +105,13 @@ export default {
                 return []
 
             return this.action.data.filter(item => !item.taked_at)
-        }
+        },
+        bot() {
+            return window.currentBot
+        },
+        settings(){
+            return this.bot.settings
+        },
     },
     data() {
         return {

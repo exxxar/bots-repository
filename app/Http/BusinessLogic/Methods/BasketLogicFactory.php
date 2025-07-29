@@ -20,6 +20,7 @@ use App\Models\Product;
 use App\Models\ProductCollection;
 use App\Models\Table;
 use Carbon\Carbon;
+use CdekSDK2\Exceptions\RequestException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -35,8 +36,9 @@ class BasketLogicFactory extends BaseLogicFactory
     /**
      * @throws ValidationException
      * @throws HttpException
+     * @throws RequestException
      */
-    public function checkout(array $data, $uploadedPhoto = null): void
+    public function checkout(array $data, $uploadedPhoto = null): object | null
     {
 
         if (is_null($this->bot) || is_null($this->botUser) )
@@ -59,7 +61,12 @@ class BasketLogicFactory extends BaseLogicFactory
             $uploadedPhoto
         );
 
-        $basket->handler();
+        try {
+            return $basket->handler();
+        } catch (RequestException|ValidationException $e) {
+            return null;
+        }
+
     }
 
 

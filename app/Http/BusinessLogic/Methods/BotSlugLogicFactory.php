@@ -6,6 +6,7 @@ use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Classes\HasSettings;
 use App\Http\Resources\BotMenuSlugCollection;
 use App\Http\Resources\BotMenuSlugResource;
+use App\Http\Resources\BotSecurityResource;
 use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
@@ -313,7 +314,7 @@ class BotSlugLogicFactory extends BaseLogicFactory
     /**
      * @throws HttpException
      */
-    public function updateScriptParams(array $data): BotMenuSlugResource
+    public function updateScriptParams(array $data): BotSecurityResource
     {
         if (is_null($this->bot) || is_null($this->slug))
             throw new HttpException(404, "Не все параметры функции заданы!");
@@ -363,6 +364,6 @@ class BotSlugLogicFactory extends BaseLogicFactory
         $slug->config = [];
         $slug->save();
 
-        return new BotMenuSlugResource($slug);
+        return new BotSecurityResource($this->bot);
     }
 }

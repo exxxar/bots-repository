@@ -4,18 +4,17 @@ import CheckoutProductForm from "@/ClientTg/Components/V2/Shop/Cart/CheckoutProd
 import CheckoutNonFoodGoodsForm from "@/ClientTg/Components/V2/Shop/Cart/CheckoutNonFoodGoodsForm.vue";
 import ScreenPaymentForm from "@/ClientTg/Components/V2/Shop/Cart/ScreenPaymentForm.vue";
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
+import {canBy} from "@/ClientTg/utils/commonMethods.js";
+
 </script>
 <template>
 
     <div v-if="cartTotalCount>0">
         <template v-if="tab===0">
             <CartProductList
-                v-if="loaded_settings"
                 v-on:select-prize="selectPrize"
                 v-on:change-tab="changeTab"
-
-                :form-data="deliveryForm"
-                :settings="settings">
+                :form-data="deliveryForm">
                 <template #upper-text>
                     <h4>Итого</h4>
                     <p>
@@ -26,34 +25,25 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                     </p>
                 </template>
             </CartProductList>
-            <PreloaderV1 v-else/>
         </template>
 
         <template v-if="tab===1">
-            <template v-if="loaded_settings">
                 <CheckoutProductForm
                     v-if="settings.shop_display_type === 0"
                     v-on:start-checkout="startCheckout"
                     v-on:change-tab="changeTab"
-                    v-model="deliveryForm"
-                    :settings="settings"></CheckoutProductForm>
+                    v-model="deliveryForm"></CheckoutProductForm>
                 <CheckoutNonFoodGoodsForm
                     v-else
                     v-on:start-checkout="startCheckout"
                     v-on:change-tab="changeTab"
-                    v-model="deliveryForm"
-                    :settings="settings"></CheckoutNonFoodGoodsForm>
-            </template>
-            <PreloaderV1 v-else/>
+                    v-model="deliveryForm"></CheckoutNonFoodGoodsForm>
         </template>
 
         <template v-if="tab===3">
             <ScreenPaymentForm
-                v-if="loaded_settings"
                 v-on:start-checkout="startCheckout"
-                v-model="deliveryForm"
-                :settings="settings"></ScreenPaymentForm>
-            <PreloaderV1 v-else/>
+                v-model="deliveryForm"></ScreenPaymentForm>
         </template>
 
     </div>
@@ -110,53 +100,14 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 <script>
 
 import {mapGetters} from "vuex";
+import {startTimer} from "@/ClientTg/utils/commonMethods.js";
+
 
 export default {
     props: ["type"],
     data() {
         return {
             tab: 0,
-            loaded_settings: true,
-            settings:null,
-          /*  settings: {
-                can_use_cash: true,
-                can_use_card: true,
-                delivery_price_text: null,
-                min_price: 0,
-                min_price_for_cashback: 0,
-                menu_list_type: 0,
-                payment_info: 0,
-                need_category_by_page: false,
-                need_pay_after_call: false,
-                can_buy_after_closing: false,
-                free_shipping_starts_from: 0,
-
-                max_tables: 0,
-                need_table_list: false,
-
-                need_use_sbp: false,
-                sbp: {
-                    selected_sbp_bank: 'tinkoff',
-                    tinkoff: {
-                        terminal_key: null,
-                        terminal_password: null,
-                    },
-                    sber: {}
-                },
-
-                shop_display_type: 0,
-                is_product_list: false,
-
-                need_automatic_delivery_request: true,
-                need_promo_code: true,
-                need_person_counter: true,
-                need_bonuses_section: true,
-                need_health_restrictions: true,
-                need_prizes_from_wheel_of_fortune: true,
-                selected_script_id: null,
-            },
-
-*/
             deliveryForm: {
                 name: null,
                 phone: null,
@@ -238,14 +189,10 @@ export default {
     },
     computed: {
         ...mapGetters(['cartTotalCount', 'cartTotalPrice', 'getSelf']),
-        canBy() {
-            // return false
-            if (!window.isCorrectSchedule(this.bot.company.schedule))
-                return true
 
-            return this.settings?.can_buy_after_closing || true
+        settings() {
+            return this.bot.settings
         },
-
         bot() {
             return window.currentBot
         },
@@ -256,11 +203,6 @@ export default {
     },
 
     mounted() {
-        if (this.bot.settings?.self_updated) {
-            this.settings = this.bot.settings
-        } else
-            this.loadShopModuleData()
-
         this.loadBasketData()
 
         this.tg.BackButton.show()
@@ -298,55 +240,11 @@ export default {
         selectPrize(item) {
             this.deliveryForm.action_prize = item
         },
-        loadShopModuleData() {
-            this.loaded_settings = false
-            return this.$store.dispatch("loadShopModuleData").then((resp) => {
-                this.$nextTick(() => {
-                    let data = resp.data
-                    if (data)
-                        Object.keys(data).forEach(item => {
-                            if (item)
-                                this.settings[item] = data[item]
-                        })
 
-
-                    this.deliveryForm.payment_type = this.settings.can_use_sbp ? 4 : 2
-                    this.loaded_settings = true
-
-                    console.log("settings=>", this.settings)
-                })
-            })
-        },
         loadBasketData() {
             return this.$store.dispatch("loadProductsInBasket")
         },
         startCheckout() {
-
-            localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
-            localStorage.setItem("cashman_self_product_delivery_form_phone", this.deliveryForm.phone || '')
-            localStorage.setItem("cashman_self_product_delivery_form_address", this.deliveryForm.address || '')
-            localStorage.setItem("cashman_self_product_delivery_form_city", this.deliveryForm.city || '')
-            localStorage.setItem("cashman_self_product_delivery_form_street", this.deliveryForm.street || '')
-            localStorage.setItem("cashman_self_product_delivery_form_building", this.deliveryForm.building || '')
-            localStorage.setItem("cashman_self_product_delivery_form_flat_number", this.deliveryForm.flat_number || '')
-
-            localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
-            if ((this.deliveryForm.disabilities || []).length > 0)
-                localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
-            else
-                localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
-
-
-            /*   if (this.spent_time_counter>0) {
-                   this.$notify({
-                       title: 'Упс!',
-                       text: "Сделать повторный заказ можно через "+this.spent_time_counter+" сек.",
-                       type: 'error'
-                   })
-
-                   return;
-               }
-   */
             let data = new FormData();
 
             //data.append("need_payment_link", this.deliveryForm.payment_type === 0)
@@ -389,11 +287,11 @@ export default {
             })
                 .then((response) => {
 
-                    this.deliveryForm = {
+                  /*  this.deliveryForm = {
                         message: null,
                         name: null,
                         phone: null,
-                    }
+                    }*/
 
                     this.$notify({
                         title: "Доставка",
@@ -403,9 +301,10 @@ export default {
 
                     this.tab = 1
                     this.$store.dispatch("clearCart");
-                    //this.clearCart();
 
-                    this.tg.close();
+                    if (response.url)
+                        window.location.href = response.url
+
 
                     this.sending = false
                 }).catch(err => {
@@ -418,22 +317,9 @@ export default {
                 })
             })
 
-            this.startTimer(10);
+            startTimer(10);
         },
-        startTimer(time) {
-            this.spent_time_counter = parseInt(time) != null ? Math.min(parseInt(time), 10) : 10;
 
-            let counterId = setInterval(() => {
-                    if (this.spent_time_counter > 0)
-                        this.spent_time_counter--
-                    else {
-                        clearInterval(counterId)
-                        this.spent_time_counter = null
-                    }
-                    localStorage.setItem("cashman_self_product_delivery_counter", this.spent_time_counter)
-                }, 1000
-            )
-        },
     }
 }
 </script>
