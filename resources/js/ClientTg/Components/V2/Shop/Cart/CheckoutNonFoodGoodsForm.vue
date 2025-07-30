@@ -193,6 +193,11 @@ export default {
             this.deliveryForm.cdek.to.city = item.to?.city || null
             this.deliveryForm.cdek.to.office = item.to?.office || null
 
+            if (this.deliveryForm.cdek.tariff?.errors) {
+                this.can_start_payment = false
+                return
+            }
+
             if (this.deliveryForm.cdek.tariff)
                 this.can_start_payment = true
 
