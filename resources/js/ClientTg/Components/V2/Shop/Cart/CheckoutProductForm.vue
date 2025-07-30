@@ -28,11 +28,8 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
         <OfferForm v-model="offer_agreement"></OfferForm>
 
         <Summary
-            v-on:person-inc="incPersons"
-            v-on:person-dec="decPersons"
-            v-on:discount="activatePromo"
             v-on:calc-delivery-price="requestDeliveryPrice"
-            :data="deliveryForm">
+            v-model="deliveryForm">
         </Summary>
 
         <p
@@ -216,19 +213,7 @@ export default {
         goToProductCart() {
             document.dispatchEvent(new Event('switch-to-cart'));
         },
-        decPersons() {
-            this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
-        },
-        incPersons() {
-            this.deliveryForm.persons = this.deliveryForm.persons < 100 ? this.deliveryForm.persons + 1 : this.deliveryForm.persons;
-        },
-        activatePromo(item) {
-            this.deliveryForm.promo.discount_in_percent = item.discount_in_percent || false
-            this.deliveryForm.promo.discount = item.discount || 0
 
-            this.deliveryForm.promo.activate_price = item.activate_price || 0
-            this.deliveryForm.promo.code = item.code || null
-        },
         requestDeliveryPrice() {
             this.need_request_delivery_price = false
             this.error_delivery_price_message = null

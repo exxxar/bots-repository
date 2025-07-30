@@ -36,7 +36,7 @@ import OfferForm from "@/ClientTg/Components/V2/Shop/Cart/OfferForm.vue";
 
         <h6 class="opacity-75 my-3">Сводка</h6>
 
-        <Summary :data="deliveryForm"></Summary>
+        <Summary v-model="deliveryForm"></Summary>
 
         <button type="button"
                 @click="goToProductCart"
@@ -49,42 +49,53 @@ import OfferForm from "@/ClientTg/Components/V2/Shop/Cart/OfferForm.vue";
             class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
             style="border-radius:10px 10px 0px 0px;">
 
-            <template v-if="deliveryForm.cdek.tariff!=null||!settings.need_automatic_delivery_request">
-                <button
-                    v-if="settings.need_pay_after_call || deliveryForm.payment_type === 3"
-                    type="button"
-                    @click="startCheckout"
-                    :disabled="!canSubmitForm"
+            <template v-if="spent_time<=0">
+                <template v-if="deliveryForm.cdek.tariff!=null||!settings.need_automatic_delivery_request">
+                    <button
+                        v-if="settings.need_pay_after_call || deliveryForm.payment_type === 3"
+                        type="button"
+                        @click="startCheckout"
+                        :disabled="!canSubmitForm"
+                        class="btn btn-primary p-3 w-100 mb-2">
+                        <i v-if="spent_time<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                        <i v-else class="fa-solid fa-hourglass  mr-2"></i>
+                        Оформить
+                    </button>
 
-                    class="btn btn-primary p-3 w-100 mb-2">
+                    <button
+                        v-if="deliveryForm.payment_type===4&&!settings.need_pay_after_call"
+                        type="button"
+                        @click="startCheckout"
+                        :disabled="!canSubmitForm"
+                        class="btn btn-primary p-3 w-100">
+                        <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
+                    </button>
 
-                    <i v-if="spent_time<=0" class="fa-solid fa-file-invoice mr-2"></i>
-                    <i v-else class="fa-solid fa-hourglass  mr-2"></i>
-
-                    Оформить
-                </button>
-
-                <button
-                    v-if="deliveryForm.payment_type===4&&!settings.need_pay_after_call"
-                    type="button"
-                    @click="startCheckout"
-                    :disabled="!canSubmitForm"
-                    class="btn btn-primary p-3 w-100">
-                    <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
-                </button>
-
-                <button
-                    v-if="deliveryForm.payment_type===2&&!settings.need_pay_after_call"
-                    type="button"
-                    @click="nextStep"
-                    :disabled="!canSubmitForm"
-                    class="btn btn-primary p-3 w-100">
-                    <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+                    <button
+                        v-if="deliveryForm.payment_type===2&&!settings.need_pay_after_call"
+                        type="button"
+                        @click="nextStep"
+                        :disabled="!canSubmitForm"
+                        class="btn btn-primary p-3 w-100">
+                        <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+                    </button>
+                </template>
+                <div v-else class="alert alert-info">
+                    Для оформления выберите офис доставки СДЭК
+                </div>
+            </template>
+            <template v-else>
+                <button type="button"
+                        class="btn btn-primary p-3 w-100 d-flex align-items-center justify-content-center">
+                    Осталось ждать {{ spent_time || 0 }} сек.
+                    <div
+                        v-if="!canSubmitForm"
+                        class="spinner-border ml-2 spinner-border-sm"
+                        role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </button>
             </template>
-            <div v-else class="alert alert-info">
-                Для оформления выберите офис доставки СДЭК
-            </div>
         </nav>
     </form>
 </template>
@@ -92,12 +103,13 @@ import OfferForm from "@/ClientTg/Components/V2/Shop/Cart/OfferForm.vue";
 
 import {mapGetters} from "vuex";
 import {cashbackLimit, startTimer, checkTimer} from "@/ClientTg/utils/commonMethods.js";
+
 export default {
-    props: [ "modelValue"],
+    props: ["modelValue"],
     data() {
         return {
-            spent_time:0,
-            deliveryForm:null,
+            spent_time: 0,
+            deliveryForm: null,
             can_start_payment: false,
             offer_agreement: true,
             need_request_delivery_price: true,
@@ -138,7 +150,7 @@ export default {
         bot() {
             return window.currentBot
         },
-        settings(){
+        settings() {
             return this.bot.settings
         },
         canRequestDeliverPrice() {
@@ -149,11 +161,12 @@ export default {
         },
 
         canSubmitForm() {
-            return this.can_start_payment && this.spent_time === 0
-                && (!this.deliveryForm.use_cashback ?
-                    this.cartTotalPrice >= this.settings.min_price :
-                    this.cartTotalPrice - cashbackLimit() > this.settings.min_price)
 
+            let sumIsValid = !this.deliveryForm.use_cashback ?
+                this.cartTotalPrice >= (this.settings.min_price || 0) :
+                this.cartTotalPrice - cashbackLimit() > (this.settings.min_price || 0)
+
+            return this.can_start_payment && sumIsValid && !(this.spent_time > 0)
         },
 
 
@@ -167,6 +180,7 @@ export default {
         window.addEventListener("trigger-spent-timer", (event) => { // (1)
             this.spent_time = event.detail
         });
+
 
     },
     methods: {

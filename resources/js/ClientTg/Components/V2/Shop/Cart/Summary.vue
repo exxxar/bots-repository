@@ -218,19 +218,32 @@ import {mapGetters} from "vuex";
 import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 
 export default {
-    props: ["data"],
+    props: ["modelValue"],
     data() {
         return {
+            deliveryForm:null,
             moneyVariants: [
                 500, 1000, 2000, 5000
             ],
         }
     },
     watch: {
+        'deliveryForm': {
+            handler: function (newValue) {
+                this.$emit("update:modelValue", this.deliveryForm)
+            },
+            deep: true
+        },
+        'modelValue': {
+            handler: function (newValue) {
+                this.deliveryForm = newValue
+            },
+            deep: true
+        },
         'cartTotalPrice': {
             handler: function (newValue) {
                 if (this.settings.free_shipping_starts_from <= this.cartTotalPrice) {
-                    this.data.delivery_price = 0
+                    this.deliveryForm.delivery_price = 0
                 }
             },
             deep: true
@@ -262,16 +275,11 @@ export default {
             return (computedPriceWithDiscount >= activationDiscountPrice ?
                 computedPriceWithDiscount : price) + deliveryCdekPrice
         },
-        canSubmitForm() {
-            return (this.spent_time_counter || 0) === 0
-                && (!this.data.use_cashback ?
-                    this.cartTotalPrice >= this.settings.min_price :
-                    this.cartTotalPrice - cashbackLimit() > this.settings.min_price)
 
-        },
 
     },
     mounted() {
+        this.deliveryForm = this.modelValue
     },
     methods: {
         goToProductCart() {
@@ -281,13 +289,17 @@ export default {
             this.$emit("calc-delivery-price")
         },
         activateDiscount(item) {
-            this.$emit("discount", item)
+                this.deliveryForm.promo.discount_in_percent = item.discount_in_percent || false
+                this.deliveryForm.promo.discount = item.discount || 0
+
+                this.deliveryForm.promo.activate_price = item.activate_price || 0
+                this.deliveryForm.promo.code = item.code || null
         },
         decPersons() {
-            this.$emit("person-dec")
+            this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
         },
         incPersons() {
-            this.$emit("person-inc")
+            this.deliveryForm.persons = this.deliveryForm.persons < 100 ? this.deliveryForm.persons + 1 : this.deliveryForm.persons;
         },
     }
 }
