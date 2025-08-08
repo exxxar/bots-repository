@@ -55,7 +55,7 @@ class CheckBotMessages extends Command
                 $message = "#ответ от $name:\n";
 
                 foreach ($data['messages']  ?? [] as $m)
-                    $message .= "[".$m["timestamp"]."]: ".$m["message"]."\n";
+                    $message .= "[".Carbon::parse($m["timestamp"])->format("H:i:s")."]: ".$m["message"]."\n";
 
                 $telegramChatId = $data['user']["telegram_chat_id"] ?? null;
 
