@@ -1045,9 +1045,11 @@ abstract class BotCore
         $this->reply("Ошибка обработки данных!");
     }
 
-    private function addMessageToJson($filename, $newMessage): void
+    private function addMessageToJson($filename, $newMessage): string
     {
         $path = "chat-logs/$filename.json";
+
+        $type = "new";
 
         // Проверка существования файла
         if (Storage::exists($path)) {
@@ -1064,9 +1066,11 @@ abstract class BotCore
             $data['messages'] = $data['messages'] ?? [];
             // Добавление нового сообщения
             $data['messages'][] = [
-                "message"=> $newMessage["message"] ?? '-',
-                'timestamp'=> $newMessage["timestamp"] ?? null
+                "message" => $newMessage["message"] ?? '-',
+                'timestamp' => $newMessage["timestamp"] ?? null
             ];
+
+            $type = "append";
         } else {
             // Создание новой структуры
             $data = [
@@ -1076,8 +1080,8 @@ abstract class BotCore
                 'link' => $newMessage["link"] ?? null,
                 'user' => $newMessage["user"] ?? null,
                 'messages' => [[
-                    "message"=> $newMessage["message"] ?? '-',
-                    'timestamp'=> $newMessage["timestamp"] ?? null
+                    "message" => $newMessage["message"] ?? '-',
+                    'timestamp' => $newMessage["timestamp"] ?? null
                 ]],
             ];
         }
@@ -1085,6 +1089,7 @@ abstract class BotCore
         // Сохранение обратно в файл
         Storage::put($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
+        return $type;
     }
 
     public function adminNotificationHandler($message, $query): bool
@@ -1106,19 +1111,24 @@ abstract class BotCore
 
             if (strlen($channel) > 6 && str_starts_with($channel, "-")) {
 
-                $this->addMessageToJson("chat-history-" . $this->currentBotUser()->telegram_chat_id, [
+                $result = $this->addMessageToJson("chat-history-" . $this->currentBotUser()->telegram_chat_id, [
                     "bot_id" => $this->getSelf()->id,
                     "channel" => $channel,
                     "thread" => $thread,
                     "link" => $link,
                     "user" => [
-                        "name"=>$name,
-                        "telegram_chat_id"=>$botUser->telegram_chat_id
+                        "name" => $name,
+                        "telegram_chat_id" => $botUser->telegram_chat_id
                     ],
                     'timestamp' => now()->toDateTimeString(),
                     "message" => $query
                 ]);
-                $this->replyAction();
+
+                if ($result == "new")
+                    $this->reply("Ваше сообщение будет доставлено администратору в течении 10 минут.");
+                else
+                    $this->replyAction();
+
                 return true;
             }
 
