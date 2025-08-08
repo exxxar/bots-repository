@@ -33,23 +33,29 @@ class CheckBotMessages extends Command
     {
         $folder = 'telegram-images'; // Папка, где хранятся config-*.json
 
+        Log::info("test folders");
         if (!Storage::exists($folder)) {
             return;
         }
-
+        Log::info("folders exist");
         $files = Storage::files($folder);
 
         foreach ($files as $filePath) {
+
+            Log::info("open file $filePath");
+
             if (!str_contains($filePath, 'config-') || pathinfo($filePath, PATHINFO_EXTENSION) !== 'json') {
                 // Не конфиг — удаляем
                 Storage::delete($filePath);
                 continue;
             }
+            Log::info("open file success");
 
             try {
                 $content = Storage::get($filePath);
                 $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
+                Log::info("json struct ".print_r($data, true));
                 // Проверяем структуру
                 if (
                     !isset($data['bot_id']) ||
