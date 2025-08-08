@@ -226,26 +226,6 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
-        $count = 0;
-
-        if ($botUser->is_admin || $botUser->is_manager) {
-            $media = \App\Models\BotMedia::query()->updateOrCreate([
-                'bot_id' => $bot->id,
-                'bot_user_id' => $botUser->id,
-                'file_id' => $photoToSend,
-            ], [
-                'caption' => $caption,
-                'type' => "photo"
-            ]);
-
-            $tmp = "<b>#$media->id</b> (<code>$photoToSend</code>),";
-            $count++;
-
-            BotManager::bot()
-                ->reply("Фотографии ($count шт.) добавлены в медиа пространство бота с идентификаторами: $tmp - для просмотра доступных медиа используйте /media");
-
-        }
-
         $caption = !is_null($caption) ? $caption : 'Без подписи';
 
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
@@ -259,10 +239,64 @@ BotManager::bot()
 
         $chatId = $botUser->telegram_chat_id;
 
-        $phone = $botUser->phone ?? 'Не указан';
+        $filename = "images-$chatId.json";
+        $folder = "telegram-images";
+        $filePath = "$folder/$filename";
 
-        $link = "https://t.me/$bot->bot_domain?start=" .
-            base64_encode("001" . $botUser->telegram_chat_id);
+        $botDomain = $bot->bot_domain;
+
+        $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $chatId);
+
+        if (Storage::exists($filePath)) {
+            $config = json_decode(Storage::get($filePath), true);
+
+            BotManager::bot()
+                ->sendChatAction(
+                    $botUser->telegram_chat_id,
+                    "upload_photo");
+        } else {
+            $config = [
+                'bot_id' => $bot->id,
+                'link' => $link,
+                'channel' => $bot->order_channel ?? null,
+                'thread' => $bot->topics["response"] ?? null,
+                'user' => [
+                    'name' => $name,
+                    'telegram_chat_id' => $chatId,
+                ],
+                'images' => [],
+                'messages' => [],
+
+            ];
+
+            BotManager::bot()
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "Ваши фотографии будут отправлены администратору в течении 10 минут!");
+
+        }
+
+        // Добавляем file_id
+        $config['images'][] = $photoToSend;
+        $config['messages'][] = $caption;
+
+        Storage::put($filePath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+        if ($botUser->is_admin || $botUser->is_manager) {
+            $media = \App\Models\BotMedia::query()->updateOrCreate([
+                'bot_id' => $bot->id,
+                'bot_user_id' => $botUser->id,
+                'file_id' => $photoToSend,
+            ], [
+                'caption' => $caption,
+                'type' => "photo"
+            ]);
+
+            $tmp = "<b>#$media->id</b> (<code>$photoToSend</code>),";
+
+            BotManager::bot()
+                ->reply("Фотография добавлена в медиа пространство бота с идентификаторами: $tmp - для просмотра доступных медиа используйте /media");
+        }
 
         $order = Order::query()
             ->where("bot_id", $bot->id)
@@ -270,134 +304,59 @@ BotManager::bot()
             ->orderBy("updated_at", "DESC")
             ->first();
 
-        $historyLink = "https://t.me/$bot->bot_domain?start=" . (
-            !is_null($order) ?
-                base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id) :
-                base64_encode("001" . $botUser->telegram_chat_id)
-            );
+        if (!is_null($order)) {
+            $phone = $botUser->phone ?? 'Не указан';
 
-        $thread = $bot->topics["orders"] ?? null;
+            $historyLink = "https://t.me/$bot->bot_domain?start=" .base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id);
 
+            $thread = $bot->topics["orders"] ?? null;
 
-        if (is_null($order)) {
-            $filename = "images-$chatId.json";
-            $folder = "telegram-images";
-            $filePath = "$folder/$filename";
+            $from = "не указан источник";
+            $products = "нет продуктов";
+            if (!empty($order->product_details)) {
 
-            $botDomain = $bot->bot_domain;
+                $products = "";
 
-            $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $chatId);
+                foreach ($order->product_details as $detail) {
+                    $detail = (object)$detail;
+                    $from = $detail->from ?? 'Не указано';
+                    if (is_array($detail->products)) {
+                        foreach ($detail->products as $product) {
+                            $product = (object)$product;
+                            $products .= "$product->title x$product->count = $product->price ₽\n";
+                        }
 
-            if (Storage::exists($filePath)) {
-                $config = json_decode(Storage::get($filePath), true);
+                    } else
+                        $products .= "Текст заказа: $detail->products\n";
 
-                BotManager::bot()
-                    ->sendChatAction(
-                        $botUser->telegram_chat_id,
-                        "upload_photo");
-            } else {
-                $config = [
-                    'bot_id' => $bot->id,
-                    'link' => $link,
-                    'channel' => $bot->order_channel ?? null,
-                    'thread' => $bot->topics["response"] ?? null,
-                    'user'=>[
-                        'name'=>$name,
-                        'telegram_chat_id' => $chatId,
-                    ],
-                    'images' => [],
-                    'messages' => [],
-                ];
-
-                BotManager::bot()
-                    ->sendMessage(
-                        $botUser->telegram_chat_id,
-                        "Ваши фотографии будут отправлены администратору в течении 10 минут!");
+                }
             }
 
-            // Добавляем file_id
-            $config['images'][] = $photoToSend;
-            $config['messages'][] = $caption;
-
-            // Сохраняем обновлённый JSON
-            Storage::put($filePath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-/*
-            $keyboard = [
-                [
-                    ["text" => "Работа с пользователем", "url" => $link]
-                ]
-            ];
+            $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
+                    ->format("Y-m-d H:i:s");
 
             BotManager::bot()
                 ->sendPhoto(
                     $channel,
-                    "#фото\n" .
-                    "Идентификатор: $id\n" .
+                    "#оплатачеком\n" .
+                    "Идентификатор: $chatId\n" .
                     "Пользователь: $name\n" .
                     "Телефон: $phone\n\n" .
-                    "Подпись к фото: $caption\n\n",
-                    $photoToSend,
-                    $keyboard,
+                    "Параметры заказа:\n$text\n",
+                    $photoToSend, [
+                    [
+                        ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                    ],
+                    [
+                        ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
+                    ],
+
+                ],
                     $thread
                 );
 
-            BotManager::bot()
-                ->sendMessage(
-                    $botUser->telegram_chat_id,
-                    "Спасибо! Ваше фото загружено!");*/
-
-            return;
         }
 
-        $from = "не указан источник";
-        $products = "нет продуктов";
-        if (!empty($order->product_details)) {
-
-            $products = "";
-
-            foreach ($order->product_details as $detail) {
-                $detail = (object)$detail;
-                $from = $detail->from ?? 'Не указано';
-                if (is_array($detail->products)) {
-                    foreach ($detail->products as $product) {
-                        $product = (object)$product;
-                        $products .= "$product->title x$product->count = $product->price ₽\n";
-                    }
-
-                } else
-                    $products .= "Текст заказа: $detail->products\n";
-
-            }
-        }
-
-
-        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
-                ->format("Y-m-d H:i:s");
-
-
-        BotManager::bot()
-            ->sendPhoto(
-                $channel,
-                "#оплатачеком\n" .
-                "Идентификатор: $chatId\n" .
-                "Пользователь: $name\n" .
-                "Телефон: $phone\n\n" .
-                "Параметры заказа:\n$text\n",
-                $photoToSend, [
-                [
-                    ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                ],
-                [
-                    ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
-                ],
-
-            ],
-                $thread
-            );
-
-        BotManager::bot()
-            ->sendMessage(
-                $chatId, "Спасибо! Ваше фото загружено!");
     });
 
 BotManager::bot()
