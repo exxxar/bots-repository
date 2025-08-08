@@ -76,7 +76,7 @@ class CheckBotMessages extends Command
 
                 Log::info("bot find success");
 
-                $chatId = $data['telegram_chat_id'];
+                $chatId = $data["user"]['telegram_chat_id'];
                 $fileIds = $data['images'];
 
                 Log::info("fileIds".print_r($fileIds, true));
