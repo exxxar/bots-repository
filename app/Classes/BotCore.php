@@ -1096,7 +1096,6 @@ abstract class BotCore
 
         $botUser = $this->currentBotUser();
 
-        $domain = $botUser->username ?? null;
         $name = $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
 
   /*      if ($botUser->is_admin || $botUser->is_manager) {
@@ -1130,7 +1129,7 @@ abstract class BotCore
                     "thread" => $thread,
                     "link" => $link,
                     "user" => [
-                        "name"=>!is_null($domain) ? "$domain" : "$name",
+                        "name"=>$name,
                         "telegram_chat_id"=>$botUser->telegram_chat_id
                     ],
                     'timestamp' => now()->toDateTimeString(),
