@@ -302,6 +302,7 @@ BotManager::bot()
         $order = Order::query()
             ->where("bot_id", $bot->id)
             ->where("customer_id", $botUser->id)
+            ->whereNull("payed_at")
             ->orderBy("updated_at", "DESC")
             ->first();
 
@@ -330,6 +331,10 @@ BotManager::bot()
                         $products .= "Текст заказа: $detail->products\n";
 
                 }
+
+                $order->payed_at = Carbon::now();
+                $order->save();
+
             } else {
                 $order->delete();
                 return;
