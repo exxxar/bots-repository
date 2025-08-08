@@ -60,7 +60,7 @@ class CheckBotMessages extends Command
                 // Проверяем структуру
                 if (
                     !isset($data['bot_id']) ||
-                    !isset($data['telegram_chat_id']) ||
+                    !isset($data['user']) ||
                     !isset($data['images']) ||
                     !is_array($data['images'])
                 ) {
