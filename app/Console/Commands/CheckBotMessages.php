@@ -53,6 +53,9 @@ class CheckBotMessages extends Command
 
             try {
                 $content = Storage::get($filePath);
+
+                Log::info("json content ".print_r($content, true));
+
                 $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
                 Log::info("json struct ".print_r($data, true));
@@ -134,8 +137,8 @@ class CheckBotMessages extends Command
                     );
 
 
-            } catch (\Exception $e) {
-                Log::info($e);
+            } catch (\Throwable $e) {
+                Log::info($e->getMessage());
             }
             Storage::delete($filePath);
         }
