@@ -1095,27 +1095,10 @@ abstract class BotCore
             return true;
 
         $botUser = $this->currentBotUser();
-
         $name = $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
-
-  /*      if ($botUser->is_admin || $botUser->is_manager) {
-            BotNote::query()->updateOrCreate([
-                'bot_id' => $this->getSelf()->id,
-                'bot_user_id' => $botUser->id,
-                'text' => $query,
-            ]);
-
-            $this->reply("Ваше сообщение добавлено в список заметок /notes");
-            return true;
-        }
-
-
-        if (mb_strlen($query) < 10)
-            return false;*/
 
         $channel = $this->getSelf()->order_channel ?? null;
         if (!is_null($channel)) {
-
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
 
@@ -1134,16 +1117,6 @@ abstract class BotCore
                     ],
                     'timestamp' => now()->toDateTimeString(),
                     "message" => $query
-                ]);
-
-
-                ChatLog::query()->create([
-                    'text' => $query,
-                    'media_content' => null,
-                    'content_type' => null,
-                    'bot_id' => $this->getSelf()->id,
-                    'form_bot_user_id' => $botUser->id,
-                    'to_bot_user_id' => null
                 ]);
 
                 $this->reply("Ваше сообщение будет доставлено администратору в течении 5-10 минут.");
