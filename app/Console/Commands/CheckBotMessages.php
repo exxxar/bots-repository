@@ -75,6 +75,14 @@ class CheckBotMessages extends Command
                         ],
                         $data['thread'] ?? null);
 
+                sleep(1);
+                BotMethods::bot()
+                    ->whereBot($bot)
+                    ->sendMessage(
+                        $telegramChatId,
+                        "Ваше сообщение успешно доставлено администратору!"
+                    );
+
             } catch (\JsonException $e) {
                 Log::warning("Удаление невалидного файла: $file");
             }

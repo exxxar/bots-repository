@@ -1118,8 +1118,7 @@ abstract class BotCore
                     'timestamp' => now()->toDateTimeString(),
                     "message" => $query
                 ]);
-
-                $this->reply("Ваше сообщение будет доставлено администратору в течении 5-10 минут.");
+                $this->replyAction();
                 return true;
             }
 
