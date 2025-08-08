@@ -120,6 +120,7 @@ BotManager::bot()
         $order = Order::query()
             ->where("bot_id", $bot->id)
             ->where("customer_id", $botUser->id)
+            ->whereNull("payed_at")
             ->orderBy("updated_at", "DESC")
             ->first();
 
@@ -183,6 +184,17 @@ BotManager::bot()
             }
         }
 
+        $orders = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->whereNull("payed_at")
+            ->get();
+
+        foreach ($orders as $tmpOrder)
+        {
+            $tmpOrder->payed_at = Carbon::now();
+            $tmpOrder->save();
+        }
 
         $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
                 ->format("Y-m-d H:i:s");
@@ -332,10 +344,17 @@ BotManager::bot()
 
                 }
 
-                $order->payed_at = Carbon::now();
-                $order->save();
+                $orders = Order::query()
+                    ->where("bot_id", $bot->id)
+                    ->where("customer_id", $botUser->id)
+                    ->whereNull("payed_at")
+                    ->get();
 
-                
+                foreach ($orders as $tmpOrder)
+                {
+                    $tmpOrder->payed_at = Carbon::now();
+                    $tmpOrder->save();
+                }
 
             } else {
                 $order->delete();
