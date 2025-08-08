@@ -335,6 +335,8 @@ BotManager::bot()
                 $order->payed_at = Carbon::now();
                 $order->save();
 
+                
+
             } else {
                 $order->delete();
                 return;
