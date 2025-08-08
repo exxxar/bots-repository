@@ -44,11 +44,11 @@ class CheckBotMessages extends Command
 
             Log::info("open file $filePath");
 
-            if (!str_contains($filePath, 'config-') || pathinfo($filePath, PATHINFO_EXTENSION) !== 'json') {
-                // Не конфиг — удаляем
+            if (!str_contains($filePath, 'config-')) {
                 Storage::delete($filePath);
                 continue;
             }
+
             Log::info("open file success");
 
             try {
