@@ -13,10 +13,12 @@ use App\Models\Product;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Telegram\Bot\FileUpload\InputFile;
 
 class PaymentLogicFactory extends BaseLogicFactory
 {
@@ -75,7 +77,11 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] !== 'CONFIRMED') {
 
+            Log::info("test payment status=>".print_r($data, true));
             if (($data["Status"] ?? 'REFUNDED') == 'REFUNDED' || ($data["Status"] ?? 'REJECTED') == 'REJECTED') {
+
+                $file = print_r($data, true);
+
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage(
@@ -83,6 +89,16 @@ class PaymentLogicFactory extends BaseLogicFactory
                         "⛔Оплата СБП по заказу #$orderId в размере $amount руб. НЕ прошла!",
                         $thread
                     );
+                sleep(1);
+
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendDocument(
+                        $callbackChannel,
+                        "Данные по запросу СБП #" . ($order->id ?? 'не указан'),
+                        InputFile::createFromContents($file, "sbp-support-info.txt")
+                    );
+
                 sleep(1);
                 if (!is_null($customerKey)) {
                     $botUser = BotUser::query()
@@ -121,6 +137,16 @@ class PaymentLogicFactory extends BaseLogicFactory
                 $callbackChannel,
                 "✅Оплата СБП по заказу #$order->id в размере $amount (в заказе $order->summary_price) руб. прошла успешно!",
                 $thread
+            );
+
+        $file = print_r($data, true);
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendDocument(
+                $callbackChannel,
+                "Данные по запросу СБП #" . ($order->id ?? 'не указан'),
+                InputFile::createFromContents($file, "sbp-support-info.txt")
             );
 
         if (!is_null($customerKey)) {
