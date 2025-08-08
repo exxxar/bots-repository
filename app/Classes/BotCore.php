@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mpdf\Mpdf;
 use PHPUnit\Exception;
@@ -903,7 +904,7 @@ abstract class BotCore
                     foreach ($actions as $action) {
 
                         $tmpData = (array)$action->data;
-                        $success = array_key_exists("cashback_at",$tmpData) && is_null($tmpData["cashback_at"] ?? null);
+                        $success = array_key_exists("cashback_at", $tmpData) && is_null($tmpData["cashback_at"] ?? null);
 
 
                         if ($success) {
@@ -1044,6 +1045,48 @@ abstract class BotCore
         $this->reply("Ошибка обработки данных!");
     }
 
+    private function addMessageToJson($filename, $newMessage): void
+    {
+        $path = "chat-logs/$filename.json";
+
+        // Проверка существования файла
+        if (Storage::exists($path)) {
+            // Чтение и декодирование файла
+            $json = Storage::get($path);
+            $data = json_decode($json, true);
+
+            // Проверка наличия ключей
+            $data['bot_id'] = $data['bot_id'] ?? null;
+            $data['channel'] = $data['channel'] ?? null;
+            $data['link'] = $data['link'] ?? null;
+            $data['thread'] = $data['thread'] ?? null;
+            $data['user'] = $data['user'] ?? null;
+            $data['messages'] = $data['messages'] ?? [];
+            // Добавление нового сообщения
+            $data['messages'][] = [
+                "message"=> $newMessage["message"] ?? '-',
+                'timestamp'=> $newMessage["timestamp"] ?? null
+            ];
+        } else {
+            // Создание новой структуры
+            $data = [
+                'bot_id' => $newMessage["bot_id"] ?? null,
+                'channel' => $newMessage["channel"] ?? null,
+                'thread' => $newMessage["thread"] ?? null,
+                'link' => $newMessage["link"] ?? null,
+                'user' => $newMessage["user"] ?? null,
+                'messages' => [[
+                    "message"=> $newMessage["message"] ?? '-',
+                    'timestamp'=> $newMessage["timestamp"] ?? null
+                ]],
+            ];
+        }
+
+        // Сохранение обратно в файл
+        Storage::put($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+    }
+
     public function adminNotificationHandler($message, $query): bool
     {
         $type = $message->chat->type ?? null;
@@ -1056,7 +1099,7 @@ abstract class BotCore
         $domain = $botUser->username ?? null;
         $name = $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
 
-        if ($botUser->is_admin || $botUser->is_manager) {
+  /*      if ($botUser->is_admin || $botUser->is_manager) {
             BotNote::query()->updateOrCreate([
                 'bot_id' => $this->getSelf()->id,
                 'bot_user_id' => $botUser->id,
@@ -1069,7 +1112,7 @@ abstract class BotCore
 
 
         if (mb_strlen($query) < 10)
-            return false;
+            return false;*/
 
         $channel = $this->getSelf()->order_channel ?? null;
         if (!is_null($channel)) {
@@ -1080,17 +1123,20 @@ abstract class BotCore
             $thread = $this->getSelf()->topics["response"] ?? null;
 
             if (strlen($channel) > 6 && str_starts_with($channel, "-")) {
-                $this->sendInlineKeyboard($channel,
-                    "#ответ\n" .
-                    (!is_null($domain) ? "Сообщение от @$domain:\n" : "Сообщение от $name:\n") .
-                    "$query",
-                    [
-                        [
-                            ["text" => "Написать пользователю ответ", "url" => $link]
-                        ]
+
+                $this->addMessageToJson("chat-history-" . $this->currentBotUser()->telegram_chat_id, [
+                    "bot_id" => $this->getSelf()->id,
+                    "channel" => $channel,
+                    "thread" => $thread,
+                    "link" => $link,
+                    "user" => [
+                        "name"=>!is_null($domain) ? "$domain" : "$name",
+                        "telegram_chat_id"=>$botUser->telegram_chat_id
                     ],
-                    $thread
-                );
+                    'timestamp' => now()->toDateTimeString(),
+                    "message" => $query
+                ]);
+
 
                 ChatLog::query()->create([
                     'text' => $query,
@@ -1101,7 +1147,7 @@ abstract class BotCore
                     'to_bot_user_id' => null
                 ]);
 
-                $this->reply("Ваше сообщение успешно доставлено администратору бота");
+                $this->reply("Ваше сообщение будет доставлено администратору в течении 5-10 минут.");
                 return true;
             }
 
