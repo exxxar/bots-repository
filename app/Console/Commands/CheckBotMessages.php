@@ -54,8 +54,6 @@ class CheckBotMessages extends Command
             try {
                 $content = Storage::get($filePath);
 
-                Log::info("json content ".print_r($content, true));
-
                 $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
                 Log::info("json struct ".print_r($data, true));
@@ -69,15 +67,19 @@ class CheckBotMessages extends Command
                     Storage::delete($filePath);
                     continue;
                 }
-
+                Log::info("json struct success");
                 $bot = Bot::query()
                     ->find($data["bot_id"] ?? null);
 
                 if (is_null($bot))
                     continue;
 
+                Log::info("bot find success");
+
                 $chatId = $data['telegram_chat_id'];
                 $fileIds = $data['images'];
+
+                Log::info("fileIds".print_r($fileIds, true));
 
                 $channel = $data["channel"] ?? null;
                 $thread = $data["thread"] ?? null;
@@ -88,7 +90,7 @@ class CheckBotMessages extends Command
 
                 $link = $data["link"] ?? null;
 
-                Log::info("fileIds".print_r($fileIds, true));
+
                 Log::info("message=>".$message);
                 if (count($fileIds) > 1) {
                     $media = [];

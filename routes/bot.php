@@ -226,7 +226,7 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
-        $caption = !is_null($caption) ? $caption : 'Без подписи';
+        $caption = !is_null($caption) ? $caption : null;
 
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
@@ -278,7 +278,8 @@ BotManager::bot()
 
         // Добавляем file_id
         $config['images'][] = $photoToSend;
-        $config['messages'][] = $caption;
+        if (!is_null($caption))
+            $config['messages'][] = $caption;
 
         Storage::put($filePath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
@@ -288,7 +289,7 @@ BotManager::bot()
                 'bot_user_id' => $botUser->id,
                 'file_id' => $photoToSend,
             ], [
-                'caption' => $caption,
+                'caption' => $caption ?? 'Без подписи',
                 'type' => "photo"
             ]);
 
@@ -307,7 +308,7 @@ BotManager::bot()
         if (!is_null($order)) {
             $phone = $botUser->phone ?? 'Не указан';
 
-            $historyLink = "https://t.me/$bot->bot_domain?start=" .base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id);
+            $historyLink = "https://t.me/$bot->bot_domain?start=" . base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id);
 
             $thread = $bot->topics["orders"] ?? null;
 
@@ -329,8 +330,7 @@ BotManager::bot()
                         $products .= "Текст заказа: $detail->products\n";
 
                 }
-            }
-            else {
+            } else {
                 $order->delete();
                 return;
             }
