@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Bots;
 use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
-use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
+use App\Http\BusinessLogic\Methods\Classes\Banking\TinkoffBankService;
 use App\Http\Controllers\Controller;
 use App\Models\Basket;
 use App\Models\BotMenuSlug;
@@ -50,7 +50,7 @@ class FoodBasketController extends Controller
         $tax = $sbp["tinkoff"]["tax"] ?? "osn";
         $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
 
-        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+        $tinkoff = new TinkoffBankService(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
         $state = $tinkoff->getState($paymentId);
 

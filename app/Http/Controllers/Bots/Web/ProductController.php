@@ -2,37 +2,22 @@
 
 namespace App\Http\Controllers\Bots\Web;
 
-use App\Exports\BotCashBackExport;
-use App\Exports\ProductExport;
 use App\Facades\BotManager;
-use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
-use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
+use App\Http\BusinessLogic\Methods\Classes\Banking\TinkoffBankService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCategoryCollection;
 use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
-use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
-use App\Models\BotUser;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\ProductOption;
-use App\Models\Table;
-use App\Models\Transaction;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Maatwebsite\Excel\Facades\Excel;
 use Mpdf\Mpdf;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Telegram\Bot\FileUpload\InputFile;
-use function Laravel\Prompts\search;
 
 class ProductController extends Controller
 {
@@ -138,7 +123,7 @@ class ProductController extends Controller
         $tax = $sbp["tinkoff"]["tax"] ?? "osn";
         $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
 
-        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+        $tinkoff = new TinkoffBankService(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
         $state = $tinkoff->getState($paymentId);
 

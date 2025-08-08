@@ -4,23 +4,15 @@ namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
-use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Http\BusinessLogic\Methods\Classes\Banking\TinkoffBankService;
 use App\Http\BusinessLogic\Methods\Classes\HasSettings;
-use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
-use App\Http\Resources\AmoCrmResource;
-use App\Models\AmoCrm;
-use App\Models\Basket;
-use App\Models\Bot;
-use App\Models\BotMenuSlug;
 use App\Models\BotUser;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Table;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -242,7 +234,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             'NDS' => $vat,
         ];
 
-        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+        $tinkoff = new TinkoffBankService(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
         $order = Order::query()->create([
             'bot_id' => $bot->id,
@@ -316,7 +308,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             'NDS' => $vat ?? 'vat20',  //НДС //tax
         ];
 
-        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+        $tinkoff = new TinkoffBankService(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
         $payment = [
             'OrderId' => $data["order_id"] ?? Str::uuid(),        //Ваш идентификатор платежа
@@ -376,7 +368,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             'NDS' => $vat ?? 'vat20',  //НДС //tax
         ];
 
-        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+        $tinkoff = new TinkoffBankService(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
         $order = Order::query()
             ->create([
@@ -478,7 +470,7 @@ class PaymentLogicFactory extends BaseLogicFactory
 
         }
 
-        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+        $tinkoff = new TinkoffBankService(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
 
         $payment = [

@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Http\BusinessLogic\Methods\Classes;
+namespace App\Http\BusinessLogic\Methods\Classes\Banking;
 
-class Tinkoff
+use App\Http\BusinessLogic\Methods\Classes\sha256;
+use App\Http\BusinessLogic\Methods\Classes\url;
+
+class TinkoffBankService
 {
     private $acquiring_url;
     private $terminal_id;

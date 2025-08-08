@@ -1,42 +1,20 @@
 <?php
 
-use App\Events\CashBackEvent;
-use App\Facades\BotManager;
 use App\Facades\BotMethods;
-use App\Facades\BusinessLogic;
-use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Jobs\SendMessageJob;
 use App\Models\Bot;
-use App\Models\BotUser;
-use App\Models\CashBack;
-use App\Models\Company;
-use App\Models\ReferralHistory;
-use App\Models\Role;
-use App\Models\Table;
 use App\Models\User;
-use Carbon\Carbon;
-use danog\Decoder\FileId;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;
-use Mpdf\HTMLParserMode;
-use Mpdf\Mpdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Telegram\Bot\FileUpload\InputFile;
 
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 /*
 |--------------------------------------------------------------------------
 | Web Routes

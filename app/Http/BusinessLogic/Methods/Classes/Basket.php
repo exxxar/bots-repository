@@ -687,7 +687,7 @@ class Basket
                 ]
             ],
             'product_count' => $summaryCount,
-            'summary_price' => $summaryPrice,
+            'summary_price' =>  $summaryPrice - $discountItem->discount,
             'delivery_price' => $deliverySum ?? 0,
             'delivery_range' => 0,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
