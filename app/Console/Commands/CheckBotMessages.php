@@ -80,7 +80,10 @@ class CheckBotMessages extends Command
                 $channel = $data["channel"] ?? null;
                 $thread = $data["thread"] ?? null;
 
-                $message = "Подпись к фотографиям:\n".implode('\n', $data["messages"] ?? []);
+                $message = "Подпись к фотографиям:\n";
+
+                foreach ($data["messages"] ?? [] as $m)
+                    $message .= $m."\n";
 
                 $message .= "\n<a href='tg://user?id=$chatId'>Перейти к чату с пользователем</a>\n";
 
