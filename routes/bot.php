@@ -314,7 +314,6 @@ BotManager::bot()
             $from = "не указан источник";
             $products = "нет продуктов";
             if (!empty($order->product_details)) {
-
                 $products = "";
 
                 foreach ($order->product_details as $detail) {
@@ -331,8 +330,12 @@ BotManager::bot()
 
                 }
             }
+            else {
+                $order->delete();
+                return;
+            }
 
-            $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
+            $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>\nДата заказа: " . Carbon::parse($order->created_at)
                     ->format("Y-m-d H:i:s");
 
             BotManager::bot()
