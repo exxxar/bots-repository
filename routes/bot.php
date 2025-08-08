@@ -4,7 +4,9 @@ use App\Facades\BotManager;
 use App\Http\Controllers\Bots\InlineBotController;
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -255,7 +257,6 @@ BotManager::bot()
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {
-            Log::info("Ошибка отправки фотографии!" . print_r($photoToSend, true) . " " . print_r($channel, true));
             BotManager::bot()->reply("Ошибка отправки фотографии!");
             return;
         }
@@ -263,7 +264,7 @@ BotManager::bot()
 
         $name = \App\Facades\BotMethods::prepareUserName($botUser);
 
-        $id = $botUser->telegram_chat_id;
+        $chatId = $botUser->telegram_chat_id;
 
         $phone = $botUser->phone ?? 'Не указан';
 
@@ -287,6 +288,49 @@ BotManager::bot()
 
         if (is_null($order)) {
 
+            $filename = "images-$chatId.json";
+            $folder = "telegram-images"; // например, папка для хранения конфигов
+            $filePath = "{$folder}/{$filename}";
+
+            $botDomain = $bot->bot_domain;
+
+            $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $chatId);
+
+            if (Storage::exists($filePath)) {
+                $config = json_decode(Storage::get($filePath), true);
+
+                BotManager::bot()
+                    ->sendChatAction(
+                        $botUser->telegram_chat_id,
+                        "upload_photo");
+            } else {
+                // Создаем структуру
+                $config = [
+                    'bot_id' => $bot->id,
+                    'link' => $link,
+                    'channel' => $bot->order_channel ?? null,
+                    'thread' => $bot->topics["response"] ?? null,
+                    'user'=>[
+                        'name'=>$name,
+                        'telegram_chat_id' => $chatId,
+                    ],
+                    'images' => [],
+                    'messages' => [],
+                ];
+
+                BotManager::bot()
+                    ->sendMessage(
+                        $botUser->telegram_chat_id,
+                        "Ваши фотографии будут отправлены администратору в течении 10 минут!");
+            }
+
+            // Добавляем file_id
+            $config['images'][] = $photoToSend;
+            $config['messages'][] = $caption;
+
+            // Сохраняем обновлённый JSON
+            Storage::put($filePath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+/*
             $keyboard = [
                 [
                     ["text" => "Работа с пользователем", "url" => $link]
@@ -309,7 +353,7 @@ BotManager::bot()
             BotManager::bot()
                 ->sendMessage(
                     $botUser->telegram_chat_id,
-                    "Спасибо! Ваше фото загружено!");
+                    "Спасибо! Ваше фото загружено!");*/
 
             return;
         }
@@ -344,7 +388,7 @@ BotManager::bot()
             ->sendPhoto(
                 $channel,
                 "#оплатачеком\n" .
-                "Идентификатор: $id\n" .
+                "Идентификатор: $chatId\n" .
                 "Пользователь: $name\n" .
                 "Телефон: $phone\n\n" .
                 "Параметры заказа:\n$text\n",
@@ -362,7 +406,7 @@ BotManager::bot()
 
         BotManager::bot()
             ->sendMessage(
-                $botUser->telegram_chat_id, "Спасибо! Ваше фото загружено!");
+                $chatId, "Спасибо! Ваше фото загружено!");
     });
 
 BotManager::bot()

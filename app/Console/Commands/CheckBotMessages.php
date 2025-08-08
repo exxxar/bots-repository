@@ -29,13 +29,94 @@ class CheckBotMessages extends Command
      */
     protected $description = 'проверка пула сообщений к админам';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle(): void
+    public function processTelegramImages()
     {
-        ini_set('max_execution_time', 30000);
+        $folder = 'telegram-images'; // Папка, где хранятся config-*.json
 
+        if (!Storage::exists($folder)) {
+            return;
+        }
+
+        $files = Storage::files($folder);
+
+        foreach ($files as $filePath) {
+            if (!str_contains($filePath, 'config-') || pathinfo($filePath, PATHINFO_EXTENSION) !== 'json') {
+                // Не конфиг — удаляем
+                Storage::delete($filePath);
+                continue;
+            }
+
+            try {
+                $content = Storage::get($filePath);
+                $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+
+                // Проверяем структуру
+                if (
+                    !isset($data['bot_id']) ||
+                    !isset($data['telegram_chat_id']) ||
+                    !isset($data['images']) ||
+                    !is_array($data['images'])
+                ) {
+                    Storage::delete($filePath);
+                    continue;
+                }
+
+                $bot = Bot::query()
+                    ->find($data["bot_id"] ?? null);
+
+                if (is_null($bot))
+                    continue;
+
+                $chatId = $data['telegram_chat_id'];
+                $fileIds = $data['images'];
+                $message = implode('\n', $data["messages"] ?? []);
+
+                if (count($fileIds) > 1) {
+                    $media = [];
+                    foreach ($fileIds as $fileId) {
+                        $media[] = [
+                            "media" => $fileId,
+                            "type" => "photo",
+                            "caption" => ""
+                        ];
+                    }
+
+                    BotMethods::bot()
+                        ->whereBot($bot)
+                        ->sendMediaGroup($chatId, json_encode($media));
+
+                    sleep(1);
+
+                    BotMethods::bot()
+                        ->whereBot($bot)
+                        ->sendMessage($chatId, $message);
+
+                }
+
+                if (count($fileIds) == 1)
+                    BotMethods::bot()
+                        ->whereBot($bot)
+                        ->sendPhoto($chatId, $message, $fileIds[0]);
+
+                sleep(1);
+                BotMethods::bot()
+                    ->whereBot($bot)
+                    ->sendMessage(
+                        $chatId,
+                        "Ваши изображения успешно доставлены администратору!"
+                    );
+
+
+            } catch (\Throwable $e) {
+
+            }
+            Storage::delete($filePath);
+        }
+
+    }
+
+    public function processTelegramMessages()
+    {
         $folder = 'chat-logs'; // Папка внутри storage/app
         $files = Storage::files($folder);
 
@@ -45,7 +126,7 @@ class CheckBotMessages extends Command
                 $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
                 $bot = Bot::query()
-                    ->find($data["bot_id"]??null);
+                    ->find($data["bot_id"] ?? null);
 
                 if (is_null($bot))
                     continue;
@@ -54,12 +135,12 @@ class CheckBotMessages extends Command
 
                 $message = "#ответ от $name:\n";
 
-                foreach ($data['messages']  ?? [] as $m)
-                    $message .= "[".Carbon::parse($m["timestamp"])->format("H:i:s")."]: ".$m["message"]."\n";
+                foreach ($data['messages'] ?? [] as $m)
+                    $message .= "[" . Carbon::parse($m["timestamp"])->format("H:i:s") . "]: " . $m["message"] . "\n";
 
                 $telegramChatId = $data['user']["telegram_chat_id"] ?? null;
 
-                $message .=  "\n<a href='tg://user?id=$telegramChatId'>Перейти к чату с пользователем</a>\n";
+                $message .= "\n<a href='tg://user?id=$telegramChatId'>Перейти к чату с пользователем</a>\n";
 
                 $link = $data["link"] ?? null;
 
@@ -91,6 +172,18 @@ class CheckBotMessages extends Command
             Storage::delete($file);
         }
 
+    }
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): void
+    {
+        ini_set('max_execution_time', 30000);
+
+        $this->processTelegramMessages();
+
+        $this->processTelegramImages();
 
         ini_set('max_execution_time', 300);
     }
