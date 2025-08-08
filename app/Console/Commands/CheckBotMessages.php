@@ -52,10 +52,10 @@ class CheckBotMessages extends Command
 
                 $name = $data['user']["name"] ?? 'Пользователь';
 
-                $message = "#ответ от $name\n";
+                $message = "#ответ от $name:\n";
 
                 foreach ($data['messages']  ?? [] as $m)
-                    $message .= "[".$m["timestamp"]."]:".$m["message"]."\n";
+                    $message .= "[".$m["timestamp"]."]: ".$m["message"]."\n";
 
                 $telegramChatId = $data['user']["telegram_chat_id"] ?? null;
 
