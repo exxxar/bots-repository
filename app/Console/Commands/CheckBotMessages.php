@@ -79,6 +79,8 @@ class CheckBotMessages extends Command
 
                 $link = $data["link"] ?? null;
 
+                Log::info("fileIds".print_r($fileIds, true));
+                Log::info("message=>".$message);
                 if (count($fileIds) > 1) {
                     $media = [];
                     foreach ($fileIds as $fileId) {
@@ -126,8 +128,8 @@ class CheckBotMessages extends Command
                     );
 
 
-            } catch (\Throwable $e) {
-
+            } catch (\Exception $e) {
+                Log::info($e);
             }
             Storage::delete($filePath);
         }
