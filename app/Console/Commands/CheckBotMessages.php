@@ -69,7 +69,15 @@ class CheckBotMessages extends Command
 
                 $chatId = $data['telegram_chat_id'];
                 $fileIds = $data['images'];
+
+                $channel = $data["channel"] ?? null;
+                $thread = $data["thread"] ?? null;
+
                 $message = implode('\n', $data["messages"] ?? []);
+
+                $message .= "\n<a href='tg://user?id=$chatId'>Перейти к чату с пользователем</a>\n";
+
+                $link = $data["link"] ?? null;
 
                 if (count($fileIds) > 1) {
                     $media = [];
@@ -83,20 +91,31 @@ class CheckBotMessages extends Command
 
                     BotMethods::bot()
                         ->whereBot($bot)
-                        ->sendMediaGroup($chatId, json_encode($media));
+                        ->sendMediaGroup($channel, json_encode($media), $thread);
 
                     sleep(1);
 
                     BotMethods::bot()
                         ->whereBot($bot)
-                        ->sendMessage($chatId, $message);
+                        ->sendInlineKeyboard($channel, $message,
+                            [
+                                [
+                                    ["text" => "Ответить через бота", "url" => $link]
+                                ]
+                            ],
+                            $thread);
 
                 }
 
                 if (count($fileIds) == 1)
                     BotMethods::bot()
                         ->whereBot($bot)
-                        ->sendPhoto($chatId, $message, $fileIds[0]);
+                        ->sendPhoto($channel, $message, $fileIds[0],
+                            [
+                                [
+                                    ["text" => "Ответить через бота", "url" => $link]
+                                ]
+                            ], $thread);
 
                 sleep(1);
                 BotMethods::bot()

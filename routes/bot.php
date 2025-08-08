@@ -246,13 +246,7 @@ BotManager::bot()
 
         }
 
-
         $caption = !is_null($caption) ? $caption : 'Без подписи';
-
-        /*if (!str_contains($caption, "оплата")) {
-            BotManager::bot()->reply("Фотография в описании должна содержать ключевое слово, например: оплата");
-            return;
-        }*/
 
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
@@ -260,7 +254,6 @@ BotManager::bot()
             BotManager::bot()->reply("Ошибка отправки фотографии!");
             return;
         }
-
 
         $name = \App\Facades\BotMethods::prepareUserName($botUser);
 
@@ -287,10 +280,9 @@ BotManager::bot()
 
 
         if (is_null($order)) {
-
             $filename = "images-$chatId.json";
-            $folder = "telegram-images"; // например, папка для хранения конфигов
-            $filePath = "{$folder}/{$filename}";
+            $folder = "telegram-images";
+            $filePath = "$folder/$filename";
 
             $botDomain = $bot->bot_domain;
 
@@ -304,7 +296,6 @@ BotManager::bot()
                         $botUser->telegram_chat_id,
                         "upload_photo");
             } else {
-                // Создаем структуру
                 $config = [
                     'bot_id' => $bot->id,
                     'link' => $link,
