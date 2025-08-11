@@ -32,7 +32,8 @@
         "spatie/laravel-permission": "^6.4",
         "tightenco/ziggy": "^1.0",
         "vkcom/vk-php-sdk": "^5.131",
-        "yandex/geo": "^1.2"
+        "yandex/geo": "^1.2",
+      "ext-openssl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -108,6 +108,7 @@ trait HasSettings
         "min_price" => 100,
         "price_per_km" => 100,
         "min_price_for_cashback" => 2000,
+        "is_edit_mode" => false,
         "is_disabled" => false,
         "can_use_card" => false,
         "can_use_cash" => true,

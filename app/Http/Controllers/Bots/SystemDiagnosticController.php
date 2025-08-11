@@ -748,9 +748,12 @@ class SystemDiagnosticController extends Controller
         $thread = $bot->topics["reviews"] ?? null;
         /*
                 if ($value <= 2)*/
+
+        $tmpUserLink = "\n<a href='tg://user?id=$botUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n";
+
         BotManager::bot()
             ->sendMessage($bot->order_channel ?? null,
-                "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!",
+                "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!$tmpUserLink",
                 $thread
             );
 

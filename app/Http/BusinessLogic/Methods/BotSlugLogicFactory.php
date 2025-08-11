@@ -332,6 +332,7 @@ class BotSlugLogicFactory extends BaseLogicFactory
         $data["can_use_card"] = (($data["can_use_card"] ?? false) == "true");
         $data["can_use_sbp"] = (($data["can_use_sbp"] ?? false) == "true");
         $data["is_disabled"] = (($data["is_disabled"] ?? false) == "true");
+        $data["is_edit_mode"] = (($data["is_edit_mode"] ?? false) == "true");
         $data["can_buy_after_closing"] = (($data["can_buy_after_closing"] ?? false) == "true");
         $data["need_pay_after_call"] = (($data["need_pay_after_call"] ?? false) == "true");
         $data["need_hide_disabled_products"] = (($data["need_hide_disabled_products"] ?? false) == "true");

@@ -143,6 +143,7 @@ class CashBackListener
 
         if ($event->directionEnum == CashBackDirectionEnum::Debiting) {
             if ($cashBack->amount - $event->amount < 0) {
+                sleep(1);
                 BotMethods::bot()
                     ->whereBot($bot)
                     ->sendMessage(
@@ -198,11 +199,12 @@ class CashBackListener
                     "С вашего счета успешно списано <b>$event->amount руб.</b> CashBak. Списание произвел администратор $tmpAdmin",
                 );
             sleep(1);
+            $tmpUserLink = "\n<a href='tg://user?id=$botUserUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n";
             BotMethods::bot()
                 ->whereId($event->botId)
                 ->sendMessage(
                     $channel,
-                    "Администратор $tmpAdmin успешно списал <b>  $event->amount руб.</b> CashBak у пользователя $tmpUser", $thread
+                    "Администратор $tmpAdmin успешно списал <b>  $event->amount руб.</b> CashBak у пользователя $tmpUser $tmpUserLink", $thread
                 );
 
         }
@@ -272,11 +274,12 @@ class CashBackListener
 
             sleep(1);
 
+            $tmpUserLink = "\n<a href='tg://user?id=$userBotUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n";
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
                     $channel,
-                    "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> ($levelIndex уровня) CashBaсk пользователю $name", $thread
+                    "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> ($levelIndex уровня) CashBaсk пользователю $name $tmpUserLink", $thread
                 );
         }
 

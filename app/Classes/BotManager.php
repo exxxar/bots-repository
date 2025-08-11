@@ -195,12 +195,12 @@ class BotManager extends BotCore
 
         $this
             ->replyPhoto("\xF0\x9F\x9A\xA8В данный момент сервис временно недосутепн! Обратитесь в тех. поддержку:\xF0\x9F\x9A\xA8\n\n<em><b>$message</b></em>",
-                InputFile::create(public_path() . "/images/maintenance.png"),
-                [
+                InputFile::create(public_path() . "/images/maintenance.png")
+              /*  [
                     [
                         ["text" => "\xF0\x9F\x9A\xA7Написать в тех. поддержку", "url" => "https://t.me/Risha_358"]
                     ]
-                ]
+                ]*/
             );
 
         return BotStatusEnum::InMaintenance;
@@ -251,7 +251,7 @@ class BotManager extends BotCore
             Log::info("change webhook url $serverUrl");
             $botUrl = ($serverUrl ?? env("APP_URL")) . "/bot/" . $bot->bot_domain;
 
-            $token =  $bot->bot_token ;
+            $token = $bot->bot_token;
 
             $telegramUrl = "https://api.telegram.org/bot$token/setWebhook?url=$botUrl";
             Log::info("change webhook url telegram url=$telegramUrl");
@@ -440,10 +440,11 @@ class BotManager extends BotCore
 
             $this->sendInlineKeyboard($bot->order_channel ?? null,
                 "#лог_действий_на_странице\n" .
-                (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n") . "Страница: $pageName\n<a href='tg://user?id=$botUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n",
+                "Действие от $tgName:\n" .
+                "Страница: $pageName\n\n<a href='tg://user?id=$botUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n",
                 [
                     [
-                        ["text" => "Написать пользователю сообщение", "url" => $link]
+                        ["text" => "Ответить от имени бота", "url" => $link]
                     ]
                 ],
                 $thread
@@ -727,8 +728,8 @@ class BotManager extends BotCore
 
         $content = str_replace(["{{referralQr}}"], $qr, $content);
 
-        if ($botUser->is_admin||$botUser->is_manager) {
-            $link = "https://t.me/$bot->bot_domain?start=" .base64_encode("000PAGE" . $page->id);
+        if (($botUser->is_admin || $botUser->is_manager) && ($bot->config["is_edit_mode"] ?? false)) {
+            $link = "https://t.me/$bot->bot_domain?start=" . base64_encode("000PAGE" . $page->id);
             $content .= "\n\n<a href='$link'>Редактировать</a>";
         }
 

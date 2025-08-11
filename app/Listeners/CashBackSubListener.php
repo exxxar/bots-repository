@@ -113,7 +113,12 @@ class CashBackSubListener
                 ->sendMessage(
                     $botUserUser->telegram_chat_id,
                     "Вам начислили <b>$tmpAmount руб.</b> CashBack в категории \"$event->title\"",
-                )
+                );
+
+            sleep(1);
+
+            BotMethods::bot()
+                ->whereId($event->botId)
                 ->sendMessage(
                     $botUserAdmin->telegram_chat_id,
                     "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name в категории \"$event->title\"",
@@ -135,20 +140,20 @@ class CashBackSubListener
 
 
             if ($event->needUserReview)
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendInlineKeyboard(
-                    $botUserUser->telegram_chat_id,
-                    "Пожалуйста, поставьте оценку нашей работе!", [
-                        [
-                            ["text" => "😡", "callback_data" => "/send_review 0"],
-                            ["text" => "😕", "callback_data" => "/send_review 1"],
-                            ["text" => "😐", "callback_data" => "/send_review 2"],
-                            ["text" => "🙂", "callback_data" => "/send_review 3"],
-                            ["text" => "😁", "callback_data" => "/send_review 4"],
+                BotMethods::bot()
+                    ->whereBot($bot)
+                    ->sendInlineKeyboard(
+                        $botUserUser->telegram_chat_id,
+                        "Пожалуйста, поставьте оценку нашей работе!", [
+                            [
+                                ["text" => "😡", "callback_data" => "/send_review 0"],
+                                ["text" => "😕", "callback_data" => "/send_review 1"],
+                                ["text" => "😐", "callback_data" => "/send_review 2"],
+                                ["text" => "🙂", "callback_data" => "/send_review 3"],
+                                ["text" => "😁", "callback_data" => "/send_review 4"],
+                            ]
                         ]
-                    ]
-                );
+                    );
         }
 
         if ($event->directionEnum == CashBackDirectionEnum::Debiting) {
@@ -158,7 +163,11 @@ class CashBackSubListener
                     ->sendMessage(
                         $botUserAdmin->telegram_chat_id,
                         "На специальном счету \"$cashBackSub->title\" клиента недостаточно CashBack для списания.На балансе <b>$cashBackSub->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>"
-                    )
+                    );
+
+                sleep(1);
+                BotMethods::bot()
+                    ->whereId($event->botId)
                     ->sendMessage(
                         $botUserUser->telegram_chat_id,
                         "На вашем cпециальном счету \"$cashBackSub->title\" недостаточно CashBack для списания.У вас <b>$cashBackSub->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>",
@@ -191,7 +200,10 @@ class CashBackSubListener
                 ->sendMessage(
                     $botUserAdmin->telegram_chat_id,
                     "Вы успешно списали <b>  $event->amount руб.</b> CashBack у пользователя $tmpUser с его специального счета",
-                )
+                );
+            sleep(1);
+            BotMethods::bot()
+                ->whereId($event->botId)
                 ->sendMessage(
                     $botUserUser->telegram_chat_id,
                     "С вашего специального счета \"$cashBackSub->title\" успешно списано <b>$event->amount руб.</b> CashBack. Списание произвел администратор $tmpAdmin",
@@ -207,10 +219,11 @@ class CashBackSubListener
 
             $thread = $bot->topics["cashback"] ?? null;
 
+            sleep(1);
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
-                    $bot->order_channel ??  null,
+                    $bot->order_channel ?? null,
                     "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
                     $thread
                 );

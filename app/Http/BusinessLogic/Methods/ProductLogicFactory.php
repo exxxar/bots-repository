@@ -1018,11 +1018,13 @@ class ProductLogicFactory extends BaseLogicFactory
 
         $thread = $this->bot->topics["delivery"] ?? null;
 
+        $tmpUserLink = "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
+
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
                 $this->bot->order_channel ?? null,
-                "$message\n\n$userInfo",
+                "$message\n\n$userInfo\n$tmpUserLink",
                 $keyboard,
                 $thread
             );

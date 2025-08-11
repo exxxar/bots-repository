@@ -8,6 +8,15 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
         <div class="form-check form-switch mb-2">
             <input class="form-check-input"
                    type="checkbox"
+                   v-model="form.is_edit_mode"
+                   role="switch" id="script-settings-is_edit_mode">
+            <label class="form-check-label" for="script-settings-is_edit_mode">Режим редактирования страниц: <span
+                v-bind:class="{'text-primary fw-bold':!form.is_edit_mode}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':form.is_edit_mode}">выкл</span></label>
+        </div>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
                    v-model="form.is_disabled"
                    role="switch" id="script-settings-is_disabled">
             <label class="form-check-label" for="script-settings-is_disabled">Состояние магазина: <span
@@ -493,6 +502,7 @@ export default {
                 main_text: null,
                 delivery_price_text: null,
                 min_price: 80,
+                is_edit_mode: false,
                 is_disabled: false,
                 can_buy_after_closing: false,
                 can_use_cash: true,

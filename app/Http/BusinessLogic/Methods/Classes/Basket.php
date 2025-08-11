@@ -266,7 +266,7 @@ class Basket
                 "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано');
 
         sleep(1);
-        if ($hasPhoto)
+        if ($hasPhoto) {
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendPhoto(
@@ -274,23 +274,23 @@ class Basket
                     $tmpMessage,
                     InputFile::create(storage_path() . "/app/$imageName"),
                     [
-                        /*   [
-                               ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                           ],*/
                         [
                             ["text" => "✉Работа с пользователем", "url" => $userProfileLink]
                         ],
 
                     ]
-                )->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message\n$userLink");
-        else
+                );
+
+            sleep(1);
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage($channel, "Детали заказа №:" . ($order->id ?? '-') . "\n$message\n$userLink");
+        } else
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendInlineKeyboard($channel, "#оплатаналичными\n$message\n$userLink",
                     [
-                        /*  [
-                              ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                          ],*/
+
                         [
                             ["text" => "✉Работа с пользователем", "url" => $userProfileLink]
                         ],
@@ -471,6 +471,7 @@ class Basket
             $productMessage .= "\nИтого c доставкой: <b>" . (($summaryPrice + $deliveryPrice) - $discountItem->discount) . " руб.</b>";
         }
 
+        $productMessage .= "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
 
         switch ($paymentType) {
             case 0:
@@ -687,7 +688,7 @@ class Basket
                 ]
             ],
             'product_count' => $summaryCount,
-            'summary_price' =>  $summaryPrice - $discountItem->discount,
+            'summary_price' => $summaryPrice - $discountItem->discount,
             'delivery_price' => $deliverySum ?? 0,
             'delivery_range' => 0,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
@@ -788,7 +789,9 @@ class Basket
         }
 
         $productMessage .= $this->gsPrepareFromInfo($order, $discountItem->discount ?? 0);
+        $tmpUserLink = "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
 
+        $productMessage .= $tmpUserLink;
         //  $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
         $this->gsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order, $productMessage);

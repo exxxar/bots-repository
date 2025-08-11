@@ -52,11 +52,33 @@ return [
     */
 
     'channels' => [
-        'stack' => [
+
+        'critical_file' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/critical.log'),
+            'level' => 'critical',
+        ],
+        'error_file' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/critical.log'),
+            'level' => 'error',
+        ],
+        'warning_file' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/warning.log'),
+            'level' => 'warning',
+        ],
+        // info и log
+        'info_file' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/info.log'),
+            'level' => 'info',
+        ],
+  /*      'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
             'ignore_exceptions' => false,
-        ],
+        ],*/
 
         'single' => [
             'driver' => 'single',
@@ -125,6 +147,10 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => ['critical_file', 'warning_file', 'error_file','info_file'],
         ],
     ],
 

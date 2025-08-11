@@ -340,11 +340,17 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $messageToAdmin .= "\n<b>Информация о призе:</b>\n" .
             "Описание приза: " . ($winnerDescription ?? 'не указано');
 
+        $tmpUserLink = "\n<a href='tg://user?id=$botUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n";
+
+        $messageToAdmin .= $tmpUserLink;
 
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
-                ->telegram_chat_id, $winMessage)
+                ->telegram_chat_id, $winMessage);
+        sleep(1);
+        BotMethods::bot()
+            ->whereDomain($bot->bot_domain)
             ->sendInlineKeyboard($callbackChannel,
                 $messageToAdmin, [
                     [
@@ -536,7 +542,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->setBot($bot)
             ->setBotUser($botUser)
             ->setConfig([
-                "wheel_of_fortune"=>$tmp
+                "wheel_of_fortune" => $tmp
             ]);
 
         return new BotMenuSlugResource($slug);
@@ -629,7 +635,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
      * @return \Illuminate\Http\JsonResponse
      * @throws HttpException
      */
-    protected function extractedPreparedPrizes(mixed $bot, mixed $botUser,mixed  $slug): \Illuminate\Http\JsonResponse
+    protected function extractedPreparedPrizes(mixed $bot, mixed $botUser, mixed $slug): \Illuminate\Http\JsonResponse
     {
         if (is_null($bot) || is_null($botUser) || is_null($slug))
             throw new HttpException("Не заданы необходимые параметры функции", 400);

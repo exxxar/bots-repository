@@ -157,7 +157,10 @@ class CashBackSystemListener
                     ->sendMessage(
                         $botUserAdmin->telegram_chat_id,
                         "На специальном счету \"$cashBackSub->title\" клиента недостаточно CashBack для списания.На балансе <b>$cashBackSub->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>"
-                    )
+                    );
+                sleep(1);
+                BotMethods::bot()
+                    ->whereId($event->botId)
                     ->sendMessage(
                         $botUserUser->telegram_chat_id,
                         "На вашем cпециальном счету \"$cashBackSub->title\" недостаточно CashBack для списания.У вас <b>$cashBackSub->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>",
@@ -190,7 +193,12 @@ class CashBackSystemListener
                 ->sendMessage(
                     $botUserAdmin->telegram_chat_id,
                     "Вы успешно списали <b>  $event->amount руб.</b> CashBack у пользователя $tmpUser с его специального счета",
-                )
+                );
+
+            sleep(1);
+
+            BotMethods::bot()
+                ->whereId($event->botId)
                 ->sendMessage(
                     $botUserUser->telegram_chat_id,
                     "С вашего специального счета \"$cashBackSub->title\" успешно списано <b>$event->amount руб.</b> CashBack. Списание произвел администратор $tmpAdmin",
@@ -206,6 +214,7 @@ class CashBackSystemListener
 
             $thread = $bot->topics["cashback"] ?? null;
 
+            sleep(1);
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
