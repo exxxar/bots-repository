@@ -73,6 +73,8 @@ class CheckBotLogs extends Command
         $this->processAndDeleteLogFiles('logs', function ($filePath, $name) use ($bot) {
             $content = File::get($filePath);
 
+            $content = mb_convert_encoding($content, 'UTF-8', mb_detect_encoding($content, 'UTF-8, ISO-8859-1, ASCII', true));
+
             $name = explode('.', $name)[0] ?? $name;
 
             $callbackChannel = env("LOGGER_BOT_CHANNEL");
