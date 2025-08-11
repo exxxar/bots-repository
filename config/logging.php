@@ -73,6 +73,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/info.log'),
             'level' => 'info',
+            'tap' => [App\Logging\FilterInfoOnly::class],
         ],
   /*      'stack' => [
             'driver' => 'stack',
