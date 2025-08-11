@@ -93,7 +93,7 @@ class CheckBotLogs extends Command
                     $thread = env('LOGGER_BOT_CHANNEL_INFO_THREAD');
                     break;
             }
-
+            sleep(1);
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendDocument(
