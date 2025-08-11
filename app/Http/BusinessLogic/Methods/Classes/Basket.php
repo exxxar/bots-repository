@@ -471,7 +471,7 @@ class Basket
             $productMessage .= "\nИтого c доставкой: <b>" . (($summaryPrice + $deliveryPrice) - $discountItem->discount) . " руб.</b>";
         }
 
-        $productMessage .= "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
+        $productMessage .= "\n\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
 
         switch ($paymentType) {
             case 0:

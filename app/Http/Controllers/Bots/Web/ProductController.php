@@ -162,6 +162,62 @@ class ProductController extends Controller
         return response()->noContent();
     }
 
+    private function ensureCityPrefix(string $address): string {
+        // Список признаков города / населённого пункта
+        $patterns = [
+            '/\bг\.\b/ui',        // г.
+            '/\bгород\b/ui',      // город
+            '/\bс\.\b/ui',        // с.
+            '/\bсело\b/ui',       // село
+            '/\bпос\.\b/ui',      // пос.
+            '/\bпос[её]лок\b/ui', // поселок / посёлок
+            '/\bпгт\b/ui',        // пгт
+        ];
+
+        // Проверка наличия признака
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $address)) {
+                return trim($address);
+            }
+        }
+
+        // Если признака нет — добавляем "г."
+        return 'г. ' . trim($address);
+    }
+
+    private function ensureStreetPrefix(string $street): string {
+        // Список признаков улицы
+        $patterns = [
+            '/\bул\.\b/ui',          // ул.
+            '/\bулица\b/ui',         // улица
+            '/\bпр-т\b/ui',          // пр-т
+            '/\bпросп\.\b/ui',       // просп.
+            '/\bпроспект\b/ui',      // проспект
+            '/\bпер\.\b/ui',         // пер.
+            '/\bпереулок\b/ui',      // переулок
+            '/\bбул\.\b/ui',         // бул.
+            '/\bбульвар\b/ui',       // бульвар
+            '/\bпроезд\b/ui',        // проезд
+            '/\bш\.\b/ui',           // ш.
+            '/\bшоссе\b/ui',         // шоссе
+            '/\bнаб\.\b/ui',         // наб.
+            '/\bнабережная\b/ui',    // набережная
+            '/\bпл\.\b/ui',          // пл.
+            '/\bплощадь\b/ui',       // площадь
+            '/\bтракт\b/ui',         // тракт
+            '/\bтуп\.\b/ui',         // туп.
+            '/\bтупик\b/ui',         // тупик
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $street)) {
+                return trim($street);
+            }
+        }
+
+        return 'ул. ' . trim($street);
+    }
+
     /**
      * @throws ValidationException
      */
@@ -194,12 +250,14 @@ class ProductController extends Controller
             ->first())["value"] ?? 100;
 
 
+        $city = $this->ensureCityPrefix($request->city ?? "");
+        $street = $this->ensureStreetPrefix($request->street ?? "");
 
         $geo = BusinessLogic::geo()
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
             ->getCoords([
-                "address" => (($request->city ?? "") . ", " . ($request->street ?? "") . ", " . ($request->building ?? ""))
+                "address" => ("$city, $street, " . ($request->building ?? ""))
             ]);
 
         if (($geo->lat ?? 0) > 0 && ($geo->lon ?? 0) > 0) {

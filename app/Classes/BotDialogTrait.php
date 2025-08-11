@@ -630,7 +630,7 @@ trait BotDialogTrait
             . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
             . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
             . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n"
-            . "\n<a href='tg://user?id=$botUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n"
+            . "\n\n<a href='tg://user?id=$botUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n"
             . "Данные из диалога:\n";
 
         if ($sendByText) {

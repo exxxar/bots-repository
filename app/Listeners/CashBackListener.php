@@ -274,7 +274,7 @@ class CashBackListener
 
             sleep(1);
 
-            $tmpUserLink = "\n<a href='tg://user?id=$userBotUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n";
+            $tmpUserLink = "\n\n<a href='tg://user?id=$userBotUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n";
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
