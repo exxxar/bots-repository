@@ -271,7 +271,7 @@ BotManager::bot()
                 'bot_id' => $bot->id,
                 'link' => $link,
                 'channel' => $bot->order_channel ?? null,
-                'thread' => $bot->topics["response"] ?? null,
+                'thread' => ($botUser->in_dialog_mode ?? false) ? $bot->topics["questions"] ?? null : $bot->topics["response"] ?? null,
                 'user' => [
                     'name' => $name,
                     'telegram_chat_id' => $chatId,

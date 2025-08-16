@@ -18,7 +18,14 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
         <div class="navbar shadow shadow-sm">
             <div class="container flex-row-reverse p-2">
 
-                <p class="mb-0  fw-bold d-flex flex-column"
+                <a
+                    @click="goTo('ProfileV2')"
+                    class="badge bg-primary btn"
+                    href="javascript:void(0)">
+                    {{self.cashBack?.amount || 0}} <i class="fa-solid fa-ruble-sign"></i>
+                </a>
+
+                <p class="mb-0  fw-bold d-flex flex-column align-items-center"
                    style="font-size:12px;"
                    v-if="bot.company">
                     <span v-if="bot.company.address" class="text-primary">
@@ -254,6 +261,9 @@ export default {
         },
         bot() {
             return window.currentBot
+        },
+        self(){
+          return window.self
         },
         preparedMenuItem() {
             if (!this.bot.settings)

@@ -12,10 +12,9 @@
                 <button
                     type="button"
                     class="btn btn-primary flex-shrink-0"
-                    @click="need_search=!need_search"
+                    @click="openCategoryModal"
                 >
-                    <i v-if="!need_search" class="fa-solid fa-magnifying-glass"></i>
-                    <i v-else class="fa-solid fa-xmark"></i>
+                    <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
 
                 <!-- Комбо-меню -->
@@ -43,27 +42,59 @@
         </div>
 
 
-        <template v-if="need_search">
-            <div class="input-group mt-2">
-                <div class="form-floating">
-                    <input
-                        @click="findProducts"
-                        type="search"
-                        v-model="search"
-                        class="form-control"
-                        id="searchInput"
-                        placeholder="Поиск по товарам"
-                    >
-                    <label for="searchInput">Поиск по товарам</label>
+
+
+
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="category-list-2-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Категории</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <button class="btn btn-primary" type="button" @click="findProducts">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
+                <div class="modal-body">
+                    <div class="row  mb-2">
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="form-floating">
+                                    <input
+
+                                        type="search"
+                                        v-model="search"
+                                        class="form-control"
+                                        id="searchInput"
+                                        placeholder="Поиск по товарам"
+                                    >
+                                    <label for="searchInput">Поиск по товарам</label>
+                                </div>
+                                <button class="btn btn-primary" type="button" @click="findProducts">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-cols-1">
+
+                        <div class="col mb-2" v-for="item in categories">
+                            <button
+                                type="button"
+                                :key="item.id"
+                                class="btn btn-outline-secondary flex-shrink-0 w-100 d-flex justify-content-between"
+                                @click="selectCategory(item)"
+                            >
+                                {{ item.title || 'Не указано' }}
+                                <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ item.count || 0 }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-
-        </template>
-
+        </div>
     </div>
 </template>
 
@@ -74,6 +105,7 @@ export default {
         return {
             search: null,
             need_search: false,
+            category_modal:null,
         }
     },
     props: {
@@ -99,14 +131,22 @@ export default {
             deep: true
         },
     },
-
+    mounted(){
+        this.category_modal = new bootstrap.Modal(document.getElementById('category-list-2-modal'), {
+            backdrop:false
+        })
+    },
     methods: {
+        openCategoryModal(){
+          this.category_modal.show()
+        },
         findProducts() {
             this.$emit("search", this.search)
+            this.category_modal.hide()
         },
         selectCategory(item) {
             this.$emit('select', item)
-
+            this.category_modal.hide()
             // Скролл к якорю
             let anchorId
 

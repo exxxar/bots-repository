@@ -187,7 +187,7 @@ export default {
         },
 
         canSubmitForm() {
-            let sumIsValid = !this.deliveryForm.use_cashback ?
+            let sumIsValid = !this.deliveryForm?.use_cashback ?
                 this.cartTotalPrice >= (this.settings.min_price || 0) :
                 this.cartTotalPrice - cashbackLimit() > (this.settings.min_price || 0)
 

@@ -182,7 +182,7 @@ class ProductController extends Controller
         }
 
         // Если признака нет — добавляем "г."
-        return 'г. ' . trim($address);
+        return 'город ' . trim($address);
     }
 
     private function ensureStreetPrefix(string $street): string {
@@ -215,7 +215,7 @@ class ProductController extends Controller
             }
         }
 
-        return 'ул. ' . trim($street);
+        return 'улица ' . trim($street);
     }
 
     /**
@@ -253,12 +253,15 @@ class ProductController extends Controller
         $city = $this->ensureCityPrefix($request->city ?? "");
         $street = $this->ensureStreetPrefix($request->street ?? "");
 
+        $address = "$city, $street, " . ($request->building ?? "");
+
         $geo = BusinessLogic::geo()
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
             ->getCoords([
-                "address" => ("$city, $street, " . ($request->building ?? ""))
+                "address" => $address
             ]);
+
 
         if (($geo->lat ?? 0) > 0 && ($geo->lon ?? 0) > 0) {
             $tmpDistance = BusinessLogic::geo()
@@ -267,6 +270,14 @@ class ProductController extends Controller
                 ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
             $distance = floatval($tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0);
+
+            if ($distance>100)
+                return response()->json([
+                    "distance" => 0,
+                    "price" => 0,
+                    "address"=>  $address
+                ], 404);
+
             return response()->json([
                 "distance" => $distance,
                 "price" => round($min_base_delivery_price + $distance * $price_per_km, 2)
@@ -276,8 +287,9 @@ class ProductController extends Controller
 
         return response()->json([
             "distance" => 0,
-            "price" => 0
-        ], 400);
+            "price" => 0,
+            "address"=>  $address
+        ], 404);
     }
 
 
