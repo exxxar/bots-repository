@@ -21,7 +21,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 <a
                     @click="goTo('ProfileV2')"
                     class="badge bg-primary btn"
-                    v-if="loaded_casshback"
+                    v-if="loaded_cashback"
                     href="javascript:void(0)">
                     {{cashback || 0}} <i class="fa-solid fa-ruble-sign"></i>
                 </a>
