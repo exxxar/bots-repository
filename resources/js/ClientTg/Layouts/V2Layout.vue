@@ -21,9 +21,9 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 <a
                     @click="goTo('ProfileV2')"
                     class="badge bg-primary btn"
-                    v-if="self"
+                    v-if="loaded_casshback"
                     href="javascript:void(0)">
-                    {{self.cashBack?.amount || 0}} <i class="fa-solid fa-ruble-sign"></i>
+                    {{cashback || 0}} <i class="fa-solid fa-ruble-sign"></i>
                 </a>
 
                 <p class="mb-0  fw-bold d-flex flex-column align-items-center"
@@ -233,6 +233,8 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+            loaded_cashback:false,
+            cashback:0,
             install_modal: null,
             currentTheme: '',
             themes: []
@@ -296,8 +298,11 @@ export default {
 
     mounted() {
 
+        this.loaded_cashback = false
         this.$store.dispatch("loadSelf").then(() => {
             window.self = this.getSelf
+            this.cashback = this.getSelf.cashBack?.amount || 0
+            this.loaded_cashback = true
         })
 
         /*    this.tg.checkHomeScreenStatus((resp) => {
