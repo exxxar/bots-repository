@@ -21,6 +21,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 <a
                     @click="goTo('ProfileV2')"
                     class="badge bg-primary btn"
+                    v-if="self"
                     href="javascript:void(0)">
                     {{self.cashBack?.amount || 0}} <i class="fa-solid fa-ruble-sign"></i>
                 </a>
@@ -263,7 +264,7 @@ export default {
             return window.currentBot
         },
         self(){
-          return window.self
+          return window.self || null
         },
         preparedMenuItem() {
             if (!this.bot.settings)
@@ -294,6 +295,10 @@ export default {
     },
 
     mounted() {
+
+        this.$store.dispatch("loadSelf").then(() => {
+            window.self = this.getSelf
+        })
 
         /*    this.tg.checkHomeScreenStatus((resp) => {
                 let needInstall = localStorage.getItem("cashman_need_install_" + (this.bot.bot_domain || 'any_bot')) || null

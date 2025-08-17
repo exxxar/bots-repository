@@ -42,10 +42,6 @@
         </div>
 
 
-
-
-
-
     </div>
 
     <!-- Modal -->
@@ -84,7 +80,7 @@
                             <button
                                 type="button"
                                 :key="item.id"
-                                class="btn btn-outline-secondary flex-shrink-0 w-100 d-flex justify-content-between"
+                                class="btn py-3 btn-outline-secondary flex-shrink-0 w-100 d-flex justify-content-between"
                                 @click="selectCategory(item)"
                             >
                                 {{ item.title || 'Не указано' }}

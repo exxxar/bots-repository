@@ -139,9 +139,7 @@ export default {
           );*/
         window.currentScript = this.slug_id || null
 
-        this.$store.dispatch("loadSelf").then(() => {
-            window.self = this.getSelf
-        })
+
 
         this.$notify({
             title: 'Главная',

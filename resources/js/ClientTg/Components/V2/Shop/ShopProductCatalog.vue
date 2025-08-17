@@ -7,6 +7,8 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
 import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 import CategorySlider from "@/ClientTg/Components/V2/Shop/CategorySlider.vue";
+
+import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 </script>
 <template>
 
@@ -22,6 +24,7 @@ import CategorySlider from "@/ClientTg/Components/V2/Shop/CategorySlider.vue";
         />
 
     </menu>
+
 
     <div
          class="d-flex flex-column">
@@ -153,6 +156,14 @@ import CategorySlider from "@/ClientTg/Components/V2/Shop/CategorySlider.vue";
                         </div>
                     </template>
 
+
+                    <template
+                        v-if="(stories||[]).length>0">
+                        <h5 class="my-4 divider" id="cat-combo">Наши новинки</h5>
+                        <StoryList
+                            :stories="stories||[]"/>
+                    </template>
+
                     <template
                         v-if="filteredCategories.length>0"
                         v-for="cat in filteredCategories">
@@ -213,6 +224,7 @@ export default {
     props: ["settings"],
     data() {
         return {
+            stories: [],
             tab: 1,
             load_content: false,
             load_collection: false,
@@ -261,7 +273,7 @@ export default {
         ...mapGetters([
             'inCart',
             'inCollectionCart',
-
+            'getStories',
             'getCollections',
             'getCollectionsPaginateObject',
             'getProducts',
@@ -371,6 +383,7 @@ export default {
 
         window.addEventListener('scroll', handleScroll)
 
+        this.loadStories()
 
         //this.clearCart();
         this.loadProducts()
@@ -390,6 +403,14 @@ export default {
         })
     },
     methods: {
+        loadStories() {
+            this.$store.dispatch("loadStories")
+                .then((resp) => {
+
+                    this.stories = this.getStories || []
+
+                })
+        },
         findProducts(text){
           this.search = text
         },
