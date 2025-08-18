@@ -55,7 +55,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
         </a>
     </div>
 
-    <template v-if="(settings.need_bonuses_section||false)&&cashbackLimit>0">
+
+    <template v-if="(settings.need_bonuses_section||false)&&cashbackLimit()>0">
         <h6 class="opacity-75">Бонусы <small>(нажми для использования)</small></h6>
 
         <div class="card my-3"
@@ -65,7 +66,7 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                 class="card-body">
                 <p class="d-flex justify-content-between mb-0">
                     <span> Списать баллы</span>
-                    <strong>{{ cashbackLimit }}₽</strong>
+                    <strong>{{ cashbackLimit() }}₽</strong>
                 </p>
             </div>
         </div>
@@ -74,6 +75,7 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 </template>
 <script>
 import {mapGetters} from "vuex";
+import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 
 export default {
     props: ["modelValue"],

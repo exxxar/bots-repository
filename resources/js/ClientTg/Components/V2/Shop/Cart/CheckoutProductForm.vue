@@ -20,6 +20,8 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
         <h6 class="opacity-75">Способы оплаты</h6>
         <PaymentTypes v-model="deliveryForm"></PaymentTypes>
 
+
+
         <h6 class="opacity-75 mb-3">Информация</h6>
         <DeliveryForm
             v-model="deliveryForm"

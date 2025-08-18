@@ -1,3 +1,7 @@
+<script setup>
+import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
+</script>
+
 <template>
     <div
         v-if="settings"
@@ -6,12 +10,12 @@
         <div
             v-if="categories.length>0||collections.length > 0"
             v-bind:style="colorTheme"
-            class="container-slider-wrapper p-2">
+            class="container-slider-wrapper p-2 d-flex align-items-start">
             <div class="d-flex overflow-auto category-slider gap-2">
                 <!-- Все категории -->
                 <button
                     type="button"
-                    class="btn btn-primary flex-shrink-0"
+                    class="btn btn-primary flex-shrink-0 mr-2"
                     @click="openCategoryModal"
                 >
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -74,7 +78,17 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row row-cols-1">
+<div class="col">
+    <CategoryList
+        :selected="categories"
+        v-on:select="selectCategory"/>
+</div>
+                    </div>
+
+
+<!--                    <div class="row row-cols-1">
 
                         <div class="col mb-2" v-for="item in categories">
                             <button
@@ -87,7 +101,7 @@
                                 <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ item.count || 0 }}</span>
                             </button>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>

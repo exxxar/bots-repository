@@ -1,5 +1,6 @@
 <script setup>
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
+
 </script>
 <template>
 
