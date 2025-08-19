@@ -209,11 +209,11 @@
       "_index.es-800d80e2.js"
     ]
   },
-  "_V1Layout-69ff1448.js": {
+  "_V1Layout-c73823b2.js": {
     "css": [
       "assets/V1Layout-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-69ff1448.js",
+    "file": "assets/V1Layout-c73823b2.js",
     "imports": [
       "_index.es-800d80e2.js",
       "resources/js/ClientTg/app.js"
@@ -746,11 +746,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-45add5fd.js",
+    "file": "assets/MainV1-0a6e4824.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-800d80e2.js",
-      "_V1Layout-69ff1448.js",
+      "_V1Layout-c73823b2.js",
       "resources/js/ClientTg/app.js",
       "_vue3-simple-typeahead-28cb397a.js",
       "_vue3-json-editor.esm.prod-c06c32c7.js",
@@ -788,9 +788,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-6ce3fa5b.js",
+    "file": "assets/Result-d5e44792.js",
     "imports": [
-      "_V1Layout-69ff1448.js",
+      "_V1Layout-c73823b2.js",
       "resources/js/ClientTg/app.js",
       "_index.es-800d80e2.js",
       "_vue3-simple-typeahead-28cb397a.js",
@@ -850,7 +850,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-15e3526b.js",
+    "file": "assets/CashBack-2d280568.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-800d80e2.js",
@@ -880,9 +880,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Fastoran/Main.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-3ff708f3.js",
+    "file": "assets/Result-4643268b.js",
     "imports": [
-      "_V1Layout-69ff1448.js",
+      "_V1Layout-c73823b2.js",
       "_index.es-800d80e2.js",
       "resources/js/ClientTg/app.js",
       "_vue3-simple-typeahead-28cb397a.js",
@@ -902,12 +902,12 @@
     "src": "resources/js/ClientTg/Pages/V2/Result.vue"
   },
   "resources/js/ClientTg/app.css": {
-    "file": "assets/app-ebe50e5b.css",
+    "file": "assets/app-62dbda3d.css",
     "src": "resources/js/ClientTg/app.css"
   },
   "resources/js/ClientTg/app.js": {
     "css": [
-      "assets/app-ebe50e5b.css"
+      "assets/app-62dbda3d.css"
     ],
     "dynamicImports": [
       "resources/js/ClientTg/Pages/MainV1.vue",
@@ -921,7 +921,7 @@
       "resources/js/ClientTg/Pages/V2/Fastoran/Main.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-3f4715f3.js",
+    "file": "assets/app-ff4bc426.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_vue3-simple-typeahead-28cb397a.js",
