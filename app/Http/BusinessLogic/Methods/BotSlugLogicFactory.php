@@ -344,6 +344,8 @@ class BotSlugLogicFactory extends BaseLogicFactory
         $data["free_shipping_starts_from"] = (int)($data["free_shipping_starts_from"] ?? 0);
         $data["min_base_delivery_price"] = (int)($data["min_base_delivery_price"] ?? 0);
         $data["wheel_of_fortune"] = json_decode($data["wheel_of_fortune"] ?? '[]');
+        $data["init_certificate"] = json_decode($data["init_certificate"] ?? '[]');
+
         $data["sbp"] = json_decode($data["sbp"] ?? '[]');
 
         if (!is_null($data["payment_token"] ?? null)) {

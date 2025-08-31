@@ -28,7 +28,8 @@ use Telegram\Bot\FileUpload\InputFile;
 class StartCodesHandlerController extends Controller
 {
 
-    public function addTableOfficiant(...$data){
+    public function addTableOfficiant(...$data)
+    {
         $bot = BotManager::bot()
             ->getSelf();
 
@@ -179,7 +180,6 @@ class StartCodesHandlerController extends Controller
         $product = Product::query()
             ->where("id", $productId)
             ->first();
-
 
 
         BotMethods::bot()
@@ -602,6 +602,22 @@ class StartCodesHandlerController extends Controller
             'bot_id' => $bot->id,
             'activated' => true,
         ]);
+
+        $certificate = $bot->config->init_certificate ?? null;
+
+        if (!is_null($certificate)) {
+
+            $certificate = (object)$certificate;
+
+            if ($certificate->is_active ?? false)
+                BusinessLogic::promoCodes()
+                    ->setBot($bot)
+                    ->setBotUser($botUser)
+                    ->generateFreeCertificate(
+                        $certificate->title ?? 'Промокод на приз',
+                        $certificate->description ?? 'Промокод не найден'
+                    );
+        }
 
         $userName1 = BotMethods::prepareUserName($botUser);
         $userName2 = BotMethods::prepareUserName($userBotUser);

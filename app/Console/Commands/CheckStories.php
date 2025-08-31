@@ -41,7 +41,7 @@ class CheckStories extends Command
             $createdAt = Carbon::parse($story->created_at);
             $now = Carbon::now();
 
-            if ($createdAt->lessThan($now) && $createdAt->diffInSeconds($now) > 172800) {
+            if ($createdAt->lessThan($now) && $createdAt->diffInSeconds($now) > 2592000) {
                $story->delete();
             }
         }

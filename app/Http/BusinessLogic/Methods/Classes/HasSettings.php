@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 trait HasSettings
 {
     private array $defaultConfig = [
-        "self_updated"=>false,
+        "self_updated" => false,
         "theme" => "/theme6.bootstrap.min.css",
         "themes" => [
             [
@@ -102,9 +102,16 @@ trait HasSettings
 
 
         ],
+        "init_certificate" => [
+            "title" => "Подарочный сертификат",
+            "description" => "500 рублей на CashBack",
+            "amount" => 500,
+            "type" => "cashback",
+            "is_active"=>false,
+        ],
         "delivery_price_text" => "Цена доставки рассчитывается курьером",
         "disabled_text" => "Временно недоступно!",
-        "can_work_in_marketplace"=>false,
+        "can_work_in_marketplace" => false,
         "min_price" => 100,
         "price_per_km" => 100,
         "min_price_for_cashback" => 2000,
@@ -205,20 +212,20 @@ trait HasSettings
             ],
             "sber" => null
         ],
-        "base_payment_service"=>[
-            "needs"=>[
-                "need_name"=>true,
-                "need_phone_number"=>true,
-                "need_email"=>false,
-                "need_shipping_address"=>false,
-                "send_phone_number_to_provider"=>false,
-                "send_email_to_provider"=>false,
-                "is_flexible"=>false,
-                "disable_notification"=>false,
-                "protect_content"=>false,
+        "base_payment_service" => [
+            "needs" => [
+                "need_name" => true,
+                "need_phone_number" => true,
+                "need_email" => false,
+                "need_shipping_address" => false,
+                "send_phone_number_to_provider" => false,
+                "send_email_to_provider" => false,
+                "is_flexible" => false,
+                "disable_notification" => false,
+                "protect_content" => false,
             ],
-            "checkout_title"=>"Заказ товара",
-            "checkout_description"=>"Ваш товар"
+            "checkout_title" => "Заказ товара",
+            "checkout_description" => "Ваш товар"
 
         ],
         "free_shipping_starts_from" => 0,
@@ -290,7 +297,7 @@ trait HasSettings
             }
 
             if (!is_null($tmp["icons"] ?? null)) {
-                $tmp['icons'] = is_string($tmp['icons'])? (array)(json_decode($tmp['icons'])):$tmp['icons'] ;
+                $tmp['icons'] = is_string($tmp['icons']) ? (array)(json_decode($tmp['icons'])) : $tmp['icons'];
                 foreach ($tmp['icons'] as &$icon) {
                     foreach ($default["icons"][0] as $key => $defaultValue) {
                         if (!array_key_exists($key, (array)$icon)) {
@@ -302,11 +309,11 @@ trait HasSettings
             }
 
             if (!is_null($tmp["base_payment_service"] ?? null)) {
-                $tmp['base_payment_service'] = is_string($tmp['base_payment_service'])? (array)(json_decode($tmp['base_payment_service'])):$tmp['base_payment_service'] ;
+                $tmp['base_payment_service'] = is_string($tmp['base_payment_service']) ? (array)(json_decode($tmp['base_payment_service'])) : $tmp['base_payment_service'];
             }
 
             if (!is_null($tmp["themes"] ?? null)) {
-                $tmp['themes'] = is_string($tmp['themes'])? (array)(json_decode($tmp['themes'])):$tmp['themes'] ;
+                $tmp['themes'] = is_string($tmp['themes']) ? (array)(json_decode($tmp['themes'])) : $tmp['themes'];
             }
 
 
@@ -340,11 +347,11 @@ trait HasSettings
 
         $config = $this->validateConfig($this->bot->config ?? []);
 
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $config[$key] = $value;
         }
 
-        $config["self_updated"]=true;
+        $config["self_updated"] = true;
         $this->bot->config = $config;
         $this->bot->save();
 

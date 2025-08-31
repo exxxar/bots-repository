@@ -15,6 +15,13 @@
                    placeholder="+7(000)000-00-00" required>
             <label for="deliveryForm-phone">Номер телефона <span class="fw-bold text-danger">*</span></label>
         </div>
+        <div class="form-floating">
+            <textarea class="form-control"
+                      v-model="deliveryForm.info"
+                      style="height:200px;line-height:150%;"
+                      placeholder="Информация" id="deliveryForm-info"></textarea>
+            <label for="deliveryForm-info">Информация для сотрудника</label>
+        </div>
     </template>
 
 

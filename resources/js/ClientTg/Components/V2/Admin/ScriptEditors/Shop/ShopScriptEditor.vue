@@ -2,6 +2,7 @@
 import ShopWheelForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopWheelForm.vue";
 import ShopForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopForm.vue";
 import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/CompanyForm.vue";
+import CertificateForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/CertificateForm.vue";
 </script>
 <template>
 
@@ -15,7 +16,16 @@ import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/Co
                     @click="tab=0"
                     style="line-height:100%;white-space: nowrap;"
                     v-bind:class="{'active':tab===0}"
-                    aria-current="page"><i class="fa-solid fa-scroll mr-2"></i>Магазин
+                    aria-current="page"><i class="fa-solid fa-scroll mr-2"></i> Магазин
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-info  btn p-3"
+                    @click="tab=3"
+                    style=";line-height:100%;white-space: nowrap;"
+                    v-bind:class="{'active':tab===3}"
+                    aria-current="page"><i class="fa-solid fa-certificate mr-2"></i> Реферальный сертификат
                 </button>
 
                 <button
@@ -24,7 +34,7 @@ import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/Co
                     @click="tab=2"
                     style=";line-height:100%;white-space: nowrap;"
                     v-bind:class="{'active':tab===2}"
-                    aria-current="page"><i class="fa-solid fa-coins mr-2"></i>Юридические данные
+                    aria-current="page"><i class="fa-solid fa-coins mr-2"></i> Юридические данные
                 </button>
 
                 <button
@@ -33,7 +43,7 @@ import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/Co
                     @click="tab=1"
                     style="line-height:100%;white-space: nowrap;"
                     v-bind:class="{'active':tab===1}"
-                    aria-current="page"><i class="fa-solid fa-users mr-2"></i>Интерактив в магазине
+                    aria-current="page"><i class="fa-solid fa-users mr-2"></i> Интерактив в магазине
                 </button>
 
 
@@ -48,6 +58,17 @@ import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/Co
             <ShopForm
                 v-if="form"
                 v-model="form"></ShopForm>
+
+            <button
+                style="z-index: 100;"
+                type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
+            </button>
+        </div>
+
+        <div v-if="tab===3" class="py-3">
+            <CertificateForm
+                v-if="form"
+                v-model="form"></CertificateForm>
 
             <button
                 style="z-index: 100;"
