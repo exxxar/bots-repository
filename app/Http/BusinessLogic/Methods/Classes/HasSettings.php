@@ -243,11 +243,9 @@ trait HasSettings
     {
         $normalizedConfig = [];
 
-        // Определяем формат
         $isKeyValueArray = isset($inputConfig[0]['key']) && isset($inputConfig[0]['value']);
 
         if ($isKeyValueArray) {
-            // Преобразуем массив формата [{"key": ..., "value": ...}, ...] в обычный ассоциативный
             foreach ($inputConfig as $item) {
                 if (isset($item['key']) && array_key_exists('value', $item)) {
                     $normalizedConfig[$item['key']] = $item['value'];
@@ -257,18 +255,7 @@ trait HasSettings
             $normalizedConfig = $inputConfig;
         }
 
-        // Валидируем и дополняем конфиг
-        $validatedConfig = [];
-
-        foreach ($this->defaultConfig as $key => $defaultValue) {
-            if (array_key_exists($key, $normalizedConfig)) {
-                $validatedConfig[$key] = $normalizedConfig[$key];
-            } else {
-                $validatedConfig[$key] = $defaultValue;
-            }
-        }
-
-        return $validatedConfig;
+        return $normalizedConfig;
     }
 
     public function getConfig(): array
@@ -345,6 +332,7 @@ trait HasSettings
             throw new HttpException(400, "Не заданы необходимые параметры функции");
         }
 
+        // Получаем текущий конфиг без дефолтов
         $config = $this->validateConfig($this->bot->config ?? []);
 
         foreach ($data as $key => $value) {
