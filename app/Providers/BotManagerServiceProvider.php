@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Classes\BotManager;
+use App\Classes\BotMessageService;
 use App\Classes\BotMethods;
 use App\Classes\InlineQueryCore;
 use App\Classes\StartCodesCore;
@@ -19,6 +20,7 @@ class BotManagerServiceProvider extends ServiceProvider
         $this->app->bind('bot.methods', fn () => new BotMethods());
         $this->app->bind('codes.service', fn () => new StartCodesCore());
         $this->app->bind('inline.query.service', fn () => new InlineQueryCore());
+        $this->app->bind('bot.messages', fn () => new BotMessageService());
     }
 
     /**

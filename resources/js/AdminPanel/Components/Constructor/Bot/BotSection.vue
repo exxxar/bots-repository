@@ -21,6 +21,7 @@ import InlineQuery from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQ
 import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCodes.vue";
 import FrontPadForm from "@/AdminPanel/Components/Constructor/FrontPad/FrontPadForm.vue";
 import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.vue";
+import MessageTable from "@/AdminPanel/Components/Constructor/SystemMessages/MessageTable.vue";
 </script>
 <template>
 
@@ -144,6 +145,11 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
             v-if="!load"/>
     </div>
 
+    <div v-if="step===20" class="pb-5 mb-5 pt-2">
+        <MessageTable
+            v-if="!load"/>
+    </div>
+
     <div class="row pb-5 mb-5" v-if="step===4">
         <div class="col-12 col-md-12" v-if="!load">
             <Page
@@ -241,6 +247,8 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
                     class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
                 <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(3)"><i
                     class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(20)"><i
+                    class="fa-solid fa-users mr-2"></i>Настройка системных сообщений</a></li>
 
                 <h6>Интеграции</h6>
                 <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(7)"><i

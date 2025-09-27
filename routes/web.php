@@ -1,6 +1,7 @@
 <?php
 
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -26,14 +27,36 @@ use Telegram\Bot\FileUpload\InputFile;
 |
 */
 
+Route::get("/bottest", [\App\Http\Controllers\Globals\FastoranController::class, "shopList"]);
 
-Route::get("/bottest", [\App\Http\Controllers\Globals\FastoranController::class,"shopList"]);
+Route::get("/test", function () {
 
-Route::get("/test", function (){
-    Log::critical('Сервер упал!'); // → critical.log
-    Log::warning('Подозрительное поведение'); // → warning.log
-    Log::error('Ошибочное поведение'); // → warning.log
-    Log::info('Пользователь вошёл в систему'); // → info.log
+
+    $bot = Bot::query()
+        ->where("bot_domain", "nextitgroup_bot")
+        ->first();
+
+    $certificate = $bot->config->init_certificate ?? null;
+
+    Log::info("certificate" . print_r($certificate, true));
+
+    $certificate = (object)$certificate;
+
+    $botUser = \App\Models\BotUser::query()
+        ->where("telegram_chat_id", env("debug_bot_user"))
+        ->where("bot_id", $bot->id)
+        ->first();
+
+    BusinessLogic::promoCodes()
+        ->setBot($bot)
+        ->setBotUser($botUser)
+        ->generateFreeCertificate(
+            $certificate->title ?? 'Промокод на приз',
+            $certificate->description ?? 'Промокод не найден'
+        );
+
+    dd($certificate);
+
 });
 Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);
 Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);

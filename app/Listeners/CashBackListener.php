@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
+use App\Facades\BotMessages;
 use App\Facades\BotMethods;
 use App\Models\Bot;
 use App\Models\BotUser;
@@ -23,12 +24,14 @@ class CashBackListener
 
     protected $warnText;
 
+
     /**
      * Create the event listener.
      */
     public function __construct()
     {
         $this->warnText = "";
+
     }
 
     /**
@@ -43,6 +46,7 @@ class CashBackListener
         $bot = Bot::query()
             ->where("id", $event->botId)
             ->first();
+
 
         if (is_null($bot))
             return;
@@ -69,12 +73,16 @@ class CashBackListener
         $botUserUser->location_comment = null;
         $botUserUser->save();
 
+
+        $m = BotMessages::query($bot)
+            ->setBotUser($botUserUser);
+
         if (!$botUserAdmin->is_admin) {
             BotMethods::bot()
                 ->whereId($event->botId)
                 ->sendMessage(
                     $botUserAdmin->telegram_chat_id,
-                    "Вы не являетесь администратором данного бота! Данное действие недоступно!",
+                    $m->message("not_admin"),
                 );
             return;
         }
@@ -129,7 +137,7 @@ class CashBackListener
                     ->whereBot($bot)
                     ->sendInlineKeyboard(
                         $botUserUser->telegram_chat_id,
-                        "Пожалуйста, поставьте оценку нашей работе!", [
+                        $m->message("need_review_mark"), [
                             [
                                 ["text" => "😡", "callback_data" => "/send_review 0"],
                                 ["text" => "😕", "callback_data" => "/send_review 1"],
@@ -219,13 +227,13 @@ class CashBackListener
             sleep(1);
 
 
-                BotMethods::bot()
-                    ->whereBot($bot)
-                    ->sendMessage(
-                        $bot->order_channel ?? null,
-                        "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
-                        $thread
-                    );
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $bot->order_channel ?? null,
+                    "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
+                    $thread
+                );
         }
 
 

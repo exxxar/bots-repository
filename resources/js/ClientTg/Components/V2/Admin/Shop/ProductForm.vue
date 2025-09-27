@@ -17,8 +17,8 @@
                                 <input class="form-check-input"
                                        v-model="productForm.in_stop_list_at"
                                        type="checkbox"
-                                       value="false" id="in-stop-list">
-                                <label class="form-check-label" for="in-stop-list">
+                                       value="false" :id="'in-stop-list-'+(productForm.id||'new')">
+                                <label class="form-check-label" :for="'in-stop-list-'+(productForm.id||'new')">
                                     Товар находится в стоп-листе
                                 </label>
                             </div>

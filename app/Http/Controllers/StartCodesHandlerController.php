@@ -605,6 +605,8 @@ class StartCodesHandlerController extends Controller
 
         $certificate = $bot->config->init_certificate ?? null;
 
+        Log::info("certificate".print_r($certificate, true));
+
         if (!is_null($certificate)) {
 
             $certificate = (object)$certificate;

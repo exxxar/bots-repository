@@ -550,6 +550,13 @@ class ProductController extends Controller
             ->removeAllProducts();*/
     }
 
+    public function stopList(Request $request, $productId): ProductResource
+    {
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->stopList($productId);
+    }
+
     public function restore(Request $request, $productId): ProductResource
     {
         return BusinessLogic::products()

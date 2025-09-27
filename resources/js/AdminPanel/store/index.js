@@ -14,6 +14,7 @@ import quizzes from './modules/quiz';
 import promoCodes from './modules/promocodes';
 import inlineQueries from './modules/inline_queries';
 import mailing from './modules/mailing';
+import messages from './modules/messages';
 import util from "@/AdminPanel/store/modules/utilites";
 
 
@@ -219,6 +220,7 @@ export default createStore({
         media,
         inlineQueries,
         promoCodes,
+        messages,
         mailing
     }
 })

@@ -129,7 +129,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                                         @click="openRestoreModal(product)"
                                         href="javascript:void(0)">Восстановить товар</a></li>
                                     <li><a class="dropdown-item"
-
+                                           @click="openStopListModal(product)"
                                            href="javascript:void(0)">Добавить в стоп-лист</a></li>
                                 </ul>
                             </div>
@@ -363,6 +363,27 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="stop-list-modal"
+         data-bs-backdrop="static"
+         tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6 class="text-center my-3">Вы действительно хотите добавить этот товар в стоплист?</h6>
+                    <div class="d-flex justify-content-center">
+                        <button type="button"
+                                style="margin-right:10px;"
+                                class="btn btn-primary px-3 mr-2" @click="addToStopListProduct">Да</button>
+                        <button type="button" class="btn btn-secondary px-3" @click="hideStopListModal">Нет</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -377,6 +398,7 @@ export default {
             products: [],
             reviews: [],
             modal: null,
+            accept_stop_list_modal: null,
             accept_remove_modal: null,
             accept_restore_modal: null,
             add_product_modal: null,
@@ -429,6 +451,7 @@ export default {
         this.accept_remove_modal = new bootstrap.Modal(document.getElementById('remove-modal'), {})
         this.accept_restore_modal = new bootstrap.Modal(document.getElementById('restore-modal'), {})
         this.add_product_modal = new bootstrap.Modal(document.getElementById('add-product-modal'), {})
+        this.accept_stop_list_modal = new bootstrap.Modal(document.getElementById('stop-list-modal'), {})
     },
     methods: {
 
@@ -446,6 +469,13 @@ export default {
 
 
 
+        },
+        openStopListModal(product) {
+            this.selected_product = null
+            this.$nextTick(() => {
+                this.selected_product = product
+                this.accept_stop_list_modal.show();
+            })
         },
         openRemoveModal(product) {
 
@@ -491,6 +521,9 @@ export default {
             })
 
         },
+        hideStopListModal() {
+            this.accept_stop_list_modal.hide()
+        },
         hideRestoreModal() {
             this.accept_restore_modal.hide()
         },
@@ -530,12 +563,36 @@ export default {
                     search: this.search,
                     direction: this.sort.direction,
                     order_by: this.sort.param,
-                    need_removed: this.need_removed
+                    need_removed: this.need_removed,
+                    need_all: true,
                 },
                 page: page
             }).then(() => {
                 this.products = this.getProducts
                 this.paginate = this.getProductsPaginateObject
+            })
+        },
+        addToStopListProduct(){
+            if (!this.selected_product)
+                return
+
+            this.$store.dispatch("addToStopListProduct", this.selected_product.id)
+                .then((resp) => {
+                    // this.hideModal()
+                    this.hideStopListModal()
+
+                    this.loadProducts()
+
+                    this.$notify({
+                        title: 'Редактор товара',
+                        text: 'Товар успешно восстановлен',
+                        type: 'success'
+                    })
+
+                }).catch(() => {
+                // this.hideModal()
+                this.hideStopListModal()
+                this.loadProducts()
             })
         },
         restoreProduct(){
@@ -545,7 +602,7 @@ export default {
             this.$store.dispatch("restoreProduct", this.selected_product.id)
                 .then((resp) => {
                     // this.hideModal()
-                    this.hideRemoveModal()
+                    this.hideRestoreModal()
 
                     this.loadProducts()
 

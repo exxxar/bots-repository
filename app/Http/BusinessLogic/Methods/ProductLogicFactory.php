@@ -266,7 +266,7 @@ class ProductLogicFactory extends BaseLogicFactory
             'old_price' => $data["old_price"] ?? 0,
             'current_price' => $data["current_price"] ?? 0,
             'variants' => $variants,
-            'in_stop_list_at' => ($data["in_stop_list_at"] ?? false) == "true" ? Carbon::now() : null,
+
             'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true" ? Carbon::now() : false,
             'bot_id' => $data["bot_id"] ?? $this->bot->id,
             'dimension' => is_null($data["dimension"] ?? null) ?
@@ -284,6 +284,13 @@ class ProductLogicFactory extends BaseLogicFactory
             $product = Product::query()
                 ->with(["productCategories", "productOptions"])
                 ->create($tmp);
+
+
+        if (!is_null($data["in_stop_list_at"] ?? null)) {
+            $product->in_stop_list_at = $data["in_stop_list_at"] == "true" ? Carbon::now() : null;
+            $product->save();
+        }
+
 
 
         $options = $data["options"] ?? null;
@@ -382,6 +389,29 @@ class ProductLogicFactory extends BaseLogicFactory
         }
 
         return new ProductCategoryResource($category);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function stopList($productId): ProductResource
+    {
+        $product = Product::query()
+            ->withTrashed()
+            ->find($productId);
+
+        if (is_null($product))
+            throw new HttpException(404, "Продукт не найден");
+
+
+        if (is_null($product->in_stop_list))
+            $product->in_stop_list_at = Carbon::now();
+        else
+            $product->in_stop_list_at = null;
+
+        $product->save();
+
+        return new ProductResource($product);
     }
 
     /**

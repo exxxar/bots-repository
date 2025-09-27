@@ -299,6 +299,16 @@ Route::prefix("admin")
                 Route::get("/restore/{companyId}", "restore");
             });
 
+
+        Route::prefix("system-messages")
+            ->controller(\App\Http\Controllers\Admin\MessageServiceController::class)
+            ->middleware(["role:manager"])
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/message-update", "update")->middleware(["role:admin"]);
+            });
+
+
         Route::prefix("slugs")
             ->controller(\App\Http\Controllers\Admin\BotMenuSlugController::class)
             ->middleware(["role:manager"])

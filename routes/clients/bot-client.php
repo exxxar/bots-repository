@@ -385,6 +385,9 @@ Route::prefix("bot-client")
                 Route::post("/products/{productId}", [ProductController::class, "getProduct"]);
                 Route::post("/products/restore-product/{productId}", [ProductController::class, "restore"])
                     ->middleware(["tgAuth.admin"]);
+                Route::post("/products/stop-list-product/{productId}", [ProductController::class, "stopList"])
+                    ->middleware(["tgAuth.admin"]);
+
                 Route::delete("/products/{productId}", [ProductController::class, "destroy"])
                     ->middleware(["tgAuth.admin"]);
 
