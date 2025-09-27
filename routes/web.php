@@ -36,11 +36,13 @@ Route::get("/test", function () {
         ->where("bot_domain", "dpnrouter_bot")
         ->first();
 
-    $certificate = $bot->config->init_certificate ?? null;
-
-    Log::info("certificate" . print_r($certificate, true));
+    $certificate = $bot->config->init_certificate ?? $bot->config["init_certificate"] ?? null;
 
     $certificate = (object)$certificate;
+
+    Log::info("certificate" . print_r($bot->config, true));
+    Log::info("certificate data" . print_r($certificate, true));
+
 
     $botUser = \App\Models\BotUser::query()
         ->where("telegram_chat_id", env("DEBUG_BOT_USER"))
