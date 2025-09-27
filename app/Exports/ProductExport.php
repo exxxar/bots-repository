@@ -70,7 +70,7 @@ class ProductExport implements FromCollection, WithHeadings, WithMapping
             $product->title,
             $product->delivery_terms,
             $product->description,
-            implode(',',$product->images),
+          print_r($product->images, true),
             $product->type,
             $product->rating,
             $product->old_price,
