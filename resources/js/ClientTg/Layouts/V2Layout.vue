@@ -26,7 +26,9 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                     {{cashback || 0}} <i class="fa-solid fa-ruble-sign"></i>
                 </a>
 
-                <p class="mb-0  fw-bold d-flex flex-column align-items-center"
+                <span
+                    class="text-primary">{{ bot.title || 'Магазин' }}</span>
+<!--                <p class="mb-0  fw-bold d-flex flex-column align-items-center"
                    style="font-size:12px;"
                    v-if="bot.company">
                     <span v-if="bot.company.address" class="text-primary">
@@ -41,7 +43,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 </p>
                 <p class="mb-0 text-primary"
                    style="font-size:12px;"
-                   v-else>{{ bot.title || 'Бот' }}</p>
+                   v-else>{{ bot.title || 'Бот' }}</p>-->
                 <button class="btn btn-link rounded-0 border-0 p-1" type="button"
                         data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu">
                     <span class="navbar-toggler-icon"></span>

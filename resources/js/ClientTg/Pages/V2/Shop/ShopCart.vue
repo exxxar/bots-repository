@@ -51,7 +51,10 @@ import {canBy} from "@/ClientTg/utils/commonMethods.js";
 
     </div>
 
-    <div v-else class="d-flex flex-column justify-content-center align-items-center" style="height:100vh;">
+    <div v-else
+         v-touch:swipe.left="doSwipeLeft"
+         v-touch:swipe.right="doSwipeRight"
+         class="d-flex flex-column justify-content-center align-items-center" style="height:100vh;">
         <div class="d-flex justify-content-center flex-column align-items-center">
             <i class="fa-brands fa-shopify mb-3" style="font-size:36px;"></i>
             <p>Корзина пустая:(</p>
