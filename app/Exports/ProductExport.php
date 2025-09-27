@@ -75,10 +75,10 @@ class ProductExport implements FromCollection, WithHeadings, WithMapping
             $product->rating,
             $product->old_price,
             $product->current_price,
-            implode(',',$product->variants),
+            json_encode($product->variants),
             optional($product->in_stop_list_at)->format('Y-m-d H:i:s'),
             $product->not_for_delivery ? 'Yes' : 'No',
-            implode(',',$product->dimension),
+            json_encode($product->dimension),
             $product->bot_id,
             optional($product->deleted_at)->format('Y-m-d H:i:s'),
         ];
