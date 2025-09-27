@@ -539,9 +539,9 @@ export const simpleRoutes = [
     },
     {
         name: 'CatalogV2',
-        path: simplePrefix + '/catalog',
+        path: simplePrefix + '/menu',
         component: CatalogV2,
-        meta: {title: 'Каталог'}
+        meta: {title: 'Меню магазина'}
     },
     {
         name: 'WaiterCatalogV2',
@@ -599,9 +599,9 @@ export const simpleRoutes = [
     },
     {
         name: 'MenuV2',
-        path: simplePrefix + '/menu',
+        path: simplePrefix + '/catalog',
         component: MenuV2,
-        meta: {title: 'Меню системы'}
+        meta: {title: 'Каталог сервисов'}
     },
     {
         name: 'TableMenuV2',
