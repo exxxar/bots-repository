@@ -33,7 +33,7 @@ Route::get("/test", function () {
 
 
     $bot = Bot::query()
-        ->where("bot_domain", "nextitgroup_bot")
+        ->where("bot_domain", "dpnrouter_bot")
         ->first();
 
     $certificate = $bot->config->init_certificate ?? null;
@@ -43,7 +43,7 @@ Route::get("/test", function () {
     $certificate = (object)$certificate;
 
     $botUser = \App\Models\BotUser::query()
-        ->where("telegram_chat_id", env("debug_bot_user"))
+        ->where("telegram_chat_id", env("DEBUG_BOT_USER"))
         ->where("bot_id", $bot->id)
         ->first();
 
