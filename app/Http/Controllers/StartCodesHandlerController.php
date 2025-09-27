@@ -603,13 +603,12 @@ class StartCodesHandlerController extends Controller
             'activated' => true,
         ]);
 
-        $certificate = $bot->config->init_certificate ?? null;
+        $certificate = $bot->config->init_certificate ?? $bot->config["init_certificate"] ?? null;
 
-        Log::info("certificate".print_r($certificate, true));
+        $certificate = (object)$certificate;
+
 
         if (!is_null($certificate)) {
-
-            $certificate = (object)$certificate;
 
             if ($certificate->is_active ?? false)
                 BusinessLogic::promoCodes()
