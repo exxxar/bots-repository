@@ -27,7 +27,9 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
 
     <div
-         class="d-flex flex-column">
+        v-touch:swipe.left="doSwipeLeft"
+        v-touch:swipe.right="doSwipeRight"
+        class="d-flex flex-column">
 
         <template v-if="settings">
             <div class="p-2" v-if="settings.is_disabled">
@@ -403,6 +405,14 @@ export default {
         })
     },
     methods: {
+
+        doSwipeLeft() {
+            this.$router.push({ name: 'MenuV2' })
+        },
+        doSwipeRight() {
+            this.$router.push({ name: 'ShopCartV2' })
+
+        },
         loadStories() {
             this.$store.dispatch("loadStories")
                 .then((resp) => {
@@ -441,7 +451,7 @@ export default {
             }
             return false;
         },
-        doSwipeLeft() {
+       /* doSwipeLeft() {
             if (this.closeModalOnSwipe())
                 return;
 
@@ -465,7 +475,7 @@ export default {
 
             window.scroll(0, 80);
 
-        },
+        },*/
 
         decPersons() {
             this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;

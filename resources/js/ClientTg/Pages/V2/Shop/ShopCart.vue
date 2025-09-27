@@ -9,7 +9,10 @@ import {canBy} from "@/ClientTg/utils/commonMethods.js";
 </script>
 <template>
 
-    <div v-if="cartTotalCount>0">
+    <div
+        v-touch:swipe.left="doSwipeLeft"
+        v-touch:swipe.right="doSwipeRight"
+        v-if="cartTotalCount>0">
         <template v-if="tab===0">
             <CartProductList
                 v-on:select-prize="selectPrize"
@@ -230,6 +233,15 @@ export default {
 
     },
     methods: {
+        doSwipeLeft() {
+            this.$router.push({ name: 'CatalogV2' })
+
+        },
+        doSwipeRight() {
+            this.$router.push({ name: 'MenuV2' })
+
+
+        },
         changeTab(index) {
             this.tab = index
         },

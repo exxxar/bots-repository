@@ -6,7 +6,10 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 </script>
 <template>
 
-    <div class="container py-3" v-if="getSelf">
+    <div class="container py-3"
+         v-touch:swipe.left="doSwipeLeft"
+         v-touch:swipe.right="doSwipeRight"
+         v-if="getSelf">
 
         <div
             v-if="script_data.is_disabled"
@@ -456,6 +459,14 @@ export default {
         })
     },
     methods: {
+        doSwipeLeft() {
+            this.$router.push({ name: 'ShopCartV2' })
+
+        },
+        doSwipeRight() {
+            this.$router.push({ name: 'CatalogV2' })
+
+        },
         goTo(name) {
             this.$router.push({name: name})
         },
