@@ -26,6 +26,18 @@
 <body>
 
 @if ($products)
+
+    @php
+     $maxImg = 0;
+
+     foreach ($products as $p)
+         {
+             $imagesCount = count($p->images ?? []);
+             if ($imagesCount>$maxImg)
+                 $maxImg = $imagesCount;
+         }
+
+    @endphp
     <table>
         <thead>
         <tr>
@@ -37,7 +49,9 @@
             <th>Название</th>
             <th>Условия доставки</th>
             <th>Описание</th>
-            <th>Изображения</th>
+            @for($i=0;$i<$maxImg;$i++)
+            <th>Изображение {{$i+1}}</th>
+            @endfor
             <th>Тип</th>
             <th>Рейтинг</th>
             <th>Старая цена</th>
@@ -61,11 +75,11 @@
                 <td>{{ $product->title }}</td>
                 <td>{{ $product->delivery_terms }}</td>
                 <td>{{ $product->description }}</td>
+                @for($i=0;$i<$maxImg;$i++)
                 <td>
-                    @foreach($product->images ?? [] as $img)
-                        <p>{{$img}}</p>
-                    @endforeach
+                   {{$product->images[$i] ?? ''}}
                 </td>
+                @endfor
                 <td>{{ $product->type }}</td>
                 <td>{{ $product->rating }}</td>
                 <td>{{ $product->old_price }}</td>
