@@ -3,7 +3,7 @@
 import {Head} from '@inertiajs/vue3'
 import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
-
+import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
 </script>
 <template>
 
@@ -221,6 +221,15 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                    style="font-size:12px;"
                    v-else>{{ bot.title || 'Бот' }}</p>
 
+                    <div
+                        v-if="!isWork"
+                        class="my-3 alert alert-primary" role="alert">
+                        В данный момент мы <span class="text-primary fw-bold">не работаем</span>.
+                        Вы можете ознакомиться с нашим
+                        <span
+                            data-bs-toggle="modal" data-bs-target="#schedule-list-display"
+                            class="text-primary fw-bold text-decoration-underline cursor-pointer">графиком работы</span>.
+                    </div>
 
 
                 <p class="text-center mb-3">
@@ -233,6 +242,28 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                         class="fa-solid fa-pen-to-square"></i> Редактировать</a>
                 </p>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="schedule-list-display" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">График работы</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ScheduleList
+                        v-if="bot"
+                        :schedule="bot.company.schedule"></ScheduleList>
+                    <p v-if="(getSelf||{is_admin:false}).is_admin" class="my-2 d-flex justify-content-center"><a
+                        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+                        href="javascript:void(0)" class="text-primary ml-2" style="font-size:12px;"><i
+                        class="fa-solid fa-pen-to-square"></i> редактировать</a></p>
                 </div>
             </div>
         </div>
@@ -295,6 +326,12 @@ export default {
         },
         self(){
           return window.self || null
+        },
+        isWork() {
+            if (!window.isCorrectSchedule(this.bot.company.schedule))
+                return true
+
+            return (this.bot.company || {is_work: true}).is_work
         },
         preparedMenuItem() {
             if (!this.bot.settings)
