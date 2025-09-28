@@ -28,14 +28,14 @@
 @if ($products)
 
     @php
-     $maxImg = 0;
+        $maxImg = 0;
 
-     foreach ($products as $p)
-         {
-             $imagesCount = count($p->images ?? []);
-             if ($imagesCount>$maxImg)
-                 $maxImg = $imagesCount;
-         }
+        foreach ($products as $p)
+            {
+                $imagesCount = count($p->images ?? []);
+                if ($imagesCount>$maxImg)
+                    $maxImg = $imagesCount;
+            }
 
     @endphp
     <table>
@@ -50,7 +50,7 @@
             <th>Условия доставки</th>
             <th>Описание</th>
             @for($i=0;$i<$maxImg;$i++)
-            <th>Изображение {{$i+1}}</th>
+                <th>Изображение {{$i+1}}</th>
             @endfor
             <th>Тип</th>
             <th>Рейтинг</th>
@@ -59,7 +59,10 @@
             <th>Варианты</th>
             <th>Дата остановки</th>
             <th>Не для доставки</th>
-            <th>Размеры</th>
+            <th>Размеры: высота</th>
+            <th>Размеры: ширина</th>
+            <th>Размеры: длина</th>
+            <th>Размеры: масса</th>
             <th>Bot ID</th>
             <th>Дата удаления</th>
         </tr>
@@ -76,9 +79,9 @@
                 <td>{{ $product->delivery_terms }}</td>
                 <td>{{ $product->description }}</td>
                 @for($i=0;$i<$maxImg;$i++)
-                <td>
-                   {{$product->images[$i] ?? ''}}
-                </td>
+                    <td>
+                        {{$product->images[$i] ?? ''}}
+                    </td>
                 @endfor
                 <td>{{ $product->type }}</td>
                 <td>{{ $product->rating }}</td>
@@ -91,11 +94,20 @@
                 </td>
                 <td>{{ optional($product->in_stop_list_at)->format('Y-m-d H:i:s') }}</td>
                 <td>{{ $product->not_for_delivery ? 'Yes' : 'No' }}</td>
+
+                @php
+                    $d = (array)($product->dimension ?? []);
+                    $height = $d["height"] ?? 0;
+                    $width = $d["width"] ?? 0;
+                    $length = $d["length"] ?? 0;
+                    $weight = $d["weight"] ?? 0;
+                @endphp
                 <td>
-                    @foreach($product->dimension ?? [] as $d)
-                        <p>{{$d}}</p>
-                    @endforeach
+                    {{$height}}
                 </td>
+                <td>{{$width}}</td>
+                <td>{{$length}}</td>
+                <td>{{$weight}}</td>
                 <td>{{ $product->bot_id }}</td>
                 <td>{{ optional($product->deleted_at)->format('Y-m-d H:i:s') }}</td>
             </tr>
