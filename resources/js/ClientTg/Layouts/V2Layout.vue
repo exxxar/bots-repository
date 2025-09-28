@@ -220,8 +220,20 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 <p class="mb-0 text-primary"
                    style="font-size:12px;"
                    v-else>{{ bot.title || 'Бот' }}</p>
-                </div>
 
+
+
+                <p class="text-center mb-3">
+                    <span v-html="bot.company.description"></span>
+                    <br>
+                    <a
+                        v-if="(getSelf||{is_admin:false}).is_admin"
+                        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+                        href="javascript:void(0)" class="text-primary ml-2 my-3" style="font-size:12px;"><i
+                        class="fa-solid fa-pen-to-square"></i> Редактировать</a>
+                </p>
+
+                </div>
             </div>
         </div>
     </div>
