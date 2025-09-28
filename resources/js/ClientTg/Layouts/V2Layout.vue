@@ -28,7 +28,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
                 <span
                     data-bs-toggle="modal" data-bs-target="#bot-info-modal"
-                    class="text-primary fw-bold">{{ bot.title || 'Магазин' }}</span>
+                    class="text-primary fw-bold cursor-pointer">{{ bot.title || 'Магазин' }}</span>
 
                 <button class="btn btn-link rounded-0 border-0 p-1" type="button"
                         data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu">
