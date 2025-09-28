@@ -55,7 +55,7 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
             <p class="mb-0">Рейтинг товара</p>
             <h6 class="d-flex justify-content-between mb-3">
                 <Rating :rating="product.rating"></Rating>
-                {{ product.rating }} из 5
+                {{ Math.round(product.rating) }} из 5
             </h6>
 
         </div>

@@ -17,7 +17,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                 <div class="top d-flex justify-content-between w-100 align-items-center">
                     <div class="rating w-100 p-2">
                         <span class="text-white fw-bold"><i
-                            class="fa-regular fa-star text-primary mr-1"></i> {{ item.rating || 0 }}</span>
+                            class="fa-regular fa-star text-primary mr-1"></i> {{ Math.round(item.rating || 0) }}</span>
                     </div>
 
                     <div class="terms p-2" v-if="item.delivery_terms">
@@ -163,7 +163,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                         <p class="mb-0">Рейтинг товара</p>
                         <h6 class="d-flex justify-content-between mb-3">
                             <Rating :rating="item.rating"></Rating>
-                            {{ item.rating }} из 5
+                            {{ Math.round(item.rating) }} из 5
                         </h6>
 
                     </div>
