@@ -52,7 +52,7 @@ class ProductLogicFactory extends BaseLogicFactory
     /**
      * @throws HttpException
      */
-    public function listByCategories(): ProductCategoryCollection
+    public function listByCategories()
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -70,7 +70,25 @@ class ProductLogicFactory extends BaseLogicFactory
             ->orderBy("order_position", "ASC")
             ->get();
 
-        return new ProductCategoryCollection($categories);
+        $withoutCategory = Product::query()
+            ->with(["productCategories"])
+            ->where("bot_id", $this->bot->id)
+            ->has("productCategories", "=", 0)
+            ->get();
+
+        $tmpCategory = [
+            "id" => -1,
+            "is_active" => true,
+            "order_position" => 0,
+            "title" => "Без категории",
+            "bot_id" => $this->bot->id,
+            "products" => $withoutCategory->toArray(),
+            "count" => count($withoutCategory)
+        ];
+
+        return (object)[
+            "data" => [$tmpCategory, ...($categories->toArray())]
+        ];
     }
 
 
@@ -290,7 +308,6 @@ class ProductLogicFactory extends BaseLogicFactory
             $product->in_stop_list_at = $data["in_stop_list_at"] == "true" ? Carbon::now() : null;
             $product->save();
         }
-
 
 
         $options = $data["options"] ?? null;
