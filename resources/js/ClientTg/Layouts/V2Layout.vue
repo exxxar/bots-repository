@@ -27,23 +27,9 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 </a>
 
                 <span
-                    class="text-primary">{{ bot.title || 'Магазин' }}</span>
-<!--                <p class="mb-0  fw-bold d-flex flex-column align-items-center"
-                   style="font-size:12px;"
-                   v-if="bot.company">
-                    <span v-if="bot.company.address" class="text-primary">
-                          <i class="fa-solid fa-location-dot mr-1"></i> {{ bot.company.address }}
-                    </span>
-                    <span class="text-primary" v-else>{{ bot.title || 'Магазин' }}</span>
+                    data-bs-toggle="modal" data-bs-target="#bot-info-modal"
+                    class="text-primary fw-bold">{{ bot.title || 'Магазин' }}</span>
 
-                    <span v-if="(bot.company.phones||[]).length>0"
-                          class="small d-flex justify-content-end">
-                    <a href="javascript:void(0)" class=" text-secondary fw-bold">{{ bot.company.phones[0] }}</a>
-                </span>
-                </p>
-                <p class="mb-0 text-primary"
-                   style="font-size:12px;"
-                   v-else>{{ bot.title || 'Бот' }}</p>-->
                 <button class="btn btn-link rounded-0 border-0 p-1" type="button"
                         data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu">
                     <span class="navbar-toggler-icon"></span>
@@ -208,6 +194,34 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                         </button>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="bot-info-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                                 <p class="mb-0  fw-bold d-flex flex-column align-items-center"
+                   style="font-size:12px;"
+                   v-if="bot.company">
+                    <span v-if="bot.company.address" class="text-primary">
+                          <i class="fa-solid fa-location-dot mr-1"></i> {{ bot.company.address }}
+                    </span>
+                    <span class="text-primary" v-else>{{ bot.title || 'Магазин' }}</span>
+
+                    <span v-if="(bot.company.phones||[]).length>0"
+                          class="small d-flex justify-content-end">
+                    <a href="javascript:void(0)" class=" text-secondary fw-bold">{{ bot.company.phones[0] }}</a>
+                </span>
+                </p>
+                <p class="mb-0 text-primary"
+                   style="font-size:12px;"
+                   v-else>{{ bot.title || 'Бот' }}</p>
+                </div>
+
             </div>
         </div>
     </div>
