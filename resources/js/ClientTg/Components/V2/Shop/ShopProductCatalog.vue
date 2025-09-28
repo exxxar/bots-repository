@@ -575,13 +575,13 @@ export default {
 
                 this.load_content = true
 
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.products = resp.data
                     localStorage.setItem("cashman_preloaded_products_by_categories", JSON.stringify(this.products))
                     this.load_content = false
-                    window.scroll(0, 80);
+                    if (!hasProducts)
+                        window.scroll(0, 80);
                 })
-
 
 
                 /*   this.products = this.getProducts
