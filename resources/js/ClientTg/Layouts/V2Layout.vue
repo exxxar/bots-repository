@@ -200,10 +200,10 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
     <!-- Modal -->
     <div class="modal fade" id="bot-info-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable" >
             <div class="modal-content">
 
-                <div class="modal-body">
+                <div class="modal-body" style="max-height:400px;">
                                  <p class="mb-0  fw-bold d-flex flex-column align-items-center"
                    style="font-size:12px;"
                    v-if="bot.company">
