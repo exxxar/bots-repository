@@ -26,6 +26,7 @@ import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog
         <p
             v-else
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            data-bs-toggle="modal" data-bs-target="#schedule-list-display"
             class="btn btn-secondary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between "
         >
             В данный момент покупки недоступны
