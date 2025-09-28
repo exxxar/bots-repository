@@ -80,8 +80,8 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(VueLazyLoad,
             {
-                loading: '/images/cashman.jpg',
-                error: '/images/cashman.jpg'
+                loading: '/images/cashman-lazy.jpg',
+                error: '/images/cashman-lazy.jpg'
             })
             .mount(el);
 

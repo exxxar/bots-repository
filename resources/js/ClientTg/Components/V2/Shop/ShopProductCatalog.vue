@@ -359,6 +359,7 @@ export default {
 
     mounted() {
 
+        //this.products
         const slider = document.getElementById('category-slider')
 
         const handleScroll = () => {
