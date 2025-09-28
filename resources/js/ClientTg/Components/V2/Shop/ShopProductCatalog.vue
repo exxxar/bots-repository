@@ -40,7 +40,6 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
         </template>
 
 
-
         <!--        <menu
                     v-bind:style="colorTheme"
                     class="d-block position-sticky w-100 header-category-slider">
@@ -310,16 +309,16 @@ export default {
                 return []
             }
 
-           /* if (this.search instanceof Event)
-                return this.products
+            /* if (this.search instanceof Event)
+                 return this.products
 
-            if (!this.search)
-                return this.products*/
+             if (!this.search)
+                 return this.products*/
 
 
-          // console.log("search=>", this.settings)
+            // console.log("search=>", this.settings)
 
-            const query = this.search instanceof Event || !this.search? '':this.search.toLowerCase()
+            const query = this.search instanceof Event || !this.search ? '' : this.search.toLowerCase()
 
             return this.products
                 .map(category => {
@@ -371,8 +370,8 @@ export default {
                 slider.style.left = '0'
                 slider.style.right = '0'
                 slider.style.zIndex = '1000'
-               // slider.style.backgroundColor = 'white'
-              //  slider.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
+                // slider.style.backgroundColor = 'white'
+                //  slider.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
             } else {
                 slider.style.position = 'relative'
                 slider.style.top = ''
@@ -408,10 +407,10 @@ export default {
     methods: {
 
         doSwipeLeft() {
-            this.$router.push({ name: 'MenuV2' })
+            this.$router.push({name: 'MenuV2'})
         },
         doSwipeRight() {
-            this.$router.push({ name: 'ShopCartV2' })
+            this.$router.push({name: 'ShopCartV2'})
 
         },
         loadStories() {
@@ -422,8 +421,8 @@ export default {
 
                 })
         },
-        findProducts(text){
-          this.search = text
+        findProducts(text) {
+            this.search = text
         },
         /*   checkCollectionInCart(item){
                return this.inCollectionCart(item.id, null) > 0
@@ -432,7 +431,7 @@ export default {
             // document.getElementById(id).scrollIntoView();
             var element = document.getElementById(id);
             var headerOffset = 70;
-            var elementPosition = element?.getBoundingClientRect().top||70;
+            var elementPosition = element?.getBoundingClientRect().top || 70;
             var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
             window.scroll({
                 top: offsetPosition,
@@ -452,31 +451,31 @@ export default {
             }
             return false;
         },
-       /* doSwipeLeft() {
-            if (this.closeModalOnSwipe())
-                return;
+        /* doSwipeLeft() {
+             if (this.closeModalOnSwipe())
+                 return;
 
-            let limit = 1
-            if (this.tab === 0)
-                this.tab = limit
-            else
-                this.tab--;
+             let limit = 1
+             if (this.tab === 0)
+                 this.tab = limit
+             else
+                 this.tab--;
 
-            window.scroll(0, 80);
-        },
-        doSwipeRight() {
-            if (this.closeModalOnSwipe())
-                return;
+             window.scroll(0, 80);
+         },
+         doSwipeRight() {
+             if (this.closeModalOnSwipe())
+                 return;
 
-            let limit = 1
-            if (this.tab === limit)
-                this.tab = 0
-            else
-                this.tab++;
+             let limit = 1
+             if (this.tab === limit)
+                 this.tab = 0
+             else
+                 this.tab++;
 
-            window.scroll(0, 80);
+             window.scroll(0, 80);
 
-        },*/
+         },*/
 
         decPersons() {
             this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
@@ -556,7 +555,11 @@ export default {
         },
         loadProducts(page = 0) {
             this.tab = 1
-            this.load_content = true
+
+            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories") !== null
+
+            if (hasProducts)
+                this.products = localStorage.getItem("cashman_preloaded_products_by_categories")
 
 
             return this.$store.dispatch("loadProductsByCategory"/*, {
@@ -569,11 +572,21 @@ export default {
                 page: page,
                 size: 100
             }*/).then((resp) => {
-                this.products = resp.data
+
+                this.load_content = true
+
+                this.$nextTick(()=>{
+                    this.products = resp.data
+                    localStorage.setItem("cashman_preloaded_products_by_categories", JSON.stringify(this.products))
+                    this.load_content = false
+                    window.scroll(0, 80);
+                })
+
+
+
                 /*   this.products = this.getProducts
                    this.paginate = this.getProductsPaginateObject*/
-                this.load_content = false
-                window.scroll(0, 80);
+
             }).catch(() => {
                 this.load_content = false
 
