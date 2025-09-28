@@ -559,7 +559,7 @@ export default {
             let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories") !== null
 
             if (hasProducts)
-                this.products = localStorage.getItem("cashman_preloaded_products_by_categories")
+                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories"))
 
 
             return this.$store.dispatch("loadProductsByCategory"/*, {
