@@ -111,8 +111,10 @@ class ProductLogicFactory extends BaseLogicFactory
         $products = $products->with(["productCategories", "productOptions"])
             ->where("bot_id", $this->bot->id);
 
-        if (!$needAll)
-            $products = $products->whereNull("in_stop_list_at");
+
+        $products = $needAll ? $products->whereNull("in_stop_list_at") :
+            $products->whereNotNull("in_stop_list_at");
+
 
         if (!is_null($search))
             $products = $products
@@ -421,7 +423,7 @@ class ProductLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Продукт не найден");
 
 
-        if (is_null($product->in_stop_list))
+        if (is_null($product->in_stop_list_at))
             $product->in_stop_list_at = Carbon::now();
         else
             $product->in_stop_list_at = null;

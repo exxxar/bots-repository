@@ -61,6 +61,17 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
     <div class="form-check form-switch mb-2">
         <input class="form-check-input"
+               v-model="need_in_stop"
+               type="checkbox" role="switch" id="is_active">
+        <label class="form-check-label"
+               for="is_active">
+            <span v-if="need_in_stop">Товар в стоп листе</span>
+            <span v-else>Все товары</span>
+        </label>
+    </div>
+
+    <div class="form-check form-switch mb-2">
+        <input class="form-check-input"
                v-model="need_removed"
                type="checkbox" role="switch" id="is_active">
         <label class="form-check-label"
@@ -129,8 +140,13 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                                         @click="openRestoreModal(product)"
                                         href="javascript:void(0)">Восстановить товар</a></li>
                                     <li><a class="dropdown-item"
-                                           @click="openStopListModal(product)"
+                                           v-if="product.in_stop_list_at==null"
+                                           @click="openStopListModal(product,'добавления в стоп лист')"
                                            href="javascript:void(0)">Добавить в стоп-лист</a></li>
+                                    <li><a class="dropdown-item"
+                                           v-if="product.in_stop_list_at!=null"
+                                           @click="openStopListModal(product,'извлечения из стоп листа')"
+                                           href="javascript:void(0)">Вернуть из стоп-листа</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -370,7 +386,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
                 <div class="modal-body">
-                    <h6 class="text-center my-3">Вы действительно хотите добавить этот товар в стоплист?</h6>
+                    <h6 class="text-center my-3">Выполнить операцию {{operation_text}}?</h6>
                     <div class="d-flex justify-content-center">
                         <button type="button"
                                 style="margin-right:10px;"
@@ -393,6 +409,7 @@ export default {
     data() {
         return {
             tab: 0,
+            operation_text:null,
             selected_image: null,
             search: null,
             products: [],
@@ -407,6 +424,7 @@ export default {
             review_paginate: null,
             loading_reviews: true,
             need_removed:false,
+            need_in_stop:false,
             need_table:true,
             sort: {
                 param: null,
@@ -415,6 +433,12 @@ export default {
         }
     },
     watch: {
+        'need_in_stop': {
+            handler: function (newValue) {
+                this.loadProducts()
+            },
+            deep: true
+        },
         'need_removed': {
             handler: function (newValue) {
                 this.loadProducts()
@@ -470,9 +494,11 @@ export default {
 
 
         },
-        openStopListModal(product) {
+        openStopListModal(product, text = null) {
+            this.operation_text = null
             this.selected_product = null
             this.$nextTick(() => {
+                this.operation_text = text
                 this.selected_product = product
                 this.accept_stop_list_modal.show();
             })
@@ -564,7 +590,7 @@ export default {
                     direction: this.sort.direction,
                     order_by: this.sort.param,
                     need_removed: this.need_removed,
-                    need_all: true,
+                    need_all:  !this.need_in_stop,
                 },
                 page: page
             }).then(() => {
