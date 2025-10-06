@@ -114,6 +114,25 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async addCommentToProduct(context, payload) {
+        let link = `${BASE_BASKET_LINK}/comment-product`
+
+        let _axios = util.makeAxiosFactory(link, "POST", {
+            product_id: payload.id,
+            comment: payload.comment || null
+        })
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            context.commit("setBasket", dataObject.data)
+            delete dataObject.data
+            context.commit('setBasketPaginateObject', dataObject)
+            return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response?.data?.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async addProductToCart(context, payload) {
         let link = `${BASE_BASKET_LINK}/inc-product`
 

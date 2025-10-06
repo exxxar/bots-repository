@@ -5,8 +5,8 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 
     <div
         v-if="item"
-        class="card border-0">
-        <div class="card-body p-1">
+        class="card border-0 mb-3">
+        <div class="card-body p-0">
 
             <div class="d-flex">
                 <div class="mr-auto"

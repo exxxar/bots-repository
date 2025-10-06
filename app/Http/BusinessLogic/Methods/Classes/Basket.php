@@ -329,6 +329,7 @@ class Basket
         $ids = [];
 
         foreach ($basket as $item) {
+            $comment = $item->comment ?? null;
             $product = $item->product ?? null;
             $collection = $item->collection ?? null;
 
@@ -336,11 +337,18 @@ class Basket
 
             if (!is_null($product)) {
                 $price = ($product->current_price ?? 0) * $item->count;
-                $productMessage .= sprintf("💎%s x%s=%s руб.\n",
-                    $product->title,
-                    $item->count,
-                    $price
-                );
+                $productMessage .= is_null($comment) ?
+                    sprintf("💎%s x%s=%s руб.\n",
+                        $product->title,
+                        $item->count,
+                        $price
+                    ) :
+                    sprintf("💎%s x%s=%s руб.\n<em>(%s)</em>\n",
+                        $product->title,
+                        $item->count,
+                        $price,
+                        $comment
+                    );
 
                 $tmpOrderProductInfo[] = (object)[
                     "title" => $product->title,
@@ -448,6 +456,23 @@ class Basket
         ]);
 
         $this->fsPrepareFrontPad($order, $tmpOrderProductInfo);
+        $iiko = $this->bot->iiko ?? null;
+
+        if (!is_null($iiko))
+            BusinessLogic::iiko()
+                ->createOrder([
+                    "guests_count" => $this->data["persons"] ?? 1,
+                    "phone" => $this->data["phone"],
+                    "customer" => [
+                        "name" => $this->data["name"],
+                        "surname" => $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? "",
+                        "comment" => $deliveryNote,
+                        "gender" => $this->botUser->sex ? "Male" : "Female",
+                        "type" => "regular",
+
+                    ],
+                    "items" => $basket,
+                ]);
 
         BusinessLogic::review()
             ->setBotUser($this->botUser)
@@ -588,6 +613,7 @@ class Basket
         ];
 
         foreach ($basket as $item) {
+            $comment = $item->comment ?? null;
             $product = $item->product ?? null;
             $collection = $item->collection ?? null;
             $price = 0;
@@ -597,7 +623,7 @@ class Basket
                 $dimension = $product->dimension ?? (object)[];
 
                 $productMessage .= sprintf(
-                    "%s x%s=%s руб. (%s x %s x %s, %s грамм)\n",
+                    "%s x%s=%s руб. (%s x %s x %s, %s грамм, <em>%s</em>)\n",
                     $product->title,
                     $item->count,
                     $price,
@@ -605,7 +631,7 @@ class Basket
                     ($package->height ?? 0) == 0 ? $baseDimensions["height"] : $dimension->height,
                     ($package->length ?? 0) == 0 ? $baseDimensions["length"] : $dimension->length,
                     (($package->weight ?? 0) == 0 ? $baseDimensions["weight"] : $dimension->weight) * 1000,
-
+                    $comment ?? 'без комментария'
                 );
 
                 $package[] = (object)[

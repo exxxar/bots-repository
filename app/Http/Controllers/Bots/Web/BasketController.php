@@ -19,6 +19,15 @@ class BasketController extends Controller
             ->productsInBasket();
     }
 
+    public function commentProductInBasket(Request $request): BasketCollection
+    {
+
+
+        return BusinessLogic::basket()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->addProductComment($request->all());
+    }
     /**
      * @throws ValidationException
      */

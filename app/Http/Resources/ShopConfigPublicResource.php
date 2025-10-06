@@ -21,13 +21,17 @@ class ShopConfigPublicResource extends JsonResource
                 "selected_sbp_bank" => $tmpSbp->selected_sbp_bank ?? "tinkoff",
                 "tinkoff" => (object)[
                     "terminal_key" => $isAdmin ? $tmpSbp->tinkoff->terminal_key ?? null : null,
-                    "terminal_password" => $isAdmin ? $tmpSbp->tinkoff->terminal_password ?? null  : null,
+                    "terminal_password" => $isAdmin ? $tmpSbp->tinkoff->terminal_password ?? null : null,
                     "tax" => $tmpSbp->tinkoff->tax ?? null,
-                    "vat" =>$tmpSbp->tinkoff->vat ?? null,
+                    "vat" => $tmpSbp->tinkoff->vat ?? null,
 
                 ]
             ];
         }
+        $tmpManager = (object)[
+            "link" => $this->manager->link ?? $this->manager["link"] ?? null,
+            "title" => $this->manager->title ?? $this->manager['title'] ?? null
+        ];
 
 
         return [
@@ -74,6 +78,7 @@ class ShopConfigPublicResource extends JsonResource
             "payment_info" => $this->payment_info ?? null, //Текст не найден",
             "wheel_of_fortune" => $this->wheel_of_fortune ?? null, //null,
             "win_message" => $this->win_message ?? null, //null
+            "manager" => $tmpManager ?? null, //null
 
         ];
     }

@@ -134,6 +134,7 @@ Route::prefix("bot-client")
                 Route::post('/increment/{id}', "incrementItem");
                 Route::post('/decrement/{id}', "decrementItem");
                 Route::post('/inc-product', "incProductInBasket");
+                Route::post('/comment-product', "commentProductInBasket");
                 Route::post('/dec-product', "decProductInBasket");
                 Route::post('/inc-collection', "incCollectionInBasket");
                 Route::post('/dec-collection', "decCollectionInBasket");

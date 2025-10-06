@@ -3,9 +3,9 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 </script>
 <template>
 
-    <div class="card border-0" v-if="item">
-        <div class="card-body">
-            <div class="d-flex">
+    <div class="card border-0 mb-3" v-if="item">
+        <div class="card-body p-0">
+            <div class="d-flex mb-2">
                 <div class="mr-auto"
                      @click="addToCart"
                      style="max-height: 100px;">
@@ -14,6 +14,7 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                         v-lazy="item.images[0]"
                         style="object-fit: cover;height: 100%;"
                         class="rounded-2" width="110">
+
                 </div>
                 <div class="w-100 px-2 d-flex flex-column justify-content-between">
                     <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">{{ item.title || 'не указано' }}</h6>
@@ -52,7 +53,27 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                         </div>
                     </div>
                 </div>
+
             </div>
+            <div class="form-check form-switch mb-2">
+                <input
+                    v-model="form.need_comment"
+                    class="form-check-input" type="checkbox" value="" :id="'item-comment-'+item.id" switch>
+                <label class="form-check-label"
+                       style="font-size:12px;"
+                       :for="'item-comment-'+item.id">
+                    Добавить комментарий к товару
+                </label>
+            </div>
+
+            <div class="form-floating" v-if="form.need_comment">
+                <input type="text"
+                       @blur="addCommentToProduct"
+                       v-model="form.comment"
+                       class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput">Комментарий</label>
+            </div>
+
             <div class="p-2 alert alert-warning mt-2 mb-0"
                  v-if="item.delivery_terms">
                 <p class="mb-0 fw-bold">Особенности доставки данного товара</p>
@@ -73,9 +94,14 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["item"],
+    props: ["item","comment"],
     data() {
         return {
+            form:{
+                id:null,
+                comment:null,
+                need_comment:false,
+            },
             sending: false,
             is_online: true,
         }
@@ -102,10 +128,44 @@ export default {
         window.addEventListener('offline', () => {
             this.is_online = false
         });
+
+        if (this.comment){
+            console.log("COMMENT", this.comment, this.form.need_comment)
+            this.form.need_comment = true
+            this.form.comment = this.comment
+        }
+
     },
     methods: {
         addToCart() {
             this.$cart.add(this.item)
+        },
+        addCommentToProduct(){
+            this.sending = true
+            this.form.id = this.item.id
+            let incResult = this.$store.dispatch("addCommentToProduct", this.form)
+
+            incResult.then(() => {
+                this.sending = false
+                this.$notify({
+                    title: "Товар",
+                    text: 'Комментарий к товару успешно добавлен',
+                    type: 'success'
+                })
+
+                if (this.comment){
+                    this.form.need_comment = true
+                    this.form.comment = this.comment
+                }
+
+            }).catch(() => {
+                this.sending = false
+                this.$notify({
+                    title: "Товар",
+                    text: 'Ошибка добавления комментария к товару!',
+                    type: 'error'
+                })
+            })
         },
         incProductCart() {
             this.sending = true

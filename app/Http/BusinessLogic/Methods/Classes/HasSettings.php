@@ -113,6 +113,10 @@ trait HasSettings
         "disabled_text" => "Временно недоступно!",
         "can_work_in_marketplace" => false,
         "min_price" => 100,
+        "manager" => [
+            "link"=>null,
+            "title"=>null,
+        ],
         "price_per_km" => 100,
         "min_price_for_cashback" => 2000,
         "is_edit_mode" => false,
@@ -303,6 +307,9 @@ trait HasSettings
                 $tmp['themes'] = is_string($tmp['themes']) ? (array)(json_decode($tmp['themes'])) : $tmp['themes'];
             }
 
+            if (!is_null($tmp["manager"] ?? null)) {
+                $tmp['manager'] = is_string($tmp['manager']) ? (array)(json_decode($tmp['manager'])) : $tmp['manager'];
+            }
 
         }
 

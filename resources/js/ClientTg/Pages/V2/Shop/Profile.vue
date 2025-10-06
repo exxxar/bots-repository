@@ -114,6 +114,28 @@ import ProfileCard from "@/ClientTg/Components/V2/Shop/ProfileCard.vue";
                             </div>
                         </div>
 
+                        <div class="row mb-0">
+                            <p class="col-12 my-2">Получать рассылки от бота?</p>
+                            <div class="col-6">
+                                <button
+                                    type="button"
+                                    @click="botUserForm.config.need_bot_mailing = true"
+                                    v-bind:class="{'btn-info text-white':botUserForm.config.need_bot_mailing,'btn-outline-secondary':!botUserForm.config.need_bot_mailing}"
+                                    class="w-100 btn">
+                                    Да
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button
+                                    type="button"
+                                    @click="botUserForm.config.need_bot_mailing = false"
+                                    v-bind:class="{'btn-info text-white':!botUserForm.config.need_bot_mailing,'btn-outline-secondary':botUserForm.config.need_bot_mailing}"
+                                    class="w-100 btn">
+                                    Нет
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer p-2">
                         <button type="submit" class="btn btn-primary w-100">Сохранить изменения</button>
@@ -143,6 +165,9 @@ export default {
                 country: null,
                 address: null,
                 sex: null,
+                config:{
+                    need_bot_mailing:true,
+                }
 
             }
         }
@@ -183,6 +208,7 @@ export default {
             this.botUserForm.country = this.getSelf.country || null
             this.botUserForm.address = this.getSelf.address || null
             this.botUserForm.sex = this.getSelf.sex || false
+            this.botUserForm.config.need_bot_mailing = this.getSelf.config?.need_bot_mailing || true
         }
     },
 
@@ -208,6 +234,7 @@ export default {
                 this.botUserForm.country = this.getSelf.country || null
                 this.botUserForm.address = this.getSelf.address || null
                 this.botUserForm.sex = this.getSelf.sex || false
+                this.botUserForm.config.need_bot_mailing = this.getSelf.config?.need_bot_mailing || true
             }
 
         })

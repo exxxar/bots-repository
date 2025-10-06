@@ -25,6 +25,7 @@ class Basket extends Model
         'table_id',
         'table_approved_at',
         'ordered_at',
+        'comment',
     ];
 
     /**

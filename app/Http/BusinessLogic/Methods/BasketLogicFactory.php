@@ -312,6 +312,58 @@ class BasketLogicFactory extends BaseLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
+    public function addProductComment(array $data): BasketCollection
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Не все параметры заданы!");
+
+        $validator = Validator::make($data, [
+            "product_id" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $productId = $data["product_id"] ?? null;
+
+        $product = Product::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("id", $productId)
+            ->first();
+
+        if (is_null($product))
+            throw new HttpException(404, "Продукт не найден в системе!");
+
+        $productInBasket = Basket::query()
+            ->where("product_id", $product->id)
+            ->where("bot_user_id", $this->botUser->id)
+            ->where("bot_id", $this->bot->id)
+            ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
+            ->first();
+
+        if (!is_null($productInBasket))
+        {
+            $productInBasket->comment = $data["comment"] ?? null;
+            $productInBasket->save();
+
+        }
+
+        $allProductsInBasket = Basket::query()
+            ->where("bot_user_id", $this->botUser->id)
+            ->where("bot_id", $this->bot->id)
+            ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
+            ->get();
+
+        return new BasketCollection($allProductsInBasket);
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
     public function addAndIncrementProduct(array $data): BasketCollection
     {
         if (is_null($this->bot) || is_null($this->botUser))

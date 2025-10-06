@@ -175,6 +175,13 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
                            v-if="links.site"
                            class="text-decoration-none fw-bold"
                     >{{ links.site }}</a></li>
+                    <template v-if="bot.settings?.manager?.link">
+                        <li><p class="mt-3 mb-0">Связаться с сотрудником</p></li>
+                        <li style="position: sticky;bottom: 0px;"><a :href="bot.settings?.manager?.link"
+                               target="_blank"
+                               class="btn btn-primary p-3 w-100"
+                        >{{ bot.settings?.manager?.title || 'Написать' }}</a></li>
+                    </template>
                 </ul>
             </div>
 

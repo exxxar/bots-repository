@@ -14,10 +14,12 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
         <div class="row">
             <div class="col-12" v-for="(item, index) in cartProducts">
                 <ProductCardSimple
+                    :comment="item.comment"
                     v-if="(item.product||null)!=null"
                     :item="item.product"/>
 
                 <CollectionCardSimple
+                    :comment="item.comment"
                     v-if="(item.collection||null)!=null"
                     :params="item.params"
                     :item="item.collection"/>

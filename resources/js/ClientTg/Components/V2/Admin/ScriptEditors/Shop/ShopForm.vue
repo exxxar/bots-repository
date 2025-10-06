@@ -79,9 +79,10 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                    type="checkbox"
                    v-model="form.need_hide_disabled_products"
                    role="switch" id="script-settings-need_bonuses_section">
-            <label class="form-check-label" for="script-settings-need_bonuses_section">Скрывать товары, которых нет в наличии: <span
-                v-bind:class="{'text-primary fw-bold':form.need_hide_disabled_products}">вкл</span> \ <span
-                v-bind:class="{'text-primary fw-bold':!form.need_hide_disabled_products}">выкл</span></label>
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Скрывать товары, которых нет в
+                наличии: <span
+                    v-bind:class="{'text-primary fw-bold':form.need_hide_disabled_products}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.need_hide_disabled_products}">выкл</span></label>
         </div>
 
         <p class="alert alert-light mb-2">Сумма, от которой будет доступен заказа в магазине</p>
@@ -124,9 +125,10 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                    type="checkbox"
                    v-model="form.need_hide_delivery_period"
                    role="switch" id="script-settings-need_bonuses_section">
-            <label class="form-check-label" for="script-settings-need_bonuses_section">Скрывать период доставки при расчете СДЭК: <span
-                v-bind:class="{'text-primary fw-bold':form.need_hide_delivery_period}">вкл</span> \ <span
-                v-bind:class="{'text-primary fw-bold':!form.need_hide_delivery_period}">выкл</span></label>
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Скрывать период доставки при
+                расчете СДЭК: <span
+                    v-bind:class="{'text-primary fw-bold':form.need_hide_delivery_period}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.need_hide_delivery_period}">выкл</span></label>
         </div>
 
         <template v-if="form.shop_display_type===0">
@@ -259,9 +261,10 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                    type="checkbox"
                    v-model="form.need_bonuses_section"
                    role="switch" id="script-settings-need_bonuses_section">
-            <label class="form-check-label" for="script-settings-need_bonuses_section">Использовать бонусы при оплате: <span
-                v-bind:class="{'text-primary fw-bold':form.need_bonuses_section}">вкл</span> \ <span
-                v-bind:class="{'text-primary fw-bold':!form.need_bonuses_section}">выкл</span></label>
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Использовать бонусы при оплате:
+                <span
+                    v-bind:class="{'text-primary fw-bold':form.need_bonuses_section}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.need_bonuses_section}">выкл</span></label>
         </div>
 
         <div class="form-check form-switch mb-2">
@@ -426,6 +429,22 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
         </ul>
 
 
+        <div class="divider my-3">Кнопка связи с менеджером</div>
+
+        <div class="form-floating mb-2">
+            <input type="text"
+                   @blur="normalizeTelegramLink"
+                   v-model="form.manager.link"
+                   class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Полная ссылка на менеджера</label>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input type="text"
+                   v-model="form.manager.title"
+                   class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Текст на кнопке</label>
+        </div>
 
     </div>
 
@@ -514,7 +533,10 @@ export default {
                 need_hide_delivery_period: false,
 
 
-
+                manager: {
+                    link: null,
+                    title: 'Написать',
+                },
                 disabled_text: null,
 
                 shop_display_type: 0,
@@ -596,6 +618,27 @@ export default {
         })
     },
     methods: {
+        normalizeTelegramLink() {
+            // Убираем пробелы по краям
+            let  input = this.form.manager.link;
+
+            // Если уже есть https://t.me — возвращаем как есть
+            if (input.includes("https://t.me")) {
+                return;
+            }
+
+            // Если начинается с @ — заменяем на ссылку
+            if (input.startsWith("@")) {
+                this.form.manager.link = "https://t.me/" + input.slice(1);
+                return
+            }
+
+            // Если просто указан username без @
+            if (!input.startsWith("https://") && !input.includes("t.me") && /^[a-zA-Z0-9_]+$/.test(input)) {
+                this.form.manager.link =  "https://t.me/" + input;
+            }
+
+        },
         copyToClipBoard() {
             let text = this.pageTinkoffLink
             navigator.clipboard.writeText(text).then(() => {

@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -300,5 +301,101 @@ class IIKOLogicFactory extends BaseLogicFactory
 
     }
 
+    /**
+     * Создание заказа в системе iiko
+     *
+     * @param array $orderData Данные заказа
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function createOrder(array $orderData): mixed
+    {
+        if (is_null($this->bot) || is_null($this->botUser)) {
+            throw new HttpException(400, "Условия функции не выполнены!");
+        }
+
+        $iiko = $this->bot->iiko ?? null;
+
+        if (is_null($iiko)) {
+            throw new HttpException(400, "Система не настроена!");
+        }
+
+        $organizationId = $iiko->organization_id ?? null;
+        $terminalGroupId = $iiko->terminal_group_id ?? null;
+
+        $token = $this->getToken(); // метод, который получает токен iiko
+
+        $url = rtrim(config('iiko.api_url'), '/'); // например https://api-ru.iiko.services/api
+
+        // Базовая структура заказа (см. документацию iiko)
+        $order = [
+            "organizationId" => $organizationId,
+            "terminalGroupId" => $terminalGroupId,
+            "order" => [
+                "id" => \Illuminate\Support\Str::uuid()->toString(),
+                "externalNumber" => $orderData['order_id'] ?? null,
+                "phone" => $orderData['customer']['phone'] ?? null,
+                "customer" => $orderData['customer'] ?? null,
+                "guests" => [
+                    "count" => $orderData['guests_count'] ?? 1,
+                ],
+                "items" => [],
+                "payments" => $orderData['payments'] ?? [],
+            ],
+            "createOrderSettings" => [
+                "servicePrint" => false,
+                "transportToFrontTimeout" => 0,
+                "checkStopList" => false
+            ]
+        ];
+
+        $basket = $orderData["items"] ?? [];
+
+        foreach ($basket as $item) {
+            $item = (object)$item;
+            $comment = $item->comment ?? null;
+            $product = $item->product ?? null;
+            $collection = $item->collection ?? null;
+
+
+            if (!is_null($product)) {
+
+                if (is_null($product->iiko_article ?? null))
+                    continue;
+
+                $price = ($product->current_price ?? 0) * $item->count;
+
+                $order['order']['items'][] = [
+                    "productId"    => $product->iiko_article ?? null,  // ID товара в iiko
+                    "type"         => "Product",
+                    "amount"       => $item->count,    // Количество
+                    "price"        => $price,       // Цена за штуку
+                    "comment"      => $comment,
+                ];
+
+            }
+
+        }
+
+        if (count($order['order']['items'][])==0)
+            throw new HttpException(404, "Нет заказов для передачи в iiko!");
+
+        // Отправляем запрос в iiko
+        $response = Http::withToken(trim($token))
+            ->timeout(15)
+            ->post("$url/1/order/create", $order);
+
+        if ($response->failed()) {
+            Log::warning("iiko order=>".print_r($order, true));
+            Log::warning("iiko status=>".print_r($response->json(), true));
+
+            throw new HttpException(
+                $response->status(),
+                $response->json("errorDescription") ?? $response->body()
+            );
+        }
+
+        return $response->json();
+    }
 
 }

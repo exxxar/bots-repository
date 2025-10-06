@@ -63,7 +63,7 @@ import {canBy} from "@/ClientTg/utils/commonMethods.js";
 
     <nav
         v-if="canBy"
-        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0"
         style="border-radius:10px 10px 0px 0px;">
         <div v-if="cartTotalCount>0" class="w-100">
             <button type="button"
@@ -92,7 +92,7 @@ import {canBy} from "@/ClientTg/utils/commonMethods.js";
     </nav>
 
     <nav
-        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0"
         style="border-radius:10px 10px 0px 0px;"
         v-else>
         <p

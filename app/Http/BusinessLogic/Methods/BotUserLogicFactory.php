@@ -422,7 +422,10 @@ class BotUserLogicFactory extends BaseLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+
         $botUser = $this->botUser;
+
+        $config = $botUser->config ?? [];
 
         $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday ?? Carbon::now())->format("Y-m-d");
 
@@ -434,6 +437,7 @@ class BotUserLogicFactory extends BaseLogicFactory
         } else
             $botUser->phone = $botUser->phone ?? null;
 
+        $config["need_bot_mailing"] = (bool)(($data["config"]["need_bot_mailing"] ?? false));
 
         $botUser->name = $data["name"] ?? $botUser->name ?? null;
         $botUser->email = $data["email"] ?? $botUser->email ?? null;
@@ -445,10 +449,11 @@ class BotUserLogicFactory extends BaseLogicFactory
         $botUser->age = Carbon::now()->year - Carbon::parse($birthday)
                 ->year;
 
+        $botUser->config = $config;
         $botUser->save();
 
 
-        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s",
+        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s\nРассылки: %s",
             $botUser->name ?? "Не указано",
             $botUser->phone ?? "Не указано",
             $botUser->email ?? "Не указано",
@@ -458,7 +463,7 @@ class BotUserLogicFactory extends BaseLogicFactory
             $botUser->city ?? "Не указано",
             $botUser->address ?? "Не указано",
             $botUser->sex ? "муж" : "жен",
-
+            $config["need_bot_mailing"] ? "включены": "отключены"
         );
         BotMethods::bot()
             ->whereBot($this->bot)
@@ -501,9 +506,13 @@ class BotUserLogicFactory extends BaseLogicFactory
             ->where("id", $data["id"])
             ->first();
 
+
         if (is_null($botUser))
             throw new HttpException(404, "Пользователь бота не найден");
 
+        $config = $botUser->config ?? [];
+
+        $config["need_bot_mailing"] = (bool)(($data["config"]["need_bot_mailing"] ?? false));
 
         $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday ?? Carbon::now())->format("Y-m-d");
 
@@ -531,13 +540,14 @@ class BotUserLogicFactory extends BaseLogicFactory
                 ->year;
         $botUser->blocked_at = (bool)(($data["is_blocked"] ?? false)) ? Carbon::now() : null;
         $botUser->blocked_message = $data["blocked_message"] ?? null;
+        $botUser->config = $config;
         $botUser->save();
 
         if (!is_null($botUser->blocked_at))
             return new BotUserResource($botUser);
 
 
-        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s\nVip: %s\nAdmin: %s\nЗа работой: %s\nМенеджер: %s",
+        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s\nVip: %s\nAdmin: %s\nЗа работой: %s\nМенеджер: %s\nРассылки: %s",
             $botUser->name ?? "Не указано",
             $botUser->phone ?? "Не указано",
             $botUser->email ?? "Не указано",
@@ -551,6 +561,7 @@ class BotUserLogicFactory extends BaseLogicFactory
             $botUser->is_admin ? "да" : "нет",
             $botUser->is_work ? "да" : "нет",
             $botUser->is_manager ? "да" : "нет",
+            $config["need_bot_mailing"] ? "включены": "отключены"
         );
         BotMethods::bot()
             ->whereBot($this->bot)
