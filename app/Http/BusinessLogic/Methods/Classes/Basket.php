@@ -459,20 +459,27 @@ class Basket
         $iiko = $this->bot->iiko ?? null;
 
         if (!is_null($iiko))
-            BusinessLogic::iiko()
-                ->createOrder([
-                    "guests_count" => $this->data["persons"] ?? 1,
-                    "phone" => $this->data["phone"],
-                    "customer" => [
-                        "name" => $this->data["name"],
-                        "surname" => $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? "",
-                        "comment" => $deliveryNote,
-                        "gender" => $this->botUser->sex ? "Male" : "Female",
-                        "type" => "regular",
+        {
+            try {
+                BusinessLogic::iiko()
+                    ->createOrder([
+                        "guests_count" => $this->data["persons"] ?? 1,
+                        "phone" => $this->data["phone"],
+                        "customer" => [
+                            "name" => $this->data["name"],
+                            "surname" => $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? "",
+                            "comment" => $deliveryNote,
+                            "gender" => $this->botUser->sex ? "Male" : "Female",
+                            "type" => "regular",
 
-                    ],
-                    "items" => $basket,
-                ]);
+                        ],
+                        "items" => $basket,
+                    ]);
+
+            }catch (\Exception $exception){
+                Log::info("error iiko =>".$exception->getMessage());
+            }
+        }
 
         BusinessLogic::review()
             ->setBotUser($this->botUser)
