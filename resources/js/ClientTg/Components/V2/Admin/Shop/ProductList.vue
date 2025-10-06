@@ -120,9 +120,16 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                               <p
                                   class="text-decoration-underline mb-0"
                                   @click="selectProduct(product)">
-                        {{ product.title }}
-                   </p>
+                                    {{ product.title }}
+                            </p>
+
+                            <div class="d-flex align-items-center">
+                                <span v-if="product.vk_product_id" class="badge text-bg-primary" style="font-size:8px; min-width:30px;margin-right:5px;">VK</span>
+                                <span v-if="product.iiko_article" class="badge text-bg-danger" style="font-size:8px; min-width:30px;margin-right:5px;">IIKO</span>
+                                <span v-if="product.frontpad_article" class="badge text-bg-warning" style="font-size:8px; min-width:30px;margin-right:5px;">FrontPad</span>
+                            </div>
                         </div>
+
                         <div class="col  d-flex justify-content-end align-items-center">
                             <div class="dropdown">
                                 <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
