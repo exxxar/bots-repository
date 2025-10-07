@@ -466,14 +466,14 @@ class Basket
                     ->setBot($this->bot)
                     ->createOrder([
                         "guests_count" => $this->data["persons"] ?? 1,
-                        "phone" => $this->data["phone"],
+
                         "customer" => [
                             "name" => $this->data["name"],
                             "surname" => $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? "",
                             "comment" => $deliveryNote,
                             "gender" => $this->botUser->sex ? "Male" : "Female",
                             "type" => "regular",
-
+                            "phone" => $this->data["phone"],
                         ],
                         "items" => $basket,
                     ]);
