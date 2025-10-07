@@ -377,7 +377,7 @@ class IIKOLogicFactory extends BaseLogicFactory
 
         }
 
-        if (count($order['order']['items'][])==0)
+        if (count($order['order']['items'])==0)
             throw new HttpException(404, "Нет заказов для передачи в iiko!");
 
         // Отправляем запрос в iiko
