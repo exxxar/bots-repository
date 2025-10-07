@@ -462,6 +462,8 @@ class Basket
         {
             try {
                 BusinessLogic::iiko()
+                    ->setBotUser($this->botUser)
+                    ->setBot($this->bot)
                     ->createOrder([
                         "guests_count" => $this->data["persons"] ?? 1,
                         "phone" => $this->data["phone"],
