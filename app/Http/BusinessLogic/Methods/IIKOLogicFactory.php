@@ -395,6 +395,7 @@ class IIKOLogicFactory extends BaseLogicFactory
             );
         }
 
+        Log::info("IIKO RESPONSE".print_r($response->json(),true));
         return $response->json();
     }
 
