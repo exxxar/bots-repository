@@ -4,6 +4,8 @@ import {Head} from '@inertiajs/vue3'
 import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
 import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
+
+import ProductInfo from "@/ClientTg/Components/V2/Shop/ProductInfo.vue"
 </script>
 <template>
 
@@ -39,6 +41,8 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
     </header>
 
     <slot/>
+    <ProductInfo/>
+
 
     <footer class="text-body-secondary" style="padding:0px 0px 90px 0px;">
 

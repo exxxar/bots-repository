@@ -5,6 +5,7 @@ import BotPages from './modules/pages.js'
 import BotPreloader from './modules/preloader.js'
 import Cart from './modules/cart.js'
 import CashBack from './modules/cashback.js'
+import ProductInfo from './modules/products.js'
 
 import router from './router'
 
@@ -65,6 +66,7 @@ createInertiaApp({
         app.config.globalProperties.$preloader = BotPreloader
         app.config.globalProperties.$cashback = CashBack
         app.config.globalProperties.$botPages = BotPages
+        app.config.globalProperties.$productInfo = ProductInfo
 
         app
             .use(plugin)

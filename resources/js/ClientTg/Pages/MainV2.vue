@@ -14,6 +14,7 @@ defineProps({
 
 
 import Layout from "@/ClientTg/Layouts/V2Layout.vue";
+
 </script>
 <template>
     <Layout>
@@ -25,6 +26,8 @@ import Layout from "@/ClientTg/Layouts/V2Layout.vue";
 
             <router-view
                 :bot="bot"/>
+
+
         </template>
     </Layout>
 </template>

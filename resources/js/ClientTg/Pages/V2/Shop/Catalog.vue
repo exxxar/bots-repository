@@ -63,14 +63,22 @@ export default {
 
             return (this.bot.company || {is_work: true}).is_work || (this.settings ? this.settings.can_buy_after_closing : true)
         },
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
     mounted() {
+
+        this.tg.BackButton.show()
+
         if (this.bot.settings?.self_updated) {
             this.settings = this.bot.settings
         } else
             this.loadShopModuleData()
 
-
+        this.tg.BackButton.onClick(() => {
+            this.tg.close()
+        })
 
         this.loadBasketData()
     },
