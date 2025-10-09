@@ -28,10 +28,12 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                 <button
                     type="button"
                     v-if="collections.length > 0"
-                    class="btn btn-outline-warning flex-shrink-0"
+                    class="btn btn-outline-warning flex-shrink-0 d-flex align-items-center"
                     @click="selectCategory({ id: 'combo' })"
                 >
-                    Комбо-меню <span class="badge bg-dark">{{ collections.length }}</span>
+                    Комбо-меню <span
+                    style="margin-left:10px;"
+                    class="badge bg-dark">{{ collections.length }}</span>
                 </button>
 
                 <!-- Категории -->
@@ -39,11 +41,13 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                     type="button"
                     v-for="item in categories"
                     :key="item.id"
-                    class="btn btn-outline-secondary flex-shrink-0"
+                    class="btn btn-outline-secondary flex-shrink-0 d-flex align-items-center"
                     @click="selectCategory(item)"
                 >
                     {{ item.title || 'Не указано' }}
-                    <span class="badge bg-primary">{{ item.count || 0 }}</span>
+                    <span
+                        style="margin-left:10px;"
+                        class="badge bg-primary">{{ item.count || 0 }}</span>
                 </button>
             </div>
         </div>
