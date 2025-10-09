@@ -15,7 +15,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                 v-lazy="item.images[0]">
             <div class="controls">
                 <div class="top d-flex justify-content-between w-100 align-items-center">
-                    <div class="rating w-100 p-2">
+                    <div class="rating p-2">
                         <span class="text-white fw-bold"><i
                             class="fa-regular fa-star text-primary mr-1"></i> {{ Math.round(item.rating || 0) }}</span>
                     </div>
@@ -27,7 +27,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     </div>
                     <span
                         v-if="item.old_price>0"
-                        class="badge bg-primary mr-2 fw-bold">%</span>
+                        style="margin-right: 10px;"
+                        class="badge bg-primary fw-bold">%</span>
                 </div>
 
             </div>

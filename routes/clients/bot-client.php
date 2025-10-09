@@ -373,10 +373,13 @@ Route::prefix("bot-client")
                     ->middleware(["slug"]);
                 Route::post("/products/store-category", [ProductController::class, "storeCategory"]);
                 Route::post("/products/export-all-products", [ProductController::class, "exportAllProducts"]);
+                Route::post("/products/load-recommended-products", [ProductController::class, "loadRecommendedProducts"]);
                 Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
                 Route::post("/products/random", [ProductController::class, "randomProducts"]);
                 Route::post("/products/categories", [ProductController::class, "getCategories"]);
                 Route::post("/products/add-product", [ProductController::class, "saveProduct"]);
+                Route::post("/products/change-recommendation-status", [ProductController::class, "changeRecommendationStatus"]);
+                Route::post("/products/categories/recommendation-status", [ProductController::class, "changeCategoryRecommendationStatus"]);
                 Route::post("/products/remove-all-products", [ProductController::class, "removeAllProducts"]);
                 Route::delete("/products/remove-category/{categoryId}", [ProductController::class, "removeCategoryId"]);
                 Route::post("/products/categories/status/{id}", [ProductController::class, "changeCategoryStatus"]);

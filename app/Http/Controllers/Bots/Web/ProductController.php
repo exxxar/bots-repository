@@ -22,17 +22,18 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class ProductController extends Controller
 {
 
-    public function sendSBPInvoice(Request $request){
-            $request->validate([
-                "amount"=>"required",
-                "description"=>"required"
-            ]);
+    public function sendSBPInvoice(Request $request)
+    {
+        $request->validate([
+            "amount" => "required",
+            "description" => "required"
+        ]);
 
-            BusinessLogic::payment()
-                ->setSlug($request->slug ?? null)
-                ->setBot($request->bot ?? null)
-                ->setBotUser($request->botUser ?? null)
-                ->invoiceLink($request->all());
+        BusinessLogic::payment()
+            ->setSlug($request->slug ?? null)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->invoiceLink($request->all());
     }
 
     public function generateTablesQR(Request $request, $domain)
@@ -162,7 +163,8 @@ class ProductController extends Controller
         return response()->noContent();
     }
 
-    private function ensureCityPrefix(string $address): string {
+    private function ensureCityPrefix(string $address): string
+    {
         // Список признаков города / населённого пункта
         $patterns = [
             '/\bг\.\b/ui',        // г.
@@ -185,7 +187,8 @@ class ProductController extends Controller
         return 'город ' . trim($address);
     }
 
-    private function ensureStreetPrefix(string $street): string {
+    private function ensureStreetPrefix(string $street): string
+    {
         // Список признаков улицы
         $patterns = [
             '/\bул\.\b/ui',          // ул.
@@ -271,11 +274,11 @@ class ProductController extends Controller
 
             $distance = floatval($tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0);
 
-            if ($distance>100)
+            if ($distance > 100)
                 return response()->json([
                     "distance" => 0,
                     "price" => 0,
-                    "address"=>  $address
+                    "address" => $address
                 ], 404);
 
             return response()->json([
@@ -288,22 +291,33 @@ class ProductController extends Controller
         return response()->json([
             "distance" => 0,
             "price" => 0,
-            "address"=>  $address
+            "address" => $address
         ], 404);
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function loadRecommendedProducts(Request $request): ProductCollection
+    {
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->loadRecommendedProducts();
+    }
 
-    public function exportAllProducts(Request $request){
+    public function exportAllProducts(Request $request)
+    {
 
 
-
-         BusinessLogic::products()
+        BusinessLogic::products()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->exportAllProducts();
 
         return response()->noContent();
     }
+
     /**
      * @throws ValidationException
      */
@@ -444,6 +458,7 @@ class ProductController extends Controller
     }
 
 
+
     public function changeCategoryStatus(Request $request, $categoryId): \App\Http\Resources\ProductCategoryResource
     {
         return BusinessLogic::products()
@@ -521,6 +536,42 @@ class ProductController extends Controller
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
             ->randomList();
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function changeCategoryRecommendationStatus(Request $request): array
+    {
+        $request->validate([
+            "category_id" => "required",
+            "status" => "required",
+        ]);
+
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->changeCategoryRecommendationStatus($request->all());
+
+
+
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function changeRecommendationStatus(Request $request): array
+    {
+        $request->validate([
+            "product_id" => "required",
+            "status" => "required",
+        ]);
+
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->changeRecommendationStatus($request->all());
+
+
     }
 
     /**

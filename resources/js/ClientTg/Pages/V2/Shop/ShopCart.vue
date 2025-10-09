@@ -5,15 +5,18 @@ import CheckoutNonFoodGoodsForm from "@/ClientTg/Components/V2/Shop/Cart/Checkou
 import ScreenPaymentForm from "@/ClientTg/Components/V2/Shop/Cart/ScreenPaymentForm.vue";
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 import {canBy} from "@/ClientTg/utils/commonMethods.js";
-
+import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductRecommendationList.vue";
 </script>
 <template>
 
     <div
-        v-touch:swipe.left="doSwipeLeft"
-        v-touch:swipe.right="doSwipeRight"
+
         v-if="cartTotalCount>0">
+
+
         <template v-if="tab===0">
+
+
             <CartProductList
                 v-on:select-prize="selectPrize"
                 v-on:change-tab="changeTab"
@@ -27,10 +30,18 @@ import {canBy} from "@/ClientTg/utils/commonMethods.js";
                         зависит от расстояния.
                     </p>
                 </template>
+
+                <template #recommendation-list>
+                    <ProductRecommendationList/>
+                </template>
             </CartProductList>
+
         </template>
 
+
         <template v-if="tab===1">
+            <div v-touch:swipe.left="doSwipeLeft"
+                 v-touch:swipe.right="doSwipeRight">
                 <CheckoutProductForm
                     v-if="settings.shop_display_type === 0"
                     v-on:start-checkout="startCheckout"
@@ -41,6 +52,7 @@ import {canBy} from "@/ClientTg/utils/commonMethods.js";
                     v-on:start-checkout="startCheckout"
                     v-on:change-tab="changeTab"
                     v-model="deliveryForm"></CheckoutNonFoodGoodsForm>
+            </div>
         </template>
 
         <template v-if="tab===3">
@@ -237,11 +249,11 @@ export default {
     },
     methods: {
         doSwipeLeft() {
-            this.$router.push({ name: 'CatalogV2' })
+            this.$router.push({name: 'CatalogV2'})
 
         },
         doSwipeRight() {
-            this.$router.push({ name: 'MenuV2' })
+            this.$router.push({name: 'MenuV2'})
 
 
         },
@@ -302,11 +314,11 @@ export default {
             })
                 .then((response) => {
 
-                  /*  this.deliveryForm = {
-                        message: null,
-                        name: null,
-                        phone: null,
-                    }*/
+                    /*  this.deliveryForm = {
+                          message: null,
+                          name: null,
+                          phone: null,
+                      }*/
 
                     this.$notify({
                         title: "Доставка",

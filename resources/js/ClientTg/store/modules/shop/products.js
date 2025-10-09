@@ -22,6 +22,18 @@ const getters = {
 
 const actions = {
 
+    async loadRecommendedProducts(context) {
+        let link = `${BASE_PRODUCTS_LINK}/load-recommended-products`
+
+        let _axios = util.makeAxiosFactory(link, 'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadShopModuleData(context) {
 
 
@@ -75,6 +87,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async changeCategoryRecommendationStatus(context, payload = {category_id:null, status: 0}) {
+        let link = `${BASE_PRODUCTS_LINK}/categories/recommendation-status`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async storeProductCategory(context, payload = {category: null}) {
         let link = `${BASE_PRODUCTS_LINK}/store-category`
 
@@ -111,6 +135,22 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async changeProductRecommendationStatus(context, payload = {product_id: null, status: 0}) {
+        let link = `${BASE_PRODUCTS_LINK}/change-recommendation-status`
+
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
+
+        return _axios.then((response) => {
+
+            return Promise.resolve();
+        }).catch(err => {
+
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
     async removeAllProducts(context) {
         let link = `${BASE_PRODUCTS_LINK}/remove-all-products`
         let method = 'POST'
@@ -123,6 +163,8 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+
     async removeShopProduct(context, id) {
         let link = `${BASE_PRODUCTS_LINK}/${id}`
         let method = 'DELETE'

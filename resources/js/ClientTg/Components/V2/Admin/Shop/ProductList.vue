@@ -62,9 +62,9 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
     <div class="form-check form-switch mb-2">
         <input class="form-check-input"
                v-model="need_in_stop"
-               type="checkbox" role="switch" id="is_active">
+               type="checkbox" role="switch" id="need_in_stop">
         <label class="form-check-label"
-               for="is_active">
+               for="need_in_stop">
             <span v-if="need_in_stop">Товар в стоп листе</span>
             <span v-else>Все товары</span>
         </label>
@@ -73,16 +73,24 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
     <div class="form-check form-switch mb-2">
         <input class="form-check-input"
                v-model="need_removed"
-               type="checkbox" role="switch" id="is_active">
+               type="checkbox" role="switch" id="need_removed">
         <label class="form-check-label"
-               for="is_active">Отображать удаленные</label>
+               for="need_removed">Отображать удаленные</label>
     </div>
     <div class="form-check form-switch mb-2">
         <input class="form-check-input"
                v-model="need_table"
-               type="checkbox" role="switch" id="is_active">
+               type="checkbox" role="switch" id="need_table">
         <label class="form-check-label"
-               for="is_active">Отображать в виде таблицы</label>
+               for="need_table">Отображать в виде таблицы</label>
+    </div>
+
+    <div class="form-check form-switch mb-2">
+        <input class="form-check-input"
+               v-model="need_recommendation_config"
+               type="checkbox" role="switch" id="need_recommendation_config">
+        <label class="form-check-label"
+               for="need_recommendation_config">Режим настройки рекомендаций</label>
     </div>
 
     <p>Всего товаров: <span v-if="paginate">{{ paginate.meta.total || 0 }}</span></p>
@@ -117,17 +125,22 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
                     <div class="row row-cols-2">
                         <div class="col">
-                              <p
-                                  class="text-decoration-underline mb-0"
-                                  @click="selectProduct(product)">
-                                    {{ product.title }}
+                            <p
+                                class="text-decoration-underline mb-0"
+                                @click="selectProduct(product)">
+                                {{ product.title }}
                             </p>
 
                             <div class="d-flex align-items-center">
-                                <span v-if="product.vk_product_id" class="badge text-bg-primary" style="font-size:8px; min-width:30px;margin-right:5px;">VK</span>
-                                <span v-if="product.iiko_article" class="badge text-bg-danger" style="font-size:8px; min-width:30px;margin-right:5px;">IIKO</span>
-                                <span v-if="product.frontpad_article" class="badge text-bg-warning" style="font-size:8px; min-width:30px;margin-right:5px;">FrontPad</span>
+                                <span v-if="product.vk_product_id" class="badge text-bg-primary"
+                                      style="font-size:8px; min-width:30px;margin-right:5px;">VK</span>
+                                <span v-if="product.iiko_article" class="badge text-bg-danger"
+                                      style="font-size:8px; min-width:30px;margin-right:5px;">IIKO</span>
+                                <span v-if="product.frontpad_article" class="badge text-bg-warning"
+                                      style="font-size:8px; min-width:30px;margin-right:5px;">FrontPad</span>
                             </div>
+
+
                         </div>
 
                         <div class="col  d-flex justify-content-end align-items-center">
@@ -137,10 +150,10 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li
-                                    v-if="product.deleted_at == null"
+                                        v-if="product.deleted_at == null"
                                     ><a class="dropdown-item"
-                                           @click="openRemoveModal(product)"
-                                           href="javascript:void(0)">Удалить товар</a></li>
+                                        @click="openRemoveModal(product)"
+                                        href="javascript:void(0)">Удалить товар</a></li>
                                     <li
                                         v-if="product.deleted_at"
                                     ><a class="dropdown-item"
@@ -160,6 +173,41 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     </div>
 
 
+                    <div class="row row-cols-1" v-if="need_recommendation_config">
+                        <div class="col">
+                            <div class="d-flex mt-2 mb-2 justify-content-center">
+                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio"
+                                           @change="changeStatus(product.id, 0)"
+                                           class="btn-check"
+                                           :name="'config-recommendation'+product.id"
+                                           :id="'config-recommendation-1-'+product.id" autocomplete="off" checked>
+                                    <label class="btn btn-outline-primary"
+                                           style="font-size:10px;"
+                                           :for="'config-recommendation-1-'+product.id">Отмена</label>
+
+                                    <input type="radio"
+                                           @change="changeStatus(product.id, 1)"
+                                           :checked="recommendations.indexOf(product.id)!==-1"
+                                           class="btn-check"
+                                           :name="'config-recommendation'+product.id"
+                                           :id="'config-recommendation-2-'+product.id" autocomplete="off">
+                                    <label class="btn btn-outline-primary"
+                                           style="font-size:10px;" :for="'config-recommendation-2-'+product.id">Рекомендация</label>
+
+                                    <input type="radio"
+                                           @change="changeStatus(product.id, 2)"
+                                           :checked="excludes.indexOf(product.id)!==-1"
+                                           class="btn-check"
+                                           :name="'config-recommendation'+product.id"
+                                           :id="'config-recommendation-3-'+product.id" autocomplete="off">
+                                    <label class="btn btn-outline-primary"
+                                           style="font-size:10px;" :for="'config-recommendation-3-'+product.id">Исключение</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
 
                 </li>
             </ul>
@@ -354,7 +402,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     <div class="d-flex justify-content-center">
                         <button type="button"
                                 style="margin-right:10px;"
-                                class="btn btn-primary px-3 mr-2" @click="restoreProduct">Да</button>
+                                class="btn btn-primary px-3 mr-2" @click="restoreProduct">Да
+                        </button>
                         <button type="button" class="btn btn-secondary px-3" @click="hideRestoreModal">Нет</button>
                     </div>
 
@@ -376,7 +425,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     <div class="d-flex justify-content-center">
                         <button type="button"
                                 style="margin-right:10px;"
-                                class="btn btn-primary px-3 mr-2" @click="removeProduct">Да</button>
+                                class="btn btn-primary px-3 mr-2" @click="removeProduct">Да
+                        </button>
                         <button type="button" class="btn btn-secondary px-3" @click="hideRemoveModal">Нет</button>
                     </div>
 
@@ -393,11 +443,12 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
                 <div class="modal-body">
-                    <h6 class="text-center my-3">Выполнить операцию {{operation_text}}?</h6>
+                    <h6 class="text-center my-3">Выполнить операцию {{ operation_text }}?</h6>
                     <div class="d-flex justify-content-center">
                         <button type="button"
                                 style="margin-right:10px;"
-                                class="btn btn-primary px-3 mr-2" @click="addToStopListProduct">Да</button>
+                                class="btn btn-primary px-3 mr-2" @click="addToStopListProduct">Да
+                        </button>
                         <button type="button" class="btn btn-secondary px-3" @click="hideStopListModal">Нет</button>
                     </div>
 
@@ -416,7 +467,7 @@ export default {
     data() {
         return {
             tab: 0,
-            operation_text:null,
+            operation_text: null,
             selected_image: null,
             search: null,
             products: [],
@@ -430,9 +481,11 @@ export default {
             paginate: null,
             review_paginate: null,
             loading_reviews: true,
-            need_removed:false,
-            need_in_stop:false,
-            need_table:true,
+            need_removed: false,
+            need_in_stop: false,
+            need_table: true,
+            recommendations:[],
+            need_recommendation_config: false,
             sort: {
                 param: null,
                 direction: 'asc'
@@ -460,19 +513,27 @@ export default {
                 return []
             }
 
-             if (this.search instanceof Event)
-                 return this.products
+            if (this.search instanceof Event)
+                return this.products
 
-             if (!this.search)
-                 return this.products
+            if (!this.search)
+                return this.products
 
-            const query = this.search instanceof Event || !this.search? '':this.search.toLowerCase()
+            const query = this.search instanceof Event || !this.search ? '' : this.search.toLowerCase()
 
             return this.products.filter(product =>
                 product.title?.toLowerCase().includes(query))
         },
+        bot() {
+            return window.currentBot
+        },
+
+        excludes() {
+            return this.bot.settings?.recommendation?.excludes || []
+        }
     },
     mounted() {
+        this.recommendations =  this.bot.settings?.recommendation?.products || []
 
         const page = localStorage.getItem("cashman_admin_product_list_page_index") != null ?
             localStorage.getItem("cashman_admin_product_list_page_index") : 0
@@ -485,8 +546,19 @@ export default {
         this.accept_stop_list_modal = new bootstrap.Modal(document.getElementById('stop-list-modal'), {})
     },
     methods: {
+        changeStatus(productId, status) {
+            this.$store.dispatch("changeProductRecommendationStatus", {
+                product_id: productId,
+                status: status
+            }).then((resp) => {
+                let data = resp
+                this.recommendations = data.products || []
 
-        openAddProductModal(){
+            }).catch(() => {
+
+            })
+        },
+        openAddProductModal() {
             this.add_product_modal.show()
         },
         openRestoreModal(product) {
@@ -497,7 +569,6 @@ export default {
                 this.selected_product = product
                 this.accept_restore_modal.show();
             })
-
 
 
         },
@@ -518,7 +589,6 @@ export default {
                 this.selected_product = product
                 this.accept_remove_modal.show();
             })
-
 
 
         },
@@ -561,7 +631,7 @@ export default {
             this.accept_restore_modal.hide()
         },
         hideRemoveModal() {
-                this.accept_remove_modal.hide()
+            this.accept_remove_modal.hide()
         },
         selectProduct(product) {
 
@@ -585,8 +655,7 @@ export default {
             this.loadProducts(index)
         },
         loadProducts(page = 0) {
-            if (page==null)
-            {
+            if (page == null) {
                 page = localStorage.getItem("cashman_admin_product_list_page_index") != null ?
                     localStorage.getItem("cashman_admin_product_list_page_index") : 0
             }
@@ -597,7 +666,7 @@ export default {
                     direction: this.sort.direction,
                     order_by: this.sort.param,
                     need_removed: this.need_removed,
-                    need_all:  !this.need_in_stop,
+                    need_all: !this.need_in_stop,
                 },
                 page: page
             }).then(() => {
@@ -605,7 +674,7 @@ export default {
                 this.paginate = this.getProductsPaginateObject
             })
         },
-        addToStopListProduct(){
+        addToStopListProduct() {
             if (!this.selected_product)
                 return
 
@@ -628,7 +697,7 @@ export default {
                 this.loadProducts()
             })
         },
-        restoreProduct(){
+        restoreProduct() {
             if (!this.selected_product)
                 return
 
@@ -658,7 +727,7 @@ export default {
 
             this.$store.dispatch("removeShopProduct", this.selected_product.id)
                 .then((resp) => {
-                   // this.hideModal()
+                    // this.hideModal()
                     this.hideRemoveModal()
 
                     this.loadProducts()
@@ -670,7 +739,7 @@ export default {
                     })
 
                 }).catch(() => {
-               // this.hideModal()
+                // this.hideModal()
                 this.hideRemoveModal()
                 this.loadProducts()
             })

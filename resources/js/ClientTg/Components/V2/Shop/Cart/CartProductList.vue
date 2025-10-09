@@ -3,6 +3,7 @@ import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.v
 import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSimple.vue";
 
 
+
 </script>
 <template>
     <div class="container py-3">
@@ -23,8 +24,13 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
                     v-if="(item.collection||null)!=null"
                     :params="item.params"
                     :item="item.collection"/>
+
+
             </div>
+
         </div>
+
+
 
         <template
             v-if="settings.need_prizes_from_wheel_of_fortune && (filteredActionData||[]).length>0">
@@ -61,7 +67,7 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
         </template>
 
         <template v-if="!simpleMode">
-            <div class="card my-2">
+            <div class="card">
                 <div class="card-body">
                     <h6 class="mb-2">Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
                     <h6 class="mb-0">Общая цена товаров <strong class="fw-bold">{{
@@ -77,6 +83,9 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
 
                 </div>
             </div>
+
+            <slot name="recommendation-list"></slot>
+
             <button
                 v-if="cartTotalCount>0"
                 @click="clearCart"

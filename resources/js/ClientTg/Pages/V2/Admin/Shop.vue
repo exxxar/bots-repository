@@ -48,14 +48,14 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                 </div>
             </div>
 
-            <div class="col-12" v-if="tab===0">
+            <div class="col-12" v-show="tab===0">
                 <ProductList
                     v-if="!load"
                     v-on:select="selectProduct"
                 />
             </div>
 
-            <div class="col-12" v-if="tab===3">
+            <div class="col-12" v-show="tab===3">
                 <CollectionList
                     v-if="!load"
                 />
@@ -146,7 +146,7 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
             </template>
 
 
-            <div class="col-12" v-if="tab===2">
+            <div class="col-12" v-show="tab===2">
                 <ProductCategoryList></ProductCategoryList>
             </div>
         </div>

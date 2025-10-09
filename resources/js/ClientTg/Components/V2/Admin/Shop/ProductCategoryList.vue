@@ -45,6 +45,14 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
             v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
     </p>
 
+    <div class="form-check form-switch mb-2">
+        <input class="form-check-input"
+               v-model="need_recommendation_config"
+               type="checkbox" role="switch" id="need_recommendation_config">
+        <label class="form-check-label"
+               for="need_recommendation_config">Режим настройки рекомендаций</label>
+    </div>
+
     <p>Всего категорий: <span v-if="paginate">{{ paginate.meta.total || 0 }}</span></p>
 
     <template v-if="filteredProductCategories.length>0">
@@ -53,12 +61,13 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
             <div class="col">
                 <ul class="list-group">
                     <li class="list-group-item"
-                        @click="selectProductCategory(item)"
+
                         v-for="(item, index)  in filteredProductCategories">
                         <p class="mb-2 d-flex justify-content-between">
                             <span class="fw-bold">  {{ item.title }}</span>
 
                             <a href="javascript:void(0)"
+                               @click="selectProductCategory(item)"
                                class="text-secondary"><i class="fa-regular fa-pen-to-square"></i></a>
                         </p>
 
@@ -89,6 +98,35 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
                             </button>
                         </div>
 
+                        <div class="row row-cols-1" v-if="need_recommendation_config">
+                            <div class="col">
+
+
+
+                                <div class="d-flex mt-2 mb-2 justify-content-center">
+                                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                        <input type="radio"
+                                               @change="changeStatus(item.id, 0)"
+                                               class="btn-check"
+                                               :name="'config-category-recommendation-'+item.id"
+                                               :id="'config-category-recommendation-1-'+item.id" autocomplete="off" checked>
+                                        <label class="btn btn-outline-primary"
+                                               :for="'config-category-recommendation-1-'+item.id">Отмена</label>
+
+                                        <input type="radio"
+                                               @change="changeStatus(item.id, 1)"
+                                               :checked="recommendations.indexOf(item.id)!==-1"
+                                               class="btn-check"
+                                               :name="'config-category-recommendation-'+item.id"
+                                               :id="'config-category-recommendation-2-'+item.id" autocomplete="off">
+                                        <label class="btn btn-outline-primary"
+                                             :for="'config-category-recommendation-2-'+item.id">Рекомендация</label>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
 
                     </li>
                 </ul>
@@ -188,9 +226,11 @@ export default {
             selectedCategory: null,
             categoryEditorModal: null,
             removeModal: null,
+            need_recommendation_config: false,
             search: null,
             categories: [],
             paginate: null,
+            recommendations:[],
             sort: {
                 param: 'id',
                 direction: 'asc'
@@ -201,6 +241,9 @@ export default {
         ...mapGetters(['getCategories', 'getCategoriesPaginateObject']),
         bot() {
             return window.currentBot
+        },
+        recommendations() {
+            return this.bot.settings?.recommendation?.categories || []
         },
         filteredProductCategories() {
 
@@ -218,11 +261,23 @@ export default {
         },
     },
     mounted() {
+        this.recommendations = this.bot.settings?.recommendation?.categories || []
         this.loadProductCategories()
         this.categoryEditorModal = new bootstrap.Modal(document.getElementById('category-edit-item-form'), {})
         this.removeModal = new bootstrap.Modal(document.getElementById('remove-category-modal'), {})
     },
     methods: {
+        changeStatus(categoryId, status) {
+            this.$store.dispatch("changeCategoryRecommendationStatus", {
+                category_id: categoryId,
+                status: status
+            }).then((resp) => {
+                let data = resp
+                this.recommendations = data.categories || []
+            }).catch(() => {
+
+            })
+        },
         changeDirection(direction) {
             this.sort.direction = direction
             this.loadProductCategories(0)
@@ -331,7 +386,7 @@ export default {
                     direction: this.sort.direction
                 },
                 page: page,
-                size: 10,
+                size: 50,
             }).then(() => {
                 this.categories = this.getCategories
                 this.paginate = this.getCategoriesPaginateObject

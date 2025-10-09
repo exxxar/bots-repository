@@ -117,6 +117,11 @@ trait HasSettings
             "link"=>null,
             "title"=>null,
         ],
+        "recommendation"=>[
+            "categories"=>[],
+            "products"=>[],
+            "excludes"=>[]
+        ],
         "price_per_km" => 100,
         "min_price_for_cashback" => 2000,
         "is_edit_mode" => false,
@@ -309,6 +314,10 @@ trait HasSettings
 
             if (!is_null($tmp["manager"] ?? null)) {
                 $tmp['manager'] = is_string($tmp['manager']) ? (array)(json_decode($tmp['manager'])) : $tmp['manager'];
+            }
+
+            if (!is_null($tmp["recommendation"] ?? null)) {
+                $tmp['recommendation'] = is_string($tmp['recommendation']) ? (array)(json_decode($tmp['recommendation'])) : $tmp['recommendation'];
             }
 
         }

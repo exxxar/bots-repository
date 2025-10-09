@@ -466,7 +466,7 @@ class Basket
                     ->setBot($this->bot)
                     ->createOrder([
                         "guests_count" => $this->data["persons"] ?? 1,
-
+                        "order_id"=>$order->id,
                         "customer" => [
                             "name" => $this->data["name"],
                             "surname" => $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? "",

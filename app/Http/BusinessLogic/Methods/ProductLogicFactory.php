@@ -214,6 +214,150 @@ class ProductLogicFactory extends BaseLogicFactory
     }
 
     /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function loadRecommendedProducts():ProductCollection
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+
+        $recommendation = $this->bot->settings["recommendation"] ?? [
+            "categories" => [],
+            "products" => [],
+            "excludes" => []
+        ];
+
+        $categoryIds = $recommendation["categories"] ?? [];
+
+        $productCategories = ProductCategory::query()
+            ->with(["products"])
+            ->whereIn("id", $categoryIds)
+            ->get();
+
+        $tmpProducts = [];
+
+        foreach ($productCategories as $category)
+            foreach ($category->products as $product)
+                $tmpProducts[] = $product->id;
+
+        $productIds = $recommendation["products"] ?? [];
+
+        $excludeIds = $recommendation["excludes"] ?? [];
+
+        $products = Product::query()
+            ->where("bot_id", $this->bot->id)
+            ->whereIn("id", [...$productIds, ...$tmpProducts])
+            ->whereNotIn("id", $excludeIds)
+            ->get();
+
+        return new ProductCollection($products);
+
+    }
+
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function changeCategoryRecommendationStatus(array $data): array
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "category_id" => "required",
+            "status" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $categoryId = $data["category_id"];
+        $status = $data["status"] ?? 0;
+
+        $recommendation = $this->bot->settings["recommendation"] ?? [
+            "categories" => [],
+            "products" => [],
+            "excludes" => []
+        ];
+
+        switch ($status) {
+            default:
+            case 0:
+                $recommendation["categories"] = array_filter($recommendation["categories"] ?? [], fn($v) => $v !== $categoryId);
+                break;
+            case 1:
+                $recommendation["categories"][] = $categoryId;
+                break;
+
+        }
+
+
+        $config = $this->bot->settings;
+        $config["recommendation"] = $recommendation;
+        $this->bot->config = $config;
+        $this->bot->save();
+
+        return $config["recommendation"];
+
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function changeRecommendationStatus(array $data): array
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "product_id" => "required",
+            "status" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $productId = $data["product_id"];
+        $status = $data["status"] ?? 0;
+
+        $recommendation = $this->bot->settings["recommendation"] ?? [
+            "categories" => [],
+            "products" => [],
+            "excludes" => []
+        ];
+        switch ($status) {
+            default:
+            case 0:
+                $recommendation["products"] = array_filter($recommendation["products"] ?? [], fn($v) => $v !== $productId);
+                $recommendation["excludes"] = array_filter($recommendation["excludes"] ?? [], fn($v) => $v !== $productId);
+
+                break;
+            case 1:
+                $recommendation["products"][] = $productId;
+                $recommendation["excludes"] = array_filter($recommendation["excludes"] ?? [], fn($v) => $v !== $productId);
+                break;
+            case 2:
+                $recommendation["excludes"][] = $productId;
+                $recommendation["products"] = array_filter($recommendation["products"] ?? [], fn($v) => $v !== $productId);
+                break;
+        }
+
+        $config = $this->bot->settings;
+        $config["recommendation"] = $recommendation;
+        $this->bot->config = $config;
+        $this->bot->save();
+
+        return $config["recommendation"];
+    }
+
+    /**
      * @throws ValidationException
      * @throws HttpException
      */
