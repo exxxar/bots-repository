@@ -161,10 +161,10 @@ class CheckBotMessages extends Command
                     continue;
 
                 $name = $data['user']["name"] ?? 'Пользователь';
-                $timestamp = $data['timestamp'] ?? Carbon::now()->timestamp;
+                $timestamp = Carbon::parse($data['timestamp'] ?? Carbon::now())->timestamp;
 
                 $current_time = Carbon::now()->timestamp;
-                if ($current_time - $timestamp < 600)
+                if ($current_time - $timestamp < 300)
                     continue;
 
                 $message = "#ответ от $name:\n";
