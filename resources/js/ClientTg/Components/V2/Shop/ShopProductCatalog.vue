@@ -20,8 +20,8 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
 
 
 
-        <div class="container mt-4">
-            <!-- Profile Header -->
+<!--        <div class="container mt-4">
+            &lt;!&ndash; Profile Header &ndash;&gt;
             <div class="row mb-4">
                 <div class="col-md-3 text-center">
                     <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="img-fluid rounded-circle w-75">
@@ -32,7 +32,7 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
                 </div>
             </div>
 
-            <!-- Profile Stats -->
+            &lt;!&ndash; Profile Stats &ndash;&gt;
             <div class="row mb-4">
                 <div class="col-6 col-md-3 mb-2">
                     <a href="#" class="text-decoration-none d-block text-center">
@@ -56,7 +56,7 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
                 </div>
             </div>
 
-            <!-- Profile Bio and Location -->
+            &lt;!&ndash; Profile Bio and Location &ndash;&gt;
             <div class="row mb-4">
                 <div class="col-12">
                     <p class="text-muted">
@@ -68,7 +68,7 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
                 </div>
             </div>
 
-            <!-- Tabs for Navigation -->
+            &lt;!&ndash; Tabs for Navigation &ndash;&gt;
             <div class="row">
                 <div class="col-12">
                     <ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
@@ -95,21 +95,21 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
                     </ul>
                     <div class="tab-content" id="profileTabContent">
                         <div class="tab-pane fade show active" id="feed" role="tabpanel" aria-labelledby="feed-tab">
-                            <!-- Feed content goes here -->
+                            &lt;!&ndash; Feed content goes here &ndash;&gt;
                         </div>
                         <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
-                            <!-- Friends content goes here -->
+                            &lt;!&ndash; Friends content goes here &ndash;&gt;
                         </div>
                         <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks-tab">
-                            <!-- Bookmarks content goes here -->
+                            &lt;!&ndash; Bookmarks content goes here &ndash;&gt;
                         </div>
                         <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                            <!-- Settings content goes here -->
+                            &lt;!&ndash; Settings content goes here &ndash;&gt;
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <menu
             id="category-slider"
             class="d-block w-100 p-0 m-0 sticky-menu">
