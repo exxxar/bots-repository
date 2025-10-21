@@ -20,7 +20,7 @@ class DynamicLogChannel
     public function __invoke($config)
     {
 
-        $botName = self::$botDomain ?? 'bot';
+        $botName = self::$botDomain ?? 'system';
 
 
         $logPath = storage_path("logs/{$botName}.log");
