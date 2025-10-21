@@ -100,7 +100,7 @@ class CheckBotLogs extends Command
                 ->whereBot($bot)
                 ->sendDocument(
                     $callbackChannel,
-                    "$icon Лог событий системы за " . (Carbon::now("+3")->format('Y-m-d H:i:s')),
+                    "#$name\n$icon Лог событий системы за " . (Carbon::now("+3")->format('Y-m-d H:i:s')),
                     InputFile::createFromContents($content, "$name.txt"),
                     $thread
                 );

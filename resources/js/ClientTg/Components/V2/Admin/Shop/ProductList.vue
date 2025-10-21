@@ -39,7 +39,6 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
             class="form-select" id="floatingSelect" aria-label="Floating label select example">
             <option value="id">По номеру товара</option>
             <option value="title">По названию</option>
-            >
             <option value="description">По описанию</option>
             <option value="price">По цене</option>
             <option value="old_price">По наличию скидки</option>

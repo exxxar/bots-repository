@@ -112,6 +112,16 @@ export default {
             pageFormModal: null,
         }
     },
+    watch: {
+        'utm_source': {
+            handler: (newValue) => {
+                const cleanedValue = newValue.replace(/[а-яА-Я\s]/g, '');
+                this.utm_source = cleanedValue;
+            },
+            deep: true
+        },
+
+    },
     computed: {
         bot() {
             return window.currentBot

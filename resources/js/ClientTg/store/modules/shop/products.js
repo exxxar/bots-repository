@@ -177,11 +177,11 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadProductsByCategory(context) {
+    async loadProductsByCategory(context, payload) {
 
         let link = `${BASE_PRODUCTS_LINK}-by-category`
         let method = 'POST'
-        let _axios = util.makeAxiosFactory(link, method)
+        let _axios = util.makeAxiosFactory(link, method, payload)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

@@ -1,18 +1,17 @@
 models:
-  Story:
+  Partner:
     bot_id: id foreign:bots
+    bot_partner_id: id foreign:bots
     title: string:255 nullable
-    thumbnail: string:255 nullable
-    image: string:255 nullable
     description: longtext nullable
+    image: string:255 nullable
+    is_active: boolean default:true
+    extra_charge: integer default:0
     config: json nullable
+    legal_info: json nullable
     relationships:
       belongsTo: Bot
 
-seeders:  Story
 
-controllers:
-  Story:
-    resource: api
 
 

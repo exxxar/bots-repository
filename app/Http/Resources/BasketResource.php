@@ -12,6 +12,15 @@ class BasketResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $partner = $this->whenLoaded('partner') ?? null;
+
+        if (!is_null($partner))
+            $partner = (object)[
+                "id" => $partner->id,
+                "title" => $partner->title,
+                "image" => $partner->image,
+                "description" => $partner->description
+            ];
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
@@ -24,6 +33,8 @@ class BasketResource extends JsonResource
             'bot_user_id' => $this->bot_user_id,
             'bot_id' => $this->bot_id,
             'table_id' => $this->table_id,
+            'bot_partner_id' => $this->bot_partner_id,
+            'partner' => $partner,
             'table_approved_at' => $this->table_approved_at,
             'ordered_at' => $this->ordered_at,
         ];

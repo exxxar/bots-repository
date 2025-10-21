@@ -53,6 +53,7 @@ class BotResource extends JsonResource
             'level_1' => $this->level_1,
             'level_2' => $this->level_2,
             'level_3' => $this->level_3,
+            'partners' => PartnerResource::collection($this->whenLoaded("partners")) ,
             'warnings' => BotWarningResource::collection($this->whenLoaded("warnings")) ,
             'blocked_message' => $this->blocked_message,
             'payment_provider_token' => $this->payment_provider_token ?? null,

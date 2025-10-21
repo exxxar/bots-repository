@@ -32,6 +32,8 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
         v-on:pagination_page="nextCategories"
         v-if="categories_paginate_object && categories_paginate_object.meta.total > size"
         :pagination="categories_paginate_object"/>
+
+
 </template>
 <script>
 import {mapGetters} from "vuex";

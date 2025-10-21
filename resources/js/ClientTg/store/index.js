@@ -44,6 +44,7 @@ import bitrix from "./modules/bitrix"
 import cdek from "./modules/cdek"
 import collections from "./modules/collections"
 import myFriends from "./modules/friends"
+import partners from "./modules/partners"
 
 import util from "./modules/utilites";
 import storiesModule from "./modules/stories";
@@ -195,6 +196,7 @@ export default createStore({
         bitrix,
         cdek,
         stories,
-        tables
+        tables,
+        partners
     }
 })

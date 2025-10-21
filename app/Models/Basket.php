@@ -18,6 +18,7 @@ class Basket extends Model
     protected $fillable = [
         'product_id',
         'product_collection_id',
+        'bot_partner_id',
         'count',
         'params',
         'bot_user_id',
@@ -37,6 +38,7 @@ class Basket extends Model
         'id' => 'integer',
         'product_id' => 'integer',
         'product_collection_id' => 'integer',
+        'bot_partner_id' => 'integer',
         'bot_user_id' => 'integer',
         'bot_id' => 'integer',
         'params' => 'array',
@@ -45,11 +47,17 @@ class Basket extends Model
         'ordered_at' => 'timestamp',
     ];
 
-    protected $with = ["product", "collection"];
+    protected $with = ["product", "collection","partner"];
 
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
+    }
+
+
+    public function partner(): BelongsTo
+    {
+        return $this->belongsTo(Bot::class,"bot_partner_id","id");
     }
 
     public function botUser(): BelongsTo

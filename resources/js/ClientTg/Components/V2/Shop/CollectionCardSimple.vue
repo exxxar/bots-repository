@@ -24,6 +24,8 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                             class="fw-bold"> ({{ (item.products || []).length }} ед.)</small>
                     </h6>
 
+                    <slot name="partner"></slot>
+
                     <p class="fst-italic mb-2 " style="font-size:10px;">{{ description }}</p>
                     <p class="fst-italic mb-0 text-danger fw-bold" style="font-size:10px;" v-if="item.discount>0">Скидка {{item.discount}}%</p>
                     <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">

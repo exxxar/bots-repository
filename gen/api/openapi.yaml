@@ -1,0 +1,671 @@
+openapi: 3.0.0
+info:
+  contact:
+    name: Кищенко Кирилл Александрович
+    url: https:://t.me/x_x1337kka
+  description: "Автор работы: Кищенко Кирилл Александрович\nЭто API предназначено\
+    \ для управления арендой домов. \nОно предоставляет функционал для работы с ка\
+    тегориями домов, \nарендаторами, платежами и настройками системы.\n\nКаждый до\
+    м может быть отнесен к одной из категорий, и может \nиметь множество арендатор\
+    ов. Платежи связаны с арендаторами, \nа система настроек позволяет управлять к\
+    онтактной информацией.\n"
+  title: Курсовая работа "Разработка базы данных для веб-системы аренды домов"
+  version: 1.0.0
+servers:
+- url: http://localhost:8000/api
+paths:
+  /categories:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                type: array
+          description: Список категорий
+      summary: Получить все категории
+      x-accepts: application/json
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object'
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+              type: object
+        required: true
+      responses:
+        "201":
+          description: Категория создана
+      summary: Добавить новую категорию
+      x-contentType: application/json
+      x-accepts: application/json
+  /categories/{id}:
+    delete:
+      parameters:
+      - description: Идентификатор категории
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          description: Категория удалена
+        "404":
+          description: Категория не найдена
+      summary: Удалить категорию по ID
+      x-accepts: application/json
+    get:
+      parameters:
+      - description: Идентификатор категории
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: Информация о категории
+        "404":
+          description: Категория не найдена
+      summary: Получить категорию по ID
+      x-accepts: application/json
+    put:
+      parameters:
+      - description: Идентификатор категории
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_1'
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+              type: object
+        required: true
+      responses:
+        "200":
+          description: Категория обновлена
+        "404":
+          description: Категория не найдена
+      summary: Обновить информацию о категории
+      x-contentType: application/json
+      x-accepts: application/json
+  /houses:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                type: array
+          description: Список домов
+      summary: Получить все дома
+      x-accepts: application/json
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_2'
+        content:
+          application/json:
+            schema:
+              properties:
+                house_no:
+                  type: string
+                category_id:
+                  type: integer
+                description:
+                  type: string
+                price:
+                  format: float
+                  type: number
+              type: object
+        required: true
+      responses:
+        "201":
+          description: Дом добавлен
+      summary: Добавить новый дом
+      x-contentType: application/json
+      x-accepts: application/json
+  /houses/{id}:
+    delete:
+      parameters:
+      - description: Идентификатор дома
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          description: Дом удален
+        "404":
+          description: Дом не найден
+      summary: Удалить дом по ID
+      x-accepts: application/json
+    get:
+      parameters:
+      - description: Идентификатор дома
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+          description: Информация о доме
+        "404":
+          description: Дом не найден
+      summary: Получить дом по ID
+      x-accepts: application/json
+    put:
+      parameters:
+      - description: Идентификатор дома
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_3'
+        content:
+          application/json:
+            schema:
+              properties:
+                house_no:
+                  type: string
+                category_id:
+                  type: integer
+                description:
+                  type: string
+                price:
+                  format: float
+                  type: number
+              type: object
+        required: true
+      responses:
+        "200":
+          description: Дом обновлен
+        "404":
+          description: Дом не найден
+      summary: Обновить информацию о доме
+      x-contentType: application/json
+      x-accepts: application/json
+  /payments:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/inline_response_200_2'
+                type: array
+          description: Список платежей
+      summary: Получить все платежи
+      x-accepts: application/json
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_4'
+        content:
+          application/json:
+            schema:
+              properties:
+                tenant_id:
+                  type: integer
+                amount:
+                  format: float
+                  type: number
+                invoice:
+                  type: string
+              type: object
+        required: true
+      responses:
+        "201":
+          description: Платеж добавлен
+      summary: Добавить новый платеж
+      x-contentType: application/json
+      x-accepts: application/json
+  /tenants:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/inline_response_200_3'
+                type: array
+          description: Список арендаторов
+      summary: Получить всех арендаторов
+      x-accepts: application/json
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_5'
+        content:
+          application/json:
+            schema:
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                contact:
+                  type: string
+                house_id:
+                  type: integer
+                status:
+                  type: integer
+                date_in:
+                  format: date
+                  type: string
+              type: object
+        required: true
+      responses:
+        "201":
+          description: Арендатор добавлен
+      summary: Добавить нового арендатора
+      x-contentType: application/json
+      x-accepts: application/json
+  /users:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/inline_response_200_4'
+                type: array
+          description: Список пользователей
+      summary: Получить всех пользователей
+      x-accepts: application/json
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_6'
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                type:
+                  type: integer
+              type: object
+        required: true
+      responses:
+        "201":
+          description: Пользователь добавлен
+      summary: Добавить нового пользователя
+      x-contentType: application/json
+      x-accepts: application/json
+components:
+  requestBodies:
+    inline_object_1:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_1'
+      required: true
+    inline_object:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object'
+      required: true
+    inline_object_6:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_6'
+      required: true
+    inline_object_5:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_5'
+      required: true
+    inline_object_4:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_4'
+      required: true
+    inline_object_3:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_3'
+      required: true
+    inline_object_2:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_2'
+      required: true
+  schemas:
+    Category:
+      properties:
+        id:
+          description: Идентификатор категории
+          type: integer
+        name:
+          description: Название категории
+          type: string
+      type: object
+    House:
+      properties:
+        id:
+          description: Идентификатор дома
+          type: integer
+        house_no:
+          description: Номер дома
+          type: string
+        category_id:
+          description: Идентификатор категории (ссылается на `Category`)
+          type: integer
+        description:
+          description: Описание дома
+          type: string
+        price:
+          description: Цена дома
+          format: float
+          type: number
+      type: object
+    Payment:
+      properties:
+        id:
+          description: Идентификатор платежа
+          type: integer
+        tenant_id:
+          description: Идентификатор арендатора (ссылается на `Tenant`)
+          type: integer
+        amount:
+          description: Сумма платежа
+          format: float
+          type: number
+        invoice:
+          description: Номер счета
+          type: string
+        date_created:
+          description: Дата и время создания платежа
+          format: date-time
+          type: string
+      type: object
+    SystemSettings:
+      properties:
+        id:
+          description: Идентификатор настроек системы
+          type: integer
+        name:
+          description: Название системы
+          type: string
+        email:
+          description: Контактный email
+          type: string
+        contact:
+          description: Контактный телефон
+          type: string
+        cover_img:
+          description: Путь к изображению обложки
+          type: string
+        about_content:
+          description: Описание системы
+          type: string
+      type: object
+    Tenant:
+      properties:
+        id:
+          description: Идентификатор арендатора
+          type: integer
+        firstname:
+          description: Имя арендатора
+          type: string
+        middlename:
+          description: Отчество арендатора
+          type: string
+        lastname:
+          description: Фамилия арендатора
+          type: string
+        email:
+          description: Email арендатора
+          type: string
+        contact:
+          description: Контактный телефон арендатора
+          type: string
+        house_id:
+          description: Идентификатор дома арендатора (ссылается на `House`)
+          type: integer
+        status:
+          description: Статус арендатора (1 — активный, 0 — неактивный)
+          type: integer
+        date_in:
+          description: Дата въезда арендатора
+          format: date
+          type: string
+      type: object
+    User:
+      properties:
+        id:
+          description: Идентификатор пользователя
+          type: integer
+        name:
+          description: Имя пользователя
+          type: string
+        username:
+          description: Логин пользователя
+          type: string
+        password:
+          description: Пароль пользователя
+          type: string
+        type:
+          description: Тип пользователя (1 — Администратор, 2 — Сотрудник)
+          type: integer
+      type: object
+    inline_response_200:
+      example:
+        name: name
+        id: 0
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      type: object
+    inline_object:
+      properties:
+        name:
+          type: string
+      type: object
+    inline_object_1:
+      properties:
+        name:
+          type: string
+      type: object
+    inline_response_200_1:
+      example:
+        category_id: 6
+        price: 1.4658129
+        house_no: house_no
+        description: description
+        id: 0
+      properties:
+        id:
+          type: integer
+        house_no:
+          type: string
+        category_id:
+          type: integer
+        description:
+          type: string
+        price:
+          format: float
+          type: number
+      type: object
+    inline_object_2:
+      properties:
+        house_no:
+          type: string
+        category_id:
+          type: integer
+        description:
+          type: string
+        price:
+          format: float
+          type: number
+      type: object
+    inline_object_3:
+      properties:
+        house_no:
+          type: string
+        category_id:
+          type: integer
+        description:
+          type: string
+        price:
+          format: float
+          type: number
+      type: object
+    inline_response_200_2:
+      example:
+        tenant_id: 6
+        amount: 1.4658129
+        date_created: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        invoice: invoice
+      properties:
+        id:
+          type: integer
+        tenant_id:
+          type: integer
+        amount:
+          format: float
+          type: number
+        invoice:
+          type: string
+        date_created:
+          format: date-time
+          type: string
+      type: object
+    inline_object_4:
+      properties:
+        tenant_id:
+          type: integer
+        amount:
+          format: float
+          type: number
+        invoice:
+          type: string
+      type: object
+    inline_response_200_3:
+      example:
+        date_in: 2000-01-23
+        firstname: firstname
+        house_id: 6
+        contact: contact
+        id: 0
+        email: email
+        lastname: lastname
+        status: 1
+      properties:
+        id:
+          type: integer
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        contact:
+          type: string
+        house_id:
+          type: integer
+        status:
+          type: integer
+        date_in:
+          format: date
+          type: string
+      type: object
+    inline_object_5:
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        contact:
+          type: string
+        house_id:
+          type: integer
+        status:
+          type: integer
+        date_in:
+          format: date
+          type: string
+      type: object
+    inline_response_200_4:
+      example:
+        name: name
+        id: 0
+        type: 6
+        username: username
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+        type:
+          type: integer
+      type: object
+    inline_object_6:
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        type:
+          type: integer
+      type: object
+

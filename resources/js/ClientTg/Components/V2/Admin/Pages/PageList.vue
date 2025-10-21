@@ -188,7 +188,7 @@ export default {
     methods: {
         changeDirection(direction) {
             this.sort.direction = direction
-            this.loadOrders(0)
+            this.loadPages(0)
         },
         duplicatePage(id) {
 

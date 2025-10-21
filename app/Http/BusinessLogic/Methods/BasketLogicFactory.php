@@ -16,6 +16,7 @@ use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\BotUser;
 use App\Models\Order;
+use App\Models\Partner;
 use App\Models\Product;
 use App\Models\ProductCollection;
 use App\Models\Table;
@@ -38,10 +39,10 @@ class BasketLogicFactory extends BaseLogicFactory
      * @throws HttpException
      * @throws RequestException
      */
-    public function checkout(array $data, $uploadedPhoto = null): object | null
+    public function checkout(array $data, $uploadedPhoto = null): object|null
     {
 
-        if (is_null($this->bot) || is_null($this->botUser) )
+        if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Требования функции не выполнены!");
 
         $validator = Validator::make($data, [
@@ -57,7 +58,7 @@ class BasketLogicFactory extends BaseLogicFactory
             $data,
             $this->bot,
             $this->botUser,
-         //   $this->slug,
+            //   $this->slug,
             $uploadedPhoto
         );
 
@@ -324,11 +325,12 @@ class BasketLogicFactory extends BaseLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        $botIds = [$this->bot->id, ...$this->bot->partners()->get()->pluck("bot_partner_id")];
 
         $productId = $data["product_id"] ?? null;
 
         $product = Product::query()
-            ->where("bot_id", $this->bot->id)
+            ->whereIn("bot_id", $botIds)
             ->where("id", $productId)
             ->first();
 
@@ -343,8 +345,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->whereNull("table_approved_at")
             ->first();
 
-        if (!is_null($productInBasket))
-        {
+        if (!is_null($productInBasket)) {
             $productInBasket->comment = $data["comment"] ?? null;
             $productInBasket->save();
 
@@ -376,12 +377,13 @@ class BasketLogicFactory extends BaseLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        $botIds = [$this->bot->id, ...$this->bot->partners()->get()->pluck("bot_partner_id")];
 
         $productId = $data["product_id"] ?? null;
         $productCount = $data["count"] ?? 1;
 
         $product = Product::query()
-            ->where("bot_id", $this->bot->id)
+            ->whereIn("bot_id", $botIds)
             ->where("id", $productId)
             ->first();
 
@@ -407,12 +409,28 @@ class BasketLogicFactory extends BaseLogicFactory
 
 
         if (is_null($productInBasket)) {
+
+            $extraCharge = 0;
+            if ($product->bot_id != $this->bot->id) {
+                $partner = Partner::query()
+                    ->where("bot_id", "")
+                    ->where("bot_partner_id", $product->bot_id)
+                    ->first();
+
+                $extraCharge = is_null($partner) ? 0 : $partner->extra_charge ?? 0;
+            }
+
+
             $productInBasket = Basket::query()->create([
                 'product_id' => $product->id,
                 'count' => $productCount,
                 'bot_user_id' => $this->botUser->id,
                 'table_id' => $tableWithClient->id ?? null,
                 'bot_id' => $this->bot->id,
+                'bot_partner_id' => $product->bot_id == $this->bot->id ? null : $product->bot_id,
+                'params' => [
+                    "extra_charge" => $extraCharge
+                ],
                 'ordered_at' => null,
                 'table_approved_at' => null,
             ]);

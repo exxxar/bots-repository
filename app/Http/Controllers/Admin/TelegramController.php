@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Logging\DynamicLogChannel;
 use App\Models\Bot;
 use App\Models\BotMedia;
 use App\Models\Company;
@@ -24,6 +25,7 @@ class TelegramController extends Controller
 
     public function handler(Request $request, $domain)
     {
+        DynamicLogChannel::setGlobalBotDomain($domain);
         BotManager::bot()->handler($domain);
 
         return response()->json([

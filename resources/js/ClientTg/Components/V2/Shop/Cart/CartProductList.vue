@@ -17,13 +17,26 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
                 <ProductCardSimple
                     :comment="item.comment"
                     v-if="(item.product||null)!=null"
-                    :item="item.product"/>
+                    :item="item.product">
+                    <template #partner>
+                       <p class="mb-0" v-if="item.partner">
+                           <span  class="fst-italic" style="font-size:10px;">{{item.partner.title || '-'}}</span>
+                       </p>
+                    </template>
+                </ProductCardSimple>
 
                 <CollectionCardSimple
                     :comment="item.comment"
                     v-if="(item.collection||null)!=null"
                     :params="item.params"
-                    :item="item.collection"/>
+                    :item="item.collection">
+                    <template #partner>
+                        <p class="mb-0" v-if="item.partner" >
+                            <span class="fst-italic" style="font-size:10px;">{{item.partner.title || '-'}}</span>
+                        </p>
+
+                    </template>
+                </CollectionCardSimple>
 
 
             </div>

@@ -476,9 +476,10 @@ class ProductController extends Controller
 
     public function listByCategories(Request $request)
     {
+
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->listByCategories();
+            ->listByCategories($request->all());
     }
 
     public function index(Request $request): ProductCollection

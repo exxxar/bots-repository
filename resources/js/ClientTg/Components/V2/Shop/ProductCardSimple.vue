@@ -17,7 +17,9 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 
                 </div>
                 <div class="w-100 px-2 d-flex flex-column justify-content-between">
-                    <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">{{ item.title || 'не указано' }}</h6>
+                    <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">{{ item.title || 'не указано' }}
+                        <slot name="partner"></slot>
+                    </h6>
 
                     <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
                         <span>{{ item.current_price || 0 }}₽</span>

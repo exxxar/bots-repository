@@ -1063,6 +1063,7 @@ abstract class BotCore
             $data['link'] = $data['link'] ?? null;
             $data['thread'] = $data['thread'] ?? null;
             $data['user'] = $data['user'] ?? null;
+            $data['timestamp'] = $newMessage["timestamp"] ?? Carbon::now()->timestamp;
             $data['messages'] = $data['messages'] ?? [];
             // Добавление нового сообщения
             $data['messages'][] = [
@@ -1079,6 +1080,7 @@ abstract class BotCore
                 'thread' => $newMessage["thread"] ?? null,
                 'link' => $newMessage["link"] ?? null,
                 'user' => $newMessage["user"] ?? null,
+                'timestamp' => $newMessage["timestamp"] ?? Carbon::now()->timestamp,
                 'messages' => [[
                     "message" => $newMessage["message"] ?? '-',
                     'timestamp' => $newMessage["timestamp"] ?? null
@@ -1125,7 +1127,7 @@ abstract class BotCore
                 ]);
 
                 if ($result == "new")
-                    $this->reply("Ваше сообщение будет доставлено администратору в течении 10 минут.");
+                    $this->reply("Ваши сообщения будет доставлено администратору в течении 10 минут с момента последнего вашего сообщения. Вы можете продолжить писать.");
                 else
                     $this->replyAction();
 

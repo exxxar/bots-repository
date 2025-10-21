@@ -102,6 +102,10 @@ trait HasSettings
 
 
         ],
+        "partners"=>[
+          "is_active"=>false,
+          "display_self"=>true,
+        ],
         "init_certificate" => [
             "title" => "Подарочный сертификат",
             "description" => "500 рублей на CashBack",
@@ -304,21 +308,15 @@ trait HasSettings
 
             }
 
-            if (!is_null($tmp["base_payment_service"] ?? null)) {
-                $tmp['base_payment_service'] = is_string($tmp['base_payment_service']) ? (array)(json_decode($tmp['base_payment_service'])) : $tmp['base_payment_service'];
+            $jsonParams = ["base_payment_service","themes","manager","recommendation","partners"];
+
+
+            foreach ($jsonParams as $param){
+                if (!is_null($tmp[$param] ?? null)) {
+                    $tmp[$param] = is_string($tmp[$param]) ? (array)(json_decode($tmp[$param])) : $tmp[$param];
+                }
             }
 
-            if (!is_null($tmp["themes"] ?? null)) {
-                $tmp['themes'] = is_string($tmp['themes']) ? (array)(json_decode($tmp['themes'])) : $tmp['themes'];
-            }
-
-            if (!is_null($tmp["manager"] ?? null)) {
-                $tmp['manager'] = is_string($tmp['manager']) ? (array)(json_decode($tmp['manager'])) : $tmp['manager'];
-            }
-
-            if (!is_null($tmp["recommendation"] ?? null)) {
-                $tmp['recommendation'] = is_string($tmp['recommendation']) ? (array)(json_decode($tmp['recommendation'])) : $tmp['recommendation'];
-            }
 
         }
 

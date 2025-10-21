@@ -46,7 +46,7 @@ class BotSecurityResource extends JsonResource
             'iiko' => new IikoResource($this->whenLoaded("iiko")),
             'frontPad' => new FrontPadResource($this->whenLoaded("frontPad")),
            // 'bitrix' => !isset($this->bitrix) ? [] : BitrixResource::collection($this->whenLoaded('bitrix')),
-
+            'partners' => PartnerResource::collection($this->whenLoaded("partners")) ,
             //'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];

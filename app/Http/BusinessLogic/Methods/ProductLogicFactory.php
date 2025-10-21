@@ -52,19 +52,20 @@ class ProductLogicFactory extends BaseLogicFactory
     /**
      * @throws HttpException
      */
-    public function listByCategories()
+    public function listByCategories(array $data = null)
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        //need_hide_disabled_products
+
+        $botId = isset($data["partner_id"]) ? $data["partner_id"] : $this->bot->id;
 
         $categories = ProductCategory::query()
             ->with(["products"])
             ->whereHas("products", function ($q) {
                 $q->whereNull("in_stop_list_at");
             })
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", $botId )
             ->where("is_active", true)
             ->has("products", ">", 0)
             ->orderBy("order_position", "ASC")
@@ -72,7 +73,7 @@ class ProductLogicFactory extends BaseLogicFactory
 
         $withoutCategory = Product::query()
             ->with(["productCategories"])
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", $botId)
             ->has("productCategories", "=", 0)
             ->get();
 
@@ -81,7 +82,7 @@ class ProductLogicFactory extends BaseLogicFactory
             "is_active" => true,
             "order_position" => 0,
             "title" => "Без категории",
-            "bot_id" => $this->bot->id,
+            "bot_id" => $botId,
             "products" => $withoutCategory->toArray(),
             "count" => count($withoutCategory)
         ];
@@ -217,7 +218,7 @@ class ProductLogicFactory extends BaseLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function loadRecommendedProducts():ProductCollection
+    public function loadRecommendedProducts(): ProductCollection
     {
 
         if (is_null($this->bot))

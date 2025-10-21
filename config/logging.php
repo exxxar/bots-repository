@@ -81,6 +81,11 @@ return [
             'ignore_exceptions' => false,
         ],*/
 
+        'dynamic' => [
+            'driver' => 'custom',
+            'via' => App\Logging\DynamicLogChannel::class, // Класс для кастомного логирования
+            'level' => 'debug',
+        ],
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

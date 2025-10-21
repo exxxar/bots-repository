@@ -496,6 +496,7 @@ import BotManagerV2 from "@/ClientTg/Pages/V2/Admin/BotManager.vue";
 import PageManagerV2 from "@/ClientTg/Pages/V2/Admin/Pages.vue";
 import LinkManagerV2 from "@/ClientTg/Pages/V2/Admin/Links.vue";
 import IntegrationsV2 from "@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue";
+import PartnersV2 from "@/ClientTg/Pages/V2/Admin/Partners.vue";
 
 import AmoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Amo.vue";
 import CdekV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Cdek.vue";
@@ -788,6 +789,12 @@ export const simpleRoutes = [
         path: simplePrefix + '/admin/pages',
         component: PageManagerV2,
         meta: {title: 'Страницы'}
+    },
+    {
+        name: 'PartnersV2',
+        path: simplePrefix + '/admin/partners',
+        component: PartnersV2,
+        meta: {title: 'Партнеры'}
     },
     {
         name: 'IntegrationsV2',

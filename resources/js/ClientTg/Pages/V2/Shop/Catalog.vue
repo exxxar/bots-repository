@@ -11,7 +11,7 @@ import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog
 
     <nav
 
-        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0"
         style="border-radius:10px 10px 0px 0px;z-index:999!important;">
         <button
             v-if="canBy"

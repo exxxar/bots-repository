@@ -7,214 +7,318 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
 import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 import CategorySlider from "@/ClientTg/Components/V2/Shop/CategorySlider.vue";
-
+import PartnerSlider from "@/ClientTg/Components/V2/Shop/Partners/PartnerSlider.vue";
 import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
+import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vue";
 </script>
 <template>
 
-    <menu
-        id="category-slider"
-        class="d-block w-100 p-0 m-0">
-        <CategorySlider
-            :settings="settings"
-            :categories="filteredCategories"
-            :collections="collections"
-            @select="selectCategory"
-            @search="findProducts"
-        />
-
-    </menu>
+    <template v-if="shop===0">
+        <PartnersMain v-on:select="selectPartner"></PartnersMain>
+    </template>
+    <template v-if="shop===1">
 
 
-    <div
-        v-touch:swipe.left="doSwipeLeft"
-        v-touch:swipe.right="doSwipeRight"
-        class="d-flex flex-column">
 
-        <template v-if="settings">
-            <div class="p-2" v-if="settings.is_disabled">
-                <div class="alert alert-danger mb-0">
-                    <p class="mb-0" v-html="settings.disabled_text"></p>
+        <div class="container mt-4">
+            <!-- Profile Header -->
+            <div class="row mb-4">
+                <div class="col-md-3 text-center">
+                    <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="img-fluid rounded-circle w-75">
+                </div>
+                <div class="col-md-9">
+                    <h3 class="fw-bold">Julian Gruber</h3>
+                    <h5 class="text-muted">Designer</h5>
                 </div>
             </div>
-        </template>
 
+            <!-- Profile Stats -->
+            <div class="row mb-4">
+                <div class="col-6 col-md-3 mb-2">
+                    <a href="#" class="text-decoration-none d-block text-center">
+                        <strong>152</strong><br>Photos
+                    </a>
+                </div>
+                <div class="col-6 col-md-3 mb-2">
+                    <a href="#" class="text-decoration-none d-block text-center">
+                        <strong>52</strong><br>Albums
+                    </a>
+                </div>
+                <div class="col-6 col-md-3 mb-2">
+                    <a href="#" class="text-decoration-none d-block text-center">
+                        <strong>27k</strong><br>Followers
+                    </a>
+                </div>
+                <div class="col-6 col-md-3 mb-2">
+                    <a href="#" class="text-decoration-none d-block text-center">
+                        <strong>506</strong><br>Following
+                    </a>
+                </div>
+            </div>
 
-        <!--        <menu
-                    v-bind:style="colorTheme"
-                    class="d-block position-sticky w-100 header-category-slider">
+            <!-- Profile Bio and Location -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <p class="text-muted">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at magna porttitor lorem mollis ornare. Fusce varius varius massa.
+                    </p>
+                    <p>
+                        <a href="#">Paris</a>, <a href="#">France</a>
+                    </p>
+                </div>
+            </div>
 
-                    <ul class="nav nav-tabs justify-content-center catalog-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               @click="openTab(0)"
-                               style="font-weight:bold;"
-                               v-bind:class="{'active':tab===0}"
-                               aria-current="page" href="javascript:void(0)"><i class="fa-solid fa-tag mr-2"></i>Категории</a>
+            <!-- Tabs for Navigation -->
+            <div class="row">
+                <div class="col-12">
+                    <ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="feed-tab" data-bs-toggle="tab" href="#feed" role="tab" aria-controls="feed" aria-selected="true">
+                                <i class="bi bi-grid-3x3-gap"></i> Feed
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               @click="openTab(1)"
-                               style="font-weight:bold;"
-                               v-bind:class="{'active':tab===1}"
-                               href="javascript:void(0)"><i class="fa-solid fa-bag-shopping mr-2"></i>Товары</a>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="friends-tab" data-bs-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">
+                                <i class="bi bi-person-lines-fill"></i> Friends
+                            </a>
                         </li>
-
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="bookmarks-tab" data-bs-toggle="tab" href="#bookmarks" role="tab" aria-controls="bookmarks" aria-selected="false">
+                                <i class="bi bi-bookmark-fill"></i> Bookmarks
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="settings-tab" data-bs-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">
+                                <i class="bi bi-gear-fill"></i> Settings
+                            </a>
+                        </li>
                     </ul>
-                </menu>-->
+                    <div class="tab-content" id="profileTabContent">
+                        <div class="tab-pane fade show active" id="feed" role="tabpanel" aria-labelledby="feed-tab">
+                            <!-- Feed content goes here -->
+                        </div>
+                        <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
+                            <!-- Friends content goes here -->
+                        </div>
+                        <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks-tab">
+                            <!-- Bookmarks content goes here -->
+                        </div>
+                        <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                            <!-- Settings content goes here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <menu
+            id="category-slider"
+            class="d-block w-100 p-0 m-0 sticky-menu">
+            <CategorySlider
+                :settings="settings"
+                :categories="filteredCategories"
+                :collections="collections"
+                @select="selectCategory"
+                @search="findProducts"
+            />
+
+        </menu>
+
 
         <div
-            v-show="tab===0"
-            class="album" style="min-height:100vh;">
+
+            class="d-flex flex-column">
+
             <template v-if="settings">
-                <div class="container g-2">
-
-                    <!--        <div class="p-2">
-            <div class="input-group">
-                <div class="form-floating">
-                    <input type="search"
-                           v-model="search"
-                           class="form-control border-light" id="search-product" placeholder="name@example.com">
-                    <label for="search-product">Поиск по товарам</label>
-                </div>
-                <button class="btn btn-outline-light " type="button" id="button-addon2"><i
-                    class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
-            </div>
-        </div>-->
-                    <div class="list-group" v-if="filteredCategories.length>0">
-                        <a
-                            href="javascript:void(0)"
-                            @click="selectCategory(null)"
-                            style="font-weight:bold;"
-                            class="list-group-item list-group-item-action d-flex justify-content-between p-3"
-                            aria-current="true">
-                            Все категории товаров
-                        </a>
-                        <a
-                            v-if="collections.length>0"
-                            href="javascript:void(0)"
-                            @click="selectCategory({id:'combo'})"
-                            style="font-weight:bold;"
-                            class="list-group-item list-group-item-action d-flex justify-content-between p-3"
-                            aria-current="true">
-                            Комбо-меню<span class="badge text-bg-primary">{{ collections.length || 0 }}</span>
-                        </a>
-
-                        <a
-                            href="javascript:void(0)"
-                            @click="selectCategory(item)"
-                            v-for="item in filteredCategories"
-                            style="font-weight:bold;"
-                            class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center"
-                            aria-current="true">
-                            {{ item.title || 'Не указано' }}<span class="badge text-bg-primary">{{
-                                item.count || 0
-                            }}</span>
-                        </a>
-
+                <div class="p-2" v-if="settings.is_disabled">
+                    <div class="alert alert-danger mb-0">
+                        <p class="mb-0" v-html="settings.disabled_text"></p>
                     </div>
-
-                    <!--                <CategoryList
-                                        :selected="categories"
-                                        v-on:select="selectCategory"/>-->
                 </div>
             </template>
-            <PreloaderV1 v-else/>
-        </div>
-
-        <div
-            v-if="tab===1"
-            style="min-height:100vh;"
-            class="album">
-            <template v-if="settings">
-                <div class="container g-2">
 
 
-                    <template
-                        v-if="collections.length>0">
-                        <h5 class="my-4 divider" id="cat-combo">Комбо меню</h5>
-                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
-                            <div class="col"
-                                 v-for="(collection, index) in collections">
+            <!--        <menu
+                        v-bind:style="colorTheme"
+                        class="d-block position-sticky w-100 header-category-slider">
 
-                                <CollectionCard
-                                    :item="collection"
-                                />
+                        <ul class="nav nav-tabs justify-content-center catalog-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   @click="openTab(0)"
+                                   style="font-weight:bold;"
+                                   v-bind:class="{'active':tab===0}"
+                                   aria-current="page" href="javascript:void(0)"><i class="fa-solid fa-tag mr-2"></i>Категории</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   @click="openTab(1)"
+                                   style="font-weight:bold;"
+                                   v-bind:class="{'active':tab===1}"
+                                   href="javascript:void(0)"><i class="fa-solid fa-bag-shopping mr-2"></i>Товары</a>
+                            </li>
 
+                        </ul>
+                    </menu>-->
+
+            <div
+                v-show="tab===0"
+                class="album" style="min-height:100vh;">
+                <template v-if="settings">
+                    <div class="container g-2">
+
+                        <!--        <div class="p-2">
+                <div class="input-group">
+                    <div class="form-floating">
+                        <input type="search"
+                               v-model="search"
+                               class="form-control border-light" id="search-product" placeholder="name@example.com">
+                        <label for="search-product">Поиск по товарам</label>
+                    </div>
+                    <button class="btn btn-outline-light " type="button" id="button-addon2"><i
+                        class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
+                </div>
+            </div>-->
+                        <div class="list-group" v-if="filteredCategories.length>0">
+                            <a
+                                href="javascript:void(0)"
+                                @click="selectCategory(null)"
+                                style="font-weight:bold;"
+                                class="list-group-item list-group-item-action d-flex justify-content-between p-3"
+                                aria-current="true">
+                                Все категории товаров
+                            </a>
+                            <a
+                                v-if="collections.length>0"
+                                href="javascript:void(0)"
+                                @click="selectCategory({id:'combo'})"
+                                style="font-weight:bold;"
+                                class="list-group-item list-group-item-action d-flex justify-content-between p-3"
+                                aria-current="true">
+                                Комбо-меню<span class="badge text-bg-primary">{{ collections.length || 0 }}</span>
+                            </a>
+
+                            <a
+                                href="javascript:void(0)"
+                                @click="selectCategory(item)"
+                                v-for="item in filteredCategories"
+                                style="font-weight:bold;"
+                                class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center"
+                                aria-current="true">
+                                {{ item.title || 'Не указано' }}<span class="badge text-bg-primary">{{
+                                    item.count || 0
+                                }}</span>
+                            </a>
+
+                        </div>
+
+                        <!--                <CategoryList
+                                            :selected="categories"
+                                            v-on:select="selectCategory"/>-->
+                    </div>
+                </template>
+                <PreloaderV1 v-else/>
+            </div>
+
+            <div
+                v-if="tab===1"
+                style="min-height:100vh;"
+                class="album">
+                <template v-if="settings">
+                    <div class="container g-2">
+
+
+                        <template
+                            v-if="collections.length>0">
+                            <h5 class="my-4 divider" id="cat-combo">Комбо меню</h5>
+                            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+                                <div class="col"
+                                     v-for="(collection, index) in collections">
+
+                                    <CollectionCard
+                                        :item="collection"
+                                    />
+
+
+                                </div>
+                            </div>
+                            <div
+                                v-if="collections_paginate?.meta.last_page > 1"
+                                class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                                <div class="col">
+                                    <Pagination
+                                        :simple="true"
+                                        v-on:pagination_page="nextCollections"
+                                        v-if="collections_paginate"
+                                        :pagination="collections_paginate"/>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template
+                            v-if="(bot.partners||[]).length>0&&partners.is_active">
+                            <h5 class="my-4 divider" id="cat-combo">Наши партнеры</h5>
+                            <PartnerSlider v-on:select="selectPartner"/>
+                        </template>
+
+                        <template
+                            v-if="(stories||[]).length>0">
+                            <h5 class="my-4 divider" id="cat-combo">Наши новинки</h5>
+                            <StoryList
+                                :stories="stories||[]"/>
+                        </template>
+
+                        <template
+                            v-if="filteredCategories.length>0"
+                            v-for="cat in filteredCategories">
+                            <h5 class="my-4 divider" :id="'cat-'+cat.id">{{ cat.title || '-' }}</h5>
+
+                            <div
+                                v-touch:swipe.left="doSwipeLeft"
+                                v-touch:swipe.right="doSwipeRight"
+                                v-if="!settings.is_product_list"
+                                class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+                                <div class="col"
+                                     v-for="(product, index) in cat.products">
+
+                                    <ProductCard
+
+                                        :item="product"
+                                    />
+                                </div>
 
                             </div>
-                        </div>
-                        <div
-                            v-if="collections_paginate?.meta.last_page > 1"
-                            class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                            <ol
+                                v-else
+                                class="list-group list-group-numbered">
+                                <template v-for="(product, index) in cat.products">
+                                    <ProductListItem
+                                        :item="product"
+                                    />
+                                </template>
+
+                            </ol>
+
+
+                        </template>
+                        <PreloaderV1 v-else/>
+                    </div>
+                    <div class="container">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                             <div class="col">
                                 <Pagination
                                     :simple="true"
-                                    v-on:pagination_page="nextCollections"
-                                    v-if="collections_paginate"
-                                    :pagination="collections_paginate"/>
+                                    v-on:pagination_page="nextProducts"
+                                    v-if="paginate"
+                                    :pagination="paginate"/>
                             </div>
-                        </div>
-                    </template>
-
-
-                    <template
-                        v-if="(stories||[]).length>0">
-                        <h5 class="my-4 divider" id="cat-combo">Наши новинки</h5>
-                        <StoryList
-                            :stories="stories||[]"/>
-                    </template>
-
-                    <template
-                        v-if="filteredCategories.length>0"
-                        v-for="cat in filteredCategories">
-                        <h5 class="my-4 divider" :id="'cat-'+cat.id">{{ cat.title || '-' }}</h5>
-
-                        <div
-                            v-if="!settings.is_product_list"
-                            class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
-                            <div class="col"
-                                 v-for="(product, index) in cat.products">
-
-                                <ProductCard
-
-                                    :item="product"
-                                />
-                            </div>
-
-                        </div>
-
-                        <ol
-                            v-else
-                            class="list-group list-group-numbered">
-                            <template v-for="(product, index) in cat.products">
-                                <ProductListItem
-                                    :item="product"
-                                />
-                            </template>
-
-                        </ol>
-
-
-                    </template>
-                    <PreloaderV1 v-else/>
-                </div>
-                <div class="container">
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                        <div class="col">
-                            <Pagination
-                                :simple="true"
-                                v-on:pagination_page="nextProducts"
-                                v-if="paginate"
-                                :pagination="paginate"/>
                         </div>
                     </div>
-                </div>
-            </template>
-            <PreloaderV1 v-else/>
+                </template>
+                <PreloaderV1 v-else/>
+            </div>
         </div>
-    </div>
-
+    </template>
 </template>
 <script>
 
@@ -225,6 +329,9 @@ export default {
     props: ["settings"],
     data() {
         return {
+
+            extra_charge: 0,
+            shop: 0,
             stories: [],
             tab: 1,
             load_content: false,
@@ -284,7 +391,9 @@ export default {
             const data = uuidv4();
             return data
         },
-
+        partners() {
+            return this.settings.partners
+        },
         bot() {
             return window.currentBot
         },
@@ -358,6 +467,7 @@ export default {
 
     mounted() {
 
+        this.shop = this.partners.is_active ? 0 : 1
         //this.products
         const slider = document.getElementById('category-slider')
 
@@ -387,12 +497,8 @@ export default {
 
         this.loadStories()
 
-        //this.clearCart();
         this.loadProducts()
         this.loadCollections()
-
-        /*  if (this.cartProducts.length > 0)
-              this.loadActualProducts()*/
 
 
         this.tg.BackButton.show()
@@ -405,7 +511,22 @@ export default {
         })
     },
     methods: {
+        selectPartner(partner) {
 
+            this.extra_charge = partner.extra_charge || 0
+
+
+            this.products = []
+            this.collections = []
+            this.categories = []
+
+            this.$nextTick(() => {
+                this.loadProducts(0, partner.bot_partner_id)
+                this.loadCollections(0, partner.bot_partner_id)
+                this.shop = 1
+            })
+            this.$preloader.show()
+        },
         doSwipeLeft() {
             this.$router.push({name: 'MenuV2'})
         },
@@ -424,9 +545,7 @@ export default {
         findProducts(text) {
             this.search = text
         },
-        /*   checkCollectionInCart(item){
-               return this.inCollectionCart(item.id, null) > 0
-           },*/
+
         scroll(id) {
             // document.getElementById(id).scrollIntoView();
             var element = document.getElementById(id);
@@ -451,31 +570,6 @@ export default {
             }
             return false;
         },
-        /* doSwipeLeft() {
-             if (this.closeModalOnSwipe())
-                 return;
-
-             let limit = 1
-             if (this.tab === 0)
-                 this.tab = limit
-             else
-                 this.tab--;
-
-             window.scroll(0, 80);
-         },
-         doSwipeRight() {
-             if (this.closeModalOnSwipe())
-                 return;
-
-             let limit = 1
-             if (this.tab === limit)
-                 this.tab = 0
-             else
-                 this.tab++;
-
-             window.scroll(0, 80);
-
-         },*/
 
         decPersons() {
             this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
@@ -499,6 +593,7 @@ export default {
                 }, 1000
             )
         },
+
         clearCart() {
             this.tab = 1
             this.$store.dispatch("clearCart").then(() => {
@@ -532,10 +627,11 @@ export default {
             this.loadCollections(index)
         },
 
-        loadCollections(page = 0) {
+        loadCollections(page = 0, partnerId = null) {
             this.load_content = true
             this.load_collection = true
             return this.$store.dispatch("loadGlobalCollections", {
+                partner_id: partnerId,
                 page: page
             }).then((resp) => {
                 this.collections = this.getCollections
@@ -553,31 +649,32 @@ export default {
                 })
             })
         },
-        loadProducts(page = 0) {
+        loadProducts(page = 0, partnerId = null) {
             this.tab = 1
 
-            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_"+this.getCurrentBot.bot_domain) !== null
+            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain) !== null
 
             if (hasProducts)
-                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_"+this.getCurrentBot.bot_domain))
+                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain))
 
 
-            return this.$store.dispatch("loadProductsByCategory"/*, {
-                dataObject: {
-                    search: this.search,
-                    categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,
-                    min_price: this.min_price || null,
-                    max_price: this.max_price || null
-                },
-                page: page,
-                size: 100
-            }*/).then((resp) => {
+            return this.$store.dispatch("loadProductsByCategory", {
+                partner_id: partnerId,
+                /*  dataObject: {
+                      search: this.search,
+                      categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,
+                      min_price: this.min_price || null,
+                      max_price: this.max_price || null
+                  },
+                  page: page,
+                  size: 100*/
+            }).then((resp) => {
 
                 this.load_content = true
 
                 this.$nextTick(() => {
                     this.products = resp.data
-                    localStorage.setItem("cashman_preloaded_products_by_categories_"+this.getCurrentBot.bot_domain, JSON.stringify(this.products))
+                    localStorage.setItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain, JSON.stringify(this.products))
                     this.load_content = false
                     if (!hasProducts)
                         window.scroll(0, 80);
@@ -734,5 +831,10 @@ export default {
     box-shadow: 1px 1px 7px 0px #00000045;
 }
 
-
+.sticky-menu {
+    position: sticky;
+    top: 0px;
+    z-index: 1000;
+    bottom: 65px;
+}
 </style>

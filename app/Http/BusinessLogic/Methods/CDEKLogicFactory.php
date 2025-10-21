@@ -207,7 +207,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         foreach (json_decode($data["packages"]) as $item) {
             $item = (object)$item;
             $packages[] = [
-                'number' => $item->id,
+                'number' => $item->id ?? Str::uuid(),
                 'weight' => (($item->weight ?? 0) == 0 ? $baseDimensions["weight"] : $item->weight) * 1000,
                 'length' => ($item->length ?? 0) == 0 ? $baseDimensions["length"] : $item->length,
                 'width' => ($item->width ?? 0) == 0 ? $baseDimensions["width"] : $item->width,

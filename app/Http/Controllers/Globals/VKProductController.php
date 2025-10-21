@@ -25,6 +25,8 @@ class VKProductController extends Controller
 {
     //protected string $vkUrl;
 
+    protected $bot = null;
+
     protected $fpProducts = null;
 
     protected $tmpProducts = [];
@@ -91,8 +93,10 @@ class VKProductController extends Controller
         ];
     }
 
-    protected function importProducts($vkProducts, $bot, $album, &$results)
+    protected function importProducts($vkProducts, $album, &$results)
     {
+        $bot = $this->bot;
+
         foreach ($vkProducts as $vkProduct) {
 
 
@@ -266,34 +270,59 @@ class VKProductController extends Controller
         }
     }
 
-    public function shopMode($bot, $code)
+    public function shopMode($code)
     {
-        $oauth = new VKOAuth();
-        $client_id = env("VK_CLIENT_ID");
-        $client_secret = env('VK_CLIENT_SECRET');
-        $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
 
 
         $products = Product::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         foreach ($products as $product) {
-            Log::info("ПРОДУКТ => " . $product->id . " " . $product->title . " " . $product->bot_id);
             $product->in_stop_list_at = Carbon::now();
             $product->deleted_at = Carbon::now();
             $product->save();
         }
 
 
-        $this->fpProducts = !is_null($bot->frontPad ?? null) && !is_null($bot->frontPad->token ?? null) ?
+        $this->fpProducts = !is_null($this->bot->frontPad ?? null) && !is_null($this->bot->frontPad->token ?? null) ?
             BusinessLogic::frontPad()
-                ->setBot($bot)
+                ->setBot($this->bot)
                 ->getProducts() : null;
 
 
-        $tmpScreenName = substr($bot->vk_shop_link, strpos($bot->vk_shop_link, "https://vk.com/") + strlen("https://vk.com/"));
+        $results = (object)[
+            "total_product_count" => 0,
+            "created_product_count" => 0,
+            "updated_product_count" => 0,
+            "total_frontpad_count" => 0,
+            "front_pad_not_found_items" => [],
+        ];
 
+        $input = trim($this->bot->vk_shop_link);
+
+        $links = str_contains($input, ',') ? array_map('trim', explode(',', $input)) : [$input];
+        foreach ($links as $link) {
+            if (!empty($link)) {
+                $this->vkHandler($link, $code, $results);
+            }
+        }
+
+        Inertia::setRootView("shop");
+        return Inertia::render('V2/Result', [
+            'message' => "Товары успешно добавлены!",
+            'data' => json_encode($results)
+        ]);
+    }
+
+    protected function vkHandler($link, $code, &$results)
+    {
+        $oauth = new VKOAuth();
+        $client_id = env("VK_CLIENT_ID");
+        $client_secret = env('VK_CLIENT_SECRET');
+        $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
+
+        $tmpScreenName = substr($link, strpos($link, "https://vk.com/") + strlen("https://vk.com/"));
         $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
         $access_token = $response['access_token'] ?? null;
 
@@ -321,14 +350,6 @@ class VKProductController extends Controller
             return response()->noContent(400);
 
 
-        $results = (object)[
-            "total_product_count" => 0,
-            "created_product_count" => 0,
-            "updated_product_count" => 0,
-            "total_frontpad_count" => 0,
-            "front_pad_not_found_items" => [],
-        ];
-
         try {
             $response = $vk->market()->getAlbums($access_token, [
                 'owner_id' => "-$data->object_id",
@@ -339,7 +360,6 @@ class VKProductController extends Controller
 
             if (count($vkAlbums) > 0)
                 foreach ($vkAlbums as $album) {
-
 
                     $album = (object)$album;
 
@@ -355,9 +375,8 @@ class VKProductController extends Controller
 
                     $vkProducts = ((object)$response)->items;
 
-                    // Log::info("Альбом=>".$album->title." товары в альбоме ".print_r($vkProducts, true));
 
-                    $this->importProducts($vkProducts, $bot, $album, $results);
+                    $this->importProducts($vkProducts, $album, $results);
 
                     sleep(2);
                 }
@@ -373,10 +392,9 @@ class VKProductController extends Controller
 
                 $vkProducts = ((object)$response)->items;
 
-                $this->importProducts($vkProducts, $bot, null, $results);
+                $this->importProducts($vkProducts, null, $results);
             }
 
-            /// Log::info("all product ids=>" . print_r(array_values($this->tmpProducts), true));
         } catch (\Exception $e) {
             Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");
@@ -385,204 +403,6 @@ class VKProductController extends Controller
                 'message' => "Ошибка добавления товаров!",
             ]);
         }
-
-        /*$tmpClearedCategories = ProductCategory::query()
-            ->with(["products"])
-            ->where("bot_id", $bot->id)
-            ->has("products","=",0)
-            ->get();
-
-        foreach ($tmpClearedCategories as $tmpClearedCategory)
-            $tmpClearedCategory->delete();*/
-
-        Inertia::setRootView("shop");
-
-        return Inertia::render('V2/Result', [
-            'message' => "Товары успешно добавлены!",
-            'data' => json_encode($results)
-        ]);
-    }
-
-    public function marketplaceMode($bot, $code)
-    {
-        $oauth = new VKOAuth();
-        $client_id = env("VK_CLIENT_ID");
-        $client_secret = env('VK_CLIENT_SECRET');
-        $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
-
-        $tmpScreenName = substr($bot->vk_shop_link, strpos($bot->vk_shop_link, "https://vk.com/") + strlen("https://vk.com/"));
-
-        $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
-        $access_token = $response['access_token'] ?? null;
-
-        $vk = new VKApiClient();
-
-        try {
-
-            $response = $vk->utils()->resolveScreenName($access_token, [
-                'screen_name' => $tmpScreenName ?? null,
-            ]);
-
-
-        } catch (\Exception $e) {
-            return response()->noContent(404);
-
-        }
-
-        $data = ((object)$response);
-
-        if (is_null($data))
-            return response()->noContent(400);
-
-        if ($data->type != "group" && $data->type != "page")
-            return response()->noContent(400);
-
-        /*
-
-
-                    Schema::disableForeignKeyConstraints();
-                    MenuCategory::truncate();
-                    RestoranInCategory::truncate();
-                    RestMenu::truncate();
-                    Schema::enableForeignKeyConstraints();
-
-
-                    $token = $auth->getToken($request->get('code'));
-
-                    $api = new Client('5.131');
-                    $api->setDefaultToken($token);
-
-                    $tmp_ids = [["id" => "-136275935", "base" => true]];
-                    $restorans = Restoran::select(["vk_group_id"])->whereNotNull("vk_group_id")->get();
-
-                    if (count($restorans) > 0)
-                        foreach ($restorans as $rest)
-                            array_push($tmp_ids, ["id" => $rest->vk_group_id, "base" => false]
-                            );
-
-                    foreach ($tmp_ids as $tmp_id) {
-                        $response = $api->request('market.getAlbums', [
-                            'owner_id' => $tmp_id["id"],
-                            'count' => 50
-                        ]);
-
-
-                        foreach ($response["response"]["items"] as $item) {
-                            //echo $item["id"].$item["title"]." ".$item["photo"]["photo_807"]."<br>";
-
-                            $response2 = $api->request('market.get', [
-                                'owner_id' => $tmp_id["id"],
-                                'album_id' => $item["id"],
-                                'count' => 200,
-                            ]);
-
-
-                            foreach ($response2["response"]["items"] as $item2) {
-                                //echo $item2["description"]." ".$item2["price"]["text"]." ".$item2["thumb_photo"]." ".$item2["title"]."<br>";
-
-
-                                //preg_match_all('|\d+|', $item2["description"], $matches);
-                                preg_match_all('/(#\w+)/u', $item2["description"], $matches);
-
-                                // $count = $matches[0][0] ?? 0;
-                                //dd($matches);
-
-
-                                $cat = count($matches[0]) > 0 ? $matches[0][0] : "#безкатегории";
-
-
-                                $category = MenuCategory::where("name", $cat)->first();
-                                if (is_null($category)) {
-                                    $category = MenuCategory::create([
-                                        "name" => $cat
-                                    ]);
-                                }
-
-
-                                //preg_match_all('|\d+|', $item2["price"]["text"], $matches);
-
-                                $price = intval($item2["price"]["amount"]) / 100;//$matches[0][0] ?? 0;
-                                $tmp_old_price = isset($item2["price"]["old_amount"]) ? intval($item2["price"]["old_amount"]) / 100 : 0;
-
-                                $rest = Restoran::with(["categories"])
-                                    ->where("name", $item["title"])->distinct('parent_id')->first();
-
-                                if (is_null($rest))
-                                    continue;
-
-
-                                $description = $item2["description"];
-
-                                preg_match_all('/([0-9]+).грамм/i', $description, $media);
-
-                                $weight = count($matches) >= 2 ? ($media[1][0] ?? 0) : 0;
-
-                                $food_status = [
-                                    "Акция!" => FoodStatusEnum::Promotion,
-                                    "Скидка!" => FoodStatusEnum::Promotion,
-                                    "Топ!" => FoodStatusEnum::InTheTop,
-                                    "Хит продаж!" => FoodStatusEnum::BestSeller,
-                                    "Новинка!" => FoodStatusEnum::NewFood,
-                                    "На вес!" => FoodStatusEnum::WeightFood,
-                                ];
-
-                                $food_status_index = null;
-
-                                foreach ($food_status as $key => $status)
-                                    if (mb_strpos(mb_strtolower($description), mb_strtolower($key)))
-                                        $food_status_index = $key;
-
-                                $product = RestMenu::create([
-                                    'food_name' => $item2["title"],
-                                    'food_remark' => $description,
-                                    'food_ext' => $weight ?? 0,
-                                    'food_sub' => $this->prepareSub($description),
-                                    'food_price' => $price,
-                                    'food_discount_price' => $tmp_old_price,
-                                    'food_status' => is_null($food_status_index) ? FoodStatusEnum::Unset : $food_status[$food_status_index],
-                                    'rest_id' => $rest->id,
-                                    'food_category_id' => $category->id,
-                                    'food_img' => $item2["thumb_photo"],
-                                    'stop_list' => false,
-                                ]);
-
-                                if (!is_null($food_status_index))
-                                    if ($food_status[$food_status_index] === FoodStatusEnum::Promotion) {
-                                        $promotion = Promotion::where('product->food_name', $product->food_name)
-                                            ->where('product->rest_id', $product->rest_id)
-                                            ->first();
-
-                                        if (is_null($promotion))
-                                            Promotion::create([
-                                                'product' => $product
-                                            ]);
-                                    }
-
-
-                                if (is_null($rest->categories()->find($category->id)))
-                                    RestoranInCategory::create([
-                                        'category_id' => $category->id,
-                                        'restoran_id' => $rest->id
-                                    ]);
-
-
-                                $rate = Rating::create([
-                                    'content_type' => \App\Enums\ContentTypeEnum::Menu,
-                                    'content_id' => $product->id,
-                                ]);
-
-                                $product->rating_id = $rate->id;
-                                $product->save();
-                            }
-
-
-                            sleep(2);
-
-                        }
-                    }
-                    //dd($response["items"]);
-
-                */
 
     }
 
@@ -599,26 +419,19 @@ class VKProductController extends Controller
         if (is_null($code) || is_null($state))
             return response()->noContent(404);
 
-        $bot = Bot::query()
+        $this->bot = Bot::query()
             ->with(["frontPad"])
             ->where("bot_domain", $state)
             ->first();
 
-        //  $shopMode = $bot->shop_mode ?? 0;
 
-        if (is_null($bot))
+        if (is_null($this->bot))
             return response()->noContent(404);
 
-        if (is_null($bot->vk_shop_link))
+        if (is_null($this->bot->vk_shop_link))
             return response()->noContent(404);
 
-        //    if ($shopMode == 0)
-        return $this->shopMode($bot, $code);
-        /*
-                if ($shopMode == 1)
-                    return $this->marketplaceMode($bot, $code);*/
+        return $this->shopMode($code);
 
-
-        // dd($response);
     }
 }

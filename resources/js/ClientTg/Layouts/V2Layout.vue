@@ -6,6 +6,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
 
 import ProductInfo from "@/ClientTg/Components/V2/Shop/ProductInfo.vue"
+import Preloader from "@/ClientTg/Components/V2/Shop/Preloader.vue";
 </script>
 <template>
 
@@ -13,7 +14,7 @@ import ProductInfo from "@/ClientTg/Components/V2/Shop/ProductInfo.vue"
         <title>CashMan - система твоего бизнеса внутри</title>
         <meta name="description" content="CashMan - система твоего бизнеса внутри"/>
     </Head>
-
+    <Preloader/>
     <header
         v-if="!needHideMenu"
         data-bs-theme="dark">

@@ -11,6 +11,7 @@ use App\Http\BusinessLogic\Methods\FrontPadLogicFactory;
 use App\Http\BusinessLogic\Methods\IIKOLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory;
+use App\Http\BusinessLogic\Methods\PartnersLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
 use App\Http\BusinessLogic\Methods\ProductCollectionLogicFactory;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
@@ -38,6 +39,7 @@ use App\Http\BusinessLogic\Methods\ProductLogicFactory;
 class BusinessLogic
 {
     protected AmoLogicFactory $amo;
+    protected PartnersLogicFactory $partners;
     protected ProductCollectionLogicFactory $collection;
     protected TableLogicFactory $table;
     protected BitrixLogicFactory $bitrix;
@@ -72,6 +74,7 @@ class BusinessLogic
     public function __construct()
     {
         $this->amo = new AmoLogicFactory();
+        $this->partners = new PartnersLogicFactory();
         $this->bitrix = new BitrixLogicFactory();
         $this->payment = new PaymentLogicFactory();
         $this->quiz = new QuizLogicFactory();
@@ -107,6 +110,11 @@ class BusinessLogic
     public function table(): TableLogicFactory
     {
         return $this->table;
+    }
+
+    public function partners(): PartnersLogicFactory
+    {
+        return $this->partners;
     }
 
     public function basket(): BasketLogicFactory

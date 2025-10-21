@@ -2,10 +2,11 @@ import './bootstrap';
 import Vue3TouchEvents from "vue3-touch-events";
 import BotNotification from './modules/notifications.js'
 import BotPages from './modules/pages.js'
-import BotPreloader from './modules/preloader.js'
+
 import Cart from './modules/cart.js'
 import CashBack from './modules/cashback.js'
 import ProductInfo from './modules/products.js'
+import Preloader from './modules/preloader.js'
 
 import router from './router'
 
@@ -63,10 +64,10 @@ createInertiaApp({
 
         app.config.globalProperties.$botNotification = BotNotification
         app.config.globalProperties.$cart = Cart
-        app.config.globalProperties.$preloader = BotPreloader
         app.config.globalProperties.$cashback = CashBack
         app.config.globalProperties.$botPages = BotPages
         app.config.globalProperties.$productInfo = ProductInfo
+        app.config.globalProperties.$preloader = Preloader
 
         app
             .use(plugin)

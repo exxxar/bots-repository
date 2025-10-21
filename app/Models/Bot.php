@@ -96,11 +96,12 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $with = ["company", "amo", "warnings", "fieldSettings",
-        'YClients', 'frontPad','iiko', 'cdek' ];
-    protected $appends = ['topics','settings'];
+    protected $with = ["company", "amo", "partners", "warnings", "fieldSettings",
+        'YClients', 'frontPad', 'iiko', 'cdek'];
+    protected $appends = ['topics', 'settings'];
 
-    public function getSettingsAttribute(){
+    public function getSettingsAttribute()
+    {
         return BusinessLogic::bots()
             ->setBot($this)
             ->getConfig();
@@ -168,6 +169,11 @@ class Bot extends Model
     public function bitrix(): HasMany
     {
         return $this->hasMany(Bitrix::class);
+    }
+
+    public function partners(): HasMany
+    {
+        return $this->hasMany(Partner::class, 'bot_id', 'id');
     }
 
     public function products(): HasMany

@@ -1,3 +1,5 @@
+
+
 <template>
     <!-- Modal -->
     <div class="modal fade" id="product-modal-info" tabindex="-1" aria-labelledby="exampleModalLabel"

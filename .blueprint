@@ -1,16 +1,7 @@
 created:
-    - app/Http/Controllers/StoryController.php
-    - database/factories/StoryFactory.php
-    - database/migrations/2025_05_27_172422_create_stories_table.php
-    - app/Models/Story.php
-    - database/seeders/StorySeeder.php
-    - tests/Feature/Http/Controllers/StoryControllerTest.php
-    - app/Http/Requests/StoryStoreRequest.php
-    - app/Http/Requests/StoryUpdateRequest.php
-    - app/Http/Resources/StoryCollection.php
-    - app/Http/Resources/StoryResource.php
-updated:
-    - routes/api.php
+    - database/factories/PartnerFactory.php
+    - database/migrations/2025_10_09_181628_create_partners_table.php
+    - app/Models/Partner.php
 models:
     ActionStatus: { user_id: 'biginteger unsigned', bot_id: 'biginteger unsigned', max_attempts: 'integer default:0', current_attempts: 'integer default:0', completed_at: 'datetime nullable', data: 'text nullable', slug_id: 'biginteger unsigned' }
     AmoCrm: { bot_id: 'biginteger unsigned', client_id: string, client_secret: string, auth_code: 'string:1000', redirect_uri: string, subdomain: string }
@@ -82,3 +73,4 @@ models:
     Folder: { bot_id: 'id foreign:bots nullable', title: 'string:255 nullable', type: 'enum:page', description: 'longtext nullable', is_active: 'boolean default:true', config: 'json nullable', relationships: { belongsTo: Bot, hasMany: BotPage } }
     Table: { bot_id: 'id foreign:bots nullable', creator_id: 'id foreign:bot_users nullable', officiant_id: 'id foreign:bot_users nullable', number: 'string:255 nullable', closed_at: 'timestamp nullable', config: 'json nullable', relationships: { belongsTo: BotUser, belongsToMany: BotUser } }
     Story: { bot_id: 'id foreign:bots', title: 'string:255 nullable', thumbnail: 'string:255 nullable', image: 'string:255 nullable', description: 'longtext nullable', config: 'json nullable', relationships: { belongsTo: Bot } }
+    Partner: { bot_id: 'id foreign:bots', bot_partner_id: 'id foreign:bots', title: 'string:255 nullable', description: 'longtext nullable', image: 'string:255 nullable', is_active: 'boolean default:true', extra_charge: 'integer default:0', config: 'json nullable', legal_info: 'json nullable', relationships: { belongsTo: Bot } }

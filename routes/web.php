@@ -5,6 +5,7 @@ use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Logging\DynamicLogChannel;
 use App\Models\Bot;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,33 +32,13 @@ Route::get("/bottest", [\App\Http\Controllers\Globals\FastoranController::class,
 
 Route::get("/test", function () {
 
+   DynamicLogChannel::setGlobalBotDomain("nextitgroup_bot");
 
-    $bot = Bot::query()
-        ->where("bot_domain", "dpnrouter_bot")
-        ->first();
-
-    $certificate = $bot->config->init_certificate ?? $bot->config["init_certificate"] ?? null;
-
-    $certificate = (object)$certificate;
-
-    Log::info("certificate" . print_r($bot->config, true));
-    Log::info("certificate data" . print_r($certificate, true));
-
-
-    $botUser = \App\Models\BotUser::query()
-        ->where("telegram_chat_id", env("DEBUG_BOT_USER"))
-        ->where("bot_id", $bot->id)
-        ->first();
-
-    BusinessLogic::promoCodes()
-        ->setBot($bot)
-        ->setBotUser($botUser)
-        ->generateFreeCertificate(
-            $certificate->title ?? 'Промокод на приз',
-            $certificate->description ?? 'Промокод не найден'
-        );
-
-    dd($certificate);
+// Логирование с использованием кастомного канала
+    Log::error('Some information about the request');
+    Log::debug('Some information about the request');
+    Log::warning('Some information about the request');
+    Log::info('Some information about the request');
 
 });
 Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);

@@ -151,11 +151,7 @@ export default {
     },
     methods: {
         showProductDetails(){
-            console.log("Test")
-
-
           this.$productInfo.show(this.item)
-            console.log("item=>", this.item)
         },
         goToProduct() {
             this.$router.push({name: 'ProductV2', params: {productId: this.item.id}})

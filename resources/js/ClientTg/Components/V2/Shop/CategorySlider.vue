@@ -1,6 +1,4 @@
-<script setup>
-import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
-</script>
+
 
 <template>
     <div
@@ -86,19 +84,14 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                         </div>
                     </div>
 
-<!--
-                    <div class="row row-cols-1">
-<div class="col">
-    <CategoryList
-        :selected="categories"
-        v-on:select="selectCategory"/>
-</div>
-                    </div>
--->
+
 
 
                     <div class="row row-cols-1">
 
+                        <div class="col">
+
+                        </div>
                         <div class="col mb-2" v-for="item in categories">
                             <button
                                 type="button"
@@ -110,6 +103,7 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                                 <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ item.count || 0 }}</span>
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>

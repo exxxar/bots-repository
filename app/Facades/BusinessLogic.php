@@ -5,6 +5,7 @@ namespace App\Facades;
 
 use App\Http\BusinessLogic\Methods\CDEKLogicFactory as CDEKLogic;
 use App\Http\BusinessLogic\Methods\BotMediaLogicFactory as MediaLogic;
+use App\Http\BusinessLogic\Methods\PartnersLogicFactory as PartnersLogic;
 use App\Http\BusinessLogic\Methods\ProductCollectionLogicFactory as CollectionLogic;
 use App\Http\BusinessLogic\Methods\IIKOLogicFactory as IIKOLogic;
 use App\Http\BusinessLogic\Methods\BotPageLogicFactory as PageLogic;
@@ -38,6 +39,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static BotLogic bots()
+ * @method static PartnersLogic partners()
  * @method static TableLogic table()
  * @method static BitrixLogic bitrix()
  * @method static PageLogic pages()
