@@ -77,21 +77,26 @@ class CheckBotLogs extends Command
 
             $name = explode('.', $name)[0] ?? $name;
 
+            if (stripos($content, "error") !== false || stripos($content, "critical") !== false)
+                $icon = "🔴 #error";
+            elseif (stripos($content, "warning") !== false)
+                $icon = "🟠 #warning";
+            else
+                $icon = "🟢 #info";
+
+
             $callbackChannel = env("LOGGER_BOT_CHANNEL");
 
             switch ($name) {
                 case 'error':
                 case 'critical':
-                    $icon = "🔴";
                     $thread = env('LOGGER_BOT_CHANNEL_CRITICAL_THREAD');
                     break;
                 case 'warning':
-                    $icon = "🟠";
                     $thread = env('LOGGER_BOT_CHANNEL_WARNING_THREAD');
                     break;
                 default:
                 case 'info':
-                    $icon = "🟢";
                     $thread = env('LOGGER_BOT_CHANNEL_INFO_THREAD');
                     break;
             }
