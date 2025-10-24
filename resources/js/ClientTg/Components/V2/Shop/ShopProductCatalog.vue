@@ -255,7 +255,7 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
                         </template>
 
                         <template
-                            v-if="(bot.partners||[]).length>0&&(partners.is_active||false)">
+                            v-if="(bot.partners||[]).length>0&&(partners?.is_active||false)">
                             <h5 class="my-4 divider" id="cat-combo">Наши партнеры</h5>
                             <PartnerSlider v-on:select="selectPartner"/>
                         </template>
@@ -467,7 +467,7 @@ export default {
 
     mounted() {
 
-        this.shop = (this.partners.is_active || false) ? 0 : 1
+        this.shop = (this.partners?.is_active || false) ? 0 : 1
         //this.products
         const slider = document.getElementById('category-slider')
 
