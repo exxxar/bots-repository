@@ -81,7 +81,16 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
                    class="form-control" id="floatingInput" placeholder="name@example.com" required>
             <label for="floatingInput">Максимальное число попыток</label>
         </div>
+        <div class="form-floating mb-2">
+            <select class="form-select"
+                    v-model="form.before_script"
+                    id="select-custom-script" aria-label="Floating label select example">
+                <option :value="null" selected>Не выбрано</option>
+                <option :value="script.id" v-for="script in scripts">{{script.title || '-'}}</option>
 
+            </select>
+            <label for="select-custom-script">Персональный скрипт</label>
+        </div>
 
         <div class="alert alert-light mb-2">
             <p class="mb-0">
@@ -216,6 +225,8 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
                 </div>
             </template>
 
+
+
         </template>
 
         <button
@@ -264,6 +275,20 @@ export default {
                     title: "Скидка на конкретный товар, %"
                 }
             ],
+            scripts:[
+                {
+                    id:'marketplace_1',
+                    title:'Под маркетплейс (вариант 1)',
+                },
+                {
+                    id:'auth_1',
+                    title:'Форма регистрации',
+                },
+                {
+                    id:'review_1',
+                    title:'Форма отзыва',
+                }
+            ],
             form: {
                 can_play: true,
                 rules_text: null,
@@ -272,6 +297,8 @@ export default {
                 callback_message: null,
                 win_message: null,
                 btn_text: null,
+                before_script:null,
+                after_script:null,
                 wheels: []
             }
         }

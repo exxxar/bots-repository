@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use ReflectionClass;
 use stdClass;
@@ -268,12 +269,15 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
 
         $winNumber = $request->win ?? 0;
-        $winnerName = $botUser->name ?? 'Имя не указано';
-        $winnerPhone = $botUser->phone ?? 'Телефон не указан';
+        $winnerName = $request->name ?? $botUser->name ?? 'Имя не указано';
+        $winnerPhone = $request->phone ?? $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
         $winPrizeType = $request->type ?? "text";
         $winPrizeEffectValue = $request->effect_value ?? 0;
         $winPrizeEffectProduct = $request->effect_product ?? null;
+        $winMarketPlaceId = $request->marketplace_id ?? null;
+        $reviewRating = $request->review_rating ?? null;
+        $reviewText = $request->review_text ?? '-';
 
 
         $username = $botUser->username ?? null;
@@ -294,6 +298,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "win" => $winNumber,
             "description" => $winnerDescription,
             "type" => $winPrizeType,
+            'marketplace_id' => $winMarketPlaceId,
             "effect_value" => $winPrizeEffectValue,
             "effect_product" => $winPrizeEffectProduct,
             "phone" => $winnerPhone,
@@ -328,6 +333,20 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "Телеграм id: " . ($botUser->telegram_chat_id ?? 'не указано') . "\n" .
             "Домен: " . ($username ? "@$username" : 'Домен не указан') . "\n";
 
+        if (!is_null($reviewRating)) {
+            $messageToAdmin .= "Пользователь поставил рейтинг: $reviewRating баллов ($reviewText)\n";
+        }
+
+        if (!is_null($winMarketPlaceId)) {
+            $marketplace = [
+                "ozon" => "Озон",
+                "wb" => "Wildberries",
+                "yandex" => "Яндекс.Маркет"
+            ][$winMarketPlaceId] ?? 'Не указан';
+
+            $messageToAdmin .= "Пользователь выбрал маркетплейс: $marketplace\n";
+        }
+
         if (!is_null($botUser->email ?? null))
             $messageToAdmin .= "Почта: " . ($botUser->email ?? 'не указано') . "\n";
         if (!is_null($botUser->city ?? null))
@@ -348,6 +367,30 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
                 ->telegram_chat_id, $winMessage);
+
+
+        if (!is_null($request->get("file_1") ?? null)) {
+            $uploadedFile = $request->get("file_1");
+            $ext = $uploadedFile->getClientOriginalExtension();
+            $imageName = Str::uuid() . "." . $ext;
+            //$uploadedFile->storeAs("$imageName");
+            BotMethods::bot()
+                ->whereDomain($bot->bot_domain)
+                ->sendPhoto($callbackChannel, "Фото от пользователя 1", InputFile::createFromContents($uploadedFile, $imageName));
+            sleep(1);
+        }
+
+        if (!is_null($request->get("file_2") ?? null)) {
+            $uploadedFile = $request->get("file_2");
+            $ext = $uploadedFile->getClientOriginalExtension();
+            $imageName = Str::uuid() . "." . $ext;
+            //$uploadedFile->storeAs("$imageName");
+            BotMethods::bot()
+                ->whereDomain($bot->bot_domain)
+                ->sendPhoto($callbackChannel, "Фото от пользователя 2", InputFile::createFromContents($uploadedFile, $imageName));
+            sleep(1);
+        }
+
         sleep(1);
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
@@ -486,6 +529,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $data["callback_message"] = $data["callback_message"] ?? "Поехали!";
         $data["win_message"] = $data["win_message"] ?? "Поехали!";
         $data["max_attempts"] = $data["max_attempts"] ?? 0;
+        $data["before_script"] = $data["before_script"] ?? null;
+        $data["after_script"] = $data["after_script"] ?? null;
         $wheels = json_decode($data["wheels"] ?? '[]');
         unset($data["wheels"]);
 

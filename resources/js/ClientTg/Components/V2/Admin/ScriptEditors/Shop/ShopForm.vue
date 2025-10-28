@@ -620,7 +620,7 @@ export default {
     methods: {
         normalizeTelegramLink() {
             // Убираем пробелы по краям
-            let  input = this.form.manager.link;
+            let  input = this.form.manager?.link || '';
 
             // Если уже есть https://t.me — возвращаем как есть
             if (input.includes("https://t.me")) {
