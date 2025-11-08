@@ -268,7 +268,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
             $action->completed_at = Carbon::now();
 
 
-        $winNumber = $request->win ?? 0;
+        $winNumber = $request->win ?? null;
+
         $winnerName = $request->name ?? $botUser->name ?? 'Имя не указано';
         $winnerPhone = $request->phone ?? $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
@@ -280,17 +281,10 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $reviewText = $request->review_text ?? '-';
 
 
+
         $username = $botUser->username ?? null;
 
         $tmp = $action->data ?? [];
-
-
-        /*$wheelText = Collection::make($slug->config)
-            ->where("key", "wheel_text")
-            ->pluck("value")
-            ->toArray();*/
-        /*
-                $description = $wheelText[$winNumber] ?? 'Без описания';*/
 
 
         $tmp[] = (object)[

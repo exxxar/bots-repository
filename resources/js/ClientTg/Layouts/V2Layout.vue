@@ -91,24 +91,28 @@ import Preloader from "@/ClientTg/Components/V2/Shop/Preloader.vue";
 
             <ul class="list-unstyled">
                 <li class="p-1"><a
+                    data-bs-dismiss="offcanvas"
                     v-bind:class="{'fw-bold':$route.name==='MenuV2'}"
                     @click="goTo('MenuV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > Главное меню</a></li>
                 <li class="p-1"><a
+                    data-bs-dismiss="offcanvas"
                     v-bind:class="{'fw-bold':$route.name==='ProfileV2'}"
                     @click="goTo('ProfileV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > {{ preparedMenuItem['profile']?.title || 'Профиль' }} </a></li>
                 <li class="p-1"><a
+                    data-bs-dismiss="offcanvas"
                     v-bind:class="{'fw-bold':$route.name==='CatalogV2'}"
                     @click="goTo('CatalogV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > {{ preparedMenuItem['shop']?.title || 'Магазин' }} </a></li>
                 <li class="p-1"><a
+                    data-bs-dismiss="offcanvas"
                     v-bind:class="{'fw-bold':$route.name==='ShopCartV2'}"
                     @click="goTo('ShopCartV2')"
                     href="javascript:void(0)"
@@ -117,18 +121,21 @@ import Preloader from "@/ClientTg/Components/V2/Shop/Preloader.vue";
                         cartTotalCount
                     }})</span></a></li>
                 <li class="p-1"><a
+                    data-bs-dismiss="offcanvas"
                     v-bind:class="{'fw-bold':$route.name==='OrdersV2'}"
                     @click="goTo('OrdersV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > {{ preparedMenuItem['history']?.title || 'История заказов' }} </a></li>
                 <li class="p-1"><a
+                    data-bs-dismiss="offcanvas"
                     v-bind:class="{'fw-bold':$route.name==='CashBackV2'}"
                     @click="goTo('CashBackV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > CashBack</a></li>
                 <li class="p-1"><a
+                    data-bs-dismiss="offcanvas"
                     v-bind:class="{'fw-bold':$route.name==='FeedBackV2'}"
                     @click="goTo('FeedBackV2')"
                     href="javascript:void(0)"

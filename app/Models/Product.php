@@ -33,6 +33,8 @@ class Product extends Model
         'current_price',
         'variants',
         'in_stop_list_at',
+        'is_weight_product',
+        'weight_config',
         'not_for_delivery',
         'dimension',
         'bot_id',
@@ -57,6 +59,8 @@ class Product extends Model
         'dimension'=> 'array',
         'in_stop_list_at' => 'datetime:Y-m-d H:i:s',
         'bot_id' => 'integer',
+        'is_weight_product' => 'boolean',
+        'weight_config' => 'array',
     ];
 
     protected $with = ["productOptions"];

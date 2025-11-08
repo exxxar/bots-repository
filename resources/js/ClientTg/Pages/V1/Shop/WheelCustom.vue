@@ -108,6 +108,7 @@ export default {
             })
         },
 
+
         loadServiceData() {
             this.wheelDataLoaded = false
             return this.$store.dispatch("wheelOfFortuneCustomLoadData").then((response) => {
@@ -130,7 +131,10 @@ export default {
 
                 this.rules = response.rules
                 this.winResultMessage = response.callback_message
-                const wheels = this.shuffle(response.wheels)
+                const wheels = response
+                    .wheels
+                    .sort( () => Math.random() - 0.5 );
+
 
                 this.items = []
                 wheels.forEach(item => {
@@ -142,28 +146,11 @@ export default {
                     index = (index < colors.length) ? index + 1 : 0
                 })
 
-                /*if (this.items.length % 2 !==0)
-                    this.items.push({
-                        text: "Не выиграл",
-                        color: colors[index],
-                    })*/
 
                 this.wheelDataLoaded = true
             })
         },
-        shuffle(array) {
-            let currentIndex = array.length, randomIndex;
-            // While there remain elements to shuffle.
-            while (currentIndex > 0) {
-                // Pick a remaining element.
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                // And swap it with the current element.
-                [array[currentIndex], array[randomIndex]] = [
-                    array[randomIndex], array[currentIndex]];
-            }
-            return array;
-        },
+
         submit() {
             let data = new FormData();
 

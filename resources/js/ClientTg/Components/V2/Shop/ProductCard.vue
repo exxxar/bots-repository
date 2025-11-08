@@ -84,6 +84,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                         <button type="button"
                                 v-bind:class="{'btn-secondary':!canProductAction}"
                                 class="btn btn-sm btn-primary ">{{ checkInCart }}
+                            <span v-if="item.is_weight_product">г.</span>
                         </button>
                         <button type="button"
                                 v-bind:class="{'btn-secondary':!canProductAction}"

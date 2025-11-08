@@ -274,8 +274,27 @@ class BasketLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Товар в корзине не найден!");
 
 
-        if ($productInBasket->count - 1 > 0) {
-            $productInBasket->count--;
+        $productCount = 1;
+
+        $product = $productInBasket->product;
+
+        if ($product->is_weight_product ?? false) {
+
+            $weightConfig = (object)$product->weight_config ?? null;
+            $min = $weightConfig->min ?? 0;
+            $max = $weightConfig->max ?? 0;
+            $step = $weightConfig->step ?? 0;
+
+            $productCount = is_null($productInBasket) ? $min : $step;
+
+
+            if (($productInBasket->count ?? 0) <= $min)
+                $productCount = $min;
+
+        }
+
+        if ($productInBasket->count - $productCount > 0) {
+            $productInBasket->count-=$productCount;
             $productInBasket->save();
         } else
             $productInBasket->delete();
@@ -291,6 +310,7 @@ class BasketLogicFactory extends BaseLogicFactory
 
 
         $productInBasket = Basket::query()
+            ->with(["product"])
             ->where(function ($q) use ($itemId) {
                 return $q->where("product_id", $itemId)
                     ->orWhere("product_collection_id", $itemId);
@@ -304,7 +324,25 @@ class BasketLogicFactory extends BaseLogicFactory
         if (is_null($productInBasket))
             throw new HttpException(404, "Товар в корзине не найден!");
 
-        $productInBasket->count++;
+        $productCount = 1;
+
+        $product = $productInBasket->product;
+
+
+        if ($product->is_weight_product ?? false) {
+
+            $weightConfig = (object)$product->weight_config ?? null;
+            $min = $weightConfig->min ?? 0;
+            $max = $weightConfig->max ?? 0;
+            $step = $weightConfig->step ?? 0;
+
+            $productCount = is_null($productInBasket) ? $min : $step;
+
+            if (($productInBasket->count ?? 0) >= $max && $max > 0)
+                $productCount = 0;
+        }
+
+        $productInBasket->count+=$productCount;
         $productInBasket->save();
 
     }
@@ -407,9 +445,23 @@ class BasketLogicFactory extends BaseLogicFactory
                 $query->where('id', $this->botUser->id);
             })->first();
 
+        $isWeightProduct = $product->is_weight_product ?? false;
+
+        if ($isWeightProduct) {
+
+            $weightConfig = (object)$product->weight_config ?? null;
+            $min = $weightConfig->min ?? 0;
+            $max = $weightConfig->max ?? 0;
+            $step = $weightConfig->step ?? 0;
+
+
+            $productCount = is_null($productInBasket) ? $min : $step;
+
+            if (($productInBasket->count ?? 0) >= $max && $max > 0)
+                $productCount = 0;
+        }
 
         if (is_null($productInBasket)) {
-
             $extraCharge = 0;
             if ($product->bot_id != $this->bot->id) {
                 $partner = Partner::query()
@@ -419,7 +471,6 @@ class BasketLogicFactory extends BaseLogicFactory
 
                 $extraCharge = is_null($partner) ? 0 : $partner->extra_charge ?? 0;
             }
-
 
             $productInBasket = Basket::query()->create([
                 'product_id' => $product->id,

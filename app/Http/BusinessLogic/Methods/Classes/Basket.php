@@ -335,15 +335,33 @@ class Basket
 
             $price = 0;
 
+            $isWeightProduct = false;
             if (!is_null($product)) {
-                $price = ($product->current_price ?? 0) * $item->count;
+
+                $isWeightProduct = $product->is_weight_product ?? false;
+
+                $count = $item->count;
+                $price = ($product->current_price ?? 0) * $count;
+
+                $unitOfMeasure = "ед.";
+
+                if ($isWeightProduct) {
+                    $weightConfig = (object)$product->weight_config ?? null;
+                    $step = $weightConfig->step ?? 100;
+
+                    $price = ($product->current_price * $count) / $step;
+
+                    $unitOfMeasure = "гр.";
+                }
+
+
                 $productMessage .= is_null($comment) ?
-                    sprintf("💎%s x%s=%s руб.\n",
+                    sprintf("💎%s x%s $unitOfMeasure=%s руб.\n",
                         $product->title,
                         $item->count,
                         $price
                     ) :
-                    sprintf("💎%s x%s=%s руб.\n<em>(%s)</em>\n",
+                    sprintf("💎%s x%s $unitOfMeasure=%s руб.\n<em>(%s)</em>\n",
                         $product->title,
                         $item->count,
                         $price,
@@ -411,7 +429,7 @@ class Basket
 
             }
 
-            $summaryCount += $item->count;
+            $summaryCount += $isWeightProduct? 1: $item->count;
             $summaryPrice += $price;
 
             $item->ordered_at = Carbon::now();
@@ -824,9 +842,9 @@ class Basket
         }
 
         $productMessage .= $this->gsPrepareFromInfo($order, $discountItem->discount ?? 0);
-        $tmpUserLink = "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
+       // $tmpUserLink = "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
 
-        $productMessage .= $tmpUserLink;
+        //$productMessage .= $tmpUserLink;
         //  $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
         $this->gsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order, $productMessage);

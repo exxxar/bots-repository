@@ -64,8 +64,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                type="checkbox" role="switch" id="need_in_stop">
         <label class="form-check-label"
                for="need_in_stop">
-            <span v-if="need_in_stop">Товар в стоп листе</span>
-            <span v-else>Все товары</span>
+            <span v-bind:class="{'fw-bold text-primary':need_in_stop}">Товар в стоп листе</span> /
+            <span v-bind:class="{'fw-bold text-primary':!need_in_stop}">Все товары</span>
         </label>
     </div>
 
@@ -76,6 +76,9 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
         <label class="form-check-label"
                for="need_removed">Отображать удаленные</label>
     </div>
+
+
+
     <div class="form-check form-switch mb-2">
         <input class="form-check-input"
                v-model="need_table"

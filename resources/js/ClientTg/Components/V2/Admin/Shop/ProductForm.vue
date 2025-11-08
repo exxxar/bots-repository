@@ -42,7 +42,6 @@
                             </div>
 
 
-
                             <div class="form-floating mb-2">
                                 <input type="number"
                                        min="0"
@@ -54,27 +53,27 @@
                             </div>
 
                             <div class="form-floating mb-2">
+                                <textarea class="form-control font-12"
+                                          v-model="productForm.description"
+                                          style="min-height:200px;"
+                                          v-on:invalid="openInvalidTab(0)"
+                                          placeholder="Напишите полное описание товара" id="description">
 
-                <textarea class="form-control font-12"
-                          v-model="productForm.description"
-                          style="min-height:200px;"
-                          v-on:invalid="openInvalidTab(0)"
-                          placeholder="Напишите полное описание товара" id="description">
-
-                </textarea>
+                                </textarea>
 
                                 <label for="description">Описание товара</label>
                             </div>
 
                             <div class="form-floating mb-2">
                                 <textarea class="form-control font-12"
-                                              v-model="productForm.delivery_terms"
-                                              style="min-height:200px;"
-                                              v-on:invalid="openInvalidTab(0)"
-                                              placeholder="Укажите особенности доставки товара" id="delivery_terms">
+                                          v-model="productForm.delivery_terms"
+                                          style="min-height:200px;"
+                                          v-on:invalid="openInvalidTab(0)"
+                                          placeholder="Укажите особенности доставки товара" id="delivery_terms">
 
                                 </textarea>
-                                <label for="description"><i class="fa-solid fa-clock text-primary"></i> Особенности доставки товара</label>
+                                <label for="description"><i class="fa-solid fa-clock text-primary"></i> Особенности
+                                    доставки товара</label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -106,6 +105,49 @@
                                        class="form-control" id="old-price" placeholder="0 руб">
                                 <label for="old-price">Старая цена, руб</label>
                             </div>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input"
+                                       v-model="productForm.is_weight_product"
+                                       type="checkbox"
+                                       value="false" :id="'is_weight_product-'+(productForm.id||'new')">
+                                <label class="form-check-label" :for="'is_weight_product-'+(productForm.id||'new')">
+                                    <span v-bind:class="{'fw-bold text-primary':!productForm.is_weight_product}">Поштучный</span>
+                                    \
+                                    <span
+                                        v-bind:class="{'fw-bold text-primary':productForm.is_weight_product}">весовой</span>
+                                </label>
+                            </div>
+
+                            <template v-if="productForm.is_weight_product">
+                                <p class="alert alert-light mb-2">
+                                    Оставьте 0, если нет ограничения на максимальный вес
+                                </p>
+                                <div class="form-floating mb-2">
+                                    <input type="number"
+                                           v-model="productForm.weight_config.max"
+                                           class="form-control" id="weight_config-max" placeholder="0 грамм">
+                                    <label for="weight_config-max">Максимально для покупки, грамм</label>
+                                </div>
+                                <p class="alert alert-light mb-2">
+                                    Оставьте 0, если нет ограничения на минимальный вес
+                                </p>
+                                <div class="form-floating mb-2">
+                                    <input type="number"
+                                           v-model="productForm.weight_config.min"
+                                           class="form-control" id="weight_config-min" placeholder="0 грамм">
+                                    <label for="weight_config-min">Минимально для покупки, грамм</label>
+                                </div>
+                                <p class="alert alert-light mb-2">
+                                    Укажите с каким шагом можно купить данный товар.
+                                </p>
+                                <div class="form-floating mb-2">
+                                    <input type="number"
+                                           v-model="productForm.weight_config.step"
+                                           class="form-control" id="weight_config-step" placeholder="0 грамм">
+                                    <label for="weight_config-step">Шаг покупки, грамм</label>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -397,14 +439,14 @@
         </form>
 
 
-<!--        <button
+        <!--        <button
 
-            @click="removeProduct"
-            v-if="productForm.id"
-            type="button"
-            class="btn btn-link my-3 w-100">Удалить
-            товар
-        </button>-->
+                    @click="removeProduct"
+                    v-if="productForm.id"
+                    type="button"
+                    class="btn btn-link my-3 w-100">Удалить
+                    товар
+                </button>-->
 
     </div>
 
@@ -459,7 +501,13 @@ export default {
                 bot_id: null,
                 options: [],
                 reviews: [],
-                not_for_delivery:false,
+                not_for_delivery: false,
+                is_weight_product: false,
+                weight_config: {
+                    min:0,
+                    max:0,
+                    step:0,
+                },
                 dimension: {
                     width: 0,
                     height: 0,
@@ -496,7 +544,13 @@ export default {
                 bot_id: this.modelValue.bot_id || null,
                 options: this.modelValue.options || null,
                 reviews: this.modelValue.reviews || null,
-                not_for_delivery:this.modelValue.not_for_delivery || false,
+                not_for_delivery: this.modelValue.not_for_delivery || false,
+                is_weight_product: this.modelValue.is_weight_product || false,
+                weight_config: {
+                    min: this.modelValue.weight_config?.min || 0,
+                    max:this.modelValue.weight_config?.max || 0,
+                    step:this.modelValue.weight_config?.step || 0,
+                },
                 dimension: {
                     width: this.modelValue.dimension?.width || 0,
                     height: this.modelValue.dimension?.height || 0,
@@ -689,11 +743,17 @@ export default {
                 options: [],
                 reviews: [],
                 categories: [],
-                not_for_delivery:false,
+                not_for_delivery: false,
+                is_weight_product: false,
+                weight_config: {
+                    min:0,
+                    max:0,
+                    step:0,
+                },
                 dimension: {
                     width: 0,
-                    height:  0,
-                    length:  0,
+                    height: 0,
+                    length: 0,
                     weight: 0,
                 },
             }

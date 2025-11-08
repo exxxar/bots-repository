@@ -23,7 +23,8 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 
                     <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
                         <span>{{ item.current_price || 0 }}₽</span>
-                        <span>={{ item.current_price * inCart(item.id) }}₽</span>
+                        <span v-if="!item.is_weight_product">={{ item.current_price * inCart(item.id) }}₽</span>
+                        <span v-else>{{(item.current_price * inCart(item.id)) / (item.weight_config?.step || 100)}}₽</span>
                     </h6>
                     <div class="d-flex w-100">
 
@@ -45,7 +46,9 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                             </button>
                             <button type="button"
                                     v-bind:class="{'btn-secondary':!canProductAction}"
-                                    class="btn btn-sm ">{{ checkInCart }}</button>
+                                    class="btn btn-sm ">{{ checkInCart }}
+                                <span v-if="item.is_weight_product">г.</span>
+                            </button>
                             <button type="button"
                                     v-bind:class="{'btn-secondary':!canProductAction}"
                                     :disabled="item.in_stop_list_at!=null|| !canProductAction"

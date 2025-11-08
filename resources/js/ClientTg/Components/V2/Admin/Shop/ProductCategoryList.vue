@@ -76,8 +76,12 @@ import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
                                     @click="changeCategoryStatus(item)"
                                     class="btn border-light">
                                 <i
-                                    v-bind:class="{'text-light':!item.is_active, 'text-success':item.is_active}"
-                                    class="fa-solid fa-check-double"></i>
+                                    v-if="item.is_active"
+                                    class="fa-solid fa-eye text-primary"></i>
+
+                                <i
+                                    v-if="!item.is_active"
+                                    class="fa-solid fa-eye-slash text-light"></i>
                             </button>
 
                             <div class="form-floating">

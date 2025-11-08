@@ -24,6 +24,8 @@ class ProductResource extends JsonResource
             'dimension' => $this->dimension,
             'images' => $this->images,
             'type' => $this->type,
+            'is_weight_product' => $this->is_weight_product ?? false,
+            'weight_config' => $this->weight_config ?? null,
             'old_price' => $this->old_price,
             'current_price' => $this->current_price,
             'variants' => $this->variants,

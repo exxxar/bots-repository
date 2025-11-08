@@ -432,11 +432,16 @@ class ProductLogicFactory extends BaseLogicFactory
             'current_price' => $data["current_price"] ?? 0,
             'variants' => $variants,
 
-            'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true" ? Carbon::now() : false,
+            'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true" ,//? Carbon::now() : false,
+            'is_weight_product' => ($data["is_weight_product"] ?? false) == "true" ,
             'bot_id' => $data["bot_id"] ?? $this->bot->id,
+            'weight_config' => is_null($data["weight_config"] ?? null) ?
+                null : json_decode($data["weight_config"] ?? '[]'),
             'dimension' => is_null($data["dimension"] ?? null) ?
                 null : json_decode($data["dimension"] ?? '[]'),
         ];
+
+
 
         if (!is_null($productId)) {
             $product = Product::query()
