@@ -270,6 +270,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $winNumber = $request->win ?? null;
 
+
+
         $winnerName = $request->name ?? $botUser->name ?? 'Имя не указано';
         $winnerPhone = $request->phone ?? $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
@@ -281,11 +283,14 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $reviewText = $request->review_text ?? '-';
 
 
-
         $username = $botUser->username ?? null;
 
         $tmp = $action->data ?? [];
 
+        dd([
+            "type"=>$winPrizeType,
+            "value"=>$winPrizeEffectValue,
+        ]);
 
         $tmp[] = (object)[
             "name" => $winnerName,
@@ -417,6 +422,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->setBot($bot)
             ->addLead("Участие в колесе фортуны");
 
+
         return response()->noContent();
     }
 
@@ -515,6 +521,10 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $data = $request->all();
 
+        $config = $bot->config ?? [];
+        $config["selected_script_id"] = (($data["use_in_shop"] ?? false) == "true") ? $slug->id : null;
+        $bot->config = $config;
+        $bot->save();
 
         $data["can_play"] = (($data["can_play"] ?? false) == "true");
         $data["rules_text"] = $data["rules_text"] ?? "Правила игры";
@@ -527,6 +537,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $data["after_script"] = $data["after_script"] ?? null;
         $wheels = json_decode($data["wheels"] ?? '[]');
         unset($data["wheels"]);
+        unset($data["use_in_shop"]);
 
 
         $config = Collection::make($slug->config ?? []);

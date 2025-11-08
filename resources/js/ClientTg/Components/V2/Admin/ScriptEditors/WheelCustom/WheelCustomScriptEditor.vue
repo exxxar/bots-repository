@@ -9,11 +9,22 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
             <input class="form-check-input"
                    type="checkbox"
                    v-model="form.can_play"
-                   role="switch" id="script-settings-is_disabled">
+                   role="switch" id="script-settings-wheel-of-fortune-can_play">
             <label class="form-check-label" for="script-settings-wheel-of-fortune-can_play">Состояние колеса
                 фортуны: <span v-bind:class="{'text-primary fw-bold':form.can_play}">вкл</span> \
                 <span v-bind:class="{'text-primary fw-bold':!form.can_play}">выкл</span></label>
         </div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.use_in_shop"
+                   role="switch" id="script-settings-wheel-of-fortune-use_in_shop">
+            <label class="form-check-label" for="script-settings-wheel-of-fortune-use_in_shop">Использовать выигрыши колеса фортуны в корзине товаров
+                : <span v-bind:class="{'text-primary fw-bold':form.use_in_shop}">вкл</span> \
+                <span v-bind:class="{'text-primary fw-bold':!form.use_in_shop}">выкл</span></label>
+        </div>
+
         <div class="form-floating mb-2">
                 <textarea class="form-control"
                           v-model="form.rules_text"
@@ -290,6 +301,7 @@ export default {
                 }
             ],
             form: {
+                use_in_shop: false,
                 can_play: true,
                 rules_text: null,
                 max_attempts: 1,
