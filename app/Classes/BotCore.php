@@ -963,7 +963,7 @@ abstract class BotCore
 
             if ($this->currentBotUserInDialog()) {
                 $this->nextBotDialog($query);
-                return;
+             //   return;
             }
 
             $coords = !isset($update["message"]["location"]) ? null :
