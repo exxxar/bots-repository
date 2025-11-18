@@ -961,10 +961,6 @@ abstract class BotCore
             if ($botStatus->value != BotStatusEnum::Working->value)
                 return;
 
-            if ($this->currentBotUserInDialog()) {
-                $this->nextBotDialog($query);
-             //   return;
-            }
 
             $coords = !isset($update["message"]["location"]) ? null :
                 (object)[
@@ -989,6 +985,12 @@ abstract class BotCore
 
             if ($this->botNextHandler($message))
                 return;
+
+
+            if ($this->currentBotUserInDialog()) {
+                $this->nextBotDialog($query);
+                return;
+            }
 
             if ($this->botFallbackStickerHandler($message))
                 return;
