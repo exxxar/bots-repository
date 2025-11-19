@@ -1,12 +1,12 @@
 <template>
     <form
         class="container py-3"
-        v-if="settings"
+
         v-on:submit.prevent="startCheckout">
         <h5 class="my-3 text-left"><i class="fa-regular fa-image mr-2"></i>Фотография чека</h5>
 
         <div class="alert alert-light mb-2 fw-bold"
-             v-if="settings.payment_info"
+             v-if="settings?.payment_info"
              role="alert" v-html="settings.payment_info"></div>
 
         <h6 class="opacity-75 mt-3">Сводка</h6>
@@ -138,7 +138,7 @@
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["settings", "modelValue"],
+    props: ["modelValue"],
     data() {
         return {
             spent_time_counter: 0,
@@ -154,6 +154,9 @@ export default {
             let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
 
             return Math.min(cashBackAmount, maxUserCashback)
+        },
+        settings() {
+            return window.currentBot.settings || null
         },
         finallyPrice() {
             return !this.modelValue.use_cashback ?
