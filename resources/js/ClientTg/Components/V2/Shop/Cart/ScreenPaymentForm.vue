@@ -1,6 +1,7 @@
 <template>
     <form
         class="container py-3"
+        v-if="settings"
         v-on:submit.prevent="startCheckout">
         <h5 class="my-3 text-left"><i class="fa-regular fa-image mr-2"></i>Фотография чека</h5>
 
