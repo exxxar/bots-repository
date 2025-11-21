@@ -287,10 +287,6 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $tmp = $action->data ?? [];
 
-        dd([
-            "type"=>$winPrizeType,
-            "value"=>$winPrizeEffectValue,
-        ]);
 
         $tmp[] = (object)[
             "name" => $winnerName,
