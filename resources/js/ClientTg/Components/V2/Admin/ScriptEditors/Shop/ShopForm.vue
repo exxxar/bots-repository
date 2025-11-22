@@ -532,7 +532,7 @@ export default {
                 need_hide_disabled_products: false,
                 need_hide_delivery_period: false,
 
-
+                tables_variants:[],
                 manager: {
                     link: null,
                     title: 'Написать',

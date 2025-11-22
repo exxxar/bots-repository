@@ -36,12 +36,12 @@
     "src": "ManagerProfile.css"
   },
   "TelegramChannelHelper.css": {
-    "file": "assets/TelegramChannelHelper-8363056c.css",
+    "file": "assets/TelegramChannelHelper-ee5a9069.css",
     "src": "TelegramChannelHelper.css"
   },
   "V1Layout.css": {
-    "file": "assets/MobileForPage-5ac8cdc0.css",
-    "src": "V1Layout.css"
+    "file": "assets/V1Layout-5ac8cdc0.css",
+    "src": "resources/js/Mobile/Pages/MobileForPage.css"
   },
   "_BotForm-102efbcb.js": {
     "css": [
@@ -209,11 +209,11 @@
       "_index.es-800d80e2.js"
     ]
   },
-  "_V1Layout-7c17513c.js": {
+  "_V1Layout-43b491e7.js": {
     "css": [
-      "assets/MobileForPage-5ac8cdc0.css"
+      "assets/V1Layout-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-7c17513c.js",
+    "file": "assets/V1Layout-43b491e7.js",
     "imports": [
       "_index.es-800d80e2.js",
       "resources/js/ClientTg/app.js"
@@ -311,19 +311,19 @@
     "src": "main.css"
   },
   "resources/css/AdminPanel/app.css": {
-    "file": "assets/app-a4d5f4a9.css",
+    "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
-    "file": "assets/app-a4d5f4a9.css",
+    "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
-    "file": "assets/app-a4d5f4a9.css",
+    "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Mobile/app.css": {
     "file": "assets/app-e3b0c442.css",
@@ -344,14 +344,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css"
+    "file": "assets/Login-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/ForgotPassword-3bb6b995.js",
+    "file": "assets/ForgotPassword-f405782b.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_GuestLayout-a8d32341.js",
@@ -363,14 +363,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css"
+    "file": "assets/Login-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/Login-75ff30ed.js",
+    "file": "assets/Login-2a83459f.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_GuestLayout-a8d32341.js",
@@ -382,14 +382,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Login.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css"
+    "file": "assets/Login-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/Register-cf8eac49.js",
+    "file": "assets/Register-e0ac5eea.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_GuestLayout-a8d32341.js",
@@ -401,14 +401,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Register.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css"
+    "file": "assets/Login-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/Login-1a8f864d.css"
     ],
-    "file": "assets/RegisterStep2-f7c77571.js",
+    "file": "assets/RegisterStep2-37c599de.js",
     "imports": [
       "_GuestLayout-a8d32341.js",
       "_index.es-800d80e2.js"
@@ -730,7 +730,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-91ff62d5.js",
+    "file": "assets/app-500647fa.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_index-55688c75.js"
@@ -746,11 +746,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-68eb7477.js",
+    "file": "assets/MainV1-07a25787.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-800d80e2.js",
-      "_V1Layout-7c17513c.js",
+      "_V1Layout-43b491e7.js",
       "resources/js/ClientTg/app.js",
       "_vue3-simple-typeahead-28cb397a.js",
       "_vue3-json-editor.esm.prod-c06c32c7.js",
@@ -775,7 +775,7 @@
     "css": [
       "assets/MainV2-ac87afce.css"
     ],
-    "file": "assets/MainV2-41543bea.js",
+    "file": "assets/MainV2-6d6a5c0e.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_vue3-simple-typeahead-28cb397a.js",
@@ -805,9 +805,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-ab7fedd5.js",
+    "file": "assets/Result-9c5cb9fb.js",
     "imports": [
-      "_V1Layout-7c17513c.js",
+      "_V1Layout-43b491e7.js",
       "resources/js/ClientTg/app.js",
       "_index.es-800d80e2.js",
       "_vue3-simple-typeahead-28cb397a.js",
@@ -867,7 +867,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-7ee50def.js",
+    "file": "assets/CashBack-dbf2bf71.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-800d80e2.js",
@@ -897,9 +897,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Fastoran/Main.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-3b3935f8.js",
+    "file": "assets/Result-eba82609.js",
     "imports": [
-      "_V1Layout-7c17513c.js",
+      "_V1Layout-43b491e7.js",
       "_index.es-800d80e2.js",
       "resources/js/ClientTg/app.js",
       "_vue3-simple-typeahead-28cb397a.js",
@@ -919,12 +919,12 @@
     "src": "resources/js/ClientTg/Pages/V2/Result.vue"
   },
   "resources/js/ClientTg/app.css": {
-    "file": "assets/app-bfe9de11.css",
+    "file": "assets/app-d31e7eed.css",
     "src": "resources/js/ClientTg/app.css"
   },
   "resources/js/ClientTg/app.js": {
     "css": [
-      "assets/app-bfe9de11.css"
+      "assets/app-d31e7eed.css"
     ],
     "dynamicImports": [
       "resources/js/ClientTg/Pages/MainV1.vue",
@@ -938,7 +938,7 @@
       "resources/js/ClientTg/Pages/V2/Fastoran/Main.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-d59c4a32.js",
+    "file": "assets/app-1d0f5630.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_vue3-simple-typeahead-28cb397a.js",
@@ -1083,7 +1083,7 @@
     "src": "resources/js/Landing/app.js"
   },
   "resources/js/Mobile/Pages/Main.vue": {
-    "file": "assets/Main-a6ed9bba.js",
+    "file": "assets/Main-d36d6ae4.js",
     "imports": [
       "resources/js/Mobile/app.js",
       "_index.es-800d80e2.js",
@@ -1096,14 +1096,14 @@
     "src": "resources/js/Mobile/Pages/Main.vue"
   },
   "resources/js/Mobile/Pages/MobileForPage.css": {
-    "file": "assets/MobileForPage-5ac8cdc0.css",
-    "src": "V1Layout.css"
+    "file": "assets/V1Layout-5ac8cdc0.css",
+    "src": "resources/js/Mobile/Pages/MobileForPage.css"
   },
   "resources/js/Mobile/Pages/MobileForPage.vue": {
     "css": [
-      "assets/MobileForPage-5ac8cdc0.css"
+      "assets/V1Layout-5ac8cdc0.css"
     ],
-    "file": "assets/MobileForPage-c0e91788.js",
+    "file": "assets/MobileForPage-d1f5c59c.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_vue3-simple-typeahead-28cb397a.js",
@@ -1114,7 +1114,7 @@
     "src": "resources/js/Mobile/Pages/MobileForPage.vue"
   },
   "resources/js/Mobile/Pages/MobileForTemplate.vue": {
-    "file": "assets/MobileForTemplate-57066b3f.js",
+    "file": "assets/MobileForTemplate-f4f9e9db.js",
     "imports": [
       "resources/js/Mobile/Pages/ProductList.vue",
       "resources/js/Mobile/app.js",
@@ -1149,7 +1149,7 @@
       "resources/js/Mobile/Pages/MobileForTemplate.vue",
       "resources/js/Mobile/Pages/ProductList.vue"
     ],
-    "file": "assets/app-2eb0c818.js",
+    "file": "assets/app-560066a9.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_vue3-simple-typeahead-28cb397a.js",

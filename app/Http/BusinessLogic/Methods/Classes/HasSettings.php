@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods\Classes;
 
 use App\Http\Resources\ShopConfigPublicResource;
+use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 trait HasSettings
@@ -102,29 +103,29 @@ trait HasSettings
 
 
         ],
-        "partners"=>[
-          "is_active"=>false,
-          "display_self"=>true,
+        "partners" => [
+            "is_active" => false,
+            "display_self" => true,
         ],
         "init_certificate" => [
             "title" => "Подарочный сертификат",
             "description" => "500 рублей на CashBack",
             "amount" => 500,
             "type" => "cashback",
-            "is_active"=>false,
+            "is_active" => false,
         ],
         "delivery_price_text" => "Цена доставки рассчитывается курьером",
         "disabled_text" => "Временно недоступно!",
         "can_work_in_marketplace" => false,
         "min_price" => 100,
         "manager" => [
-            "link"=>null,
-            "title"=>null,
+            "link" => null,
+            "title" => null,
         ],
-        "recommendation"=>[
-            "categories"=>[],
-            "products"=>[],
-            "excludes"=>[]
+        "recommendation" => [
+            "categories" => [],
+            "products" => [],
+            "excludes" => []
         ],
         "price_per_km" => 100,
         "min_price_for_cashback" => 2000,
@@ -136,6 +137,7 @@ trait HasSettings
         "min_base_delivery_price" => 0,
         "menu_list_type" => 0,
         "max_tables" => 0,
+        "tables_variants" => [],
         "shop_coords" => "0,0",
         "need_table_list" => false,
         "need_category_by_page" => true,
@@ -153,6 +155,13 @@ trait HasSettings
         "need_hide_delivery_period" => false,
         "can_use_sbp" => false,
         "icons" => [
+            [
+                'slug' => 'booking',
+                'title' => 'Бронирование столика',
+                'image_url' => 'booking.png',
+                'is_visible' => true,
+                'has_icon' => true,
+            ],
             [
                 'slug' => 'profile',
                 'title' => 'Профиль',
@@ -174,6 +183,7 @@ trait HasSettings
                 'is_visible' => true,
                 'has_icon' => true,
             ],
+
             [
                 'slug' => 'history',
                 'title' => 'История заказов',
@@ -296,22 +306,33 @@ trait HasSettings
                     $tmp[$key] = $item;
             }
 
+
             if (!is_null($tmp["icons"] ?? null)) {
+                $tmpIconsSlugs = [];
                 $tmp['icons'] = is_string($tmp['icons']) ? (array)(json_decode($tmp['icons'])) : $tmp['icons'];
                 foreach ($tmp['icons'] as &$icon) {
                     foreach ($default["icons"][0] as $key => $defaultValue) {
-                        if (!array_key_exists($key, (array)$icon)) {
+                        $icon = (array)$icon;
+                        if (!array_key_exists($key, $icon)) {
                             $icon[$key] = $defaultValue;
                         }
                     }
                 }
 
+                foreach ($tmp['icons'] as $icon) {
+                    $tmpIconsSlugs[] = $icon["slug"];
+                }
+
+                foreach ($default["icons"] as $icon) {
+                    if (!in_array($icon["slug"], $tmpIconsSlugs))
+                        $tmp['icons'][] = $icon;
+                }
+
             }
 
-            $jsonParams = ["base_payment_service","themes","manager","recommendation","partners"];
+            $jsonParams = ["base_payment_service", "themes", "manager", "recommendation", "partners", "tables_variants"];
 
-
-            foreach ($jsonParams as $param){
+            foreach ($jsonParams as $param) {
                 if (!is_null($tmp[$param] ?? null)) {
                     $tmp[$param] = is_string($tmp[$param]) ? (array)(json_decode($tmp[$param])) : $tmp[$param];
                 }

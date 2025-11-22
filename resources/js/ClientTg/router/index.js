@@ -514,6 +514,7 @@ import TablesManagerV2 from "@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue"
 import TableV2 from "@/ClientTg/Pages/V2/Admin/Tables/Table.vue";
 import SendInvoiceV2 from "@/ClientTg/Pages/V2/Admin/Invoice.vue";
 import PageEditorV2 from "@/ClientTg/Pages/V2/Admin/PageEditor.vue";
+import TableBookingV2 from "@/ClientTg/Pages/V2/Shop/Bookings.vue";
 
 
 const simplePrefix = "/s"
@@ -543,6 +544,13 @@ export const simpleRoutes = [
         path: simplePrefix + '/menu',
         component: CatalogV2,
         meta: {title: 'Меню магазина'}
+    },
+
+    {
+        name: 'TableBookingV2',
+        path: simplePrefix + '/booking',
+        component: TableBookingV2,
+        meta: {title: 'Бронирование столиков'}
     },
     {
         name: 'WaiterCatalogV2',

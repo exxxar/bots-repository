@@ -56,6 +56,15 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 
             <div class="col">
                 <MainMenuItem
+                    v-if="preparedMenuItem['booking']?.is_visible"
+                    :route="'TableBookingV2'"
+                    :default-image="'profile.png'"
+                    :default-text="'Бронирование столика'"
+                    :item="preparedMenuItem['booking']||null"/>
+            </div>
+
+            <div class="col">
+                <MainMenuItem
                     v-if="preparedMenuItem['shop']?.is_visible"
                     :disabled="script_data.is_disabled"
                     :route="'CatalogV2'"
