@@ -1,16 +1,109 @@
 <template>
 
 
-
-
     <div class="alert alert-light mb-2" v-if="reservation.table">
         <p class="mb-0">Вы бронируете столик <strong class="fw-bold">#{{ reservation.table.number }}</strong> -
             {{ reservation.table.description }}</p>
     </div>
 
-    <form @submit.prevent="submitReservation">
-        <div class="form-floating mb-2">
+    <ul class="nav nav-tabs justify-content-center mb-2">
+        <li class="nav-item">
+            <a class="nav-link"
+               v-bind:class="{'active':tab==='form'}"
+               @click="tab='form'"
+               aria-current="page" href="javascript:void(0)">Форма</a>
+        </li>
+        <li class="nav-item">
+            <a
+                v-bind:class="{'active':tab==='list'}"
+                @click="tab='list'"
+                class="nav-link" href="javascript:void(0)">Список броней</a>
+        </li>
+    </ul>
+    <div v-show="tab==='form'">
+        <form @submit.prevent="submitReservation">
+            <div class="form-floating mb-2">
 
+                <input
+                    type="date"
+                    id="reservationDate"
+                    v-model="reservation.date"
+                    required
+                    class="form-control"
+                />
+                <label for="reservationDate">Дата бронирования</label>
+            </div>
+
+            <div class="form-floating mb-2">
+
+                <input
+                    type="time"
+                    id="reservationTime"
+                    v-model="reservation.time"
+                    required
+                    class="form-control"
+                />
+                <label for="reservationTime">Время бронирования</label>
+            </div>
+
+            <div class="form-floating mb-2">
+
+                <input
+                    type="number"
+                    id="numberOfPersons"
+                    v-model.number="reservation.persons"
+                    min="1"
+                    required
+                    class="form-control"
+                />
+                <label for="numberOfPersons">Число персон</label>
+            </div>
+
+
+            <div class="form-floating mb-2">
+
+                <input
+                    type="text"
+                    id="userName"
+                    v-model.number="reservation.name"
+                    min="1"
+                    required
+                    class="form-control"
+                />
+                <label for="userName">На чьё имя бронировать</label>
+            </div>
+
+
+            <div class="form-floating mb-2">
+
+                <input
+                    type="text"
+                    id="userPhone"
+                    v-model.number="reservation.phone"
+                    min="1"
+                    required
+                    class="form-control"
+                />
+                <label for="userPhone">Номер телефона</label>
+            </div>
+
+            <div class="form-floating mb-2">
+
+                <textarea
+                    id="reservationDescription"
+                    v-model="reservation.description"
+                    rows="4"
+                    class="form-control"
+                ></textarea>
+                <label for="reservationDescription">Описание к брони (пожелания):</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 p-3">Забронировать</button>
+        </form>
+    </div>
+
+    <div v-show="tab==='list'">
+        <div class="form-floating mb-2">
             <input
                 type="date"
                 id="reservationDate"
@@ -20,74 +113,16 @@
             />
             <label for="reservationDate">Дата бронирования</label>
         </div>
+        <ul class="list-group" v-if="bookings.length>0">
+            <li class="list-group-item" v-for="item in bookings">
+                <p class="mb-0">{{item.booked_date_at || '-'}} в {{item.booked_time_at ||'-'}} на {{item.booked_info?.persons || 1}} чел.</p>
+            </li>
 
-        <div class="form-floating mb-2">
-
-            <input
-                type="time"
-                id="reservationTime"
-                v-model="reservation.time"
-                required
-                class="form-control"
-            />
-            <label for="reservationTime">Время бронирования</label>
-        </div>
-
-        <div class="form-floating mb-2">
-
-            <input
-                type="number"
-                id="numberOfPersons"
-                v-model.number="reservation.persons"
-                min="1"
-                required
-                class="form-control"
-            />
-            <label for="numberOfPersons">Число персон</label>
-        </div>
-
-
-        <div class="form-floating mb-2">
-
-            <input
-                type="text"
-                id="userName"
-                v-model.number="reservation.name"
-                min="1"
-                required
-                class="form-control"
-            />
-            <label for="userName">На чьё имя бронировать</label>
-        </div>
-
-
-        <div class="form-floating mb-2">
-
-            <input
-                type="text"
-                id="userPhone"
-                v-model.number="reservation.phone"
-                min="1"
-                required
-                class="form-control"
-            />
-            <label for="userPhone">Номер телефона</label>
-        </div>
-
-        <div class="form-floating mb-2">
-
-                <textarea
-                    id="reservationDescription"
-                    v-model="reservation.description"
-                    rows="4"
-                    class="form-control"
-                ></textarea>
-            <label for="reservationDescription">Описание к брони (пожелания):</label>
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100 p-3">Забронировать</button>
-    </form>
-
+        </ul>
+        <p class="alert alert-light" v-else>
+            Для данного столика нет активный броней
+        </p>
+    </div>
 
 </template>
 
@@ -96,6 +131,7 @@ export default {
     props: ["tableInfo"],
     data() {
         return {
+            tab: 'form',
             reservation: {
                 date: '',
                 time: '',
@@ -105,8 +141,8 @@ export default {
                 description: '',
                 table: null,
             },
-            successMessage: '',
-            errorMessage: ''
+            bookings: [],
+
         };
     },
     computed: {
@@ -114,51 +150,122 @@ export default {
             return window.self || null
         }
     },
+    watch: {
+        'reservation.date': {
+            handler: function (newValue) {
+                this.bookingList()
+            },
+            deep: true
+        },
+        'tab': {
+            handler: function (newValue) {
+                if (this.tab === 'list')
+                    this.bookingList()
+            },
+            deep: true
+        },
+    },
     methods: {
+        bookingList() {
+            return this.$store.dispatch("bookingList", {
+                number: this.reservation.table.number,
+                date: this.reservation.date
+            }).then((resp) => {
+                this.bookings = resp.data || []
+            })
+        },
         validateForm() {
-// Проверка на заполненность обязательных полей
+
             if (!this.reservation.date || !this.reservation.time || !this.reservation.persons) {
-                this.errorMessage = 'Пожалуйста, заполните все обязательные поля (Дата, Время, Число персон).';
-                return false;
-            }
-// Проверка на минимальное количество персон
-            if (this.reservation.persons < 1) {
-                this.errorMessage = 'Число персон должно быть не менее 1.';
+                this.$notify({
+                    title: "Бронирование",
+                    text: "Пожалуйста, заполните все обязательные поля (Дата, Время, Число персон)",
+                    type: "error"
+                })
                 return false;
             }
 
-// Дополнительная валидация (например, дата не в прошлом)
+            if (this.reservation.persons < 1) {
+                this.$notify({
+                    title: "Бронирование",
+                    text: "Число персон должно быть не менее 1.",
+                    type: "error"
+                })
+                return false;
+            }
+
             const selectedDateTime = new Date(`${this.reservation.date}T${this.reservation.time}`);
             const now = new Date();
             if (selectedDateTime < now) {
-                this.errorMessage = 'Дата и время бронирования не могут быть в прошлом.';
+                this.$notify({
+                    title: "Бронирование",
+                    text: "Дата и время бронирования не могут быть в прошлом.",
+                    type: "error"
+                })
                 return false;
             }
 
-            this.errorMessage = '';
             return true;
         },
         submitReservation() {
             if (!this.validateForm()) {
-                this.successMessage = '';
+                this.$notify({
+                    title: "Бронирование",
+                    text: "Не все поля заполнены корректно",
+                    type: "error"
+                })
                 return;
             }
 
-// Здесь вы можете отправить данные бронирования на сервер
-// Например, через fetch API или axios
-            console.log('Данные бронирования:', this.reservation);
+            let data = new FormData();
 
-// Имитация отправки данных
-            this.successMessage = 'Ваш столик успешно забронирован!';
-            this.errorMessage = '';
+            Object.keys(this.reservation)
+                .forEach(key => {
+                    const item = this.reservation[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
 
-// Сброс формы после успешной отправки (опционально)
-            this.reservation = {
-                date: '',
-                time: '',
-                persons: 1,
-                description: ''
-            };
+            this.$store.dispatch("bookATable", {
+                dataObject: data
+
+            }).then((response) => {
+
+                this.$notify({
+                    title: "Бронирование",
+                    text: "Ваш столик успешно забронирован!",
+                    type: "success"
+                })
+
+
+                this.reservation = {
+                    date: '',
+                    time: '',
+                    name: '',
+                    phone: '',
+                    persons: 1,
+                    description: '',
+                    table: null,
+                };
+
+                this.$emit("success")
+
+            }).catch(err => {
+
+                this.$notify({
+                    title: "Бронирование",
+                    text: "Ошибка бронирования столика!",
+                    type: "error"
+                })
+                this.$emit("failure")
+
+            })
+
+
+
+
         }
     },
     mounted() {
@@ -168,7 +275,7 @@ export default {
                 this.reservation.table = this.tableInfo
                 this.reservation.persons = this.tableInfo.seats || 1
                 this.reservation.description = 'Хочу забронировать этот столик'
-                this.reservation.name = this.self.name ||null
+                this.reservation.name = this.self.name || null
                 this.reservation.phone = this.self.phone || null
             })
 

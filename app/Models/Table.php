@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +25,10 @@ class Table extends Model
         'closed_at',
         'additional_services',
         'config',
+        'booked_date_at',
+        'booked_time_at',
+        'booked_info',
+
     ];
 
     /**
@@ -39,6 +44,9 @@ class Table extends Model
         'closed_at' => 'timestamp',
         'config' => 'array',
         'additional_services' => 'array',
+
+
+        'booked_info' => "array",
     ];
 
     protected $with = ["officiant", "clients"];
@@ -60,6 +68,11 @@ class Table extends Model
 
     public function clients(): BelongsToMany
     {
-        return $this->belongsToMany(BotUser::class,'table_bot_user_clients');
+        return $this->belongsToMany(BotUser::class, 'table_bot_user_clients');
+    }
+
+    public function getBookedAtAttribute()
+    {
+        return Carbon::parse($this->booked_date_at . ' ' . $this->booked_time_at);
     }
 }

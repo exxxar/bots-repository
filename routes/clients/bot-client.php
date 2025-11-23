@@ -100,6 +100,13 @@ Route::prefix("bot-client")
                 Route::post('/approved-self-basket', "approvedSelfBasket");
                 Route::post('/call-waiter', "callWaiter");
                 Route::post('/all-orders', "getAllTableOrders");
+
+                Route::post('/nearest-booking-list', "nearestBookingList");
+                Route::post('/my-upcoming-bookings', "myUpcomingBookings");
+                Route::post('/booking-list', "bookingList");
+                Route::post('/book-table', "bookATable");
+                Route::post('/export-nearest-bookings', "exportNearestBookings");
+                Route::delete('/cancel-booking/{bookingId}', "cancelBooking");
             });
 
         Route::prefix("mailing")

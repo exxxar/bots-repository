@@ -187,4 +187,64 @@ class TableController extends Controller
 
         return response()->noContent();
     }
+
+    public function nearestBookingList(Request $request)
+    {
+        return BusinessLogic::table()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->nearestBookingList($request->all());
+    }
+
+    public function myUpcomingBookings(Request $request)
+    {
+        return BusinessLogic::table()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->myUpcomingBookings();
+    }
+
+    public function bookingList(Request $request)
+    {
+        $request->validate([
+            "number" => "required"
+        ]);
+
+        return BusinessLogic::table()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->bookingList($request->number ?? null, $request->date ?? null);
+    }
+
+    public function bookATable(Request $request)
+    {
+        return BusinessLogic::table()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->bookATable($request->all());
+    }
+
+    public function exportNearestBookings(Request $request)
+    {
+         BusinessLogic::table()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->exportNearestBookings($request->all());
+
+         return response()->noContent();
+    }
+
+    /**
+     * @throws \HttpException
+     * @throws ValidationException
+     */
+    public function cancelBooking(Request $request, $bookingId)
+    {
+        BusinessLogic::table()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->cancelBookingTable($bookingId);
+
+        return response()->noContent();
+    }
 }
