@@ -168,7 +168,7 @@ export default {
                 const modal = bootstrap.Modal.getInstance(modalEl).hide();
                 modal.hide();
 
-
+                this.myUpcomingBookings()
             })
         },
         openModal(table) {

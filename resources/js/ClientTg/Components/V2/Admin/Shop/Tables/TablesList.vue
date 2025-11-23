@@ -102,6 +102,15 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                                         timeAgo(table.start_at)
                                     }}</p>
                             </div>
+
+                            <div class="col-12" v-if="table.booked_info">
+                                <p class="mb-2 bg-danger text-white fw-bold">Данный столик забронирован</p>
+
+                                <p class="mb-2">{{table.booked_date_at}} в {{table.booked_time_at}}</p>
+                                <p class="mb-2">На имя {{table.booked_info?.name}}</p>
+                                <p class="mb-2">Контакт для связи {{table.booked_info?.phone}}</p>
+                                <p class="mb-0">Доп инфо {{table.booked_info?.description}}</p>
+                            </div>
                         </div>
 
                         <div class="btn-group w-100 mb-0">
