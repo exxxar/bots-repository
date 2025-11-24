@@ -104,12 +104,12 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                             </div>
 
                             <div class="col-12" v-if="table.booked_info">
-                                <p class="mb-2 bg-danger text-white fw-bold">Данный столик забронирован</p>
+                                <p class="mb-2 bg-danger text-white fw-bold" >Данный столик забронирован</p>
 
-                                <p class="mb-2">{{table.booked_date_at}} в {{table.booked_time_at}}</p>
-                                <p class="mb-2">На имя {{table.booked_info?.name}}</p>
-                                <p class="mb-2">Контакт для связи {{table.booked_info?.phone}}</p>
-                                <p class="mb-0">Доп инфо {{table.booked_info?.description}}</p>
+                                <p class="mb-2" style="font-size:12px;">{{table.booked_date_at}} в {{table.booked_time_at}}</p>
+                                <p class="mb-2" style="font-size:12px;">На имя: {{table.booked_info?.name}}</p>
+                                <p class="mb-2" style="font-size:12px;">Контакт для связи: {{table.booked_info?.phone}}</p>
+                                <p class="mb-0" style="font-size:12px;">Доп инфо: {{table.booked_info?.description}}</p>
                             </div>
                         </div>
 

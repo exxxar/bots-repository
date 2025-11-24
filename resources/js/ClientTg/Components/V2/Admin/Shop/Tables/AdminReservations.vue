@@ -1,12 +1,15 @@
 <template>
 
     <!-- Кнопка-триггер модального окна -->
-    <button type="button" class="btn-primary btn w-100 p-3 mb-2" data-bs-toggle="modal" data-bs-target="#admin-booking-modal">
-        Выгрузить брони
+    <button type="button" class="btn-info btn w-100 p-3 mb-2" data-bs-toggle="modal"
+            data-bs-target="#admin-booking-modal">
+        <i class="fa-solid fa-calendar"></i>
+         Выгрузить брони
     </button>
 
     <!-- Модальное окно -->
-    <div class="modal fade" id="admin-booking-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="admin-booking-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -15,10 +18,27 @@
                 </div>
                 <div class="modal-body">
 
-                        <h2 class="mb-4 text-center">Управление бронированием столиков</h2>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a
+                                @click="tab='export'"
+                                v-bind:class="{'active':tab==='export'}"
+                                class="nav-link" aria-current="page" href="javascript:void(0)">Экспорт</a>
+                        </li>
+                        <li class="nav-item">
+                            <a @click="tab='bookings'"
+                               v-bind:class="{'active':tab==='bookings'}"
+                               class="nav-link" aria-current="page" href="javascript:void(0)">Список броней</a>
+                        </li>
+                        <li class="nav-item">
+                            <a @click="tab='counts'"
+                               v-bind:class="{'active':tab==='counts'}"
+                               class="nav-link" aria-current="page" href="javascript:void(0)">Сводка</a>
+                        </li>
+                    </ul>
 
-                    <div class="border border-light p-3 mb-2">
-                        <h6 class="mb-2 fw-bold">Выгрузить брони по дате</h6>
+                    <div v-show="tab==='export'">
+                        <h6 class="mb-2 mt-3 fw-bold">Выгрузить брони по дате</h6>
                         <form @submit.prevent="exportNearestBookings">
                             <div class="form-floating mb-2">
 
@@ -50,59 +70,65 @@
                         </form>
                     </div>
 
+                    <div v-show="tab==='bookings'">
+                        <h6 class="mb-2 mt-3 fw-bold">Бронирования на ближайшую неделю
+                            <span v-if="bookings.length > 0">({{ bookings.length }} ед.)</span>
+                        </h6>
 
-                        <!-- Список выгруженных броней -->
-                        <div v-if="bookings.length > 0" class="border border-light p-3 mb-2">
-                            <h6 class="mb-2 fw-bold">Бронирования на ближайшую неделю ({{ bookings.length }})</h6>
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>Дата</th>
-                                        <th>Время</th>
-                                        <th>Персон</th>
-                                        <th>Номер столика</th>
-                                        <th>Описание</th>
-                                        <th>На кого бронь</th>
-                                        <th>Номер телефона</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-for="reservation in bookings" :key="reservation.id">
-                                        <td>{{ reservation.booked_date_at }}</td>
-                                        <td>{{ reservation.booked_time_at }}</td>
-                                        <td>{{ reservation.booked_info?.persons }}</td>
-                                        <td>{{ reservation.number || '-' }}</td>
-                                        <td>{{ reservation.booked_info?.description || '-' }}</td>
-                                        <td>{{ reservation.booked_info?.name || '-' }}</td>
-                                        <td>{{ reservation.booked_info?.phone || '-' }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div
+                            v-if="bookings.length > 0"
+                            class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Время</th>
+                                    <th>Персон</th>
+                                    <th>Номер столика</th>
+                                    <th>Описание</th>
+                                    <th>На кого бронь</th>
+                                    <th>Номер телефона</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="reservation in bookings" :key="reservation.id">
+                                    <td>{{ reservation.booked_date_at }}</td>
+                                    <td>{{ reservation.booked_time_at }}</td>
+                                    <td>{{ reservation.booked_info?.persons }}</td>
+                                    <td>{{ reservation.number || '-' }}</td>
+                                    <td>{{ reservation.booked_info?.description || '-' }}</td>
+                                    <td>{{ reservation.booked_info?.name || '-' }}</td>
+                                    <td>{{ reservation.booked_info?.phone || '-' }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
+
                         <div v-else
-                             class="alert alert-info mb-2">
+                             class="alert alert-info mb-2 mt-3">
                             Бронирований за выбранный период не найдено.
                         </div>
+                    </div>
 
 
-                    <div class="border border-light p-3">
-                        <h6 class="mb-2 fw-bold">Ближайшие бронирования (по дате)</h6>
+                    <div v-show="tab==='counts'">
+                        <h6 class="mb-2 mt-3 fw-bold">Ближайшие бронирования (по дате)</h6>
 
-                        <ul class="list-group">
-                            <li v-if="counts.length === 0" class="list-group-item text-muted">
-                                Пока нет ближайших бронирований.
-                            </li>
+                        <ul class="list-group" v-if="counts.length > 0">
                             <li
                                 v-for="item in counts"
                                 class="list-group-item d-flex justify-content-between align-items-center"
                             >
-                                {{item.date}}
-                                <span class="badge bg-primary rounded-pill">{{ item.total}}</span>
+                                {{ item.date }}
+                                <span class="badge bg-primary rounded-pill">{{ item.total }}</span>
                             </li>
                         </ul>
+                        <div v-else
+                             class="alert alert-info mb-2 mt-3">
+                            Пока нет ближайших бронирований.
+                        </div>
                     </div>
+                    <!-- Список выгруженных броней -->
 
 
                 </div>
@@ -116,18 +142,17 @@
 export default {
     data() {
         return {
+            tab: 'export',
             startDate: this.getTodayDate(),
             endDate: this.getTodayDate(),
 
             loading: false,
 
-            counts:[],
-            bookings:[],
+            counts: [],
+            bookings: [],
         };
     },
-    computed: {
-
-    },
+    computed: {},
     methods: {
         getTodayDate() {
             const today = new Date();
@@ -148,7 +173,7 @@ export default {
                     text: "Список броней успешно выгружен",
                     type: "success"
                 })
-            }).catch(()=>{
+            }).catch(() => {
                 this.$notify({
                     title: "Выгрузка броней",
                     text: "Ошибка выгрузки броней",
@@ -165,7 +190,7 @@ export default {
                 console.log(resp)
                 this.counts = resp.counts || []
                 this.bookings = resp.bookings.data || []
-            }).catch(()=>{
+            }).catch(() => {
                 this.$notify({
                     title: "Список броней",
                     text: "Ошибка загрузки списка броней",

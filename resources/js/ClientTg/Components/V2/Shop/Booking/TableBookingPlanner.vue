@@ -13,6 +13,49 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
                 <AdminReservations></AdminReservations>
             </template>
 
+
+            <template v-if="my_bookings.length>0">
+                <button
+                    @click="show_my_bookings=!show_my_bookings"
+                    type="button" class="btn-primary btn w-100 p-3 mb-2">
+                    <span v-if="!show_my_bookings">
+                         <i class="fa-solid fa-plus-square"></i>
+                        Показать мои брони
+                    </span>
+                    <span v-else>
+                         <i class="fa-solid fa-minus-square"></i> Скрыть мои брони
+                    </span>
+                </button>
+
+                <template v-if="show_my_bookings">
+                    <ol
+                        v-if="my_bookings.length>0"
+                        class="list-group list-group-numbered mb-2">
+                        <li
+                            v-for="item in my_bookings"
+                            class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold mb-0">
+                                    Бронь столика №{{ item.number }}
+                                </div>
+                                <p class="mb-0">Дата {{ item.booked_date_at }} в {{ item.booked_time_at }}</p>
+
+                                <p class="mb-2 fst-italic">{{ item.booked_info?.description || '-' }}</p>
+
+                                <button
+                                    @click="openRemoveModal(item)"
+                                    type="button" class="btn btn-danger w-100">Отменить бронирование
+                                </button>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ item.booked_info.persons || 1 }} чел.</span>
+                        </li>
+                    </ol>
+                    <p class="alert alert-light" v-else>
+                        У вас нет актуальных забронированных столиков
+                    </p>
+                </template>
+            </template>
+
             <h6 class="fw-bold">Столики на выбор</h6>
             <div
 
@@ -23,10 +66,10 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
                      v-for="(table, index) in sortedSelectedTables"
                      :key="index">
 
-                    <div class="border d-flex flex-column px-3">
+                    <div class="border d-flex flex-column" style="font-size:12px;">
                         <img v-lazy="'/images/tables/'+table.image" alt="table" class="table-img-small"/>
-                        <p class="fw-bold mb-2">Столик №{{ table.number }}</p>
-                        <p>{{ table.description }}</p>
+                        <p class="fw-bold mb-0 px-2">Столик №{{ table.number }}</p>
+                        <p class=" mb-2 px-2">{{ table.description }}</p>
                     </div>
 
                 </div>
@@ -38,29 +81,7 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
             Нет столиков для бронирования
         </p>
 
-        <ol class="list-group list-group-numbered" v-if="my_bookings.length>0">
-            <li
-                v-for="item in my_bookings"
-                class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="fw-bold mb-0">
-                        Бронь столика №{{ item.number }}
-                    </div>
-                    <p class="mb-0">Дата {{ item.booked_date_at }} в {{ item.booked_time_at }}</p>
 
-                    <p class="mb-2 fst-italic">{{ item.booked_info?.description || '-' }}</p>
-
-                    <button
-                        @click="openRemoveModal(item)"
-                        type="button" class="btn btn-danger w-100">Отменить бронирование
-                    </button>
-                </div>
-                <span class="badge bg-primary rounded-pill">{{ item.booked_info.persons || 1 }} чел.</span>
-            </li>
-        </ol>
-        <p class="alert alert-light" v-else>
-            У вас нет актуальных забронированных столиков
-        </p>
     </div>
 
     <!-- Modal -->
@@ -125,6 +146,7 @@ export default {
     name: "Booking",
     data() {
         return {
+            show_my_bookings: false,
             my_bookings: [],
             selectedTable: null
         };
@@ -165,8 +187,7 @@ export default {
             this.selectedTable = null
             this.$nextTick(() => {
                 const modalEl = document.getElementById('booking-modal')
-                const modal = bootstrap.Modal.getInstance(modalEl).hide();
-                modal.hide();
+                bootstrap.Modal.getInstance(modalEl).hide();
 
                 this.myUpcomingBookings()
             })

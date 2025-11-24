@@ -46,19 +46,33 @@
                 <label for="reservationTime">Время бронирования</label>
             </div>
 
-            <div class="form-floating mb-2">
-
-                <input
-                    type="number"
-                    id="numberOfPersons"
-                    v-model.number="reservation.persons"
-                    min="1"
-                    required
-                    class="form-control"
-                />
-                <label for="numberOfPersons">Число персон</label>
+            <p class="mb-0">Число персон</p>
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Простой пример">
+                <button
+                    @click="reservation.persons++"
+                    type="button" class="btn btn-primary">+</button>
+                <button type="button"
+                        @click="show_persons_input=!show_persons_input"
+                        class="btn btn-primary">{{reservation.persons}}</button>
+                <button
+                    @click="reservation.persons>1?reservation.persons--:''"
+                    type="button" class="btn btn-primary">-</button>
             </div>
 
+            <template v-if="show_persons_input">
+                <div class="form-floating mb-2" >
+
+                    <input
+                        type="number"
+                        id="numberOfPersons"
+                        v-model.number="reservation.persons"
+                        min="1"
+                        required
+                        class="form-control"
+                    />
+                    <label for="numberOfPersons">Число персон</label>
+                </div>
+            </template>
 
             <div class="form-floating mb-2">
 
@@ -132,6 +146,7 @@ export default {
     data() {
         return {
             tab: 'form',
+            show_persons_input:false,
             reservation: {
                 date: '',
                 time: '',
