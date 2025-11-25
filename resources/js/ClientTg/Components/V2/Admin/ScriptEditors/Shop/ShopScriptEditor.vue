@@ -76,6 +76,9 @@ import TablePlanner from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/Tabl
         </div>
 
         <div v-if="tab===4" class="py-3">
+
+
+
             <TablePlanner
                 v-if="form"
                 v-model="form"></TablePlanner>

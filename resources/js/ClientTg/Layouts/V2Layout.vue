@@ -250,6 +250,12 @@ import Preloader from "@/ClientTg/Components/V2/Shop/Preloader.vue";
                             class="text-primary fw-bold text-decoration-underline cursor-pointer">графиком работы</span>.
                     </div>
 
+                    <template v-if="bot.settings?.can_use_booking||false">
+                        <button
+                            class="btn btn-info w-100 p-3 mb-2"
+                            @click="goToBookingTable">Забронировать столик</button>
+                    </template>
+
 
                 <p class="text-center mb-3">
                     <span v-html="bot.company.description"></span>
@@ -428,6 +434,11 @@ export default {
 
     },
     methods: {
+        goToBookingTable(){
+          this.goTo('TableBookingV2')
+            const modalEl = document.getElementById('bot-info-modal')
+            bootstrap.Modal.getInstance(modalEl).hide();
+        },
         switchTheme(index) {
             let changeTheme = document.querySelector("#theme")
             changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`

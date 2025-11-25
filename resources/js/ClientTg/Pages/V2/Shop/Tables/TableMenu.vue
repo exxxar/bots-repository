@@ -4,6 +4,8 @@ import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog
 </script>
 <template>
 
+
+
     <ShopProductCatalog
         :settings="settings"/>
 
@@ -81,7 +83,11 @@ export default {
         },
     },
     mounted() {
-        this.loadShopModuleData()
+        if (this.bot.settings?.self_updated) {
+            this.settings = this.bot.settings
+        } else
+            this.loadShopModuleData()
+
         this.loadBasketData()
     },
     methods: {

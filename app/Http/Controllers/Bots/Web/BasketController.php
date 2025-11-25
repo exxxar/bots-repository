@@ -16,7 +16,7 @@ class BasketController extends Controller
         return BusinessLogic::basket()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->productsInBasket();
+            ->productsInBasket($request->table_id ?? null);
     }
 
     public function commentProductInBasket(Request $request): BasketCollection

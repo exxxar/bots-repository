@@ -117,7 +117,7 @@ class TableController extends Controller
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->setSlug($request->slug ?? null)
-            ->current();
+            ->current($request->table_id ?? null);
     }
 
     public function approvedSelfBasket(Request $request)

@@ -48,6 +48,7 @@ class TableLogicFactory extends BaseLogicFactory
         $basket = \App\Models\Basket::query()
             ->where("bot_id", $this->bot->id)
             ->where("table_id", $tableId)
+            ->whereNull("ordered_at")
             ->get();
 
         $summaryPrice = 0;
@@ -224,6 +225,7 @@ class TableLogicFactory extends BaseLogicFactory
             ->whereNull("ordered_at")
             ->get();
 
+
         $clientBaskets = [];
         foreach ($table->clients as $client) {
             $clientBaskets[] = (object)[
@@ -234,6 +236,7 @@ class TableLogicFactory extends BaseLogicFactory
                 "basket" => [],
             ];
         }
+
 
         $allSummaryPrice = 0;
         $allSummaryCount = 0;
@@ -325,18 +328,26 @@ class TableLogicFactory extends BaseLogicFactory
     /**
      * @throws HttpException
      */
-    public function current(): object
+    public function current($tableId = null): object
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        $tableWithClient = Table::query()
-            ->with(["creator", "officiant"])
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("closed_at")
-            ->whereHas('clients', function ($query) {
-                $query->where('id', $this->botUser->id);
-            })->first();
+
+        $tableWithClient = is_null($tableId) ?
+            Table::query()
+                ->with(["creator", "officiant"])
+                ->where("bot_id", $this->bot->id)
+                ->whereNull("closed_at")
+                ->whereHas('clients', function ($query) {
+                    $query->where('id', $this->botUser->id);
+                })->first() :
+            Table::query()
+                ->with(["creator", "officiant"])
+                ->where("bot_id", $this->bot->id)
+                ->where("id", $tableId)
+                ->first();
+
 
         if (is_null($tableWithClient))
             throw new HttpException(404, "Увы, вы не заняли ни один из столиков!");
@@ -415,29 +426,27 @@ class TableLogicFactory extends BaseLogicFactory
         if (is_null($table))
             throw new HttpException(404, "Столик в данный момент не занят!");
 
-        if (is_null($table->officiant_id ?? null))
-            throw new HttpException(404, "В данный момент у столика нет официанта!");
-
         $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s&hide_menu#/s/admin/tables-manager/" . $table->id;
 
+        $keyboard = [
+            [
+                ["text" => "Перейти к столику",
+                    "web_app" => [
+                        "url" => sprintf(
+                            $path,
+                            $this->bot->bot_domain,
+                            $this->slug->id ?? 'route'
+                        )
+                    ]
+                ],
+            ]
+        ];
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
-                $table->officiant->telegram_chat_id,
-                "Один из клиентов за столиком №" . ($table->number + 1) . " сделал заказ и просит вас подтвердить его!", [
-                    [
-                        ["text" => "🍽️Перейти к столику",
-                            "web_app" => [
-                                "url" => sprintf(
-                                    $path,
-                                    $this->bot->bot_domain,
-                                    $this->slug->id,
-                                    $this->botUser->id,
-                                )
-                            ]
-                        ],
-                    ]
-                ]
+                is_null($table->officiant) ? $this->bot->order_channel : $table->officiant->telegram_chat_id,
+                "Один из клиентов за столиком №" . ($table->number + 1) . " сделал заказ и просит вас подтвердить его!",
+                !is_null($table->officiant) ? $keyboard : []
             );
 
         http://localhost:8000/bot-client/simple/nextitgroup_bot?slug=2606#/s/admin/tables-manager/1
@@ -671,7 +680,7 @@ class TableLogicFactory extends BaseLogicFactory
                     "table" => $data["table"],
                 ],
             ]);
-
+        $table->clients()->sync($this->botUser->id);
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage(
@@ -709,6 +718,14 @@ class TableLogicFactory extends BaseLogicFactory
         if (is_null($table))
             throw new HttpException(404, "Бронь не найдена!");
 
+        $baskets = Basket::query()
+            ->where("table_id", $table->id)
+            ->get();
+
+        foreach ($baskets as $basket)
+            $basket->delete();
+
+        $table->clients()->detach();
 
         $number = $table->number;
         $date = $table->booked_date_at;

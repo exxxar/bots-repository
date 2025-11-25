@@ -2,11 +2,15 @@
 import CartProductList from "@/ClientTg/Components/V2/Shop/Cart/CartProductList.vue";
 import ProfileCard from "@/ClientTg/Components/V2/Shop/ProfileCard.vue";
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
+import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdown.vue";
 </script>
 
 <template>
     <div class="container py-3">
         <div class="row">
+            <div class="col-12">
+                <BookingDropdown v-on:select="selectATable"></BookingDropdown>
+            </div>
             <div class="col-12 justify-content-center d-flex">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
@@ -35,6 +39,27 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
         </div>
 
         <template v-if="tab===0">
+
+
+            <div v-if="selectedTable" class="card my-3">
+                <div class="card-header bg-primary text-white">
+                    Бронь столика №{{ selectedTable.number }}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Дата: {{ selectedTable.booked_date_at }} в {{ selectedTable.booked_time_at }}
+                    </h5>
+
+                    <p class="card-text">
+                        <strong>Имя:</strong> {{ selectedTable.booked_info?.name }} <br>
+                        <strong>Телефон:</strong> {{ selectedTable.booked_info?.phone }} <br>
+                        <strong>Количество персон:</strong> {{ selectedTable.booked_info?.persons }} <br>
+                        <strong>Описание:</strong> {{ selectedTable.booked_info?.description || '-' }}
+                    </p>
+
+                </div>
+            </div>
+
 
             <template v-if="table.id">
                 <div class="alert alert-danger my-2 text-black" v-if="table.closed_at!=null">
@@ -250,23 +275,43 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                 Вы еще ничего не выбрали из меню
             </p>
 
-            <p
-                v-if="sent_to_waiter"
-                class="alert alert-light">
-                Ваш заказ передан официанту! Как только он подтвердит заказ страница обновится и ваш заказ будет
-                отображаться в общем списке заказов столика!
-            </p>
-            <button
-                @click="makeOrder"
-                :disabled="cartTotalCount==0||table.officiant_id==null || spent_time_counter>0"
-                class="btn btn-primary w-100 p-3 mb-2"><i class="fa-solid fa-clock-rotate-left"></i>
-                <span
-                    v-if="spent_time_counter<=0"
-                    class="color-white">Оформить заказ</span>
-                <span
-                    v-else
-                    class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
-            </button>
+            <template v-if="selectedTable">
+                <p
+                    class="alert alert-warning">
+                    Внимание! Оформленный заказ необходимо сразу оплатить!
+                </p>
+                <button
+                    @click="changeOrderStatus"
+                    :disabled="cartTotalCount==0 || spent_time_counter>0"
+                    class="btn btn-primary w-100 p-3 mb-2"><i class="fa-solid fa-clock-rotate-left"></i>
+                    <span
+                        v-if="spent_time_counter<=0"
+                        class="color-white">Подтвердить заказ</span>
+                    <span
+                        v-else
+                        class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
+                </button>
+            </template>
+            <template v-else>
+                <p
+                    v-if="sent_to_waiter"
+                    class="alert alert-light">
+                    Ваш заказ передан официанту! Как только он подтвердит заказ страница обновится и ваш заказ будет
+                    отображаться в общем списке заказов столика!
+                </p>
+                <button
+                    @click="makeOrder"
+                    :disabled="cartTotalCount==0 || spent_time_counter>0"
+                    class="btn btn-primary w-100 p-3 mb-2"><i class="fa-solid fa-clock-rotate-left"></i>
+                    <span
+                        v-if="spent_time_counter<=0"
+                        class="color-white">Оформить заказ</span>
+                    <span
+                        v-else
+                        class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
+                </button>
+            </template>
+
 
         </template>
 
@@ -384,6 +429,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+            selectedTable: null,
             tab: 0,
             spent_time_counter: 0,
             loaded_settings: true,
@@ -458,15 +504,61 @@ export default {
         },
     },
     mounted() {
+
+        let storedTable = localStorage.getItem("cashman_current_active_table") || null
+
+        if (storedTable)
+            this.selectedTable = JSON.parse(storedTable)
+
         this.loadCurrentTableData()
         this.loadBasketData()
         this.loadShopModuleData()
-
         if (localStorage.getItem("cashman_self_table_counter") != null) {
             this.startTimer(localStorage.getItem("cashman_self_table_counter"))
         }
     },
     methods: {
+        changeOrderStatus() {
+            let storedTable = localStorage.getItem("cashman_current_active_table") || null
+
+            if (storedTable)
+                storedTable = JSON.parse(storedTable)
+
+            this.$store.dispatch("acceptTableOder", {
+                dataObject: {
+                    table_id: storedTable?.id,
+                    type: 0
+                }
+            }).then(resp => {
+
+                this.$notify({
+                    title: 'Заказ',
+                    text: "Статус заказа успешно изменен",
+                    type: 'success'
+                })
+
+                this.tab = 2
+
+                this.loadBasketData()
+                this.startTablePay()
+
+            }).catch(() => {
+                this.$notify({
+                    title: 'Упс!',
+                    text: "Ошибка изменения статуса заказа",
+                    type: 'error'
+                })
+            })
+        },
+        selectATable(item) {
+            this.selectedTable = null
+            this.$nextTick(() => {
+                this.selectedTable = item
+                localStorage.setItem("cashman_current_active_table", JSON.stringify(item))
+                this.loadCurrentTableData()
+                this.loadBasketData()
+            })
+        },
         startTablePay() {
             this.startTimer(10)
 

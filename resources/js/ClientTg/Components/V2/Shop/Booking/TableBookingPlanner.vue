@@ -15,6 +15,7 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
 
 
             <template v-if="my_bookings.length>0">
+
                 <button
                     @click="show_my_bookings=!show_my_bookings"
                     type="button" class="btn-primary btn w-100 p-3 mb-2">
@@ -44,7 +45,7 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
 
                                 <button
                                     @click="openRemoveModal(item)"
-                                    type="button" class="btn btn-danger w-100">Отменить бронирование
+                                    type="button" class="btn btn-danger w-100">Отменить
                                 </button>
                             </div>
                             <span class="badge bg-primary rounded-pill">{{ item.booked_info.persons || 1 }} чел.</span>
@@ -83,6 +84,22 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
 
 
     </div>
+
+    <nav
+        v-if="my_bookings.length>0"
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        style="border-radius:10px 10px 0px 0px;">
+        <button
+
+            @click="goToTableMenu"
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center align-items-center">
+
+
+            Перейти к предзаказу
+        </button>
+
+    </nav>
 
     <!-- Modal -->
     <div class="modal fade" id="remove-booking-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -172,6 +189,9 @@ export default {
     },
 
     methods: {
+        goToTableMenu() {
+            this.$router.push({name: 'TableMenuV2'});
+        },
         openRemoveModal(booking) {
             this.selectedTable = null
             this.$nextTick(() => {

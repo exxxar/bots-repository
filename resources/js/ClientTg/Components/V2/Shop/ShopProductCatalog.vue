@@ -10,6 +10,7 @@ import CategorySlider from "@/ClientTg/Components/V2/Shop/CategorySlider.vue";
 import PartnerSlider from "@/ClientTg/Components/V2/Shop/Partners/PartnerSlider.vue";
 import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vue";
+import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdown.vue";
 </script>
 <template>
 
@@ -20,96 +21,6 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
 
 
 
-<!--        <div class="container mt-4">
-            &lt;!&ndash; Profile Header &ndash;&gt;
-            <div class="row mb-4">
-                <div class="col-md-3 text-center">
-                    <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="img-fluid rounded-circle w-75">
-                </div>
-                <div class="col-md-9">
-                    <h3 class="fw-bold">Julian Gruber</h3>
-                    <h5 class="text-muted">Designer</h5>
-                </div>
-            </div>
-
-            &lt;!&ndash; Profile Stats &ndash;&gt;
-            <div class="row mb-4">
-                <div class="col-6 col-md-3 mb-2">
-                    <a href="#" class="text-decoration-none d-block text-center">
-                        <strong>152</strong><br>Photos
-                    </a>
-                </div>
-                <div class="col-6 col-md-3 mb-2">
-                    <a href="#" class="text-decoration-none d-block text-center">
-                        <strong>52</strong><br>Albums
-                    </a>
-                </div>
-                <div class="col-6 col-md-3 mb-2">
-                    <a href="#" class="text-decoration-none d-block text-center">
-                        <strong>27k</strong><br>Followers
-                    </a>
-                </div>
-                <div class="col-6 col-md-3 mb-2">
-                    <a href="#" class="text-decoration-none d-block text-center">
-                        <strong>506</strong><br>Following
-                    </a>
-                </div>
-            </div>
-
-            &lt;!&ndash; Profile Bio and Location &ndash;&gt;
-            <div class="row mb-4">
-                <div class="col-12">
-                    <p class="text-muted">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at magna porttitor lorem mollis ornare. Fusce varius varius massa.
-                    </p>
-                    <p>
-                        <a href="#">Paris</a>, <a href="#">France</a>
-                    </p>
-                </div>
-            </div>
-
-            &lt;!&ndash; Tabs for Navigation &ndash;&gt;
-            <div class="row">
-                <div class="col-12">
-                    <ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="feed-tab" data-bs-toggle="tab" href="#feed" role="tab" aria-controls="feed" aria-selected="true">
-                                <i class="bi bi-grid-3x3-gap"></i> Feed
-                            </a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="friends-tab" data-bs-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">
-                                <i class="bi bi-person-lines-fill"></i> Friends
-                            </a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="bookmarks-tab" data-bs-toggle="tab" href="#bookmarks" role="tab" aria-controls="bookmarks" aria-selected="false">
-                                <i class="bi bi-bookmark-fill"></i> Bookmarks
-                            </a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="settings-tab" data-bs-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">
-                                <i class="bi bi-gear-fill"></i> Settings
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="profileTabContent">
-                        <div class="tab-pane fade show active" id="feed" role="tabpanel" aria-labelledby="feed-tab">
-                            &lt;!&ndash; Feed content goes here &ndash;&gt;
-                        </div>
-                        <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
-                            &lt;!&ndash; Friends content goes here &ndash;&gt;
-                        </div>
-                        <div class="tab-pane fade" id="bookmarks" role="tabpanel" aria-labelledby="bookmarks-tab">
-                            &lt;!&ndash; Bookmarks content goes here &ndash;&gt;
-                        </div>
-                        <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                            &lt;!&ndash; Settings content goes here &ndash;&gt;
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
         <menu
             id="category-slider"
             class="d-block w-100 p-0 m-0 sticky-menu">
@@ -137,28 +48,9 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
             </template>
 
 
-            <!--        <menu
-                        v-bind:style="colorTheme"
-                        class="d-block position-sticky w-100 header-category-slider">
-
-                        <ul class="nav nav-tabs justify-content-center catalog-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   @click="openTab(0)"
-                                   style="font-weight:bold;"
-                                   v-bind:class="{'active':tab===0}"
-                                   aria-current="page" href="javascript:void(0)"><i class="fa-solid fa-tag mr-2"></i>Категории</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   @click="openTab(1)"
-                                   style="font-weight:bold;"
-                                   v-bind:class="{'active':tab===1}"
-                                   href="javascript:void(0)"><i class="fa-solid fa-bag-shopping mr-2"></i>Товары</a>
-                            </li>
-
-                        </ul>
-                    </menu>-->
+            <div class="p-3">
+                <BookingDropdown></BookingDropdown>
+            </div>
 
             <div
                 v-show="tab===0"
@@ -392,7 +284,7 @@ export default {
             return data
         },
         partners() {
-            return this.settings.partners
+            return this.settings?.partners
         },
         bot() {
             return window.currentBot

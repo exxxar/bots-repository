@@ -4,6 +4,9 @@ import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBook
 <template>
 
     <TableBookingPlanner></TableBookingPlanner>
+
+
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -33,6 +36,7 @@ export default {
         })
     },
     methods: {
+
         loadProductInOrders(page = 0) {
             this.tab = 1
 

@@ -300,37 +300,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                         v-bind:class="{'text-primary fw-bold':!form.need_health_restrictions}">выкл</span></label>
             </div>
 
-            <div class="form-check form-switch mb-2">
-                <input class="form-check-input"
-                       type="checkbox"
-                       v-model="form.need_table_list"
-                       role="switch" id="script-settings-need_table_list">
-                <label class="form-check-label" for="script-settings-need_table_list">Столики в заведении: <span
-                    v-bind:class="{'text-primary fw-bold':form.need_table_list}">вкл</span> \ <span
-                    v-bind:class="{'text-primary fw-bold':!form.need_table_list}">выкл</span></label>
-            </div>
 
-            <template v-if="form.need_table_list">
-                <p class="alert alert-light mb-2">
-                    Укажите максимальное число столиков в заведении
-                </p>
-                <div
-                    class="form-floating mb-2">
-                    <input type="number"
-                           min="0"
-                           max="200"
-                           v-model="form.max_tables"
-                           class="form-control" id="modelValue-table-number"
-                           placeholder="Номер столика">
-                    <label for="modelValue-table-number">Число столиков</label>
-                </div>
-
-                <a
-                    :href="'/bot-client/'+bot.bot_domain+'/tables-qr?count='+form.max_tables+'&script-id='+scriptId"
-                    target="_blank"
-                    class="btn btn-info w-100 p-3"
-                ><i class="fa-solid fa-qrcode"></i> Скачать QR-коды для столиков</a>
-            </template>
 
         </template>
 
@@ -531,6 +501,7 @@ export default {
 
                 need_hide_disabled_products: false,
                 need_hide_delivery_period: false,
+                can_use_booking: false,
 
                 tables_variants:[],
                 manager: {

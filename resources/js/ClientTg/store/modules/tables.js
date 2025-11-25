@@ -237,7 +237,14 @@ const actions = {
         let link = `${BASE_TABLES_LINK}/current`
         let method = 'POST'
 
-        let _axios = util.makeAxiosFactory(link, method)
+        let storedTable = localStorage.getItem("cashman_current_active_table") || null
+
+        if (storedTable)
+            storedTable = JSON.parse(storedTable)
+
+        let _axios = util.makeAxiosFactory(link, method, {
+            table_id: storedTable?.id || null
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

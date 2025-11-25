@@ -265,6 +265,7 @@ export default {
                     table: null,
                 };
 
+                localStorage.setItem("cashman_current_active_table", JSON.stringify(response.data))
                 this.$emit("success")
 
             }).catch(err => {

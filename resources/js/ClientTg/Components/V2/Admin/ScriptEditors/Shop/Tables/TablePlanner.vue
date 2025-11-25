@@ -8,6 +8,50 @@ import SelectedTablesList from "@/ClientTg/Components/V2/Admin/ScriptEditors/Sho
         <!-- Кнопка для выбора столиков -->
 
 
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_table_list"
+                   role="switch" id="script-settings-need_table_list">
+            <label class="form-check-label" for="script-settings-need_table_list">Столики в заведении: <span
+                v-bind:class="{'text-primary fw-bold':form.need_table_list}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.need_table_list}">выкл</span></label>
+        </div>
+
+        <template v-if="form.need_table_list">
+            <p class="alert alert-light mb-2">
+                Укажите максимальное число столиков в заведении
+            </p>
+            <div
+                class="form-floating mb-2">
+                <input type="number"
+                       min="0"
+                       max="200"
+                       v-model="form.max_tables"
+                       class="form-control" id="modelValue-table-number"
+                       placeholder="Номер столика">
+                <label for="modelValue-table-number">Число столиков</label>
+            </div>
+
+            <a
+                :href="'/bot-client/'+bot.bot_domain+'/tables-qr?count='+form.max_tables+'&script-id='+scriptId"
+                target="_blank"
+                class="btn btn-info w-100 p-3 mb-2"
+            ><i class="fa-solid fa-qrcode"></i> Скачать QR-коды для столиков</a>
+        </template>
+        <div class="divider my-3">Настройка бронирования</div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.can_use_booking"
+                   role="switch" id="script-settings-need_bonuses_section">
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Разрешить бронирование столиков:
+                <span
+                    v-bind:class="{'text-primary fw-bold':form.can_use_booking}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.can_use_booking}">выкл</span></label>
+        </div>
+
         <template v-if="tab==='table-selector'">
             <button
                 type="button"
@@ -39,10 +83,10 @@ import SelectedTablesList from "@/ClientTg/Components/V2/Admin/ScriptEditors/Sho
                            class="text-center p-0 m-0 w-100 btn btn-primary"
                            v-if="countTableInSelection(table.id)===0">Выбрать</a>
                         <a href="javascript:void(0)"
-                            @click="selectTable(table)"
+                           @click="selectTable(table)"
 
-                            class="text-center p-0 m-0 w-100 btn btn-primary" v-else>
-                            <strong class="fw-bold p-0">{{countTableInSelection(table.id)}}</strong> ед.</a>
+                           class="text-center p-0 m-0 w-100 btn btn-primary" v-else>
+                            <strong class="fw-bold p-0">{{ countTableInSelection(table.id) }}</strong> ед.</a>
                     </div>
 
                 </div>
@@ -128,7 +172,7 @@ export default {
         return {
             loaded_params: false,
             tab: 'configurator',
-            form:null,
+            form: null,
             tableFilters: [],
             tablesTemplate: [
                 {id: 1, image: "1.png", description: "Угловой стол на 4 места", seats: 4},
@@ -181,6 +225,12 @@ export default {
         })
     },
     computed: {
+        scriptId() {
+            return window.currentScript || null
+        },
+        bot() {
+            return window.currentBot || null
+        },
         filteredTables() {
             // если фильтры пустые — вернуть все столики отсортированные
             if (this.tableFilters.length === 0) {
@@ -200,7 +250,7 @@ export default {
         }
     },
     methods: {
-        countTableInSelection(id){
+        countTableInSelection(id) {
             return (this.form.tables_variants.filter(i => i.id === id) || []).length
         },
         removeFromSelectedTableList(id) {

@@ -138,6 +138,7 @@ trait HasSettings
         "menu_list_type" => 0,
         "max_tables" => 0,
         "tables_variants" => [],
+        "can_use_booking" => false,
         "shop_coords" => "0,0",
         "need_table_list" => false,
         "need_category_by_page" => true,

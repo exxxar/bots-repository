@@ -74,19 +74,27 @@ class BasketLogicFactory extends BaseLogicFactory
     /**
      * @throws HttpException
      */
-    public function productsInBasket(): BasketCollection
+    public function productsInBasket($tableId = null): BasketCollection
     {
 
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры заданы!");
 
-        $allProductsInBasket = Basket::query()
+        $allProductsInBasket = is_null($tableId) ? Basket::query()
             ->with(["collection"])
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("table_approved_at")
             ->whereNull("ordered_at")
-            ->get();
+            ->get() :
+            Basket::query()
+                ->with(["collection"])
+                ->where("bot_user_id", $this->botUser->id)
+                ->where("table_id", $tableId)
+                ->where("bot_id", $this->bot->id)
+                ->whereNull("table_approved_at")
+                ->whereNull("ordered_at")
+                ->get();
 
         return new BasketCollection($allProductsInBasket);
     }
@@ -294,7 +302,7 @@ class BasketLogicFactory extends BaseLogicFactory
         }
 
         if ($productInBasket->count - $productCount > 0) {
-            $productInBasket->count-=$productCount;
+            $productInBasket->count -= $productCount;
             $productInBasket->save();
         } else
             $productInBasket->delete();
@@ -342,7 +350,7 @@ class BasketLogicFactory extends BaseLogicFactory
                 $productCount = 0;
         }
 
-        $productInBasket->count+=$productCount;
+        $productInBasket->count += $productCount;
         $productInBasket->save();
 
     }
@@ -420,6 +428,9 @@ class BasketLogicFactory extends BaseLogicFactory
         $productId = $data["product_id"] ?? null;
         $productCount = $data["count"] ?? 1;
 
+        $tableId = $data["table_id"] ?? null;
+
+
         $product = Product::query()
             ->whereIn("bot_id", $botIds)
             ->where("id", $productId)
@@ -438,12 +449,17 @@ class BasketLogicFactory extends BaseLogicFactory
             ->first();
 
 
-        $tableWithClient = Table::query()
+        $tableWithClient = is_null($tableId) ? Table::query()
             ->where("bot_id", $this->bot->id)
             ->whereNull("closed_at")
             ->whereHas('clients', function ($query) {
                 $query->where('id', $this->botUser->id);
-            })->first();
+            })->first() :
+            Table::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("id", $tableId)
+                ->whereNull("closed_at")
+                ->first();
 
         $isWeightProduct = $product->is_weight_product ?? false;
 
@@ -486,7 +502,11 @@ class BasketLogicFactory extends BaseLogicFactory
                 'table_approved_at' => null,
             ]);
 
+
         } else {
+
+            if (!is_null($tableId))
+                $productInBasket->table_id = $tableId;
             $productInBasket->count += $productCount;
             $productInBasket->save();
 
@@ -498,6 +518,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->whereNull("ordered_at")
             ->whereNull("table_approved_at")
             ->get();
+
 
         return new BasketCollection($allProductsInBasket);
     }

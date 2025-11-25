@@ -54,15 +54,16 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
                     :item="preparedMenuItem['profile']||null"/>
             </div>
 
-            <div class="col">
-                <MainMenuItem
-                    v-if="preparedMenuItem['booking']?.is_visible"
-                    :route="'TableBookingV2'"
-                    :default-image="'profile.png'"
-                    :default-text="'Бронирование столика'"
-                    :item="preparedMenuItem['booking']||null"/>
-            </div>
-
+            <template v-if="bot.settings?.can_use_booking||false">
+                <div class="col">
+                    <MainMenuItem
+                        v-if="preparedMenuItem['booking']?.is_visible"
+                        :route="'TableBookingV2'"
+                        :default-image="'profile.png'"
+                        :default-text="'Бронирование столика'"
+                        :item="preparedMenuItem['booking']||null"/>
+                </div>
+            </template>
             <div class="col">
                 <MainMenuItem
                     v-if="preparedMenuItem['shop']?.is_visible"
@@ -392,7 +393,6 @@ import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
     </div>
 
 
-
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -465,11 +465,11 @@ export default {
     },
     methods: {
         doSwipeLeft() {
-            this.$router.push({ name: 'ShopCartV2' })
+            this.$router.push({name: 'ShopCartV2'})
 
         },
         doSwipeRight() {
-            this.$router.push({ name: 'CatalogV2' })
+            this.$router.push({name: 'CatalogV2'})
 
         },
         goTo(name) {
