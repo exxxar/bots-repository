@@ -987,11 +987,6 @@ abstract class BotCore
                 return;
 
 
-            if ($this->currentBotUserInDialog()) {
-                $this->nextBotDialog($query);
-                return;
-            }
-
             if ($this->botFallbackStickerHandler($message))
                 return;
 
@@ -1009,6 +1004,11 @@ abstract class BotCore
 
             if ($this->botFallbackHandler($message))
                 return;
+
+            if ($this->currentBotUserInDialog()) {
+                $this->nextBotDialog($query);
+                return;
+            }
 
             if ($this->adminNotificationHandler($message, $query))
                 return;
