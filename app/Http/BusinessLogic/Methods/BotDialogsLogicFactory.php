@@ -498,6 +498,8 @@ class BotDialogsLogicFactory extends BaseLogicFactory
             'inline_keyboard_id' => "",
             'reply_keyboard_id' => "",
             'images' => "",
+            'videos' => "",
+            'documents' => "",
             'next_bot_dialog_command_id' => "",
             'bot_dialog_group_id' => "required",
             'result_channel' => ""
@@ -552,6 +554,8 @@ class BotDialogsLogicFactory extends BaseLogicFactory
         $tmp->send_params = json_decode($data["send_params"] ?? '[]');
         $tmp->use_result_as = $data["use_result_as"] ?? null;
         $tmp->custom_stored_value = $data["custom_stored_value"] ?? null;
+        $tmp->videos = json_decode($tmp->videos ?? '[]');
+        $tmp->documents = json_decode($tmp->documents ?? '[]');
 
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);

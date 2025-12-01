@@ -968,6 +968,11 @@ abstract class BotCore
                     "longitude" => $update["message"]["location"]["longitude"] ?? 0
                 ];
 
+            if ($this->currentBotUserInDialog()) {
+                $this->nextBotDialog($query);
+                return;
+            }
+
             if ($this->botLocationHandler($coords, $message))
                 return;
 
@@ -1005,10 +1010,7 @@ abstract class BotCore
             if ($this->botFallbackHandler($message))
                 return;
 
-            if ($this->currentBotUserInDialog()) {
-                $this->nextBotDialog($query);
-                return;
-            }
+
 
             if ($this->adminNotificationHandler($message, $query))
                 return;

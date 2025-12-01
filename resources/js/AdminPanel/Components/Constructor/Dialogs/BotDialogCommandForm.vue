@@ -5,6 +5,7 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogResultRules.vue";
 import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogVariablesHelper.vue";
+import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submit">
@@ -372,6 +373,45 @@ import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialog
             </div>
 
             <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox"
+                       v-model="need_videos"
+                       id="need-dialog-videos" checked>
+                <label class="form-check-label" for="need-dialog-videos">
+                    В диалоге нужно видео
+                </label>
+            </div>
+
+            <div class="card mb-2" v-if="need_videos">
+                <div class="card-body">
+                    <h6>Видео к диалогу</h6>
+                    <BotMediaList
+                        :need-video="true"
+                        :need-video-note="true"
+                        :selected="commandForm.videos||[]"
+                        v-on:select="selectVideo"></BotMediaList>
+                </div>
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox"
+                       v-model="need_documents"
+                       id="need-dialog-documents" checked>
+                <label class="form-check-label" for="need-dialog-documents">
+                    В диалоге нужен файл
+                </label>
+            </div>
+
+            <div class="card mb-2" v-if="need_documents">
+                <div class="card-body">
+                    <h6>Документ к диалогу</h6>
+                    <BotMediaList
+                        :need-document="true"
+                        :selected="commandForm.documents||[]"
+                        v-on:select="selectDocument"></BotMediaList>
+                </div>
+            </div>
+
+            <div class="form-check mb-2">
                 <input class="form-check-input" type="checkbox" v-model="need_inline_keyboard"
                        id="need-dialog-menu-inline" checked>
                 <label class="form-check-label" for="need-dialog-menu-inline">
@@ -450,7 +490,6 @@ import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialog
                             <th scope="row">{{ index + 1 }}</th>
 
                             <td>
-
 
 
                                 <div class="input-group">
@@ -642,6 +681,8 @@ export default {
             dialog_commands: [],
             dialog_commands_paginate_object: null,
             need_images: false,
+            need_videos: false,
+            need_documents: false,
             need_inline_keyboard: false,
             need_reply_keyboard: false,
             need_custom_stored_value: false,
@@ -717,6 +758,8 @@ export default {
                 inline_keyboard_id: null,
                 reply_keyboard_id: null,
                 images: null,
+                videos: null,
+                documents: null,
                 next_bot_dialog_command_id: null,
                 bot_dialog_group_id: null,
                 is_empty: false,
@@ -817,6 +860,8 @@ export default {
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
                     reply_keyboard_id: this.item.reply_keyboard_id || null,
                     images: this.item.images || [],
+                    videos: this.item.videos || [],
+                    documents: this.item.documents || [],
                     next_bot_dialog_command_id: this.item.next_bot_dialog_command_id || null,
                     bot_dialog_group_id: this.item.bot_dialog_group_id || null,
                     result_channel: this.item.result_channel || null,
@@ -860,6 +905,12 @@ export default {
                 if (this.commandForm.images.length > 0)
                     this.need_images = true
 
+                if (this.commandForm.videos?.length > 0)
+                    this.need_videos = true
+
+                if (this.commandForm.documents?.length > 0)
+                    this.need_documents = true
+
                 if (this.commandForm.result_flags.length > 0)
                     this.need_set_flags = true
 
@@ -883,7 +934,30 @@ export default {
         this.loadDialogs()
     },
     methods: {
+        selectDocument(item) {
 
+            if (!this.commandForm.documents)
+                this.commandForm.documents = []
+
+            let index = this.commandForm.documents.indexOf(item.file_id)
+
+            if (index !== -1)
+                this.commandForm.documents.splice(index, 1)
+            else
+                this.commandForm.documents.push(item.file_id)
+        },
+        selectVideo(item) {
+
+            if (!this.commandForm.videos)
+                this.commandForm.videos = []
+
+            let index = this.commandForm.videos.indexOf(item.file_id)
+
+            if (index !== -1)
+                this.commandForm.videos.splice(index, 1)
+            else
+                this.commandForm.videos.push(item.file_id)
+        },
         toggleRepeatSelfDialog() {
             if (this.commandForm.next_bot_dialog_command_id != null && this.commandForm.next_bot_dialog_command_id !== this.commandForm.id)
                 this.commandForm.next_bot_dialog_command_id = this.commandForm.id

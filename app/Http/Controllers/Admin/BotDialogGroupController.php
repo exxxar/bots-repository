@@ -232,6 +232,8 @@ class BotDialogGroupController extends Controller
             'input_pattern' => "",
             'inline_keyboard_id' => "",
             'images' => "",
+            'videos' => "",
+            'documents' => "",
             'next_bot_dialog_command_id' => "",
             'bot_dialog_group_id' => "required",
             'result_channel' => ""

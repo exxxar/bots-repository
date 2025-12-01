@@ -36,7 +36,7 @@
     "src": "ManagerProfile.css"
   },
   "TelegramChannelHelper.css": {
-    "file": "assets/TelegramChannelHelper-8363056c.css",
+    "file": "assets/TelegramChannelHelper-ee5a9069.css",
     "src": "TelegramChannelHelper.css"
   },
   "V1Layout.css": {
@@ -56,11 +56,11 @@
       "_vue3-json-editor.esm.prod-c06c32c7.js"
     ]
   },
-  "_BotSection-2aa920f1.js": {
+  "_BotSection-6d6a7097.js": {
     "css": [
       "assets/BotSection-ff5fe070.css"
     ],
-    "file": "assets/BotSection-2aa920f1.js",
+    "file": "assets/BotSection-6d6a7097.js",
     "imports": [
       "_MailingTable-365e612e.js",
       "_index.es-800d80e2.js",
@@ -313,17 +313,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Mobile/app.css": {
     "file": "assets/app-e3b0c442.css",
@@ -345,7 +345,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
@@ -364,7 +364,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
@@ -383,7 +383,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
@@ -402,7 +402,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
@@ -449,10 +449,10 @@
       "assets/BotPage-c29596a0.css",
       "assets/ChatMini-c2fc192f.css"
     ],
-    "file": "assets/BotPage-e5a11608.js",
+    "file": "assets/BotPage-180a8b9a.js",
     "imports": [
       "_MainAdminLayout-dc25356f.js",
-      "_BotSection-2aa920f1.js",
+      "_BotSection-6d6a7097.js",
       "_CompanyList-60f276b5.js",
       "_BotForm-102efbcb.js",
       "_index.es-800d80e2.js",
@@ -527,12 +527,12 @@
     "css": [
       "assets/Dashboard-db3e581c.css"
     ],
-    "file": "assets/Dashboard-c24c8909.js",
+    "file": "assets/Dashboard-2c586c85.js",
     "imports": [
       "_CompanyList-60f276b5.js",
       "_BotForm-102efbcb.js",
       "_MailingTable-365e612e.js",
-      "_BotSection-2aa920f1.js",
+      "_BotSection-6d6a7097.js",
       "_base64-eecd59f1.js",
       "_index.es-800d80e2.js",
       "_TelegramChannelHelper-5e7b2f6c.js",
@@ -556,13 +556,13 @@
       "assets/DevPage-b787d46b.css",
       "assets/ChatMini-c2fc192f.css"
     ],
-    "file": "assets/DevPage-089af17f.js",
+    "file": "assets/DevPage-42b64e8b.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_ManagerProfile-97c4379b.js",
       "_BotForm-102efbcb.js",
       "_PromoCodeActivateForm-1a56cca5.js",
-      "_BotSection-2aa920f1.js",
+      "_BotSection-6d6a7097.js",
       "_CompanyList-60f276b5.js",
       "_carousel.es-2930499a.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -730,7 +730,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-2edf95f4.js",
+    "file": "assets/app-f9fba8a3.js",
     "imports": [
       "_index.es-800d80e2.js",
       "_index-55688c75.js"

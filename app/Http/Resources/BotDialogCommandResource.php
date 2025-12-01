@@ -38,6 +38,8 @@ class BotDialogCommandResource extends JsonResource
             'inline_keyboard' => $this->whenLoaded('inlineKeyboard'),
             'reply_keyboard' => $this->whenLoaded('replyKeyboard'),
             'images' => $this->images,
+            'videos' => $this->videos,
+            'documents' => $this->documents,
             'next_bot_dialog_command_id' => $this->next_bot_dialog_command_id,
             'bot_dialog_group_id' => $this->bot_dialog_group_id,
             'bot_dialog_group' => $this->whenLoaded("botDialogGroup"),

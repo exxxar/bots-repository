@@ -112,6 +112,51 @@ trait BotDialogTrait
             $isSent = true;
         }
 
+        if (!is_null($botDialogCommand->videos??[])) {
+
+            $videos = $botDialogCommand->videos ?? [];
+
+            if (count($videos) == 1)
+                $this->replyVideo(null,$videos[0]);
+
+            if (count($videos) > 1 && count($videos) < 10) {
+                $media = [];
+                foreach ($videos as $video) {
+                    $media[] = [
+                        "media" => $video,
+                        "type" => "video",
+                        "caption" => "$video"
+                    ];
+                }
+
+                $this->replyMediaGroup($media);
+            }
+
+
+        }
+
+        if (!is_null($botDialogCommand->documents??[])) {
+
+            $documents = $botDialogCommand->documents ?? [];
+            if (count($documents) == 1)
+                $this->replyDocument(null, $documents[0]);
+
+            if (count($documents) > 1 && count($documents) < 10) {
+                $media = [];
+                foreach ($documents as $document) {
+                    $media[] = [
+                        "media" => $document,
+                        "type" => "document",
+                        "caption" => ""
+                    ];
+                }
+
+                $this->replyMediaGroup($media);
+            }
+
+
+        }
+
 
         $this->replyKeyboard(!$isSent ? $msg : 'Варианты ответов',
             !is_null($botDialogCommand->reply_keyboard_id) ?
