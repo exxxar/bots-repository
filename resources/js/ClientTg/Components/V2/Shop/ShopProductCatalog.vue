@@ -359,7 +359,11 @@ export default {
 
     mounted() {
 
+
         this.shop = (this.partners?.is_active || false) ? 0 : 1
+
+        console.log("partners", (this.partners?.is_active || false) ? 0 : 1)
+        console.log("shop",  this.shop )
         //this.products
         const slider = document.getElementById('category-slider')
 

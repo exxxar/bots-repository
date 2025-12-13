@@ -530,6 +530,16 @@ class BotLogicFactory extends BaseLogicFactory
             }
         }
 
+        $bot = Bot::query()
+            ->where("bot_token",$botToken )
+            ->first();
+
+        if (!is_null($bot))
+        {
+            $bot->bot_domain = $serviceBotDomain;
+            $bot->save();
+        }
+
         return $responseData;
 
     }
