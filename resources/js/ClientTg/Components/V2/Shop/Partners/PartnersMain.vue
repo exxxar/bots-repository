@@ -6,7 +6,7 @@ import PartnerTagList from "@/ClientTg/Components/V2/Shop/Partners/PartnerTagLis
     <div class="container">
         <PartnerList
             v-on:select="selectPartner"></PartnerList>
-        <PartnerTagList></PartnerTagList>
+<!--        <PartnerTagList></PartnerTagList>-->
     </div>
 
 </template>

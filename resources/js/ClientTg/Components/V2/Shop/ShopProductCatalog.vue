@@ -218,7 +218,6 @@ import {mapGetters} from "vuex";
 import {v4 as uuidv4} from "uuid";
 
 export default {
-    props: ["settings"],
     data() {
         return {
 
@@ -282,6 +281,9 @@ export default {
         uuid() {
             const data = uuidv4();
             return data
+        },
+        settings(){
+            return this.bot.settings
         },
         partners() {
             return this.bot.settings?.partners
