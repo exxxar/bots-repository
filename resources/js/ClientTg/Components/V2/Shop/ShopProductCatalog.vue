@@ -284,7 +284,7 @@ export default {
             return data
         },
         partners() {
-            return this.settings?.partners
+            return this.bot.settings?.partners
         },
         bot() {
             return window.currentBot
@@ -362,6 +362,7 @@ export default {
 
         this.shop = (this.partners?.is_active || false) ? 0 : 1
 
+        console.log("partners settings", this.partners)
         console.log("partners", (this.partners?.is_active || false) ? 0 : 1)
         console.log("shop",  this.shop )
         //this.products
