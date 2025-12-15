@@ -1,6 +1,19 @@
 <template>
 
     <form @submit.prevent="handleSubmit">
+
+        <div class="form-check form-switch mb-2">
+            <input
+                class="form-check-input"
+                type="checkbox"
+                id="flexSwitchCheck"
+                v-model="form.is_active"
+            >
+            <label class="form-check-label" for="flexSwitchCheck">
+                Активен
+            </label>
+        </div>
+
         <!-- Заголовок -->
         <div class="mb-2 form-floating">
             <input
@@ -18,35 +31,33 @@
         <textarea
             class="form-control"
             id="description"
-            rows="3"
+            style="min-height:200px;"
             v-model="form.description"
             placeholder="Введите описание"
         ></textarea>
             <label for="description">Описание</label>
         </div>
 
-        <!-- Изображение -->
-        <div class="mb-2 form-floating">
+        <div class="form-floating mb-2 file-floating">
             <input
-                type="text"
+                type="file"
                 class="form-control"
-                id="image"
-                v-model="form.image"
-                placeholder="Введите URL изображения"
-            />
-            <label for="image">Ссылка на изображение</label>
+                id="imageInput"
+                accept="image/*"
+                @change="onFileChange"
+            >
+            <label for="imageInput">Загрузить изображение</label>
         </div>
 
-        <!-- Активность -->
-        <div class="mb-2 form-check">
-            <input
-                type="checkbox"
-                class="form-check-input"
-                id="is_active"
-                v-model="form.is_active"
-            />
-            <label class="form-check-label" for="is_active">Активен</label>
+        <div v-if="preview" class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <img :src="preview" class="img-fluid rounded border img-preview" >
+                </div>
+            </div>
+
         </div>
+
 
         <!-- Дополнительная плата -->
         <div class="mb-2 form-floating">
@@ -59,128 +70,144 @@
             />
             <label for="extra_charge">Дополнительная плата</label>
         </div>
-        <!-- Навигация по табам -->
-        <ul class="nav nav-tabs mb-2">
-            <li class="nav-item" v-for="tab in tabs" :key="tab.key">
-                <button
-                    type="button"
-                    class="nav-link"
-                    :class="{ active: activeTab === tab.key }"
-                    @click="activeTab = tab.key"
-                >
-                    {{ tab.label }}
-                </button>
-            </li>
-        </ul>
 
-        <!-- Секция Партнёр -->
-        <div v-show="activeTab === 'partner'">
-            <h4>Данные партнёра</h4>
-            <div class="row row-cols-1">
-                <div class="col mb-2 " v-for="(value, key) in form.legal_info.partner" :key="key">
-                    <div class="form-floating">
-                        <input
-                            type="text"
-                            class="form-control"
-                            v-model="partner[key]"
-                            :id="'partner_' + key"
-                            placeholder=" "
-                        />
-                        <label :for="'partner_' + key">{{ labels.partner[key] || key }}</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Секция Контракты -->
-        <div v-show="activeTab === 'contract'">
-            <h4>Контракт</h4>
-            <div class="row row-cols-1">
-                <div class="col mb-2" v-for="(value, key) in form.legal_info.contract" :key="key">
-
-                    <div class="form-floating">
-                        <input
-                            type="text"
-                            class="form-control"
-                            v-model="form.legal_info.contract[key]"
-                            :id="'contract_' + key "
-                            placeholder=" "
-                        />
-                        <label :for="'contract_' + key ">{{ labels.contract[key] || key }}</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Секция Контакты -->
-        <div v-show="activeTab === 'contacts'">
-            <h4>Контактные лица</h4>
-            <div
-                v-for="(contact, i) in form.legal_info.contacts"
-                :key="'contact-'+i"
-                class="rounded mb-2 position-relative"
+        <div class="form-check form-switch mb-2">
+            <input
+                class="form-check-input"
+                type="checkbox"
+                id="flexSwitchCheck"
+                v-model="form.demo_mode"
             >
-                <div class="divider my-3">Контакт</div>
+            <label class="form-check-label" for="flexSwitchCheck">
+                Режим тестирования
+            </label>
+        </div>
+
+        <template v-if="!form.demo_mode">
+            <!-- Навигация по табам -->
+            <ul class="nav nav-tabs mb-2">
+                <li class="nav-item" v-for="tab in tabs" :key="tab.key">
+                    <button
+                        type="button"
+                        class="nav-link"
+                        :class="{ active: activeTab === tab.key }"
+                        @click="activeTab = tab.key"
+                    >
+                        {{ tab.label }}
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Секция Партнёр -->
+            <template v-show="activeTab === 'partner'">
+                <h4>Данные партнёра</h4>
                 <div class="row row-cols-1">
-                    <div class="col mb-2" v-for="(value, key) in contact" :key="key">
+                    <div class="col mb-2 " v-for="(value, key) in form.legal_info.partner" :key="key">
+                        <div class="form-floating">
+                            <input
+                                type="text"
+                                class="form-control"
+                                v-model="partner[key]"
+                                :id="'partner_' + key"
+                                placeholder=" "
+                            />
+                            <label :for="'partner_' + key">{{ labels.partner[key] || key }}</label>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Секция Контракты -->
+            <template v-show="activeTab === 'contract'">
+                <h4>Контракт</h4>
+                <div class="row row-cols-1">
+                    <div class="col mb-2" v-for="(value, key) in form.legal_info.contract" :key="key">
 
                         <div class="form-floating">
                             <input
                                 type="text"
                                 class="form-control"
-                                v-model="contact[key]"
-                                :id="'contact_' + key + i"
+                                v-model="form.legal_info.contract[key]"
+                                :id="'contract_' + key "
                                 placeholder=" "
                             />
-                            <label :for="'contact_' + key + i">{{ labels.contact[key] || key }}</label>
+                            <label :for="'contract_' + key ">{{ labels.contract[key] || key }}</label>
                         </div>
                     </div>
                 </div>
-                <button
-                    class="btn btn-sm btn-danger w-100"
-                    @click="form.legal_info.contacts.splice(i, 1)"
+            </template>
+
+            <!-- Секция Контакты -->
+            <template v-show="activeTab === 'contacts'">
+                <h4>Контактные лица</h4>
+                <div
+                    v-for="(contact, i) in form.legal_info.contacts"
+                    :key="'contact-'+i"
+                    class="rounded mb-2 position-relative"
                 >
-                    Удалить контакт
-                </button>
+                    <div class="divider my-3">Контакт</div>
+                    <div class="row row-cols-1">
+                        <div class="col mb-2" v-for="(value, key) in contact" :key="key">
+
+                            <div class="form-floating">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="contact[key]"
+                                    :id="'contact_' + key + i"
+                                    placeholder=" "
+                                />
+                                <label :for="'contact_' + key + i">{{ labels.contact[key] || key }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="btn btn-sm btn-danger w-100"
+                        @click="form.legal_info.contacts.splice(i, 1)"
+                    >
+                        Удалить контакт
+                    </button>
 
 
-            </div>
-            <button class="btn btn-outline-primary" @click="addContact">+ Добавить контакт</button>
-        </div>
+                </div>
+                <button class="btn btn-outline-primary" @click="addContact">+ Добавить контакт</button>
+            </template>
 
-        <!-- Секция Документы -->
-        <div v-show="activeTab === 'documents'">
-            <h4>Документы</h4>
-            <div
-                v-for="(doc, i) in form.legal_info.documents"
-                :key="'doc'+i"
-                class="border rounded p-3 mb-2 position-relative"
-            >
-                <button
-                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
-                    @click="form.legal_info.documents.splice(i, 1)"
+            <!-- Секция Документы -->
+            <template v-show="activeTab === 'documents'">
+                <h4>Документы</h4>
+                <div
+                    v-for="(doc, i) in form.legal_info.documents"
+                    :key="'doc'+i"
+                    class="border rounded p-3 mb-2 position-relative"
                 >
-                    Удалить документ
-                </button>
+                    <button
+                        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                        @click="form.legal_info.documents.splice(i, 1)"
+                    >
+                        Удалить документ
+                    </button>
 
-                <div class="row row-cols-1">
-                    <div class="col mb-2" v-for="(value, key) in doc" :key="key">
-                        <div class="form-floating">
-                            <input
-                                type="text"
-                                class="form-control"
-                                v-model="doc[key]"
-                                :id="'doc_' + key + i"
-                                placeholder=" "
-                            />
-                            <label :for="'doc_' + key + i">{{ labels.document[key] || key }}</label>
+                    <div class="row row-cols-1">
+                        <div class="col mb-2" v-for="(value, key) in doc" :key="key">
+                            <div class="form-floating">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="doc[key]"
+                                    :id="'doc_' + key + i"
+                                    placeholder=" "
+                                />
+                                <label :for="'doc_' + key + i">{{ labels.document[key] || key }}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <button class="btn btn-outline-primary" @click="addDocument">+ Добавить документ</button>
-        </div>
+                <button class="btn btn-outline-primary" @click="addDocument">+ Добавить документ</button>
+            </template>
 
+
+        </template>
 
 
 
@@ -199,9 +226,11 @@
 
 <script>
 export default {
-    props: ["partner"],
+    props: ["initialData"],
     data() {
         return {
+            file: null,
+            preview: null,
             activeTab:'partner',
             labels: {
                 partner: {
@@ -238,6 +267,7 @@ export default {
                 image: "",
                 is_active: true,
                 extra_charge: 0,
+                demo_mode: true,
                 config: {
                     excludes: [],
                     bg_color: 'transparent',
@@ -309,6 +339,11 @@ export default {
             }
         };
     },
+    mounted() {
+        if (this.initialData){
+            this.form = {...this.initialData}
+        }
+    },
     methods: {
         addContract() {
             this.form.legal_info.contracts.value.push({id: Date.now(), partner_id: 1})
@@ -320,7 +355,16 @@ export default {
         addDocument() {
             this.form.legal_info.documents.value.push({id: Date.now(), contract_id: 10})
         },
+        onFileChange(e) {
+            const file = e.target.files[0]
+            this.file = file
 
+            if (file) {
+                this.preview = URL.createObjectURL(file)
+            }
+
+            this.$emit("select", file)
+        },
         handleSubmit() {
             const formData = {...this.form};
             // Преобразуем JSON-строки в объекты, если они не пустые
@@ -338,5 +382,9 @@ export default {
 </script>
 
 <style scoped>
-/* Добавьте стили, если необходимо */
+.img-preview {
+    max-height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
 </style>

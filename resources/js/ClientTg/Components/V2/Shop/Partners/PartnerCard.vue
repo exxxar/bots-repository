@@ -1,5 +1,6 @@
 <template>
     <div class="card partner-card">
+
         <img v-lazy="'/images-by-bot-id/'+partner.id+'/'+partner.image" class="card-img" alt="...">
         <div class="card-img-overlay">
             <h5 class="card-title">{{ partner.title }}</h5>
@@ -18,7 +19,7 @@ export default {
         }
     },
     mounted() {
-
+        console.log(this.partner)
     }
 }
 </script>
@@ -26,15 +27,15 @@ export default {
 <style lang="scss" scoped>
 
 .partner-card {
-    height: 270px;
+    height: 300px;
 
 
     img {
         object-fit: cover;
         /* height: 100%; */
         width: 100%;
-        max-height: 190px;
-        height: 190px;
+        max-height:200px;
+        height: 200px;
     }
 
     .card-img-overlay {

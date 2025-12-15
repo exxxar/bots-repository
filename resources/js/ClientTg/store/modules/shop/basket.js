@@ -35,7 +35,7 @@ const getters = {
 
         let sum = 0;
         state.basket_items.forEach((item) => {
-            sum += item.product.is_weight_product ? 1 : item.count
+            sum += item.product?.is_weight_product ? 1 : item.count
         });
         return sum
     },
@@ -51,9 +51,8 @@ const getters = {
         console.log(state.basket_items)
         state.basket_items.forEach((item) => {
             if (item.product) {
-                console.log(item.count, item.product.current_price, item.product.weight_config?.step)
-                let count =  item.product.is_weight_product ? 1 : item.count
-                let price = item.product.is_weight_product ? (item.product.current_price * item.count) / (item.product.weight_config?.step || 100): item.product.current_price
+                let count =  item.product?.is_weight_product ? 1 : item.count
+                let price = item.product?.is_weight_product ? (item.product.current_price * item.count) / (item.product.weight_config?.step || 100): item.product.current_price
                 sum += price * count
             }
 
