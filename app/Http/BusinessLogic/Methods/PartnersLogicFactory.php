@@ -11,6 +11,7 @@ use App\Models\Partner;
 use App\Models\ProductCategory;
 use Faker\Provider\Base;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -121,7 +122,7 @@ class PartnersLogicFactory extends BaseLogicFactory
     /**
      * @throws ValidationException
      */
-    public function update(array $data): PartnerResource
+    public function update(array $data, $file = null): PartnerResource
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -142,7 +143,7 @@ class PartnersLogicFactory extends BaseLogicFactory
             throw new ValidationException($validator);
 
         $botPartner = Bot::query()
-            ->where("bot_domain", $data["telegram_domain"])
+            ->where("id", $data["bot_partner_id"])
             ->first();
 
         if (is_null($botPartner))
@@ -154,6 +155,14 @@ class PartnersLogicFactory extends BaseLogicFactory
 
         if (is_null($partner))
             throw new HttpException(403, "Данные боты уже являются партнерами!");
+
+        if ($file) {
+            $slug = $this->bot->company->slug;
+            $ext = $file->getClientOriginalExtension();
+            $imageName = Str::uuid() . "." . $ext;
+            $file->storeAs("/public/companies/$slug/$imageName");
+            $data['image'] = $imageName;
+        }
 
         $partner->update(
             [

@@ -7,7 +7,7 @@ import PartnerCard from "@/ClientTg/Components/V2/Shop/Partners/PartnerCard.vue"
     <template v-if="(partnerList||[]).length>0">
         <div
             class="row my-3 row-cols-1 g-1">
-            <div class="col">
+            <div class="col" v-if="settings.partners?.display_self||false">
                 <PartnerCard :partner="bot"
                              v-on:select="selectPartner"
                              :key="'partner-0'"></PartnerCard>
@@ -36,6 +36,9 @@ export default {
     computed: {
         bot() {
             return window.currentBot || null
+        },
+        settings(){
+          return this.bot.settings
         },
         partnerList() {
             return this.bot.partners || []

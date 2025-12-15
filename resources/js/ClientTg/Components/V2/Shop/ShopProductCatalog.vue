@@ -7,7 +7,7 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
 import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 import CategorySlider from "@/ClientTg/Components/V2/Shop/CategorySlider.vue";
-import PartnerSlider from "@/ClientTg/Components/V2/Shop/Partners/PartnerSlider.vue";
+import PartnerSliderSimple from "@/ClientTg/Components/V2/Shop/Partners/PartnerSliderSimple.vue";
 import StoryList from "@/ClientTg/Components/V2/Shop/Stories/StoryList.vue";
 import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vue";
 import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdown.vue";
@@ -149,7 +149,7 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
                         <template
                             v-if="(bot.partners||[]).length>0&&(partners?.is_active||false)">
                             <h5 class="my-4 divider" id="cat-combo">Наши партнеры</h5>
-                            <PartnerSlider v-on:select="selectPartner"/>
+                            <PartnerSliderSimple v-on:select="selectPartner"/>
                         </template>
 
                         <template

@@ -1,13 +1,16 @@
 <template>
-    <div class="card partner-card">
+    <div class="card ">
+        <div class="card-body">
+            <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+partner.image"
+                 class="w-100 card-img" alt="..." style="object-fit:cover;height:200px;">
 
-        <img v-lazy="'/images-by-bot-id/'+partner.id+'/'+partner.image" class="card-img" alt="...">
-        <div class="card-img-overlay">
-            <h5 class="card-title">{{ partner.title }}</h5>
+            <h5 class="my-2 fw-bold">{{ partner.title }}</h5>
+            <p class="fst-italic mb-2" v-if="partner.description">{{ partner.description || '' }}</p>
             <button class="btn btn-primary w-100 p-2"
                     @click="$emit('select', partner)"
                     type="button">Перейти</button>
         </div>
+
     </div>
 </template>
 <script>
@@ -16,6 +19,11 @@ export default {
     data(){
         return {
 
+        }
+    },
+    computed:{
+        bot(){
+            return window.currentBot || null
         }
     },
     mounted() {

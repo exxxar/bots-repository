@@ -130,7 +130,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
                 <div class="modal-body">
                     <ConfigPartnerForm
                         v-if="selected"
-                        :partner="selected"></ConfigPartnerForm>
+                        :initial-data="selected"></ConfigPartnerForm>
                 </div>
             </div>
         </div>

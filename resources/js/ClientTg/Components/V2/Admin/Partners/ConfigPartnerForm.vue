@@ -52,7 +52,18 @@
         <div v-if="preview" class="mb-2">
             <div class="card">
                 <div class="card-body">
-                    <img :src="preview" class="img-fluid rounded border img-preview" >
+                    <img :src="preview" class="img-fluid rounded border img-preview">
+                </div>
+            </div>
+
+        </div>
+
+        <div v-if="form.image" class="mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <img
+                        v-lazy="'/images-by-bot-id/'+bot.id+'/'+form.image"
+                        class="img-fluid rounded border img-preview">
                 </div>
             </div>
 
@@ -210,8 +221,6 @@
         </template>
 
 
-
-
         <nav
 
             class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
@@ -231,7 +240,7 @@ export default {
         return {
             file: null,
             preview: null,
-            activeTab:'partner',
+            activeTab: 'partner',
             labels: {
                 partner: {
                     organization_name: 'Название организации',
@@ -262,6 +271,7 @@ export default {
                 {key: 'documents', label: 'Документы'},
             ],
             form: {
+                id:null,
                 title: "",
                 description: "",
                 image: "",
@@ -307,21 +317,21 @@ export default {
                         }
                     ],
                     contracts: {
-                            contract_number: "ДГ-2025/14",
-                            contract_name: "Договор на оказание консультационных услуг",
-                            contract_type: "Услуги",
-                            start_date: "2025-02-01",
-                            end_date: "2026-02-01",
-                            contract_status: "Подписан",
-                            total_amount: 1200000,
-                            currency: "RUB",
-                            payment_terms: "Оплата в течение 10 рабочих дней после выставления счёта",
-                            responsible_person: "Петров И.А.",
-                            signed_by: "Иванов С.П.",
-                            signature_date: "2025-01-28",
-                            auto_renewal: false,
-                            termination_reason: null
-                        },
+                        contract_number: "ДГ-2025/14",
+                        contract_name: "Договор на оказание консультационных услуг",
+                        contract_type: "Услуги",
+                        start_date: "2025-02-01",
+                        end_date: "2026-02-01",
+                        contract_status: "Подписан",
+                        total_amount: 1200000,
+                        currency: "RUB",
+                        payment_terms: "Оплата в течение 10 рабочих дней после выставления счёта",
+                        responsible_person: "Петров И.А.",
+                        signed_by: "Иванов С.П.",
+                        signature_date: "2025-01-28",
+                        auto_renewal: false,
+                        termination_reason: null
+                    },
 
                     documents: [
                         {
@@ -339,8 +349,13 @@ export default {
             }
         };
     },
+    computed: {
+        bot() {
+            return window.currentBot || null
+        }
+    },
     mounted() {
-        if (this.initialData){
+        if (this.initialData) {
             this.form = {...this.initialData}
         }
     },
@@ -366,16 +381,35 @@ export default {
             this.$emit("select", file)
         },
         handleSubmit() {
-            const formData = {...this.form};
-            // Преобразуем JSON-строки в объекты, если они не пустые
-            if (formData.config) {
-                formData.config = JSON.parse(formData.config);
+            let data = new FormData();
+            Object.keys(this.form)
+                .forEach(key => {
+                    const item = this.form[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+            if (this.file) {
+                data.append('file', this.file);
             }
-            if (formData.legal_info) {
-                formData.legal_info = JSON.parse(formData.legal_info);
-            }
-            console.log("Отправленные данные:", formData);
-            // Здесь можно добавить логику отправки данных на сервер
+
+            this.$store.dispatch("updatePartner", {
+                form: data
+            }).then((response) => {
+                this.$notify({
+                    title: "Отлично!",
+                    text: "Параметры успешно сохранены",
+                    type: "success"
+                });
+            }).catch(err => {
+                this.$notify({
+                    title: "Упс!",
+                    text: "Ошибка сохранения параметров",
+                    type: "error"
+                });
+            })
         }
     }
 };
@@ -383,7 +417,7 @@ export default {
 
 <style scoped>
 .img-preview {
-    max-height: 300px;
+    height: 200px;
     width: 100%;
     object-fit: cover;
 }

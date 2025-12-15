@@ -1,6 +1,8 @@
 <script setup>
 import AddPartnerForm from "@/ClientTg/Components/V2/Admin/Partners/AddPartnerForm.vue";
 import PartnerList from "@/ClientTg/Components/V2/Admin/Partners/PartnerList.vue";
+import SelfConfigForm from "@/ClientTg/Components/V2/Admin/Partners/SelfConfigForm.vue";
+
 </script>
 <template>
     <div class="container py-3">
@@ -27,6 +29,16 @@ import PartnerList from "@/ClientTg/Components/V2/Admin/Partners/PartnerList.vue
                         v-bind:class="{'text-primary fw-bold':!form.display_self}">выкл</span></label>
                 </div>
             </div>
+
+
+            <div class="col-12">
+                <button
+                    v-if="form.display_self"
+                    @click="openSelfConfigModal"
+                    type="button" class="btn btn-outline-primary p-3 w-100 mb-2">Свои параметы отображения
+                </button>
+            </div>
+
             <div class="col-12">
                 <ul class="nav nav-tabs justify-content-center catalog-tabs">
 
@@ -64,6 +76,21 @@ import PartnerList from "@/ClientTg/Components/V2/Admin/Partners/PartnerList.vue
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="self-config-partner-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Настройка партнера</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <SelfConfigForm></SelfConfigForm>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 
@@ -72,7 +99,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-
+            config_modal: null,
             tab: 0,
             form: {
                 is_active: false,
@@ -93,7 +120,7 @@ export default {
     },
 
     mounted() {
-
+        this.config_modal = new bootstrap.Modal(document.getElementById('self-config-partner-modal'));
         this.form.is_active = this.currentBot?.settings?.partners?.is_active ?? false
         this.form.display_self = this.currentBot?.settings?.partners?.display_self ?? false
         // this.loadPartners()
@@ -102,7 +129,10 @@ export default {
 
 
     methods: {
-        updatePartnersSettings(){
+        openSelfConfigModal() {
+            this.config_modal.show()
+        },
+        updatePartnersSettings() {
             this.$store.dispatch("updatePartnersSettings", this.form).then(resp => {
 
             }).catch(() => {

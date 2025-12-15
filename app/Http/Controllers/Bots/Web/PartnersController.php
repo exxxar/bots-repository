@@ -79,7 +79,7 @@ class PartnersController extends Controller
 
         return BusinessLogic::partners()
             ->setBot($request->bot ?? null)
-            ->update($request->all());
+            ->update($request->all(), $request->hasFile("file") ? $request->file("file") : null);
 
 
     }
