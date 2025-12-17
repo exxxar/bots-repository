@@ -220,6 +220,8 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
                 <PreloaderV1 v-else/>
             </div>
         </div>
+
+        <slot name="navigation"></slot>
     </template>
 </template>
 <script>
