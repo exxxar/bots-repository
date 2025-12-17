@@ -132,7 +132,7 @@ export default {
                 data.append('file', this.file);
             }
 
-            this.$store.dispatch("updatePartner", {
+            this.$store.dispatch("updateSelfPartner", {
                 form: data
             }).then((response) => {
                 this.$notify({
@@ -140,6 +140,8 @@ export default {
                     text: "Параметры успешно сохранены",
                     type: "success"
                 });
+
+                this.$emit("success")
             }).catch(err => {
                 this.$notify({
                     title: "Упс!",

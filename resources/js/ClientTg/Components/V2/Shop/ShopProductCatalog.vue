@@ -18,19 +18,29 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
         <PartnersMain v-on:select="selectPartner"></PartnersMain>
     </template>
     <template v-if="shop===1">
-
-
-
         <menu
             id="category-slider"
             class="d-block w-100 p-0 m-0 sticky-menu">
+
             <CategorySlider
                 :settings="settings"
                 :categories="filteredCategories"
                 :collections="collections"
                 @select="selectCategory"
                 @search="findProducts"
-            />
+            >
+                <template #back-btn>
+                    <button
+                        @click="shop=0"
+                        v-if="(this.partners?.is_active || false)"
+                        class="btn btn-primary p-2 mt-2">
+                        <i class="fa-solid fa-arrow-left me-2"></i>
+                        К магазинам
+
+                    </button>
+                </template>
+
+            </CategorySlider>
 
         </menu>
 
@@ -48,9 +58,8 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
             </template>
 
 
-            <div class="p-3">
-                <BookingDropdown></BookingDropdown>
-            </div>
+            <BookingDropdown></BookingDropdown>
+
 
             <div
                 v-show="tab===0"
@@ -115,9 +124,10 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
                 v-if="tab===1"
                 style="min-height:100vh;"
                 class="album">
+
+
                 <template v-if="settings">
                     <div class="container g-2">
-
 
                         <template
                             v-if="collections.length>0">
@@ -146,11 +156,11 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
                             </div>
                         </template>
 
-                        <template
-                            v-if="(bot.partners||[]).length>0&&(partners?.is_active||false)">
-                            <h5 class="my-4 divider" id="cat-combo">Наши партнеры</h5>
-                            <PartnerSliderSimple v-on:select="selectPartner"/>
-                        </template>
+                        <!--                        <template
+                                                    v-if="(bot.partners||[]).length>0&&(partners?.is_active||false)">
+                                                    <h5 class="my-4 divider" id="cat-combo">Наши партнеры</h5>
+                                                    <PartnerSliderSimple v-on:select="selectPartner"/>
+                                                </template>-->
 
                         <template
                             v-if="(stories||[]).length>0">
@@ -282,7 +292,7 @@ export default {
             const data = uuidv4();
             return data
         },
-        settings(){
+        settings() {
             return this.bot.settings
         },
         partners() {
@@ -366,7 +376,7 @@ export default {
 
         console.log("partners settings", this.partners)
         console.log("partners", (this.partners?.is_active || false) ? 0 : 1)
-        console.log("shop",  this.shop )
+        console.log("shop", this.shop)
         //this.products
         const slider = document.getElementById('category-slider')
 

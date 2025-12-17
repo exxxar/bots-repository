@@ -8,7 +8,7 @@ import PartnerCard from "@/ClientTg/Components/V2/Shop/Partners/PartnerCard.vue"
         <div
             class="row my-3 row-cols-1 g-1">
             <div class="col" v-if="settings.partners?.display_self||false">
-                <PartnerCard :partner="bot"
+                <PartnerCard :partner="settings.partners"
                              v-on:select="selectPartner"
                              :key="'partner-0'"></PartnerCard>
             </div>

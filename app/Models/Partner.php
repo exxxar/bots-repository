@@ -42,6 +42,8 @@ class Partner extends Model
         'legal_info' => 'array',
     ];
 
+    protected $with = ["categories"];
+
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
@@ -55,5 +57,10 @@ class Partner extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class,'bot_id','bot_partner_id');
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(ProductCategory::class,'bot_id','bot_partner_id');
     }
 }

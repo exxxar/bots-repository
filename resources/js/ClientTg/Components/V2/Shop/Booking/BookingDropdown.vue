@@ -1,51 +1,55 @@
 <template>
-    <div class="dropdown my-2" v-if="my_bookings.length > 0">
-        <button
-            class="btn btn-success dropdown-toggle w-100 p-3"
-            type="button"
-            id="bookingsDropdown"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-        >
-            <span v-if="selectedTable">Выбран столик #{{ selectedTable.number }}</span>
-            <span v-else>Мои брони ({{ my_bookings.length }})</span>
-        </button>
 
-        <ul class="dropdown-menu w-100" aria-labelledby="bookingsDropdown">
-            <li
-                @click="selectATable(null)"
-                class="dropdown-item">
-                Не выбран
-            </li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li
-                @click="selectATable(item)"
-                v-for="item in my_bookings" :key="item.id" class="dropdown-item">
-                <div class="fw-bold">
-                    Бронь столика №{{ item.number }}
-                </div>
-                <small class="text-muted">
-                    Дата {{ item.booked_date_at }} в {{ item.booked_time_at }}
-                </small>
-                <p class="fst-italic mb-1">{{ item.booked_info?.description || '-' }}</p>
+    <div class="p-3"  v-if="my_bookings.length > 0">
+        <div class="dropdown my-2">
+            <button
+                class="btn btn-success dropdown-toggle w-100 p-3"
+                type="button"
+                id="bookingsDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <span v-if="selectedTable">Выбран столик #{{ selectedTable.number }}</span>
+                <span v-else>Мои брони ({{ my_bookings.length }})</span>
+            </button>
 
-                <div class="d-flex justify-content-between align-items-center">
-                    <button
-                        @click="openRemoveModal(item)"
-                        type="button"
-                        class="btn btn-sm btn-danger"
-                    >
-                        Отменить
-                    </button>
-                    <span class="badge bg-primary rounded-pill">
+            <ul class="dropdown-menu w-100" aria-labelledby="bookingsDropdown">
+                <li
+                    @click="selectATable(null)"
+                    class="dropdown-item">
+                    Не выбран
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li
+                    @click="selectATable(item)"
+                    v-for="item in my_bookings" :key="item.id" class="dropdown-item">
+                    <div class="fw-bold">
+                        Бронь столика №{{ item.number }}
+                    </div>
+                    <small class="text-muted">
+                        Дата {{ item.booked_date_at }} в {{ item.booked_time_at }}
+                    </small>
+                    <p class="fst-italic mb-1">{{ item.booked_info?.description || '-' }}</p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button
+                            @click="openRemoveModal(item)"
+                            type="button"
+                            class="btn btn-sm btn-danger"
+                        >
+                            Отменить
+                        </button>
+                        <span class="badge bg-primary rounded-pill">
             {{ item.booked_info?.persons || 1 }} чел.
           </span>
-                </div>
-            </li>
-        </ul>
+                    </div>
+                </li>
+            </ul>
 
+
+        </div>
 
     </div>
 

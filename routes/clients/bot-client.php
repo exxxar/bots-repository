@@ -577,6 +577,7 @@ Route::prefix("bot-client")
                 Route::post("/change-status", "changeStatus")->middleware(["tgAuth.admin"]);
                 Route::post("/partners-categories", "partnersCategories");
                 Route::post("/update", "update")->middleware(["tgAuth.admin"]);
+                Route::post("/update-self", "updateSelf")->middleware(["tgAuth.admin"]);
                 Route::post("/remove/{partnerId}", "destroy")->middleware(["tgAuth.admin"]);
 
             });

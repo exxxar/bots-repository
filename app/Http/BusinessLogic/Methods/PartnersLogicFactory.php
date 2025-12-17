@@ -181,6 +181,55 @@ class PartnersLogicFactory extends BaseLogicFactory
     /**
      * @throws ValidationException
      */
+    public function updateSelf(array $data, $file = null)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            'title' => "",
+            'description' => "",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $description = $data["description"] ?? null;
+        $title = $data["title"] ?? null;
+
+        $config = $this->bot->config ?? [];
+        $partnersConfig = $config["partners"] ?? [];
+
+        $partnersConfig["title"] = $title;
+        $partnersConfig["description"] = $description;
+
+        if ($file) {
+            $slug = $this->bot->company->slug;
+            $ext = $file->getClientOriginalExtension();
+            $imageName = Str::uuid() . "." . $ext;
+            $file->storeAs("/public/companies/$slug/$imageName");
+            $partnersConfig["image"] = $imageName;
+        }
+
+        $categories = ProductCategory::query()
+            ->where("bot_id", $this->bot->id)
+            ->get()
+            ->select("title");
+
+
+        $partnersConfig["categories"] = $categories->toArray();
+        $config["partners"] = $partnersConfig;
+
+        $this->bot->config = $config;
+        $this->bot->save();
+
+        return $config["partners"];
+
+    }
+
+    /**
+     * @throws ValidationException
+     */
     public function changeStatus(array $data)
     {
         if (is_null($this->bot))

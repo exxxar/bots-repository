@@ -84,6 +84,23 @@ class PartnersController extends Controller
 
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function updateSelf(Request $request)
+    {
+        $request->validate([
+            'title'=> "",
+            'description'=> "",
+        ]);
+
+        return BusinessLogic::partners()
+            ->setBot($request->bot ?? null)
+            ->updateSelf($request->all(), $request->hasFile("file") ? $request->file("file") : null);
+
+
+    }
+
     public function destroy(Request $request)
     {
 

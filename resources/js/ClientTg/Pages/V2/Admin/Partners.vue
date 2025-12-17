@@ -86,7 +86,7 @@ import SelfConfigForm from "@/ClientTg/Components/V2/Admin/Partners/SelfConfigFo
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <SelfConfigForm></SelfConfigForm>
+                    <SelfConfigForm v-on:success="closeSelfConfigModal"></SelfConfigForm>
                 </div>
             </div>
         </div>
@@ -131,6 +131,9 @@ export default {
     methods: {
         openSelfConfigModal() {
             this.config_modal.show()
+        },
+        closeSelfConfigModal() {
+            this.config_modal.hide()
         },
         updatePartnersSettings() {
             this.$store.dispatch("updatePartnersSettings", this.form).then(resp => {

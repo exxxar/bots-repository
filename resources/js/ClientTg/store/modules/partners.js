@@ -40,6 +40,18 @@ const actions = {
         })
     },
 
+    async updateSelfPartner(context, payload) {
+        let link = `${BASE_PARTNERS_LINK}/update-self`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.form)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
     async updatePartner(context, payload) {
         let link = `${BASE_PARTNERS_LINK}/update`
 

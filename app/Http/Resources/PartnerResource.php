@@ -24,6 +24,7 @@ class PartnerResource extends JsonResource
             'config'=> $this->config,
             'legal_info'=> $this->legal_info,
             'products' => $this->whenLoaded("products") ,
+            'categories' => $this->whenLoaded("categories") ,
             ];
     }
 }

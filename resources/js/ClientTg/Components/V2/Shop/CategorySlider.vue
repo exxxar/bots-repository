@@ -18,6 +18,8 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
 
+
+
             <div class="d-flex overflow-auto category-slider gap-2 align-items-start">
                 <!-- Все категории -->
 
@@ -49,6 +51,8 @@
                 </button>
             </div>
         </div>
+
+     <slot name="back-btn"></slot>
 
 
     </div>
