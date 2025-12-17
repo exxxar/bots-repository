@@ -3,7 +3,11 @@
         <div class="alert alert-light my-2 border-primary">
             <p class="mb-2">
                 Нажимая кнопку, вы соглашаетесь с условиями
-                <a :href="bot.company.law_params?.offer_link" class="fw-bold" target="_blank">договора оферты</a>.
+                <a :href="bot.company.law_params?.offer_link" class="fw-bold" target="_blank">договора оферты</a>,
+                а также вы даете согласие на обработку персональных данных согласно
+                <a href="https://www.consultant.ru/document/cons_doc_LAW_61801/" target="_blank">
+                    Федеральному закону №152-ФЗ
+                </a>
             </p>
             <div class="form-check form-switch">
 
@@ -18,6 +22,7 @@
         <div class="alert alert-light my-2 border-primary">
             <p class="mb-2">
                 Нажимая кнопку, вы соглашаетесь с условиями договора оферты данной компании.
+
             </p>
             <div class="form-check form-switch">
 
