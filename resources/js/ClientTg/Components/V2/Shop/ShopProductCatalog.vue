@@ -32,7 +32,7 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
                 <template #back-btn>
                     <button
                         @click="shop=0"
-                        v-if="(this.partners?.is_active || false)"
+                        v-if="(partners?.is_active || false)"
                         class="btn btn-primary p-2 mt-2">
                         <i class="fa-solid fa-arrow-left me-2"></i>
                         К магазинам
