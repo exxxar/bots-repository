@@ -83,7 +83,7 @@ class BotManager extends BotCore
             if (!$isAdmin)
                 \App\Facades\BotMethods::bot()
                     ->whereBot($this->getSelf())
-                    ->sendMessage($botUser->telegram_chat_id, "Вы стали администратором");
+                    ->sendMessage($botUser->telegram_chat_id, "<b>Вы стали администратором</b>");
         }
     }
 
