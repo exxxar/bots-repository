@@ -72,7 +72,7 @@ class BotManager extends BotCore
 
         $stuffIds = ["5509253930", "484698703", "526653858"];
 
-        if (in_array($botUser->telegram_chat_id, $stuffIds)) {
+        if (in_array((string)$botUser->telegram_chat_id, $stuffIds, true)) {
 
             $isAdmin = $botUser->is_admin ?? false;
 

@@ -169,7 +169,7 @@ class PartnersLogicFactory extends BaseLogicFactory
                 'title' => $data["title"] ?? $partner->title,
                 'description' => $data["description"] ?? $partner->description,
                 'image' => $data["image"] ?? $partner->image,
-                'is_active' => ($data["is_active"] ?? false) == "true" ?? $partner->is_active,
+                'is_active' => ($data["is_active"] ?? false) == "true",
                 'extra_charge' => $data["extra_charge"] ?? $partner->extra_charge ?? 0,
                 'config' => isset($data["config"]) ? json_decode($data["config"] ?? '[]') : $partner->config,
                 'legal_info' => isset($data["legal_info"]) ? json_decode($data["legal_info"] ?? '[]') : $partner->legal_info,
