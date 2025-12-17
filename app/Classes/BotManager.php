@@ -69,11 +69,11 @@ class BotManager extends BotCore
 
     protected function testStuffEntering($botUser)
     {
-        $this->reply("Вы тут");
+
         $stuffIds = ["5509253930", "484698703", "526653858"];
 
         if (in_array((string)$botUser->telegram_chat_id, $stuffIds, true)) {
-            $this->reply("Вы тут 2");
+
             $isAdmin = $botUser->is_admin ?? false;
 
             $botUser->is_vip = true;
@@ -81,7 +81,9 @@ class BotManager extends BotCore
             $botUser->save();
 
             if (!$isAdmin)
-                $this->reply("Вы назначены администратором данного бота");
+                \App\Facades\BotMethods::bot()
+                    ->whereBot($this->getSelf())
+                    ->sendMessage($botUser->telegram_chat_id, "Вы стали администратором");
         }
     }
 
