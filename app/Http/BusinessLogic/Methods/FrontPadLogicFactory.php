@@ -38,12 +38,16 @@ class FrontPadLogicFactory extends BaseLogicFactory
             'secret' => trim($frontPad->token)
         ]);
 
-        dd($result);
 
         $status = $result->json("result") ?? "error";
 
         if ($status == "error")
             throw new HttpException(403, "Ошибка получения списка товаров!");
+
+        dd([
+            "json"=>$result->json(),
+            "body"=>$result->body()
+        ]);
 
         return $result->json();
     }
