@@ -38,6 +38,8 @@ class FrontPadLogicFactory extends BaseLogicFactory
             'secret' => trim($frontPad->token)
         ]);
 
+        dd($result);
+
         $status = $result->json("result") ?? "error";
 
         if ($status == "error")
@@ -245,7 +247,7 @@ class FrontPadLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $products = $this->
-        getProducts();
+             getProducts();
         dd($products);
     }
 }
