@@ -217,14 +217,6 @@ class FrontPadLogicFactory extends BaseLogicFactory
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        $validator = Validator::make($data, [
-           // "hook_url" => "required",
-            "token" => "required",
-        ]);
-
-
-        if ($validator->fails())
-            throw new ValidationException($validator);
 
         $pays = isset($data["pays"]) ? json_decode($data["pays"]) : null;
         $statuses = isset($data["statuses"]) ? json_decode($data["statuses"]) : null;

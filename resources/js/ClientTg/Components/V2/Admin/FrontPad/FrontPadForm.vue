@@ -154,7 +154,8 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary p-3 w-100">
+        <button type="submit"
+                class="btn btn-primary p-3 w-100">
             <i class="fa-solid fa-cloud-arrow-down mr-1"></i> Сохранить настройку
         </button>
     </form>
@@ -164,21 +165,19 @@
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["data"],
+
     data() {
         return {
             hasConnect: false,
-            bot: null,
-
             frontPadForm: {
                 hook_url: null,
                 channel: null,
-                affiliate: null,
-                point: null,
+                affiliate: 1,
+                point: 1,
                 token: null,
                 statuses: [
                     {
-                        value: null,
+                        value: 1,
                         key: "new",
                         title: "Новый",
                     },
@@ -187,12 +186,12 @@ export default {
                 bot_id: null,
                 pays: [
                     {
-                        value: null,
+                        value: 1,
                         key: "cash",
                         title: "Наличные",
                     },
                     {
-                        value: null,
+                        value: 2,
                         key: "card",
                         title: "Перевод на карту",
                     },
@@ -200,37 +199,38 @@ export default {
             },
         }
     },
-    computed: {
-        ...mapGetters(['getCurrentBot']),
-    },
-    mounted() {
-        this.bot = this.getCurrentBot
-
-        if (this.data)
-            this.$nextTick(() => {
-                this.frontPadForm.hook_url = this.data.hook_url || null
-                this.frontPadForm.channel = this.data.channel || null
-                this.frontPadForm.affiliate = this.data.affiliate || null
-                this.frontPadForm.point = this.data.point || null
-                this.frontPadForm.token = this.data.token || null
-                this.frontPadForm.bot_id = this.data.bot_id || this.bot.id || null
-                if (this.data.pays != null)
-                    this.frontPadForm.pays = this.data.pays
-                if (this.data.statuses != null)
-                    this.frontPadForm.statuses = this.data.statuses
-
-            })
-        else {
-            this.frontPadForm.bot_id = this.bot.id || null
+    computed:{
+        bot(){
+            return window.currentBot
         }
+    },
+        mounted() {
+       // this.bot = this.getCurrentBot
+
+            this.$nextTick(() => {
+                if (this.bot?.frontPad) {
+                    this.frontPadForm.hook_url = this.bot.frontPad.hook_url || null
+                    this.frontPadForm.channel = this.bot.frontPad.channel || null
+                    this.frontPadForm.affiliate = this.bot.frontPad.affiliate || null
+                    this.frontPadForm.point = this.bot.frontPad.point || null
+                    this.frontPadForm.token = this.bot.frontPad.token || null
+                    this.frontPadForm.bot_id = this.bot.frontPad.bot_id || this.bot.id || null
+                    if (this.bot.frontPad.pays != null)
+                        this.frontPadForm.pays = this.bot.frontPad.pays
+                    if (this.bot.statuses != null)
+                        this.frontPadForm.statuses = this.bot.frontPad.statuses
+
+                }
+
+                this.frontPadForm.bot_id = this.bot.frontPad?.bot_id || this.bot.id || null
+            })
+
 
 
     },
     methods: {
         submit() {
-            /*    if (!this.hasConnect) {
-                    return;
-                }*/
+
             let data = new FormData();
             Object.keys(this.frontPadForm)
                 .forEach(key => {
@@ -246,6 +246,7 @@ export default {
                 frontPadForm: data
             }).then((response) => {
                 this.$notify("Данные CRM успешно сохранены");
+                window.location.reload()
             }).catch(err => {
 
             })

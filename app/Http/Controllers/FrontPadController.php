@@ -20,14 +20,8 @@ class FrontPadController extends Controller
      */
     public function saveFrontPad(Request $request): FrontPadResource
     {
-        $request->validate([
-            //"hook_url" => "required",
-            "token" => "required",
-            "bot_id" => "required",
-        ]);
 
-
-        $bot = Bot::query()->find($request->bot_id ?? null);
+        $bot = $request->bot ?? Bot::query()->find($request->bot_id ?? null);
 
         return BusinessLogic::frontPad()
             ->setBot($bot)

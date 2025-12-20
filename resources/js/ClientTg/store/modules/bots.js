@@ -13,7 +13,18 @@ const getters = {
 }
 
 const actions = {
+    async saveFrontPad(context, payload = {frontPadForm: null}) {
+        let link = `${BASE_BOTS_LINK}/save-front-pad`
 
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.frontPadForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadCurrentBotFields(context){
         let link = `${BASE_BOTS_LINK}/load-fields`
         let method = 'GET'

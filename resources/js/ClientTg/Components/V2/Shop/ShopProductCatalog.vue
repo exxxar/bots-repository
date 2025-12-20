@@ -14,10 +14,10 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
 </script>
 <template>
 
-    <template v-if="shop===0">
+    <template v-if="shop==0">
         <PartnersMain v-on:select="selectPartner"></PartnersMain>
     </template>
-    <template v-if="shop===1">
+    <template v-if="shop==1">
         <menu
             id="category-slider"
             class="d-block w-100 p-0 m-0 sticky-menu">
@@ -43,7 +43,6 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
             </CategorySlider>
 
         </menu>
-
 
         <div
 
@@ -376,10 +375,7 @@ export default {
 
         this.shop = (this.partners?.is_active || false) ? 0 : 1
 
-        console.log("partners settings", this.partners)
-        console.log("partners", (this.partners?.is_active || false) ? 0 : 1)
-        console.log("shop", this.shop)
-        //this.products
+
         const slider = document.getElementById('category-slider')
 
         const handleScroll = () => {
@@ -407,11 +403,8 @@ export default {
         window.addEventListener('scroll', handleScroll)
 
         this.loadStories()
-
         this.loadProducts()
         this.loadCollections()
-
-
         this.tg.BackButton.show()
 
 
