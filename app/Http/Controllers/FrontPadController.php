@@ -28,11 +28,40 @@ class FrontPadController extends Controller
             ->store($request->all());
     }
 
-    public function updateProducts(Request $request) {
+    /**
+     * @throws ValidationException
+     */
+    public function updateProducts(Request $request)
+    {
         $bot = $request->bot ?? Bot::query()->find($request->bot_id ?? null);
 
-        return BusinessLogic::frontPad()
+        BusinessLogic::frontPad()
             ->setBot($bot)
             ->loadProducts();
+
+        return \response()->noContent();
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function import(Request $request)
+    {
+
+        $request->validate([
+            "excel_file" => "required"
+        ]);
+
+        $file = $request->file('excel_file');
+
+
+        $bot = $request->bot ?? Bot::query()->find($request->bot_id ?? null);
+
+        BusinessLogic::frontPad()
+            ->setBot($bot)
+            ->import($file);
+
+        return response()->noContent();
     }
 }

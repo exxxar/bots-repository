@@ -25,6 +25,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async updateProductsFromFrontPadExcel(context, payload = { form: {} }) {
+        let link = `${BASE_BOTS_LINK}/frontpad-excel-update`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.form)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data)
+        }).catch(err => {
+            context.commit("setErrors", err.response?.data?.errors || [])
+            return Promise.reject(err)
+        })
+    },
+
     async updateProductsFromFrontPad(context) {
         let link = `${BASE_BOTS_LINK}/frontpad-update`
 

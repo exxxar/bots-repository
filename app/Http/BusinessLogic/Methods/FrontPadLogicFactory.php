@@ -5,6 +5,7 @@ namespace App\Http\BusinessLogic\Methods;
 use App\Facades\BotMethods;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\FrontPadResource;
+use App\Imports\ProductFrontPadImport;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\FrontPad;
@@ -13,8 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FrontPadLogicFactory extends BaseLogicFactory
@@ -238,6 +241,31 @@ class FrontPadLogicFactory extends BaseLogicFactory
             ]);
 
         return new FrontPadResource($frontPad);
+    }
+
+
+    public function import($file)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $products = Product::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        foreach ($products as $product) {
+            $product->in_stop_list_at = Carbon::now();
+            $product->deleted_at = Carbon::now();
+            $product->save();
+        }
+
+        $path = $file->store('imports'); // 2. Полный путь к файлу
+
+        $fullPath = storage_path('app/' . $path);
+
+        Excel::import(new ProductFrontPadImport($this->bot->id), $fullPath, null, \Maatwebsite\Excel\Excel::HTML);
+
+        Storage::delete($path);
     }
 
     /**

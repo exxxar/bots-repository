@@ -10,7 +10,6 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
         <div class="row">
 
 
-
             <div class="col-12 py-2" style="position: sticky; top: 0px;z-index: 1000;">
                 <div class="btn-group w-100 px-3 catalog-tabs py-2" style="overflow-x:auto;">
                     <button
@@ -98,7 +97,8 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                         v-if="!link"
                         class="btn btn-outline-warning p-3 mb-1 w-100">
                         <i class="fa-brands fa-vk mr-2"></i>Подготовка ссылки
-                        <span class="spinner-border text-warning ml-2" style="border-width: 2px; width: 1rem;height: 1rem;" role="status"></span>
+                        <span class="spinner-border text-warning ml-2"
+                              style="border-width: 2px; width: 1rem;height: 1rem;" role="status"></span>
                     </p>
                     <a
                         @click="openUpdateModal"
@@ -166,11 +166,13 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
             <div class="modal-content">
                 <div class="modal-body">
                     <h6 class="text-center my-3">Вы действительно хотите обновить товар?</h6>
-                    <p class="alert alert-warning mb-2">При обновлении будут загружены все товары из вк, текущие ваши товары будут удалены и заменены на новые.</p>
+                    <p class="alert alert-warning mb-2">При обновлении будут загружены все товары из вк, текущие ваши
+                        товары будут удалены и заменены на новые.</p>
                     <div class="d-flex justify-content-center">
                         <button type="button"
                                 style="margin-right:10px;"
-                                class="btn btn-primary px-3 mr-2" @click="doUpdateProducts">Да</button>
+                                class="btn btn-primary px-3 mr-2" @click="doUpdateProducts">Да
+                        </button>
                         <button type="button" class="btn btn-secondary px-3" @click="hideUpdateModal">Нет</button>
                     </div>
 
@@ -187,16 +189,55 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
                 <div class="modal-body">
-                    <h6 class="text-center my-3">Вы действительно хотите обновить товар?</h6>
-                    <p class="alert alert-warning mb-2">
-                        Товар с фронтпада можно обвить раз в час!!Будут загружены полностью новые товары из FrontPad
-                    </p>
-                    <div class="d-flex justify-content-center">
-                        <button type="button"
-                                style="margin-right:10px;"
-                                class="btn btn-primary px-3 mr-2" @click="doUpdateFrontPadProducts">Да</button>
-                        <button type="button" class="btn btn-secondary px-3" @click="hideUpdateFrontPadModal">Нет</button>
-                    </div>
+
+                    <ul class="nav nav-tabs mb-2 d-flex justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link "
+                               @click="frontpad_tab=1"
+                               v-bind:class="{'active':frontpad_tab===1}"
+                               aria-current="page" href="javascript:void(0)">API</a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                @click="frontpad_tab=0"
+                                v-bind:class="{'active':frontpad_tab===0}"
+                                class="nav-link" href="javascript:void(0)">Эксель</a>
+                        </li>
+
+                    </ul>
+
+                    <template v-if="frontpad_tab===1">
+                        <h6 class="text-center my-3">Вы действительно хотите обновить товар?</h6>
+                        <p class="alert alert-warning mb-2">
+                            Товар с фронтпада можно обвить раз в час!!Будут загружены полностью новые товары из FrontPad
+                        </p>
+                        <div class="d-flex justify-content-center">
+                            <button type="button"
+                                    style="margin-right:10px;"
+                                    class="btn btn-primary px-3 mr-2 p-3" @click="doUpdateFrontPadProducts">Да
+                            </button>
+                            <button type="button" class="btn btn-secondary px-3" @click="hideUpdateFrontPadModal">Нет
+                            </button>
+                        </div>
+                    </template>
+
+                    <template v-if="frontpad_tab === 0">
+
+                        <form v-on:submit.prevent="submitFrontPadFile">
+                            <div class="form-floating mb-2">
+                                <input
+                                    type="file"
+                                    class="form-control"
+                                    id="excelFileInput"
+                                    accept=".xlsx,.xls"
+                                    @change="handleFileUpload"
+                                />
+                                <label for="excelFileInput">Файл Excel</label>
+                            </div>
+
+                            <button class="btn p-3 w-100 btn-primary">Отправить</button>
+                        </form>
+                    </template>
 
                 </div>
 
@@ -211,10 +252,12 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            tab:0,
+            tab: 0,
             load: false,
             url: null,
             link: null,
+            frontpad_tab: 0,
+            selectedFile: null,
             update_products_modal: null,
             update_products_from_frontpad_modal: null,
             selectedProduct: null,
@@ -223,11 +266,11 @@ export default {
             }
         }
     },
-    computed:{
+    computed: {
         tg() {
             return window.Telegram.WebApp;
         },
-        currentBot(){
+        currentBot() {
             return window.currentBot
         }
     },
@@ -247,11 +290,42 @@ export default {
         })
     },
     methods: {
-        doUpdateProducts(){
+        handleFileUpload(event) {
+            const file = event.target.files[0]
+            if (file) {
+                this.selectedFile = file
+            }
+        },
+        async submitFrontPadFile() {
+
+            const formData = new FormData()
+            formData.append("excel_file",  this.selectedFile)
+
+            this.$store.dispatch("updateProductsFromFrontPadExcel", {
+                form: formData
+            }).then((response) => {
+
+                this.$notify({
+                        title: "Импорт данных",
+                        text: "Успешно!",
+                    },
+                );
+
+                this.frontpad_tab = 0
+                this.hideUpdateFrontPadModal()
+
+            }).catch(err => {
+
+                this.frontpad_tab = 0
+                this.hideUpdateFrontPadModal()
+            })
+
+        },
+        doUpdateProducts() {
             this.exportProducts()
             this.open(this.link, "_blank")
         },
-        doUpdateFrontPadProducts(){
+        doUpdateFrontPadProducts() {
             this.load = true
             this.$store.dispatch("updateProductsFromFrontPad").then((resp) => {
                 this.load = false
@@ -261,16 +335,16 @@ export default {
                 this.hideUpdateFrontPadModal()
             })
         },
-        hideUpdateFrontPadModal(){
+        hideUpdateFrontPadModal() {
             this.update_products_from_frontpad_modal.hide();
         },
-        openFrontPadUpdateModal(){
+        openFrontPadUpdateModal() {
             this.update_products_from_frontpad_modal.show();
         },
-        openUpdateModal(){
-          this.update_products_modal.show();
+        openUpdateModal() {
+            this.update_products_modal.show();
         },
-        hideUpdateModal(){
+        hideUpdateModal() {
             this.update_products_modal.hide();
         },
         goTo(name) {
@@ -278,16 +352,16 @@ export default {
         },
         updateShopLink() {
             this.load = true
-            this.$store.dispatch("updateShopLink",{
+            this.$store.dispatch("updateShopLink", {
                 botForm: this.botForm
             }).then((resp) => {
                 this.load = false
                 this.updateProducts()
 
                 this.$notify({
-                    title:'Менеджер магазина',
+                    title: 'Менеджер магазина',
                     text: "Ссылка на источник в ВК обновлена",
-                    type:'success'
+                    type: 'success'
                 })
 
             }).catch(() => {
@@ -307,9 +381,9 @@ export default {
                 this.load = false
 
                 this.$notify({
-                    title:'Менеджер магазина',
+                    title: 'Менеджер магазина',
                     text: "Все продукты удалены",
-                    type:'success'
+                    type: 'success'
                 })
 
             }).catch(() => {
@@ -324,37 +398,37 @@ export default {
             })
 
         },
-        exportOrders(){
+        exportOrders() {
             this.$store.dispatch("exportAllOrders").then((resp) => {
                 this.load = false
 
                 this.$notify({
-                    title:'Менеджер магазина',
+                    title: 'Менеджер магазина',
                     text: "Все заказы экспортированы в файл",
-                    type:'success'
+                    type: 'success'
                 })
 
             }).catch(() => {
                 this.load = false
             })
         },
-        exportProducts(){
+        exportProducts() {
             this.$store.dispatch("exportAllProducts").then((resp) => {
                 this.load = false
 
                 this.$notify({
-                    title:'Менеджер магазина',
+                    title: 'Менеджер магазина',
                     text: "Все продукты экспортированы в файл",
-                    type:'success'
+                    type: 'success'
                 })
 
             }).catch(() => {
                 this.load = false
             })
         },
-        importProducts(){
+        importProducts() {
             this.$notify({
-                title:'Менеджер магазина',
+                title: 'Менеджер магазина',
                 text: "Функция недоступна",
             })
         },
@@ -378,7 +452,7 @@ export default {
 </script>
 <style lang="scss">
 .scrolled-area {
-    overflow-x:auto;
+    overflow-x: auto;
     display: flex;
 
     padding: 5px 5px;
@@ -390,9 +464,11 @@ export default {
         flex-direction: row;
         flex-wrap: nowrap;
         align-items: center;
+
         .nav-item {
             min-width: 150px;
-            button{
+
+            button {
                 width: 100%;
             }
         }
