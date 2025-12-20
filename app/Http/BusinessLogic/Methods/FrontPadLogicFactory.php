@@ -45,6 +45,7 @@ class FrontPadLogicFactory extends BaseLogicFactory
             throw new HttpException(403, "Ошибка получения списка товаров!");
 
         dd([
+            "data"=>$frontPad->toArray(),
             "json"=>$result->json(),
             "body"=>$result->body()
         ]);

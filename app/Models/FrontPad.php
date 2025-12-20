@@ -27,9 +27,7 @@ class FrontPad extends Model
 
     ];
 
-    protected $hidden = [
-        "token"
-    ];
+
     /**
      * The attributes that should be cast to native types.
      *

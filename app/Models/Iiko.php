@@ -22,7 +22,7 @@ class Iiko extends Model
         'terminal_group_id',
     ];
 
-    protected $hidden = ["api_login"];
+
 
     /**
      * The attributes that should be cast to native types.
