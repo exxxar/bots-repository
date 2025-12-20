@@ -21,6 +21,7 @@ class FrontPadResource extends JsonResource
             'point' => $this->point,
             'token' => $this->token,
             'pays' => $this->pays,
+            'is_active' => $this->is_active ?? false,
             'statuses' => $this->statuses,
         ];
     }

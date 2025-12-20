@@ -22,6 +22,8 @@ class Iiko extends Model
         'terminal_group_id',
     ];
 
+    protected $hidden = ["api_login"];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -31,6 +33,13 @@ class Iiko extends Model
         'id' => 'integer',
         'bot_id' => 'integer',
     ];
+
+    public $appends = ["is_active"];
+
+    public function getIsActiveAttribute()
+    {
+        return !is_null($this->token);
+    }
 
     public function bot(): BelongsTo
     {

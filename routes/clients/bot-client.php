@@ -605,7 +605,8 @@ Route::prefix("bot-client")
                 Route::post("/", "index");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
-                Route::post("/save-front-pad", [FrontPadController::class, "saveFrontPad"]);
+                Route::post("/save-frontpad", [FrontPadController::class, "saveFrontPad"]);
+                Route::post("/frontpad-update", [FrontPadController::class, "updateProducts"]);
                 Route::post("/load-amo-fields", [AmoCrmController::class, "loadAmoFields"]);
                 Route::post("/sync-amo", [AmoCrmController::class, "syncAmoCrm"]);
                 Route::post("/bot-update", "updateBot");

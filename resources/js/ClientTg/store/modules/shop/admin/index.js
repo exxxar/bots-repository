@@ -19,6 +19,9 @@ const actions = {
     ...products.actions,
     ...users.actions,
     ...events.actions,
+
+
+
     async updateProductsFromVk(context) {
         let link = `/bot-client/vk-auth-link`
 

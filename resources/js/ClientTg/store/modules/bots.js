@@ -14,12 +14,24 @@ const getters = {
 
 const actions = {
     async saveFrontPad(context, payload = {frontPadForm: null}) {
-        let link = `${BASE_BOTS_LINK}/save-front-pad`
+        let link = `${BASE_BOTS_LINK}/save-frontpad`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.frontPadForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async updateProductsFromFrontPad(context) {
+        let link = `${BASE_BOTS_LINK}/frontpad-update`
+
+        let _axios = util.makeAxiosFactory(link, 'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);

@@ -27,4 +27,12 @@ class FrontPadController extends Controller
             ->setBot($bot)
             ->store($request->all());
     }
+
+    public function updateProducts(Request $request) {
+        $bot = $request->bot ?? Bot::query()->find($request->bot_id ?? null);
+
+        return BusinessLogic::frontPad()
+            ->setBot($bot)
+            ->loadProducts();
+    }
 }

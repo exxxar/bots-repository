@@ -27,6 +27,9 @@ class FrontPad extends Model
 
     ];
 
+    protected $hidden = [
+        "token"
+    ];
     /**
      * The attributes that should be cast to native types.
      *
@@ -35,9 +38,16 @@ class FrontPad extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
-        'pays'=> 'array',
-        'statuses'=> 'array',
+        'pays' => 'array',
+        'statuses' => 'array',
     ];
+
+    public $appends = ["is_active"];
+
+    public function getIsActiveAttribute()
+    {
+        return !is_null($this->token);
+    }
 
     public function bot(): BelongsTo
     {

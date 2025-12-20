@@ -104,17 +104,23 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                         @click="openUpdateModal"
                         v-if="link"
                         href="javascript:void(0)"
-                        target="_blank"
                         class="btn btn-primary p-3 w-100 mb-2">
                         <i class="fa-brands fa-vk mr-2"></i> Обновить товар из ВК
                     </a>
                 </div>
-
-                <div class="col-12" v-if="currentBot.iiko">
+                <div class="col-12" v-if="currentBot.frontPad?.is_active">
+                    <a
+                        @click="openFrontPadUpdateModal"
+                        href="javascript:void(0)"
+                        class="btn btn-primary p-3 w-100 mb-2">
+                        <i class="fa-solid fa-gears mr-2"></i> Обновить товар из FrontPad
+                    </a>
+                </div>
+                <div class="col-12" v-if="currentBot.iiko?.is_active">
                     <a
                         @click="goTo('IikoV2')"
                         href="javascript:void(0)"
-                        class="btn btn-primary p-3 w-100 my-2">
+                        class="btn btn-primary p-3 w-100 mb-2">
                         <i class="fa-solid fa-gears mr-2"></i> Обновить товар из IIKO
                     </a>
                 </div>
@@ -174,6 +180,28 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="update-products-from-frontpad-modal"
+         data-bs-backdrop="static"
+         tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6 class="text-center my-3">Вы действительно хотите обновить товар?</h6>
+                    <p class="alert alert-warning mb-2">Будут загружены полностью новые товары из FrontPad</p>
+                    <div class="d-flex justify-content-center">
+                        <button type="button"
+                                style="margin-right:10px;"
+                                class="btn btn-primary px-3 mr-2" @click="doUpdateFrontPadProducts">Да</button>
+                        <button type="button" class="btn btn-secondary px-3" @click="hideUpdateFrontPadModal">Нет</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -186,6 +214,7 @@ export default {
             url: null,
             link: null,
             update_products_modal: null,
+            update_products_from_frontpad_modal: null,
             selectedProduct: null,
             botForm: {
                 vk_shop_link: null,
@@ -205,6 +234,7 @@ export default {
         this.botForm.vk_shop_link = window.currentBot.vk_shop_link || null
 
         this.update_products_modal = new bootstrap.Modal(document.getElementById('update-products-modal'), {})
+        this.update_products_from_frontpad_modal = new bootstrap.Modal(document.getElementById('update-products-from-frontpad-modal'), {})
 
         this.tg.BackButton.show()
 
@@ -217,7 +247,21 @@ export default {
     methods: {
         doUpdateProducts(){
             this.exportProducts()
-            this.open(this.link)
+            this.open(this.link, "_blank")
+        },
+        doUpdateFrontPadProducts(){
+            this.load = true
+            this.$store.dispatch("updateProductsFromFrontPad").then((resp) => {
+                this.load = false
+            }).catch(() => {
+                this.load = false
+            })
+        },
+        hideUpdateFrontPadModal(){
+            this.update_products_from_frontpad_modal.hide();
+        },
+        openFrontPadUpdateModal(){
+            this.update_products_from_frontpad_modal.show();
         },
         openUpdateModal(){
           this.update_products_modal.show();

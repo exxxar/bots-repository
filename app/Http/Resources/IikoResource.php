@@ -16,6 +16,7 @@ class IikoResource extends JsonResource
             'id' => $this->id ?? null,
             'bot_id' => $this->bot_id?? null,
             'api_login' => $this->api_login?? null,
+            'is_active' => $this->is_active?? false,
             'organization_id' => $this->organization_id?? null,
             'terminal_group_id' => $this->terminal_group_id?? null,
         ];

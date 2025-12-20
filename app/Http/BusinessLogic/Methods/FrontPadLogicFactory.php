@@ -40,8 +40,6 @@ class FrontPadLogicFactory extends BaseLogicFactory
 
         $status = $result->json("result") ?? "error";
 
-        Log::info("LOADED FP PRODUCTS=>".print_r($result, true));
-
         if ($status == "error")
             throw new HttpException(403, "Ошибка получения списка товаров!");
 
@@ -236,5 +234,18 @@ class FrontPadLogicFactory extends BaseLogicFactory
             ]);
 
         return new FrontPadResource($frontPad);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function loadProducts()
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $products = $this->
+        getProducts();
+        dd($products);
     }
 }
