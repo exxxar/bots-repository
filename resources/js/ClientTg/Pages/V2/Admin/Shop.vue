@@ -188,7 +188,9 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
             <div class="modal-content">
                 <div class="modal-body">
                     <h6 class="text-center my-3">Вы действительно хотите обновить товар?</h6>
-                    <p class="alert alert-warning mb-2">Будут загружены полностью новые товары из FrontPad</p>
+                    <p class="alert alert-warning mb-2">
+                        Товар с фронтпада можно обвить раз в час!!Будут загружены полностью новые товары из FrontPad
+                    </p>
                     <div class="d-flex justify-content-center">
                         <button type="button"
                                 style="margin-right:10px;"
@@ -253,8 +255,10 @@ export default {
             this.load = true
             this.$store.dispatch("updateProductsFromFrontPad").then((resp) => {
                 this.load = false
+                this.hideUpdateFrontPadModal()
             }).catch(() => {
                 this.load = false
+                this.hideUpdateFrontPadModal()
             })
         },
         hideUpdateFrontPadModal(){

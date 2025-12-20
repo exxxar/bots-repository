@@ -8,6 +8,8 @@ use App\Http\Resources\FrontPadResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\FrontPad;
+use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -44,11 +46,6 @@ class FrontPadLogicFactory extends BaseLogicFactory
         if ($status == "error")
             throw new HttpException(403, "Ошибка получения списка товаров!");
 
-        dd([
-            "data"=>$frontPad->toArray(),
-            "json"=>$result->json(),
-            "body"=>$result->body()
-        ]);
 
         return $result->json();
     }
@@ -251,8 +248,45 @@ class FrontPadLogicFactory extends BaseLogicFactory
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        $products = $this->
-             getProducts();
-        dd($products);
+        $frProducts = $this->getProducts();
+
+        $products = Product::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        foreach ($products as $product) {
+            $product->in_stop_list_at = Carbon::now();
+            $product->deleted_at = Carbon::now();
+            $product->save();
+        }
+
+        foreach ($frProducts->product_id as $key => $value) {
+            $product = Product::query()
+                ->withTrashed()
+                ->where("frontpad_article", $value)
+                ->where("bot_id", $this->bot->id)
+                ->first();
+
+            $tmpProduct = [
+                'article' => null,
+                'vk_product_id' => null,
+                'frontpad_article' => $value,
+                'title' => $frProducts->name[$key],
+                'description' => $frProducts->name[$key],
+                'images' => [],
+                'type' => 0,
+                'old_price' => 0,
+                'current_price' => $frProducts->price[$key],
+                'variants' => null,
+                'in_stop_list_at' => null,
+                'bot_id' => $this->bot->id,
+                'deleted_at' => null
+            ];
+
+            if (is_null($product))
+                Product::query()->create($tmpProduct);
+            else
+                $product->update($tmpProduct);
+        }
     }
 }
