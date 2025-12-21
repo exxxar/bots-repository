@@ -411,7 +411,7 @@ export default {
         this.tg.BackButton.onClick(() => {
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
-            this.$router.back()
+            this.$router.push({name: 'MenuV2'})
         })
     },
     methods: {

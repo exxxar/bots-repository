@@ -430,7 +430,7 @@ export default {
 
         this.tg.expand()
 
-        this.tg.BackButton.hide()
+      //  this.tg.BackButton.hide()
 
     },
     methods: {
