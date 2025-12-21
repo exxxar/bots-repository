@@ -5,6 +5,7 @@ use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ClientErrorController;
 use App\Logging\DynamicLogChannel;
 use App\Models\Bot;
 use App\Models\User;
@@ -45,6 +46,7 @@ Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInv
 Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
 Route::view("/page-not-found", "error-node")->name("error-node");
 
+Route::post('/log-error', [ClientErrorController::class, 'store']);
 
 Route::middleware(["check-node"])
     ->group(function () {

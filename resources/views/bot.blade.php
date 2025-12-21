@@ -143,6 +143,78 @@
             changeTheme.href = theme
         }
 
+        // Универсальный логгер ошибок
+        (function() {
+            const STORAGE_KEY = "sentErrors";
+
+            // Получаем список уже отправленных ошибок из localStorage
+            function getSentErrors() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                } catch {
+                    return [];
+                }
+            }
+
+            // Сохраняем новый идентификатор ошибки
+            function saveErrorId(id) {
+                const errors = getSentErrors();
+                errors.push(id);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(errors));
+            }
+
+            // Генерация уникального идентификатора ошибки
+            function generateErrorId(message, source, lineno, colno) {
+                return `${message}|${source}|${lineno}|${colno}`;
+            }
+
+            // Отправка ошибки на сервер
+            function sendError(errorData) {
+                fetch("/log-error", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(errorData)
+                });
+            }
+
+            // Глобальный обработчик JS ошибок
+            window.onerror = function(message, source, lineno, colno, error) {
+                const id = generateErrorId(message, source, lineno, colno);
+                const sentErrors = getSentErrors();
+
+                if (!sentErrors.includes(id)) {
+                    sendError({message, source, lineno, colno, stack: error?.stack});
+                    saveErrorId(id);
+                }
+
+                return false; // не блокируем стандартное поведение
+            };
+
+            // Глобальный обработчик необработанных промисов
+            window.addEventListener("unhandledrejection", function(event) {
+                const id = `promise|${event.reason}`;
+                const sentErrors = getSentErrors();
+
+                if (!sentErrors.includes(id)) {
+                    sendError({type: "unhandledrejection", reason: event.reason});
+                    saveErrorId(id);
+                }
+            });
+
+            // Ошибки загрузки ресурсов
+            window.addEventListener("error", function(event) {
+                if (event.target && event.target.src) {
+                    const id = `resource|${event.target.src}`;
+                    const sentErrors = getSentErrors();
+
+                    if (!sentErrors.includes(id)) {
+                        sendError({type: "resource", src: event.target.src});
+                        saveErrorId(id);
+                    }
+                }
+            }, true);
+        })();
+
 
     };
 </script>
