@@ -15,7 +15,7 @@ const getters = {
 
 const actions = {
     async loadPartners(context, payload) {
-        let link = `${ BASE_PARTNERS_LINK}`
+        let link = `${BASE_PARTNERS_LINK}`
         let _axios = util.makeAxiosFactory(link, 'POST', payload)
         return _axios.then((response) => {
             let dataObject = response.data

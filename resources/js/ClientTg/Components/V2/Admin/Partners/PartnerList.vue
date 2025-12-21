@@ -60,12 +60,12 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
 
         <!-- Список партнеров -->
         <div class="row row-cols-1">
-            <div class="col" v-for="partner in filteredPartners" :key="partner.id">
+            <div class="col" v-for="partner in partners" :key="partner.id">
                 <div class="card mb-2" v-bind:class="{'border-danger':partner.before_deleted}">
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ partner.title }}</h5>
                         <p class="card-text">
-                            <strong>Число товаров: </strong> {{ partner.products.length || 0 }}<br>
+                            <strong>Число товаров: </strong> {{ partner.products?.length || 0 }}<br>
                             <strong>Договор работает до: </strong> {{ partner.contract_expiration }}<br>
                             <strong>Статус: </strong>
                             <span
