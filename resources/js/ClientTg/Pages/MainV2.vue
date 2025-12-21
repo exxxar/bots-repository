@@ -150,6 +150,11 @@ export default {
             type: "success",
         });
 
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.push({name: 'MenuV2'})
+        })
     },
     methods: {
         open(url) {
