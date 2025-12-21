@@ -29,7 +29,7 @@ class ClientErrorController extends Controller
             'src' => 'nullable|string',
         ]);
 
-        Log::error('Client error', $data);
+        Log::error('Client error'.print_r($data, true));
 
         return response()->json(['status' => 'ok']);
     }

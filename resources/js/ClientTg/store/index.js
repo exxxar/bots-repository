@@ -197,6 +197,6 @@ export default createStore({
         cdek,
         stories,
         tables,
-        partners
+        partners,
     }
 })

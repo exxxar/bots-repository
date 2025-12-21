@@ -56,7 +56,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
             v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
     </p>
 
-    <template v-if="partners.length>0">
+    <template v-if="!loading&&partners.length>0">
 
         <!-- Список партнеров -->
         <div class="row row-cols-1">
@@ -197,6 +197,7 @@ export default {
                 param: 'id',
                 direction: 'desc'
             },
+            loading: false,
             selected: null,
             search: null,
             config_modal: null,
@@ -210,9 +211,9 @@ export default {
 
         filteredPartners() {
             if (!this.search)
-                return this.partners
+                return this.partners || []
 
-            return this.partners.filter((partner) => {
+            return (this.partners || []).filter((partner) => {
                 const matchesSearchQuery = partner.title.toLowerCase().includes((this.search || '').toLowerCase());
                 const matchesStatus = this.sort.param ? partner.status === this.sort.param : true;
                 return matchesSearchQuery && matchesStatus;
@@ -234,7 +235,7 @@ export default {
         nextPartners(index) {
             this.loadPartners(index)
         },
-        selectPartnerForProductObserve(item){
+        selectPartnerForProductObserve(item) {
             this.selected = null
 
             this.$nextTick(() => {
@@ -259,7 +260,7 @@ export default {
             })
         },
         loadPartners(pageIndex = 0) {
-
+            this.loading = true
             this.$store.dispatch("loadPartners", {
                 dataObject: {
                     search: this.search,
@@ -270,8 +271,9 @@ export default {
             }).then(resp => {
                 this.partners = this.getPartners || []
                 this.partners_paginate_object = this.getPartnersPaginateObject || null
+                this.loading = false
             }).catch(() => {
-
+                this.loading = false
             })
         },
         removePartner() {

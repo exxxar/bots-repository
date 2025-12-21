@@ -77,7 +77,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
         </button>
     </form>
 
-    <div v-if="users">
+    <template v-if="users&&!loading">
         <p class="w-100 text-center mb-2 small">Найдено пользователей
             <span class="text-primary fw-bold"> {{ users_paginate_object.meta.total }} </span>
         </p>
@@ -111,7 +111,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
             v-on:pagination_page="nextUsers"
             v-if="users_paginate_object"
             :pagination="users_paginate_object"/>
-    </div>
+    </template>
 
     <div class="card card-info mb-3">
         <div class="card-body">
