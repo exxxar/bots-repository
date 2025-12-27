@@ -595,7 +595,16 @@ export default {
                 offset: offset,
             }).then((resp) => {
 
+                let count = resp.length || 0
+
+
                 this.load_content = false
+                if (count === 0)
+                {
+                    this.products.find(p => p.id === catId).products_count = offset
+                    return
+                }
+
                 this.products.find(p => p.id === catId).products.push(...resp)
             }).catch(() => {
                 this.load_content = false

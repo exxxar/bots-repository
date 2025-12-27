@@ -95,9 +95,6 @@ class ProductLogicFactory extends BaseLogicFactory
 
         $categories = ProductCategory::query()
             ->where("bot_id", $botId)
-            ->whereHas("products", function ($q) {
-                $q->whereNull("in_stop_list_at");
-            })
             ->where("is_active", true)
             ->withCount('products')
             ->has("products", ">", 0)
