@@ -56,21 +56,29 @@ class ProductLogicFactory extends BaseLogicFactory
 
         $botId = $partnerId ?? $this->bot->id;
 
-        $products = Product::query()
+        $category = ProductCategory::query()
             ->where("bot_id", $botId)
-            ->whereNull("in_stop_list_at");
+            ->where("is_active", true)
+            ->has("products", ">", 0)
+            ->orderBy("order_position", "ASC")
+            ->where("id", $categoryId)
+            ->first();
 
-     /*   if ($categoryId != -1)
-            $products = $products
-                ->whereHas("productCategories", fn($q) => $q->where("id", $categoryId));*/
+        if (is_null($category))
+            return [];
 
-        $products =
-            $products
-                ->skip($offset)
+
+        $category->setRelation(
+            'products',
+            $category->products()
+                ->whereNull("in_stop_list_at")
                 ->take(8)
-                ->get();
+                ->offset($offset)
+                ->get()
+        );
 
-        return $products;
+
+        return $category->products ?? [];
     }
 
     /**
@@ -103,8 +111,6 @@ class ProductLogicFactory extends BaseLogicFactory
                     ->get()
             );
         }
-
-
 
 
         // Товары без категории
