@@ -458,7 +458,6 @@ class ProductController extends Controller
     }
 
 
-
     public function changeCategoryStatus(Request $request, $categoryId): \App\Http\Resources\ProductCategoryResource
     {
         return BusinessLogic::products()
@@ -473,6 +472,20 @@ class ProductController extends Controller
             ->destroyCategory($categoryId);
     }
 
+    public function loadMoreProductsByCategories(Request $request)
+    {
+        $request->validate([
+            "category_id" => "required",
+            "offset" => "required"
+        ]);
+
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->loadMoreProductsByCategories(
+                $request->category_id,
+                $request->offset,
+                $request->partner_id ?? null);
+    }
 
     public function listByCategories(Request $request)
     {
@@ -553,7 +566,6 @@ class ProductController extends Controller
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
             ->changeCategoryRecommendationStatus($request->all());
-
 
 
     }

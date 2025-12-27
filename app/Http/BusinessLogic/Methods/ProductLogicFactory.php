@@ -49,32 +49,71 @@ class ProductLogicFactory extends BaseLogicFactory
         return new ProductCollection($products);
     }
 
+    public function loadMoreProductsByCategories($categoryId, $offset, $partnerId = null)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $botId = $partnerId ?? $this->bot->id;
+
+        $products = Product::query()
+            ->where("bot_id", $botId);
+
+        if ($categoryId != -1)
+            $products = $products
+                ->whereHas("productCategories", fn($q) => $q->where("id", $categoryId));
+
+        $products =
+            $products->whereNull("in_stop_list_at")
+                ->skip($offset)
+                ->take(8)
+                ->get();
+
+        return $products;
+    }
+
     /**
      * @throws HttpException
      */
     public function listByCategories(array $data = null)
     {
+
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
+        $botId = $data["partner_id"] ?? $this->bot->id;
 
-        $botId = isset($data["partner_id"]) ? $data["partner_id"] : $this->bot->id;
-
+        // Категории с ограничением товаров
         $categories = ProductCategory::query()
-            ->with(["products"])
             ->whereHas("products", function ($q) {
                 $q->whereNull("in_stop_list_at");
             })
-            ->where("bot_id", $botId )
+            ->where("bot_id", $botId)
             ->where("is_active", true)
             ->has("products", ">", 0)
             ->orderBy("order_position", "ASC")
-            ->get();
+            ->with([
+                "products" => function ($q) {
+                    $q->whereNull("in_stop_list_at")
+                        ->limit(8); // <-- ограничение
+                }
+            ])
+            ->get()
+            ->map(function ($category) {
+                $category->total_count = $category->products()
+                    ->whereNull("in_stop_list_at")
+                    ->count(); // <-- общее количество
+                return $category;
+            });
 
-        $withoutCategory = Product::query()
-            ->with(["productCategories"])
+        // Товары без категории
+        $withoutCategoryQuery = Product::query()
             ->where("bot_id", $botId)
             ->has("productCategories", "=", 0)
+            ->whereNull("in_stop_list_at");
+
+        $withoutCategory = $withoutCategoryQuery
+            ->limit(8)
             ->get();
 
         $tmpCategory = [
@@ -84,12 +123,14 @@ class ProductLogicFactory extends BaseLogicFactory
             "title" => "Без категории",
             "bot_id" => $botId,
             "products" => $withoutCategory->toArray(),
-            "count" => count($withoutCategory)
+            "total_count" => $withoutCategoryQuery->count()
         ];
 
         return (object)[
-            "data" => [$tmpCategory, ...($categories->toArray())]
+            "data" => [$tmpCategory, ...$categories->toArray()]
         ];
+
+
     }
 
 
@@ -432,15 +473,14 @@ class ProductLogicFactory extends BaseLogicFactory
             'current_price' => $data["current_price"] ?? 0,
             'variants' => $variants,
 
-            'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true" ,//? Carbon::now() : false,
-            'is_weight_product' => ($data["is_weight_product"] ?? false) == "true" ,
+            'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true",//? Carbon::now() : false,
+            'is_weight_product' => ($data["is_weight_product"] ?? false) == "true",
             'bot_id' => $data["bot_id"] ?? $this->bot->id,
             'weight_config' => is_null($data["weight_config"] ?? null) ?
                 null : json_decode($data["weight_config"] ?? '[]'),
             'dimension' => is_null($data["dimension"] ?? null) ?
                 null : json_decode($data["dimension"] ?? '[]'),
         ];
-
 
 
         if (!is_null($productId)) {

@@ -177,6 +177,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadMoreProductsByCategory(context, payload) {
+
+        let link = `${BASE_PRODUCTS_LINK}-more-by-category`
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method, payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadProductsByCategory(context, payload) {
 
         let link = `${BASE_PRODUCTS_LINK}-by-category`

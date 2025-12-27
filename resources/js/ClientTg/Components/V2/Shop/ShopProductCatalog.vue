@@ -185,8 +185,18 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
 
                                         :item="product"
                                     />
+
+
                                 </div>
 
+                                <div class="col-12">
+                                    <template v-if="cat.total_count > cat.products.length">
+                                        <button
+                                            @click="loadMore(cat.id, cat.products.length)"
+                                            class="btn btn-primary p-3 w-100" type="button">Загрузить еще ({{cat.total_count - cat.products.length}})
+                                        </button>
+                                    </template>
+                                </div>
                             </div>
 
                             <ol
@@ -231,7 +241,7 @@ import {v4 as uuidv4} from "uuid";
 export default {
     data() {
         return {
-
+            selected_partner:null,
             extra_charge: 0,
             shop: 0,
             stories: [],
@@ -256,6 +266,7 @@ export default {
             moneyVariants: [
                 500, 1000, 2000, 5000
             ],
+
             deliveryForm: {
                 name: null,
                 phone: null,
@@ -417,6 +428,7 @@ export default {
     methods: {
         selectPartner(partner) {
 
+            this.selected_partner = partner
             this.extra_charge = partner.extra_charge || 0
 
 
@@ -425,8 +437,8 @@ export default {
             this.categories = []
 
             this.$nextTick(() => {
-                this.loadProducts(0, partner.bot_partner_id)
-                this.loadCollections(0, partner.bot_partner_id)
+                this.loadProducts(0)
+                this.loadCollections(0)
                 this.shop = 1
             })
             this.$preloader.show()
@@ -531,11 +543,11 @@ export default {
             this.loadCollections(index)
         },
 
-        loadCollections(page = 0, partnerId = null) {
+        loadCollections(page = 0) {
             this.load_content = true
             this.load_collection = true
             return this.$store.dispatch("loadGlobalCollections", {
-                partner_id: partnerId,
+                partner_id: this.selected_partner?.bot_partner_id||null,
                 page: page
             }).then((resp) => {
                 this.collections = this.getCollections
@@ -553,7 +565,22 @@ export default {
                 })
             })
         },
-        loadProducts(page = 0, partnerId = null) {
+
+        loadMore(catId, offset) {
+
+            return this.$store.dispatch("loadMoreProductsByCategory", {
+                partner_id: this.selected_partner?.bot_partner_id || null,
+                category_id: catId,
+                offset:offset,
+            }).then((resp) => {
+
+                this.load_content = true
+                this.products.find(p=>p.id === catId).products.push(...resp)
+            }).catch(() => {
+                this.load_content = false
+            })
+        },
+        loadProducts(page = 0) {
             this.tab = 1
 
             let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain) !== null
@@ -561,9 +588,9 @@ export default {
             if (hasProducts)
                 this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain))
 
-
+            this.load_content = false
             return this.$store.dispatch("loadProductsByCategory", {
-                partner_id: partnerId,
+                partner_id: this.selected_partner?.bot_partner_id || null,
                 /*  dataObject: {
                       search: this.search,
                       categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,
