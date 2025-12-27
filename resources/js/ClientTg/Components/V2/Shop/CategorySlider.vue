@@ -47,7 +47,7 @@
                     {{ item.title || 'Не указано' }}
                     <span
                         style="margin-left:10px;"
-                        class="badge bg-primary">{{ item.count || 0 }}</span>
+                        class="badge bg-primary">{{ item.products_count || 0 }}</span>
                 </button>
             </div>
         </div>
