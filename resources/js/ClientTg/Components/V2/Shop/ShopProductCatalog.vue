@@ -188,13 +188,13 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
 
 
                                 </div>
-                                <template v-if="cat.total_count > cat.products.length">
+                                <template v-if="cat.products_count > cat.products.length">
                                     <div class="col-12">
 
                                         <button
                                             @click="loadMore(cat.id, cat.products.length)"
-                                            class="btn btn-primary p-3 w-100" type="button">Загрузить еще
-                                            ({{ cat.total_count - cat.products.length }})
+                                            class="btn btn-outline-light text-primary p-3 my-3 w-100" type="button">Загрузить еще
+                                            ({{ cat.products_count - cat.products.length }})
                                         </button>
 
                                     </div>
@@ -210,16 +210,12 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
                                         />
                                     </template>
                                 </ol>
-                                <template v-if="cat.total_count > cat.products.length">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <button
-                                                @click="loadMore(cat.id, cat.products.length)"
-                                                class="btn btn-primary p-3 w-100" type="button">Загрузить еще
-                                                ({{ cat.total_count - cat.products.length }})
-                                            </button>
-                                        </div>
-                                    </div>
+                                <template v-if="cat.products_count > cat.products.length">
+                                    <button
+                                        @click="loadMore(cat.id, cat.products.length)"
+                                        class="btn btn-outline-light text-primary  p-3 w-100 my-3" type="button">Загрузить еще
+                                        ({{ cat.products_count - cat.products.length }})
+                                    </button>
                                 </template>
                             </template>
                         </template>

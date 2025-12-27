@@ -83,37 +83,35 @@ class ProductLogicFactory extends BaseLogicFactory
 
         $botId = $data["partner_id"] ?? $this->bot->id;
 
-        // Категории с ограничением товаров
         $categories = ProductCategory::query()
-            ->whereHas("products", function ($q) {
-                $q->whereNull("in_stop_list_at");
-            })
             ->where("bot_id", $botId)
             ->where("is_active", true)
-            ->has("products", ">", 0)
+            ->withCount('products')
             ->orderBy("order_position", "ASC")
-            ->with([
-                "products" => function ($q) {
-                    $q->whereNull("in_stop_list_at")
-                        ->limit(8); // <-- ограничение
-                }
-            ])
-            ->get()
-            ->map(function ($category) {
-                $category->total_count = $category->products()
+            ->get();
+
+
+        foreach ($categories as $category) {
+            $category->setRelation(
+                'products',
+                $category->products()
                     ->whereNull("in_stop_list_at")
-                    ->count(); // <-- общее количество
-                return $category;
-            });
+                    ->take(8)
+                    ->offset(0)
+                    ->get()
+            );
+        }
+
+
+
 
         // Товары без категории
-        $withoutCategoryQuery = Product::query()
+        $withoutCategory = Product::query()
             ->where("bot_id", $botId)
             ->has("productCategories", "=", 0)
-            ->whereNull("in_stop_list_at");
-
-        $withoutCategory = $withoutCategoryQuery
-            ->limit(8)
+            ->whereNull("in_stop_list_at")
+            ->take(8)
+            ->offset(0)
             ->get();
 
         $tmpCategory = [
@@ -123,7 +121,7 @@ class ProductLogicFactory extends BaseLogicFactory
             "title" => "Без категории",
             "bot_id" => $botId,
             "products" => $withoutCategory->toArray(),
-            "total_count" => $withoutCategoryQuery->count()
+            "products_count" => $withoutCategory->count()
         ];
 
         return (object)[
