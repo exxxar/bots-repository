@@ -60,10 +60,10 @@ class ProductLogicFactory extends BaseLogicFactory
             ->where("bot_id", $botId);
 
         if ($categoryId != -1)
-            $products = $products
+            $products
                 ->whereHas("productCategories", fn($q) => $q->where("id", $categoryId));
 
-        $products =
+
             $products->whereNull("in_stop_list_at")
                 ->skip($offset)
                 ->take(8)
@@ -87,6 +87,7 @@ class ProductLogicFactory extends BaseLogicFactory
             ->where("bot_id", $botId)
             ->where("is_active", true)
             ->withCount('products')
+            ->has("products", ">", 0)
             ->orderBy("order_position", "ASC")
             ->get();
 
