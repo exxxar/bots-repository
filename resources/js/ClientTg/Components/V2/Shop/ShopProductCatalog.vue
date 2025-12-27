@@ -193,8 +193,15 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
 
                                         <button
                                             @click="loadMore(cat.id, cat.products.length)"
-                                            class="btn btn-outline-light text-primary p-3 my-3 w-100" type="button">Загрузить еще
-                                            ({{ cat.products_count - cat.products.length }})
+                                            class="btn btn-outline-light text-primary p-3 my-3 w-100" type="button">
+                                            <span v-if="!load_content">Загрузить еще
+                                            ({{ cat.products_count - cat.products.length }})</span>
+                                            <span v-else class="d-inline-flex align-items-center">
+                                                Загружаем....
+                                                    <span class="spinner-border" role="status">
+                                                      <span class="visually-hidden">Loading...</span>
+                                                    </span>
+                                            </span>
                                         </button>
 
                                     </div>
@@ -213,8 +220,15 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
                                 <template v-if="cat.products_count > cat.products.length">
                                     <button
                                         @click="loadMore(cat.id, cat.products.length)"
-                                        class="btn btn-outline-light text-primary  p-3 w-100 my-3" type="button">Загрузить еще
-                                        ({{ cat.products_count - cat.products.length }})
+                                        class="btn btn-outline-light text-primary  p-3 w-100 my-3" type="button">
+                                            <span v-if="!load_content">Загрузить еще
+                                            ({{ cat.products_count - cat.products.length }})</span>
+                                        <span v-else class="d-inline-flex align-items-center">
+                                                Загружаем....
+                                                    <span class="spinner-border" role="status">
+                                                      <span class="visually-hidden">Loading...</span>
+                                                    </span>
+                                            </span>
                                     </button>
                                 </template>
                             </template>
@@ -574,14 +588,14 @@ export default {
         },
 
         loadMore(catId, offset) {
-
+            this.load_content = true
             return this.$store.dispatch("loadMoreProductsByCategory", {
                 partner_id: this.selected_partner?.bot_partner_id || null,
                 category_id: catId,
                 offset: offset,
             }).then((resp) => {
 
-                this.load_content = true
+                this.load_content = false
                 this.products.find(p => p.id === catId).products.push(...resp)
             }).catch(() => {
                 this.load_content = false
