@@ -188,29 +188,40 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
 
 
                                 </div>
+                                <template v-if="cat.total_count > cat.products.length">
+                                    <div class="col-12">
 
-                                <div class="col-12">
-                                    <template v-if="cat.total_count > cat.products.length">
                                         <button
                                             @click="loadMore(cat.id, cat.products.length)"
-                                            class="btn btn-primary p-3 w-100" type="button">Загрузить еще ({{cat.total_count - cat.products.length}})
+                                            class="btn btn-primary p-3 w-100" type="button">Загрузить еще
+                                            ({{ cat.total_count - cat.products.length }})
                                         </button>
-                                    </template>
-                                </div>
+
+                                    </div>
+                                </template>
                             </div>
 
-                            <ol
-                                v-else
-                                class="list-group list-group-numbered">
-                                <template v-for="(product, index) in cat.products">
-                                    <ProductListItem
-                                        :item="product"
-                                    />
+                            <template v-else>
+                                <ol
+                                    class="list-group list-group-numbered">
+                                    <template v-for="(product, index) in cat.products">
+                                        <ProductListItem
+                                            :item="product"
+                                        />
+                                    </template>
+                                </ol>
+                                <template v-if="cat.total_count > cat.products.length">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button
+                                                @click="loadMore(cat.id, cat.products.length)"
+                                                class="btn btn-primary p-3 w-100" type="button">Загрузить еще
+                                                ({{ cat.total_count - cat.products.length }})
+                                            </button>
+                                        </div>
+                                    </div>
                                 </template>
-
-                            </ol>
-
-
+                            </template>
                         </template>
                         <PreloaderV1 v-else/>
                     </div>
@@ -241,7 +252,7 @@ import {v4 as uuidv4} from "uuid";
 export default {
     data() {
         return {
-            selected_partner:null,
+            selected_partner: null,
             extra_charge: 0,
             shop: 0,
             stories: [],
@@ -547,7 +558,7 @@ export default {
             this.load_content = true
             this.load_collection = true
             return this.$store.dispatch("loadGlobalCollections", {
-                partner_id: this.selected_partner?.bot_partner_id||null,
+                partner_id: this.selected_partner?.bot_partner_id || null,
                 page: page
             }).then((resp) => {
                 this.collections = this.getCollections
@@ -571,11 +582,11 @@ export default {
             return this.$store.dispatch("loadMoreProductsByCategory", {
                 partner_id: this.selected_partner?.bot_partner_id || null,
                 category_id: catId,
-                offset:offset,
+                offset: offset,
             }).then((resp) => {
 
                 this.load_content = true
-                this.products.find(p=>p.id === catId).products.push(...resp)
+                this.products.find(p => p.id === catId).products.push(...resp)
             }).catch(() => {
                 this.load_content = false
             })
