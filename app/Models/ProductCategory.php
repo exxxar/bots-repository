@@ -35,7 +35,7 @@ class ProductCategory extends Model
         'is_active' => 'boolean',
     ];
 
-    protected $appends = ["count"];
+
 
     public function bot(): BelongsTo
     {
@@ -43,10 +43,7 @@ class ProductCategory extends Model
     }
 
 
-    public function getCountAttribute(){
-        return $this->products()
-            ->count();
-    }
+
 
     public function products(): BelongsToMany
     {

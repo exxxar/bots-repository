@@ -104,7 +104,7 @@
                                 @click="selectCategory(item)"
                             >
                                 {{ item.title || 'Не указано' }}
-                                <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ item.count || 0 }}</span>
+                                <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ item.products_count || 0 }}</span>
                             </button>
                         </div>
 
