@@ -35,18 +35,18 @@ class ProductCategory extends Model
         'is_active' => 'boolean',
     ];
 
-   /* protected $appends = ["count"];*/
+    protected $appends = ["count"];
 
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
     }
 
-/*
+
     public function getCountAttribute(){
         return $this->products()
             ->count();
-    }*/
+    }
 
     public function products(): BelongsToMany
     {
