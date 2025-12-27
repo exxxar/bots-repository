@@ -57,14 +57,15 @@ class ProductLogicFactory extends BaseLogicFactory
         $botId = $partnerId ?? $this->bot->id;
 
         $products = Product::query()
-            ->where("bot_id", $botId);
+            ->where("bot_id", $botId)
+            ->whereNull("in_stop_list_at");
 
-        if ($categoryId != -1)
+     /*   if ($categoryId != -1)
+            $products = $products
+                ->whereHas("productCategories", fn($q) => $q->where("id", $categoryId));*/
+
+        $products =
             $products
-                ->whereHas("productCategories", fn($q) => $q->where("id", $categoryId));
-
-
-            $products->whereNull("in_stop_list_at")
                 ->skip($offset)
                 ->take(8)
                 ->get();
