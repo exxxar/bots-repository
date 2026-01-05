@@ -109,7 +109,7 @@ class FrontPadLogicFactory extends BaseLogicFactory
      */
     public function newOrder(array $data)
     {
-        if (is_null($this->bot) || is_null($this->botUser))
+        if (is_null($this->bot))
             throw new HttpException(404, "Требования функции не выполнены!");
 
         $validator = Validator::make($data, [
@@ -119,25 +119,16 @@ class FrontPadLogicFactory extends BaseLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-        /*
-         *
-         *    "title" => $product->title,
-                "count" => $tmpCount,
-                "price" => $tmpPrice,
-                'frontpad_article' => $product->frontpad_article ?? null,
-                'iiko_article' => $product->iiko_article ?? null,
-         */
+
         $products = array_values(Collection::make($data["products"])
             ->whereNotNull("frontpad_article")
             ->pluck("frontpad_article")->toArray());
 
-        Log::info("products=>" . print_r($products, true));
 
         $productsKol = array_values(Collection::make($data["products"])
             ->whereNotNull("frontpad_article")
             ->pluck("count")->toArray());
 
-        Log::info("products Kol=>" . print_r($productsKol, true));
 
         $frontPad = FrontPad::query()
             ->where("bot_id", $this->bot->id)
@@ -203,12 +194,11 @@ class FrontPadLogicFactory extends BaseLogicFactory
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage(
-                        $this->botUser->telegram_chat_id,
-                        "В данный момент наше заведение закрыто! Попробуйте оформить ваш заказ позже:)"
+                        $this->bot->order_channel,
+                        "Пользователь пытался сделать заказ когда система FrontPad была закрыта."
                     );
             }
         }
-        Log::info("frontpad new order result " . print_r($result->json(), true));
 
         return $result->json();
     }

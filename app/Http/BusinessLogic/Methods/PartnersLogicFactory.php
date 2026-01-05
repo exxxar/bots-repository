@@ -6,6 +6,7 @@ use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\PartnerCollection;
 use App\Http\Resources\PartnerResource;
 use App\Models\AmoCrm;
+use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\Partner;
 use App\Models\ProductCategory;
@@ -305,6 +306,17 @@ class PartnersLogicFactory extends BaseLogicFactory
 
         $this->bot->config = $config;
         $this->bot->save();
+
+        if (!$isActive) {
+            $basket = Basket::query()
+                ->where("bot_id", $this->bot->id)
+                ->get();
+
+            foreach ($basket as $item)
+                $item->delete();
+
+
+        }
 
         return $config["partners"];
     }

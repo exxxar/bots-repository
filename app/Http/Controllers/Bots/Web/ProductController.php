@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Bots\Web;
 
+use App\Enums\CashBackDirectionEnum;
+use App\Events\CashBackEvent;
 use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Classes\Banking\TinkoffBankService;
@@ -10,8 +12,11 @@ use App\Http\Resources\ProductCategoryCollection;
 use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
+use App\Models\BotUser;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -21,6 +26,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProductController extends Controller
 {
+
+
 
     public function sendSBPInvoice(Request $request)
     {
@@ -227,7 +234,7 @@ class ProductController extends Controller
     public function getDeliveryPrice(Request $request): \Illuminate\Http\JsonResponse
     {
 
-        if (is_null($request->bot ?? null) || is_null($request->slug ?? null))
+        if (is_null($request->bot ?? null))
             throw new HttpException(404, "Не все параметры функции заданы!");
 
         $request->validate([
@@ -236,63 +243,92 @@ class ProductController extends Controller
             "building" => "required",
         ]);
 
-        $slug = $request->slug ?? null;
+        $bot = $request->bot ?? null;
 
-        if (is_null($slug))
+        if (is_null($bot))
             return response()->json([
                 "distance" => 0,
-                "price" => 0
+                "price" => 0,
+                "config"=>[]
             ]);
 
-        $price_per_km = (Collection::make($slug->config)
-            ->where("key", "price_per_km")
-            ->first())["value"] ?? 80;
+        $config = $request->bot->config ?? null;
 
-        $min_base_delivery_price = (Collection::make($slug->config)
-            ->where("key", "min_base_delivery_price")
-            ->first())["value"] ?? 100;
+        $partners = \App\Models\Bot::query()
+            ->whereIn('id', function ($q) use ($bot) {
+                $q->select('bot_partner_id')
+                    ->from('baskets')
+                    ->where('bot_id', $bot->id)
+                    ->whereNull('ordered_at');
+            })
+            ->distinct('bot_partner_id')
+            ->get();
 
+        $partners = [...$partners, $bot];
+
+        if (is_null($config))
+            return response()->json([
+                "distance" => 0,
+                "price" => 0,
+                "address" => null,
+                "config"=>[]
+            ], 404);
+
+
+        $sumDistance = 0;
+        $sumPrice = 0;
+
+        $partnerBoxConfig = [];
 
         $city = $this->ensureCityPrefix($request->city ?? "");
         $street = $this->ensureStreetPrefix($request->street ?? "");
-
         $address = "$city, $street, " . ($request->building ?? "");
-
         $geo = BusinessLogic::geo()
-            ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
             ->getCoords([
                 "address" => $address
             ]);
 
+        foreach ($partners as $bot)
+        {
+            $config = $bot->config ?? [];
+            $price_per_km = $config["price_per_km"] ?? 100;
+            $min_base_delivery_price =  $config["min_base_delivery_price"] ?? 100;
 
-        if (($geo->lat ?? 0) > 0 && ($geo->lon ?? 0) > 0) {
-            $tmpDistance = BusinessLogic::geo()
-                ->setBot($request->bot ?? null)
-                ->setSlug($request->slug ?? null)
-                ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
+            $partnerBoxConfig[$bot->bot_domain] = (object)[
+                "id"=>$bot->id,
+                "price"=>0,
+                "title"=>$bot->title ?? $bot->bot_domain ?? '-',
+                "distance"=>0,
+                "address"=>$address
+            ];
 
-            $distance = floatval($tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0);
+            if (($geo->lat ?? 0) > 0 && ($geo->lon ?? 0) > 0) {
+                $tmpDistance = BusinessLogic::geo()
+                    ->setBot($bot)
+                    ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
-            if ($distance > 100)
-                return response()->json([
-                    "distance" => 0,
-                    "price" => 0,
-                    "address" => $address
-                ], 404);
+                $distance = floatval($tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0);
 
-            return response()->json([
-                "distance" => $distance,
-                "price" => round($min_base_delivery_price + $distance * $price_per_km, 2)
-            ]);
+                if ($distance < 100)
+                {
+
+                    $partnerBoxConfig[$bot->bot_domain]->distance = $distance;
+                    $partnerBoxConfig[$bot->bot_domain]->price = round($min_base_delivery_price + $distance * $price_per_km, 2);
+
+                    $sumDistance += $partnerBoxConfig[$bot->bot_domain]->distance;
+                    $sumPrice +=$partnerBoxConfig[$bot->bot_domain]->price;
+                }
+            }
+
+
         }
 
-
         return response()->json([
-            "distance" => 0,
-            "price" => 0,
-            "address" => $address
-        ], 404);
+            "distance" =>$sumDistance,
+            "price" => $sumPrice,
+            "address" => $address,
+            "config"=>$partnerBoxConfig,
+        ]);
     }
 
     /**

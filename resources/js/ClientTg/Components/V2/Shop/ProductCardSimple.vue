@@ -22,9 +22,13 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                     </h6>
 
                     <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
-                        <span>{{ item.current_price || 0 }}₽</span>
-                        <span v-if="!item?.is_weight_product||false">={{ item.current_price * inCart(item.id) }}₽</span>
-                        <span v-else>{{(item.current_price * inCart(item.id)) / (item.weight_config?.step || 100)}}₽</span>
+                        <span v-if="!config.discount_price">{{ currentPrice }}₽</span>
+                        <span v-else> {{ config.discount_price }}₽ <span
+                            class="text-decoration-line-through">{{ item.current_price  || 0 }}₽</span>
+                            (<span class="text-danger fw-bold">-{{ config.discount_amount || 0 }}₽</span>)
+                        </span>
+                        <span v-if="!item?.is_weight_product||false">={{ currentPrice * inCart(item.id) }}₽</span>
+                        <span v-else>{{ (currentPrice * inCart(item.id)) / (item.weight_config?.step || 100) }}₽</span>
                     </h6>
                     <div class="d-flex w-100">
 
@@ -33,7 +37,7 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                                 v-bind:class="{'btn-secondary':!canProductAction}"
                                 :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                 @click="incProductCart"
-                                class="btn btn-sm btn-primary w-100 rounded-3">{{ item.current_price || 0 }}<sup
+                                class="btn btn-sm btn-primary w-100 rounded-3">{{ currentPrice }}<sup
                             class="font-10 opacity-50">.00</sup>₽
                         </button>
 
@@ -85,7 +89,7 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                 <h6
                     v-if="item.delivery_terms"
                     class="d-flex justify-content-between mb-3">
-                    {{item.delivery_terms}}
+                    {{ item.delivery_terms }}
                 </h6>
                 <p v-else class="mb-0">Дополнительных условий доставки нет</p>
 
@@ -99,13 +103,13 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["item","comment"],
+    props: ["item", "comment", "config"],
     data() {
         return {
-            form:{
-                id:null,
-                comment:null,
-                need_comment:false,
+            form: {
+                id: null,
+                comment: null,
+                need_comment: false,
             },
             sending: false,
             is_online: true,
@@ -120,7 +124,7 @@ export default {
             return this.inCart(this.item.id)
         },
         currentPrice() {
-            return this.item.current_price / 100
+            return this.config?.discount_price ? (this.config?.discount_price || 0) : (this.item.current_price || 0)
         },
         oldPrice() {
             return this.item.old_price / 100
@@ -134,7 +138,7 @@ export default {
             this.is_online = false
         });
 
-        if (this.comment){
+        if (this.comment) {
             console.log("COMMENT", this.comment, this.form.need_comment)
             this.form.need_comment = true
             this.form.comment = this.comment
@@ -145,7 +149,7 @@ export default {
         addToCart() {
             this.$cart.add(this.item)
         },
-        addCommentToProduct(){
+        addCommentToProduct() {
             this.sending = true
             this.form.id = this.item.id
             let incResult = this.$store.dispatch("addCommentToProduct", this.form)
@@ -158,7 +162,7 @@ export default {
                     type: 'success'
                 })
 
-                if (this.comment){
+                if (this.comment) {
                     this.form.need_comment = true
                     this.form.comment = this.comment
                 }

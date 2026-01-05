@@ -310,7 +310,7 @@ class IIKOLogicFactory extends BaseLogicFactory
      */
     public function createOrder(array $orderData): mixed
     {
-        if (is_null($this->bot) || is_null($this->botUser)) {
+        if (is_null($this->bot)) {
             throw new HttpException(400, "Условия функции не выполнены!");
         }
 
@@ -386,8 +386,6 @@ class IIKOLogicFactory extends BaseLogicFactory
             ->post("$url/1/order/create", $order);
 
         if ($response->failed()) {
-            Log::warning("iiko order=>".print_r($order, true));
-            Log::warning("iiko status=>".print_r($response->json(), true));
 
             throw new HttpException(
                 $response->status(),
@@ -395,7 +393,7 @@ class IIKOLogicFactory extends BaseLogicFactory
             );
         }
 
-        Log::info("IIKO RESPONSE".print_r($response->json(),true));
+
         return $response->json();
     }
 

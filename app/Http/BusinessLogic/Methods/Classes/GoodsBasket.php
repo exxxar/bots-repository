@@ -17,7 +17,7 @@ trait GoodsBasket
 
     private $tariffCode = null;
 
-    private function gsPrepareFromInfo($order, $discount)
+    private function gsPrepareFromInfo($order, $cashback = 0)
     {
 
         $cash = self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
@@ -33,7 +33,7 @@ trait GoodsBasket
                 $cash,
                 $this->data["money"] ?? 'Не указано',
                 $this->data["info"] ?? 'Не указано',
-                $useCashback ? $discount : "нет",
+                $useCashback ? $cashback : "нет",
 
             );
     }

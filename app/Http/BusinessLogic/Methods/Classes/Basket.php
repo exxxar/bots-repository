@@ -14,6 +14,7 @@ use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
 use App\Models\Order;
+use App\Models\Partner;
 use Carbon\Carbon;
 use CdekSDK2\Exceptions\RequestException;
 use Illuminate\Support\Collection;
@@ -63,7 +64,7 @@ class Basket
         $this->botUser->save();
     }
 
-    private function useCashBackForPayment($discount): void
+    private function useCashBackForPayment($discount, $partnerId = null): void
     {
         $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
 
@@ -71,7 +72,7 @@ class Basket
             return;
 
         $adminBotUser = BotUser::query()
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", $partnerId ?? $this->bot->id)
             ->where("is_admin", true)
             ->orderBy("updated_at", "desc")
             ->first();
@@ -88,144 +89,18 @@ class Basket
 
     }
 
-    private function prepareDiscount($summaryPrice): mixed
+    private function prepareCashbackDiscount($summaryPrice)
     {
-        $promo = isset($this->data["promo"]) ? json_decode($this->data["promo"]) : null;
         $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
 
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
 
-        if (is_null($promo))
-            $promo = (object)[
-                "discount_in_percent" => false,
-                "activate_price" => 0,
-                "discount" => 0,
-                "code" => "не указан"
-            ];
+        return ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0);
 
-        $promoDiscount = $promo->discount_in_percent ?
-            $summaryPrice * ($promo->discount / 100) : $promo->discount;
-
-        $cashbackDiscount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0);
-
-        $discount = $cashbackDiscount +
-            ($summaryPrice >= ($promo->activate_price ?? 0) ? $promoDiscount : 0);
-
-
-        return (object)[
-            "cashback" => $cashbackDiscount,
-            "discount" => $discount,
-            "message" => ($discount > 0 ? "Скидка: $discount руб." : "") .
-                (!is_null($promo->code ?? null) ? " скидка за промокод '$promo->code' составляет $promo->discount " . ($promo->discount_in_percent ? "%" : "руб") . " (уже учтена)" : "")
-        ];
     }
 
-    private function checkWheelOfFortuneAction(): string
-    {
-        $actionPrize = !is_null($this->data["action_prize"] ?? null) ? json_decode($this->data["action_prize"]) : null;
-
-        if (is_null($actionPrize))
-            return "";
-
-
-        /*
-         *  wheel_types: [
-            {
-                key: "text",
-                title: "Приз выдается во время заказа"
-            },
-
-            {
-                key: "product_discount",
-                title: "Скидка на товары, %"
-            },
-            {
-                key: "delivery_discount",
-                title: "Скидка на доставку, %"
-            },
-            {
-                key: "cashback",
-                title: "Начисление кэшбэка, руб"
-            },
-            {
-                key: "effect_product",
-                title: "Скидка на конкретный товар, %"
-            }
-        ],
-         */
-        $selectedPrizeDescription = $actionPrize->prize->description ?? 'Без описания приза';
-        $selectedPrizeWinId = (!is_null($actionPrize->prize->win ?? null) ? json_decode($actionPrize->prize->win) : null)->id ?? null;
-        $playedAt = $actionPrize->prize->played_at ?? null;
-
-        $action = ActionStatus::query()
-            ->find($actionPrize->action_id ?? null);
-
-
-        $prizeText = "🎡Выигрыш в колесе фортуны:\n";
-        if (!is_null($action)) {
-            $tmpData = $action->data ?? [];
-            $processedPrizes = [];
-
-            foreach ($tmpData as $index => $item) {
-                $item = (object)$item;
-                $itemPrizeWinId = (!is_null($item->win ?? null) ? json_decode($item->win) : null)->id ?? null;
-
-                if ($item->description == $selectedPrizeDescription &&
-                    $itemPrizeWinId == $selectedPrizeWinId &&
-                    !is_null($selectedPrizeWinId)) {
-
-                    // Проверяем, не был ли этот приз уже обработан
-                    $prizeKey = $selectedPrizeDescription . '_' . $selectedPrizeWinId;
-                    if (in_array($prizeKey, $processedPrizes)) {
-                        continue; // Если приз уже есть, пропускаем
-                    }
-                    $processedPrizes[] = $prizeKey; // Добавляем в обработанные
-
-                    $tmpData[$index]["taked_at"] = Carbon::now();
-                    $itemPrizeType = $tmpData[$index]["type"] ?? "text";
-                    $itemPrizeEffectedValue = $tmpData[$index]["effect_value"] ?? 0;
-                    $itemPrizeEffectedProduct = $tmpData[$index]["effect_product"] ?? null;
-
-                    switch ($itemPrizeType) {
-                        default:
-                        case "text":
-                            $prizeText .= "<em><b>" . ($item->description ?? '-') . "</b></em> - ручной режим выдачи\n\n";
-                            break;
-                        case "effect_product":
-                        case "delivery_discount":
-                        case "product_discount":
-                            $prizeText .= "<em><b>" . ($item->description ?? '-') . "</b></em> - уже учтено (автоматически)\n\n";
-                            break;
-                        case "cashback":
-                            $adminBotUser = BotUser::query()
-                                ->where("bot_id", $this->bot->id)
-                                ->where("is_admin", true)
-                                ->first();
-
-                            $userId = $this->botUser->user_id;
-
-                            if (!is_null($adminBotUser))
-                                event(new CashBackEvent(
-                                    (int)$this->bot->id,
-                                    (int)$userId,
-                                    (int)$adminBotUser->user_id,
-                                    ((float)$itemPrizeEffectedValue ?? 0),
-                                    "Начисление баллов за колесо фортуны",
-                                    CashBackDirectionEnum::Crediting
-                                ));
-                            break;
-                    }
-                }
-            }
-
-            $action->data = $tmpData;
-            $action->save();
-        }
-
-        return $prizeText;
-    }
 
     private function sendPaidReceiptToChannel($order, $message)
     {
@@ -309,11 +184,8 @@ class Basket
         $deliveryPrice = $this->data["delivery_price"] ?? 0;
         $distance = $this->data["distance"] ?? 0;
         $paymentType = $this->data["payment_type"] ?? 4;
-
-
-        $productMessage = (!$needPickup ? "#заказдоставка\n" : "#заказсамовывоз\n");
-        $productMessage .= $this->checkWheelOfFortuneAction();
-        $productMessage .= $this->fsPrepareDisabilities();
+        $deliveryDetails = json_decode($this->data["delivery_details"] ?? '[]');
+        $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
 
         $basket = \App\Models\Basket::query()
             ->where("bot_id", $this->bot->id)
@@ -321,11 +193,14 @@ class Basket
             ->whereNull("ordered_at")
             ->get();
 
+
         $summaryPrice = 0;
         $summaryCount = 0;
+        $summaryDiscount = 0;
 
         $tmpOrderProductInfo = [];
 
+        $partnerProductBox = [];
         $ids = [];
 
         foreach ($basket as $item) {
@@ -333,15 +208,42 @@ class Basket
             $product = $item->product ?? null;
             $collection = $item->collection ?? null;
 
+            $partner = $item->partner ?? $this->bot;
+
+            $deliveryDetails = (array)$deliveryDetails;
+
+
+            $partnerProductBox[$partner->bot_domain]["order_channel"] = $partner->order_channel ?? null;
+            $partnerProductBox[$partner->bot_domain]["id"] = $partner->id;
+            $partnerProductBox[$partner->bot_domain]["title"] = $partner->title ?? $partner->bot_domain ?? 'Без названия';
+            $partnerProductBox[$partner->bot_domain]["message"] = "";
+            $partnerProductBox[$partner->bot_domain]["extra_charge"] = (Partner::query()
+                ->where("bot_id", $item->bot_id)
+                ->where("bot_partner_id", $item->bot_partner_id)
+                ->first())->extra_charge ?? 0;
+            $partnerProductBox[$partner->bot_domain]["summary_price"] = 0;
+            $partnerProductBox[$partner->bot_domain]["summary_count"] = 0;
+            $partnerProductBox[$partner->bot_domain]["summary_discount"] = 0;
+            $partnerProductBox[$partner->bot_domain]["delivery_price"] = $deliveryDetails[$partner->bot_domain]->price ?? 0;
+            $partnerProductBox[$partner->bot_domain]["distance"] = $deliveryDetails[$partner->bot_domain]->distance ?? 0;
+            $partnerProductBox[$partner->bot_domain]["address"] = $deliveryDetails[$partner->bot_domain]->address ?? '-';
+            $partnerProductBox[$partner->bot_domain]["thread"] = $partner->topics["delivery"] ??
+                $this->bot->topics["delivery"] ?? null;
+
+
             $price = 0;
 
+            $extraCharge = $partnerProductBox[$partner->bot_domain]["extra_charge"];
             $isWeightProduct = false;
             if (!is_null($product)) {
 
                 $isWeightProduct = $product->is_weight_product ?? false;
 
                 $count = $item->count;
-                $price = ($product->current_price ?? 0) * $count;
+
+                $currentPrice = $item->params["discount_price"] ?? $product->current_price;
+
+                $price = (($currentPrice ?? 0) * (1 + $extraCharge / 100)) * $count;
 
                 $unitOfMeasure = "ед.";
 
@@ -349,13 +251,11 @@ class Basket
                     $weightConfig = (object)$product->weight_config ?? null;
                     $step = $weightConfig->step ?? 100;
 
-                    $price = ($product->current_price * $count) / $step;
+                    $price = ((($currentPrice ?? 0) * (1 + $extraCharge / 100)) * $count) / $step;
 
                     $unitOfMeasure = "гр.";
                 }
-
-
-                $productMessage .= is_null($comment) ?
+                $tmpMessage = is_null($comment) ?
                     sprintf("💎%s x%s $unitOfMeasure=%s руб.\n",
                         $product->title,
                         $item->count,
@@ -368,6 +268,9 @@ class Basket
                         $comment
                     );
 
+                $partnerProductBox[$partner->bot_domain]["message"] .= $tmpMessage;
+                // $productMessage .= $tmpMessage;
+
                 $tmpOrderProductInfo[] = (object)[
                     "title" => $product->title,
                     "count" => $item->count,
@@ -379,7 +282,10 @@ class Basket
 
                 if (!in_array($product->id, $ids)) {
                     $ids[] = $product->id;
+
+                    $partnerProductBox[$partner->bot_domain]["products"][] = $tmpOrderProductInfo;
                 }
+
 
             }
 
@@ -410,38 +316,52 @@ class Basket
                         'iiko_article' => $product->iiko_article ?? null,
                     ];
 
-                    $price += $product->current_price ?? 0;
+                    $price += ($product->current_price ?? 0) * (1 + $extraCharge / 100);
+
 
                     if (!in_array($product->id, $ids)) {
                         $ids[] = $product->id;
+
+                        $partnerProductBox[$partner->bot_domain]["products"][] = $tmpOrderProductInfo;
                     }
 
                 }
 
                 $price = $price * $item->count;
-                $productMessage .= sprintf("💎Коллекция `%s` x%s=%s руб.:\n%s\n",
+
+                // $partnerProductBox[$partner->bot_domain]["summary_price"] += $price;
+                //  $partnerProductBox[$partner->bot_domain]["summary_count"] += $item->count;
+
+                $tmpMessage = sprintf("💎Коллекция `%s` x%s=%s руб.:\n%s\n",
                     ($collection->title),
                     $item->count,
                     $price,
                     $collectionTitles,
                 );
 
+                //$productMessage .= $tmpMessage;
+                $partnerProductBox[$partner->bot_domain]["message"] .= $tmpMessage;
 
             }
 
-            $summaryCount += $isWeightProduct? 1: $item->count;
+            $partnerProductBox[$partner->bot_domain]["summary_count"] += $isWeightProduct ? 1 : $item->count;
+            $partnerProductBox[$partner->bot_domain]["summary_price"] += $price;
+            $partnerProductBox[$partner->bot_domain]["summary_discount"] += $item->params["discount_amount"] ?? 0;
+
+            $summaryDiscount += $item->params["discount_amount"] ?? 0;
+            $summaryCount += $isWeightProduct ? 1 : $item->count;
             $summaryPrice += $price;
 
-            $item->ordered_at = Carbon::now();
+            $item->ordered_at = env("APP_DEBUG") ? null : Carbon::now();
             $item->save();
+
         }
 
         $deliveryNote = $this->fsPrepareDeliveryNote();
+        $cashback = $this->prepareCashbackDiscount($summaryPrice);
+        $this->useCashBackForPayment($cashback ?? 0);
 
-        $discountItem = $this->prepareDiscount($summaryPrice);
-
-        $this->useCashBackForPayment($discountItem->cashback ?? 0);
-
+        //todo: $deliveryPrice для всех partnerBox и суммарная
 
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
@@ -456,7 +376,7 @@ class Basket
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count' => $summaryCount,
-            'summary_price' => $summaryPrice - $discountItem->discount,
+            'summary_price' => $summaryPrice - $cashback,
             'delivery_price' => $deliveryPrice,
             'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
@@ -473,58 +393,52 @@ class Basket
             'payed_at' => Carbon::now(),
         ]);
 
-        $this->fsPrepareFrontPad($order, $tmpOrderProductInfo);
-        $iiko = $this->bot->iiko ?? null;
-
-        if (!is_null($iiko))
-        {
-            try {
-                BusinessLogic::iiko()
-                    ->setBotUser($this->botUser)
-                    ->setBot($this->bot)
-                    ->createOrder([
-                        "guests_count" => $this->data["persons"] ?? 1,
-                        "order_id"=>$order->id,
-                        "customer" => [
-                            "name" => $this->data["name"],
-                            "surname" => $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? "",
-                            "comment" => $deliveryNote,
-                            "gender" => $this->botUser->sex ? "Male" : "Female",
-                            "type" => "regular",
-                            "phone" => $this->data["phone"],
-                        ],
-                        "items" => $basket,
-                    ]);
-
-            }catch (\Exception $exception){
-                Log::info("error iiko =>".$exception->getMessage());
-            }
-        }
-
         BusinessLogic::review()
             ->setBotUser($this->botUser)
             ->setBot($this->bot)
             ->prepareReviews($order->id, $ids);
 
 
-        $productMessage .= $discountItem->message ?? '';
+        foreach ($partnerProductBox as $key => $box) {
+            $box = (object)$box;
 
-        $productMessage .= "\nИтого: <b>" . ($summaryPrice - $discountItem->discount) . " руб.</b> за <b>$summaryCount ед.</b>";
+            $botInBox = Bot::query()->find($box->id);
+
+            $this->fsPrepareFrontPad($order, $tmpOrderProductInfo, $box->id);
+
+            $iiko = $botInBox->iiko ?? null;
+
+            if (!is_null($iiko)) {
+                try {
+                    BusinessLogic::iiko()
+                        ->setBot($this->bot)
+                        ->createOrder([
+                            "guests_count" => $this->data["persons"] ?? 1,
+                            "order_id" => $order->id,
+                            "customer" => [
+                                "name" => $this->data["name"],
+                                "surname" => $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? "",
+                                "comment" => $deliveryNote,
+                                "gender" => $this->botUser->sex ? "Male" : "Female",
+                                "type" => "regular",
+                                "phone" => $this->data["phone"],
+                            ],
+                            "items" => $basket,
+                        ]);
+                } catch (\Exception $exception) {
+                    Log::info("error iiko =>" . $exception->getMessage());
+                }
+            }
 
 
-        $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
+        }
 
         $needBill = false;
 
-        $productMessage .= $this->fsPrepareUserInfo($order, $discountItem->discount ?? 0);
+        //todo: сделать ссылку в модели бота
 
-        if ($deliveryPrice > 0) {
-            $productMessage .= "\nДоставка: <b>" . $deliveryPrice . " руб.</b> за $distance км";
-            $productMessage .= "\nИтого c доставкой: <b>" . (($summaryPrice + $deliveryPrice) - $discountItem->discount) . " руб.</b>";
-        }
-
-        $productMessage .= "\n\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
-
+        $linkUserId = $this->botUser->telegram_chat_id;
+        $summaryProductMessage = "";
         switch ($paymentType) {
             case 0:
                 BusinessLogic::payment()
@@ -543,35 +457,122 @@ class Basket
                 break;
             case 4:
 
-                $urlObject = BusinessLogic::payment()
-                    ->setBot($this->bot)
-                    ->setBotUser($this->botUser)
-                    ->sbpForShop($order, $productMessage);
-
-
-                $botDomain = $this->bot->bot_domain;
-                $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $userId);
-
                 $keyboard = [
                     [
-                        ["text" => "✉Работа с заказом пользователя", "url" => $link]
+                        ["text" => "✉Работа с заказом пользователя", "url" =>
+                            "https://t.me/" . ($this->bot->bot_domain ?? '-') . "?start=" . base64_encode("003" . $linkUserId)
+                        ]
                     ]
                 ];
 
-                $thread = $this->bot->topics["delivery"] ?? null;
+
+                ini_set('max_execution_time', 300);
+                $summaryProductMessage = "<b>⚠️⚠️⚠️Сводный заказ⚠️⚠️⚠️</b>\n"
+                    . (!$needPickup ? "#заказдоставка\n" : "#заказсамовывоз\n");
+
+                $recountDeliveryPrice = $deliveryPrice == 0;
+
+                foreach ($partnerProductBox as $key => $box) {
+                    $box = (object)$partnerProductBox[$key];
+
+                    $resultMessage = "Заказ из <b>$box->title</b>\n";
+                    $resultMessage .= (!$needPickup ? "#заказдоставка\n" : "#заказсамовывоз\n");
+                  //  $resultMessage .= $this->checkWheelOfFortuneAction();
+                    $resultMessage .= $this->fsPrepareDisabilities();
+
+                    $resultMessage .= $box->message;
+
+                    $localSummaryCount = $partnerProductBox[$key]["summary_count"] ?? 0;
+                    $localSummaryPrice = $partnerProductBox[$key]["summary_price"] ?? 0;
+                    $localSummaryDiscount = $partnerProductBox[$key]["summary_discount"] ?? 0;
 
 
-                BotMethods::bot()
-                    ->whereBot($this->bot)
-                    ->sendInlineKeyboard(
-                        $this->bot->order_channel ?? null,
-                        "$productMessage\n",
-                        $keyboard,
-                        $thread
-                    );
+                    $resultMessage .= $this->fsPrepareUserInfo($order, $cashback);
+
+                    if ($localSummaryDiscount > 0)
+                        $resultMessage .= "\nСкидка по товарам: <b>-$localSummaryDiscount руб.</b>";
+                    $resultMessage .= "\nИтого: <b>" . $localSummaryPrice . " руб.</b> за <b>$localSummaryCount ед.</b>\n";
+
+                    $summaryProductMessage .= "\n<b>﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌</b>\n" .
+                        "Заказ из <b>$box->title</b>\n"
+                        . $box->message
+                        . "\nСкидка по товарам: <b>-$localSummaryDiscount руб.</b>"
+                        . "\nИтого: <b>" . $localSummaryPrice . " руб.</b> за <b>$localSummaryCount ед.</b>";
 
 
-                return $urlObject;
+                    if ($box->delivery_price > 0) {
+                        $localDeliveryPrice = $box->delivery_price;
+                        $localDistance = $box->distance;
+                        $resultMessage .= "\nДоставка: <b>" . $localDeliveryPrice . " руб.</b> за $localDistance км";
+                        $resultMessage .= "\nИтого c доставкой: <b>" . ($localSummaryPrice + $localDeliveryPrice) . " руб.</b>";
+
+                        $summaryProductMessage .= "\nДоставка: <b>" . $localDeliveryPrice . " руб.</b> за $localDistance км";
+                        $summaryProductMessage .= "\nИтого c доставкой: <b>" . ($localSummaryPrice + $localDeliveryPrice) . " руб.</b>";
+
+                        if ($recountDeliveryPrice)
+                            $deliveryPrice += $localDeliveryPrice;
+                    }
+
+
+                    BotMethods::bot()
+                        ->whereDomain($key)
+                        ->sendInlineKeyboard(
+                            $box->order_channel ?? null,
+                            $resultMessage . "\n",
+                            $box->id == $this->bot->id ? $keyboard : [],
+                            $box->thread
+                        );
+                    sleep(1);
+                }
+
+                $summaryProductMessage .= "\n<b>﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌</b>\n";
+
+
+                if ($useCashback)
+                    $summaryProductMessage .= "Использованы баллы: <b>-$cashback</b> руб.\n";
+                $summaryProductMessage .= "Итоговая скидка: <b>-$summaryDiscount</b> руб.\n";
+                $summaryProductMessage .= "Итого по всем: <b>" . ($summaryPrice - $cashback) . " руб.</b> за <b>$summaryCount ед.</b>\n";
+
+
+                if (count($deliveryDetails) > 0) {
+
+                    if ($deliveryPrice > 0) {
+                        $summaryProductMessage .= "Доставка: <b>" . $deliveryPrice . " руб.</b> за $distance км\n";
+                        $summaryProductMessage .= "Итого c доставкой: <b>" . (($summaryPrice - $cashback) + $deliveryPrice) . " руб.</b>\n";
+                    } else
+                        $summaryProductMessage .= "Доставка: <b>рассчитывается курьером</b>\n";
+
+                }
+
+
+                $summaryProductMessage .= $this->fsPrepareUserInfo($order, $cashback);
+               // $summaryProductMessage .= $this->checkWheelOfFortuneAction();
+                $summaryProductMessage .= $this->fsPrepareDisabilities();
+                $summaryProductMessage .= "\n\n<a href='tg://user?id=$linkUserId'>Перейти к чату с пользователем</a>\n";
+
+
+
+                if ($this->bot->config["partners"]["is_active"] ?? false)
+                {
+                    sleep(1);
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendInlineKeyboard(
+                            $this->bot->order_channel ?? null,
+                            $summaryProductMessage,
+                            $keyboard,
+                            $this->bot->topics["delivery"] ?? null
+                        );
+                }
+
+                $order->delivery_price = $deliveryPrice;
+                $order->save();
+
+                return BusinessLogic::payment()
+                    ->setBot($this->bot)
+                    ->setBotUser($this->botUser)
+                    ->sbpForShop($order, $summaryProductMessage);
+
 
         }
 
@@ -582,18 +583,23 @@ class Basket
                 summaryPrice: $summaryPrice,
                 summaryCount: $summaryCount,
                 tmpOrderProductInfo: $tmpOrderProductInfo,
-                discount: $discountItem->discount
+                cashback: $cashback
             );
 
 
-        $this->sendPaidReceiptToChannel($order, $productMessage);
+        $this->sendPaidReceiptToChannel($order, $summaryProductMessage);
 
         $paymentInfo = sprintf($this->bot->config["payment_info"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
-            $userId);
+            $linkUserId);
 
-        $productMessage .= "\n\n$paymentInfo";
+        $summaryProductMessage .= "\n\n$paymentInfo";
 
-        $this->fsSendResult($productMessage);
+        $this->fsSendResult($summaryProductMessage);
+
+        $config = $this->botUser->config ?? [];
+        $config["current_promocodes"] = [];
+        $this->botUser->config = $config;
+        $this->botUser->save();
 
         return null;
 
@@ -613,7 +619,7 @@ class Basket
             throw new HttpException(400, "Не указан адрес пункта выдачи");
 
         $productMessage = "#заказдоставка\n";
-        $productMessage .= $this->checkWheelOfFortuneAction();
+   //     $productMessage .= $this->checkWheelOfFortuneAction();
 
         $basket = \App\Models\Basket::query()
             ->where("bot_id", $this->bot->id)
@@ -728,8 +734,8 @@ class Basket
             $summaryPrice += $price;
         }
 
-        $discountItem = $this->prepareDiscount($summaryPrice);
-        $this->useCashBackForPayment($discountItem->discount ?? 0);
+        $cashback = $this->prepareCashbackDiscount($summaryPrice);
+        $this->useCashBackForPayment($cashback ?? 0);
 
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
@@ -741,7 +747,7 @@ class Basket
                 ]
             ],
             'product_count' => $summaryCount,
-            'summary_price' => $summaryPrice - $discountItem->discount,
+            'summary_price' => $summaryPrice - $cashback,
             'delivery_price' => $deliverySum ?? 0,
             'delivery_range' => 0,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
@@ -841,8 +847,8 @@ class Basket
             return $url;
         }
 
-        $productMessage .= $this->gsPrepareFromInfo($order, $discountItem->discount ?? 0);
-       // $tmpUserLink = "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
+        $productMessage .= $this->gsPrepareFromInfo($order, $cashback);
+        // $tmpUserLink = "\n<a href='tg://user?id=$userId'>Перейти к чату с пользователем</a>\n";
 
         //$productMessage .= $tmpUserLink;
         //  $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);

@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic\Methods\Classes;
 
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
+use App\Models\Bot;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -36,7 +37,7 @@ trait FoodBasket
         return $tmpMessage;
     }
 
-    private function fsPrepareUserInfo($order, $discount)
+    private function fsPrepareUserInfo($order, $cashback = 0)
     {
 
 
@@ -51,7 +52,7 @@ trait FoodBasket
 
 
         return !$needPickup ?
-            sprintf("\n\n".($whenReady ? "🟢" : "🟡") . " Заказ №: %s\nИдентификатор клиента: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nЦена доставки: %s руб.\nДистанция: %s км\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: <b>%s</b>\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
+            sprintf("\n".($whenReady ? "🟢" : "🟡") . " Заказ №: <b>%s</b>\nИдентификатор клиента: <b>%s</b>\n\n<b>Данные для доставки:</b>\nФ.И.О.: <b>%s</b>\nНомер телефона: <b>%s</b>\nАдрес: <b>%s</b>\nЦена доставки: %s руб.\nДистанция: %s км\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: <b>%s</b>\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: <b>%s</b> чел.\n",
                 $order->id ?? '-',
                 $this->botUser->telegram_chat_id ?? '-',
                 $this->data["name"] ?? 'Не указано',
@@ -64,11 +65,11 @@ trait FoodBasket
                 $cash,
                 $this->data["money"] ?? 'Не указано',
                 $this->data["info"] ?? 'Не указано',
-                $useCashback ? $discount : "нет",
+                $useCashback ? $cashback : "нет",
                 ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')),
                 $persons
             ) :
-            sprintf("\n\n".($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: <b>%s</b>\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nЗаберу в:%s\nЧисло персон: %s\n",
+            sprintf("\n".($whenReady ? "🟢" : "🟡") . "Заказ №: <b>%s</b>\nИдентификатор: <b>%s</b>\n\n<b>Данные для самовывоза:</b>\nФ.И.О.: <b>%s</b>\nНомер телефона: <b>%s</b>\nТип оплаты: <b>%s</b>\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nЗаберу в:%s\nЧисло персон: <b>%s</b> чел.\n",
                 $order->id ?? '-',
                 $this->botUser->telegram_chat_id,
                 $this->data["name"] ?? 'Не указано',
@@ -76,7 +77,7 @@ trait FoodBasket
                 $cash,
                 $this->data["money"] ?? 'Не указано',
                 $this->data["info"] ?? 'Не указано',
-                $useCashback ? $discount : "нет",
+                $useCashback ? $cashback : "нет",
                 ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')),
                 $persons
             );
@@ -168,7 +169,7 @@ trait FoodBasket
         return "$city, $street, " . ($this->data["building"] ?? "");
     }
 
-    private function fsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discount)
+    private function fsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $cashback = 0)
     {
 
 
@@ -203,7 +204,7 @@ trait FoodBasket
             "money" => ($this->data["money"] ?? 'Не указано'),
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
             "totalPrice" => $summaryPrice,
-            "discount" => $useCashback ? $discount : 0,
+            "discount" => $useCashback ? $cashback : 0,
             "totalCount" => $summaryCount,
             "distance" => $distance ?? 0, //$distance
             "deliveryPrice" => $deliveryPrice ?? 0, //цена доставки
@@ -228,10 +229,12 @@ trait FoodBasket
             );
     }
 
-    private function fsPrepareFrontPad($order, $tmpOrderProductInfo)
+    private function fsPrepareFrontPad($order, $tmpOrderProductInfo, $partnerId = null)
     {
+        $bot =   is_null($partnerId) ? $this->bot : Bot::query()->find($partnerId);
+        $frontPad = $bot->frontPad ?? null;
 
-        if (is_null($this->bot->frontPad ?? null))
+        if (is_null($frontPad))
             return;
 
         $persons = $this->data["persons"] ?? 1;
@@ -240,8 +243,7 @@ trait FoodBasket
         $cash =  self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
 
         BusinessLogic::frontPad()
-            ->setBot($this->bot)
-            ->setBotUser($this->botUser)
+            ->setBot($bot)
             ->newOrder([
                 "products" => $tmpOrderProductInfo,
                 "phone" => $order->receiver_phone,
@@ -258,6 +260,7 @@ trait FoodBasket
                 'cash' => $cash
             ]);
     }
+
 
     private function fsPrepareDeliveryNote(): string
     {

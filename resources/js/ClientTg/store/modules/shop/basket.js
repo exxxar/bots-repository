@@ -48,11 +48,14 @@ const getters = {
 
         let sum = 0;
 
-        console.log(state.basket_items)
+
         state.basket_items.forEach((item) => {
             if (item.product) {
+
+                let currentPrice  =item.params?.discount_price ? (item.params?.discount_price || 0) : (item.product.current_price || 0)
+
                 let count =  item.product?.is_weight_product || false ? 1 : item.count
-                let price = item.product?.is_weight_product || false ? (item.product.current_price * item.count) / (item.product.weight_config?.step || 100): item.product.current_price
+                let price = item.product?.is_weight_product || false ? (currentPrice * item.count) / (item.product.weight_config?.step || 100): currentPrice
                 sum += price * count
             }
 
@@ -70,6 +73,19 @@ const getters = {
 }
 
 const actions = {
+    async useWheelOfFortunePrize(context, payload = {form: null}) {
+        let link = `${BASE_BASKET_LINK}/use-wheel-of-fortune-prize`
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method, payload.form)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response?.data?.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
     async createCheckoutLink(context, payload = {deliveryForm: null}) {
         let link = `${BASE_BASKET_LINK}/checkout-link`
         let method = 'POST'

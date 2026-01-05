@@ -28,13 +28,9 @@ class GeoLogicFactory extends BaseLogicFactory
     public function getCoords(array $data): object
     {
 
-        if (is_null($this->bot) || is_null($this->slug))
-            throw new HttpException(403, "Не выполнены условия функции");
-
         $validator = Validator::make($data, [
             "address" => "required",
         ]);
-
 
         if ($validator->fails())
             throw new ValidationException($validator);
@@ -57,6 +53,7 @@ class GeoLogicFactory extends BaseLogicFactory
         $response = file_get_contents($url . '?' . http_build_query($params), false, $context);
         $data = json_decode($response, true);
 
+
         if (empty($data)) {
             return (object)[
                 'lat' => 0,
@@ -77,13 +74,10 @@ class GeoLogicFactory extends BaseLogicFactory
      */
     public function getDistance($latA, $longA): float
     {
-        if (is_null($this->bot) || is_null($this->slug))
+        if (is_null($this->bot))
             throw new HttpException(403, "Не выполнены условия функции");
 
-
-        $shopCoords = (Collection::make($this->slug->config)
-            ->where("key", "shop_coords")
-            ->first())["value"] ?? null;
+        $shopCoords = $this->bot->config["shop_coords"] ?? null;
 
         $coords = explode(',', $shopCoords);
 

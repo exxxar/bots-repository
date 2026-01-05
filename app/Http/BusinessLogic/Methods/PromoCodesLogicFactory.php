@@ -26,6 +26,7 @@ use App\Models\AppointmentReview;
 use App\Models\AppointmentService;
 use App\Models\Bot;
 use App\Models\BotUser;
+use App\Models\Partner;
 use App\Models\PromoCode;
 use App\Models\Quiz;
 use App\Models\QuizAnswer;
@@ -65,49 +66,126 @@ class PromoCodesLogicFactory extends BaseLogicFactory
         $bot = $this->bot;
         $botUser = $this->botUser;
 
-        $code = PromoCode::query()
-            ->with(["botUsers"])
+        $botPartnersIds = Partner::query()
             ->where("bot_id", $bot->id)
-            ->where("code", $data["code"])
-            ->first();
+            ->get()
+            ->pluck("bot_partner_id");
 
-        if (is_null($code))
+        $codes = PromoCode::query()
+            ->with(["botUsers"])
+            ->whereIn("bot_id", [...$botPartnersIds->toArray(), $bot->id])
+            ->where("code", $data["code"])
+            ->where("is_active", true)
+            ->where('available_to', '>', Carbon::now())
+            ->get();
+
+
+        if (count($codes) == 0)
             throw new HttpException(404, "Промокод не найден");
 
-        if (!$code->is_active)
-            throw new HttpException(403, "Промокод не активен");
+        $basket = \App\Models\Basket::query()
+            ->with('product')
+            ->where('bot_id', $this->bot->id)
+            ->where('bot_user_id', $this->botUser->id)
+            ->whereNull('ordered_at')
+            ->get();
 
-        if (!is_null($code->available_to)) {
-            if (Carbon::parse($code->available_to)->timestamp < Carbon::now()->timestamp)
-                throw new HttpException(400, "Срок действия промокода закончен!");
-        }
+        $basketPrice = $basket->sum(function ($basket) {
+            return $basket->count * ($basket->product->current_price ?? 0);
+        });
 
-        $isPromoActivated = !is_null($code->botUsers()
-            ->where("bot_user_id", $botUser->id)
-            ->first() ?? null);
+        $activatePrice = $codes->max('activate_price');
 
-        if ($isPromoActivated)
-            throw new HttpException(400, "Промокод уже активирован");
+        if ($basketPrice < $activatePrice)
+            throw new HttpException(404, "Недостаточно общей суммы покупок для активации промокода");
 
-        $maxActivations = $code->max_activation_count ?? 0;
-        $currentActivations = $code->botUsers()->count() ?? 0;
+        $errors = [];
 
-        if ($currentActivations >= $maxActivations) {
-            $code->is_active = false;
+        $summaryDiscount = 0; //23456788999
+
+        foreach ($codes as $code) {
+            $isPromoActivated = !is_null($code->botUsers()
+                ->where("bot_user_id", $botUser->id)
+                ->first() ?? null);
+
+            if ($isPromoActivated) {
+                $errors[] = "Промокод уже активирован";
+                continue;
+            }
+
+            $maxActivations = $code->max_activation_count ?? 0;
+            $currentActivations = $code->botUsers()->count() ?? 0;
+
+            if ($currentActivations >= $maxActivations) {
+                $code->is_active = false;
+                $code->save();
+
+                $errors[] = "Закончились попытки активации промокода!";
+                continue;
+            }
+
+            $code->botUsers()->attach([$botUser->id]);
             $code->save();
-            throw new HttpException(400, "Закончились попытки активации промокода!");
+
+
+            if ($code->cashback_amount == 0) {
+                $errors[] = "Данный промокод нельзя активировать как скидочный!";
+                continue;
+            }
+
+            $config = $this->botUser->config ?? [];
+            $config["current_promocodes"][] = $code->id;
+            $this->botUser->config = $config;
+            $this->botUser->save();
+
+            $basketByPartner = \App\Models\Basket::query()
+                ->with('product')
+                ->where('bot_id', $this->bot->id)
+                ->where('bot_user_id', $this->botUser->id);
+
+            if ($code->bot_id != $this->bot->id)
+                $basketByPartner = $basketByPartner
+                    ->where('bot_partner_id', $code->bot_id);
+
+            $basketByPartner = $basketByPartner
+                ->whereNull('ordered_at')
+                ->get();
+
+
+            if (count($basketByPartner) > 0)
+                foreach ($basketByPartner as $item) {
+
+                    $inPercent = $code->config["discount_in_percent"] ?? false;
+                    $val = $code->cashback_amount;
+
+                    $params = $item->params ?? [];
+
+                    $params["discount_price"] = $inPercent ?
+                        $item->product->current_price - ($item->product->current_price * ($val / 100)) :
+                        $item->product->current_price - $val;
+
+                    $params["discount_amount"] = $inPercent ? ($item->product->current_price * ($val / 100)) : $val;
+
+                    $summaryDiscount += $params["discount_amount"] * $item->count;
+
+                    $params["discount_object"] = (object)[
+                        "code_id" => $code->id,
+                        "amount" => $code->cashback_amount,
+                        "in_percent" => $inPercent,
+                    ];
+
+                    $item->params = $params;
+                    $item->save();
+
+                }
+
+
         }
 
-        $code->botUsers()->attach([$botUser->id]);
-        $code->save();
-
-        if ($code->cashback_amount == 0)
-            throw new HttpException(400, "Данный промокод нельзя активировать как скидочный!");
 
         return (object)[
-            "discount" => $code->cashback_amount,
-            "discount_in_percent" => $code->config["discount_in_percent"] ?? false,
-            "activate_price" => $code->activate_price,
+            "messages" => $errors,
+            "discount" => $summaryDiscount
         ];
     }
 

@@ -15,8 +15,6 @@ import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductReco
 
 
         <template v-if="tab===0">
-
-
             <CartProductList
                 v-on:select-prize="selectPrize"
                 v-on:change-tab="changeTab"
@@ -130,12 +128,7 @@ export default {
                 name: null,
                 phone: null,
                 address: null,
-                promo: {
-                    discount_in_percent: false,
-                    discount: 0,
-                    activate_price: 0,
-                    code: null,
-                },
+                discount: 0,
                 cdek: {
                     tariff: null,
                     to: {
@@ -168,6 +161,7 @@ export default {
                 image_info: null,
                 delivery_price: 0,
                 distance: 0,
+                delivery_details:[],
                 allergy: null,
                 action_prize: null,
             },

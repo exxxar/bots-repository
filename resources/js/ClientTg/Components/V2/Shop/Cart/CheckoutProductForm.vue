@@ -234,6 +234,7 @@ export default {
 
                 this.deliveryForm.delivery_price = resp.price || 0
                 this.deliveryForm.distance = resp.distance || 0
+                this.deliveryForm.delivery_details = resp.config || []
 
                 this.need_request_delivery_price = true
                 this.delivery_price_request_step = 1

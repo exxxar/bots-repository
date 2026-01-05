@@ -140,6 +140,7 @@ Route::prefix("bot-client")
                 Route::post('/', "loadProductsInBasket");
                 Route::post('/checkout', "checkout");
                 Route::post('/checkout-link', "checkoutLink");
+                Route::post("/use-wheel-of-fortune-prize","useWheelOfFortunePrize");
                 Route::post('/increment/{id}', "incrementItem");
                 Route::post('/decrement/{id}', "decrementItem");
                 Route::post('/inc-product', "incProductInBasket");
@@ -354,8 +355,7 @@ Route::prefix("bot-client")
                             ->middleware(["tgAuth.admin"]);
                         Route::post("/get-order-by-id", [ProductController::class, "loadOrderById"]);
                         Route::post("/add-cashback-to-order", [ProductController::class, "addCashBackToOrder"])->middleware(["tgAuth.admin"]);
-                        Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"])
-                            ->middleware(["slug"]);
+                        Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"]);
                     });
 
                 Route::prefix("reviews")
@@ -376,6 +376,8 @@ Route::prefix("bot-client")
                 Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"])
                     ->middleware(["slug"]);
                 Route::post("/checkout", [ProductController::class, "checkout"]);
+
+
 
                 Route::post("/checkout-instruction", [ProductController::class, "checkoutInstruction"])
                     ->middleware(["slug"]);

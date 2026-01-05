@@ -36,10 +36,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                             class="mb-0 d-flex justify-content-between">
                             Промокод
 
-                            <strong v-if="deliveryForm.promo?.discount>0"
-                                    class="fw-bold">{{ deliveryForm.promo?.discount }}
-                                <span v-if="deliveryForm.promo?.discount_in_percent">%</span>
-                                <span v-else>₽</span>
+                            <strong v-if="deliveryForm?.discount>0"
+                                    class="fw-bold">{{ deliveryForm.discount }} ₽
                             </strong>
                             <strong
                                 v-else
@@ -64,12 +62,14 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                         </li>
 
                         <li class="list-group-item" v-if="!deliveryForm.need_pickup">
-                            <p class="mb-0 d-flex justify-content-between">Цена доставки
+                            <p
+                                class="mb-0 d-flex justify-content-between">Цена доставки
                                 <template v-if="settings.need_automatic_delivery_request">
                                 <span
-                                    class="d-flex justify-content-end"
-                                    v-if="deliveryForm.delivery_price>0">{{ deliveryForm.delivery_price }}
-                                    <sup>.00</sup>₽ <span class="text-primary underline fw-bold cursor-pointer"
+                                    data-bs-toggle="modal" data-bs-target="#delivery-price-modal"
+                                    class="d-flex justify-content-end text-decoration-underline"
+                                    v-if="deliveryForm.delivery_price>0">{{ deliveryForm.delivery_price }}₽
+                                    <span class="text-primary underline fw-bold cursor-pointer"
                                                           @click="recalcDeliveryPrice">(пересчитать)</span></span>
                                     <span v-else>не рассчитана</span>
                                 </template>
@@ -131,7 +131,11 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                         </li>
                     </template>
 
-
+                    <li class="list-group-item" v-if="deliveryForm?.discount">
+                        <p class="mb-0 d-flex justify-content-between">Величина скидки
+                            <strong class="fw-bold">{{ deliveryForm?.discount }} ₽</strong>
+                        </p>
+                    </li>
                     <li class="list-group-item">
                         <p class="mb-0 d-flex justify-content-between">Итого, цена
                             <strong class="fw-bold">{{ finallyPrice }} ₽</strong>
@@ -144,7 +148,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
         </div>
 
         <p v-if="settings.delivery_price_text" v-html="settings.delivery_price_text"></p>
-        <p v-if="settings.min_price">Минимальная цена заказа <strong class="fw-bold">{{ settings.min_price || 0 }}
+        <p v-if="(settings.min_price||0)>cartTotalPrice">Минимальная цена заказа <strong
+            class="fw-bold">{{ settings.min_price || 0 }}
             руб</strong></p>
 
         <!-- Modal -->
@@ -158,20 +163,9 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                         <PromoCodeForm
                             v-on:callback="activateDiscount"></PromoCodeForm>
 
-                        <p class="fst-italic" v-if="deliveryForm?.promo.activate_price > 0">
-                            <span class="fw-bold text-primary">Внимание!</span> Скидка за промокод доступна только если
-                            сумма заказа больше чем
-                            <span class="fw-bold text-primary">{{ deliveryForm.promo?.activate_price }}₽</span>, а также
-                            данная
-                            скидка не распространяется на цену доставки!
-                        </p>
-                        <h6 v-if="deliveryForm.promo?.discount>0"
+                        <h6 v-if="deliveryForm.discount>0"
                             class="text-center py-3 border-primary border rounded-2">Скидка за промокод <strong
-                            class="fw-bold">{{ deliveryForm.promo?.discount }}
-                            <span v-if="deliveryForm.promo?.discount_in_percent">%</span>
-                            <span v-else>₽</span>
-                        </strong>
-
+                            class="fw-bold">{{ deliveryForm.discount }} ₽</strong>
                         </h6>
 
                     </div>
@@ -217,6 +211,59 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                     </div>
 
 
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="delivery-price-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Детали расчета цены доставки</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <h6 class="fw-bold">Цена доставки формируется из</h6>
+                            <ul class="list-group my-3 list-group-flush">
+                                <li class="list-group-item" v-for="item in Object.keys(deliveryForm.delivery_details)">
+                                    <div class="d-flex justify-content-between p-2">
+                                        <span class="fw-bold">{{ deliveryForm.delivery_details[item].title }}</span>
+                                        <span>
+                                             <span
+                                                 class="badge bg-primary mx-2">{{
+                                                     deliveryForm.delivery_details[item].distance
+                                                 }} км</span>
+                                             <span
+                                                 class="badge bg-primary">{{
+                                                     deliveryForm.delivery_details[item].price
+                                                 }} руб.</span>
+                                        </span>
+                                    </div>
+                                </li>
+
+                            </ul>
+                            <h6 class="fw-bold d-flex justify-content-between">
+                                Общее расстояние
+                                <span class="badge bg-primary">{{ deliveryForm.distance }} км</span>
+                            </h6>
+                            <h6 class="fw-bold d-flex justify-content-between">
+                                Общая сумма за доставку
+                                <span class="badge bg-primary">{{ deliveryForm.price }} руб.</span>
+                            </h6>
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary p-3 w-100"
+                                data-bs-dismiss="modal">Закрыть
+                        </button>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -270,20 +317,14 @@ export default {
         },
 
         finallyPrice() {
-            let isPercentDiscount = this.deliveryForm?.promo.discount_in_percent || false
-            let discountValue = this.deliveryForm?.promo.discount || 0
-            let activationDiscountPrice = this.deliveryForm?.promo.activate_price || 1
-
             let price = !this.deliveryForm?.use_cashback ?
-                Math.max(activationDiscountPrice, this.cartTotalPrice) :
-                Math.max(activationDiscountPrice, this.cartTotalPrice - cashbackLimit())
+                this.cartTotalPrice :
+                this.cartTotalPrice - cashbackLimit()
 
-            let computedPriceWithDiscount = isPercentDiscount ? price * ((100 - discountValue) / 100) : price - discountValue;
+            let deliveryPrice = this.settings.need_automatic_delivery_request ?
+                (this.deliveryForm.cdek.tariff?.delivery_sum || 0) + (this.deliveryForm.delivery_price || 0) : 0;
 
-            let deliveryCdekPrice = this.settings.need_automatic_delivery_request ? (this.deliveryForm.cdek.tariff?.delivery_sum || 0) + (this.deliveryForm.delivery_price || 0) : 0;
-
-            return (computedPriceWithDiscount >= activationDiscountPrice ?
-                computedPriceWithDiscount : price) + deliveryCdekPrice
+            return price + deliveryPrice
         },
 
 
@@ -299,11 +340,7 @@ export default {
             this.$emit("calc-delivery-price")
         },
         activateDiscount(item) {
-            this.deliveryForm.promo.discount_in_percent = item.discount_in_percent || false
-            this.deliveryForm.promo.discount = item.discount || 0
-
-            this.deliveryForm.promo.activate_price = item.activate_price || 0
-            this.deliveryForm.promo.code = item.code || null
+            this.deliveryForm.discount = item.discount || 0
         },
         decPersons() {
             this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;

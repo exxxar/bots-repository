@@ -77,7 +77,7 @@ class ReviewLogicFactory extends BaseLogicFactory
     public function prepareReviews($orderId, $productsIds = []): void
     {
 
-        if (is_null($this->bot) || is_null($this->botUser))
+        if (is_null($this->bot))
             throw new HttpException(404, "Условия функции не выполнены!");
 
         $this->store([
