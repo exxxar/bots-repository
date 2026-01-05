@@ -24,17 +24,17 @@
                     </li>
                     <li class="list-group-item">
                         <p class="mb-0 d-flex justify-content-between">Оплата бонусами
-                            <strong v-if="modelValue.use_cashback">{{ cashbackLimit }} ₽</strong>
+                            <strong v-if="modelValue?.use_cashback">{{ cashbackLimit }} ₽</strong>
                             <strong v-else>-</strong>
                         </p>
                     </li>
 
-                    <li class="list-group-item" v-if="modelValue.promo.discount>0">
+                    <li class="list-group-item" v-if="modelValue.discount>0">
                         <p class="mb-2 text-justify">
                             <strong class="fw-bold">Внимание!</strong> Не распространяется на цену доставки!
                         </p>
                         <p class="mb-0 d-flex justify-content-between">Промокод
-                            <strong>{{ modelValue.promo.discount }} ₽</strong>
+                            <strong>{{ modelValue.discount }} ₽</strong>
 
                         </p>
                     </li>
@@ -158,7 +158,7 @@ export default {
             return window.currentBot.settings || null
         },
         finallyPrice() {
-            return !this.modelValue.use_cashback ?
+            return !this.modelValue?.use_cashback ?
                 Math.max(1, (this.cartTotalPrice -
                     (this.cartTotalPrice >= this.modelValue.promo.activate_price ?
                         this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price :

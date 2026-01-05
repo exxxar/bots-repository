@@ -192,8 +192,8 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
                             <div class="col-6 text-right"><h4>{{ cartTotalCount }} шт.</h4></div>
                             <div class="col-6 text-left"><h4>Суммарно, цена</h4></div>
                             <div class="col-6 text-right">
-                                <h4 v-if="!deliveryForm.use_cashback">{{ cartTotalPrice }}<sup>.00</sup>₽</h4>
-                                <h4 v-if="deliveryForm.use_cashback">{{ cartTotalPrice - cashbackLimit }}<sup>.00</sup>₽
+                                <h4 v-if="!deliveryForm?.use_cashback">{{ cartTotalPrice }}<sup>.00</sup>₽</h4>
+                                <h4 v-if="deliveryForm?.use_cashback">{{ cartTotalPrice - cashbackLimit }}<sup>.00</sup>₽
                                 </h4>
 
                             </div>
@@ -211,11 +211,11 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
                                            class="ios-input" id="toggle-use_cashback">
                                     <label class="custom-control-label"
                                            style="padding-left:30px;"
-                                           v-if="deliveryForm.use_cashback"
+                                           v-if="deliveryForm?.use_cashback"
                                            for="toggle-use_cashback"></label>
                                     <label class="custom-control-label "
                                            style="padding-left:30px;"
-                                           v-if="!deliveryForm.use_cashback"
+                                           v-if="!deliveryForm?.use_cashback"
                                            for="toggle-use_cashback"></label>
                                     <i class="fa-solid fa-hand-holding-heart font-11 color-white" style="left:8px;"></i>
                                     <i class="fa-solid fa-hand-holding-heart font-11 color-white"
@@ -223,9 +223,9 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
 
                                 </div>
                             </div>
-                            <div class="col-6 text-left" v-if="deliveryForm.use_cashback"><h4>Доступно для списания</h4>
+                            <div class="col-6 text-left" v-if="deliveryForm?.use_cashback"><h4>Доступно для списания</h4>
                             </div>
-                            <div class="col-6 text-right" v-if="deliveryForm.use_cashback"><h4>{{ cashbackLimit }}₽</h4>
+                            <div class="col-6 text-right" v-if="deliveryForm?.use_cashback"><h4>{{ cashbackLimit }}₽</h4>
                             </div>
 
                         </div>
@@ -509,7 +509,7 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
                         <p v-if="settings.min_price">Минимальная цена заказа {{ settings.min_price || 0 }} руб</p>
                         <button
                             type="submit"
-                            :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)"
+                            :disabled="spent_time_counter>0||(!deliveryForm?.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)"
                             class="btn btn-full btn-sm rounded-l bg-highlight font-800 text-uppercase w-100 mb-2">
 
                             <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>

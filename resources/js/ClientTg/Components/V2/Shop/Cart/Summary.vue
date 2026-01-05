@@ -24,7 +24,7 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                     </li>
                     <li class="list-group-item" v-if="deliveryForm?.use_cashback">
                         <p class="mb-0 d-flex justify-content-between">Оплата бонусами
-                            <strong v-if="deliveryForm.use_cashback">{{ cashbackLimit }} ₽</strong>
+                            <strong v-if="deliveryForm?.use_cashback">{{ cashbackLimit }} ₽</strong>
                             <strong v-else>-</strong>
                         </p>
                     </li>

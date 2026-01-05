@@ -60,8 +60,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
         <h6 class="opacity-75">Бонусы <small>(нажми для использования)</small></h6>
 
         <div class="card my-3"
-             v-bind:class="{'text-bg-primary':deliveryForm.use_cashback}"
-             @click="deliveryForm.use_cashback=!deliveryForm.use_cashback">
+             v-bind:class="{'text-bg-primary':deliveryForm?.use_cashback}"
+             @click="deliveryForm.use_cashback=!deliveryForm?.use_cashback">
             <div
                 class="card-body">
                 <p class="d-flex justify-content-between mb-0">
