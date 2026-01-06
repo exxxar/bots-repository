@@ -402,7 +402,10 @@ export default {
 
         this.loaded_cashback = false
         this.$store.dispatch("loadSelf").then(() => {
-            window.self = this.getSelf
+
+            this.$nextTick(()=>{
+                window.self = this.getSelf
+            })
             this.cashback = this.getSelf.cashBack?.amount || 0
             this.loaded_cashback = true
         })

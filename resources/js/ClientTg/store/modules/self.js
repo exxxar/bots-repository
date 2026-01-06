@@ -9,6 +9,7 @@ let state = {
 
 const getters = {
     getSelf: state => state.self || null,
+    getFavoriteProducts:  state => state.self.config?.favorites || []
 }
 
 const actions = {

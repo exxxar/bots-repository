@@ -131,17 +131,22 @@ export default {
     props: ["item", "displayType", "collectionMode", "canSelect"],
     data() {
         return {
+
             sending: false,
             is_online: true,
         }
     },
+
     computed: {
-        ...mapGetters(['inCart', 'getReviews', 'getReviewsPaginateObject']),
+        ...mapGetters(['inCart', 'getReviews', 'getReviewsPaginateObject','getSelf','getFavoriteProducts']),
         currentPrice() {
             return this.item.current_price / 100
         },
         checkInCart() {
             return this.inCart(this.item.id)
+        },
+        favorites() {
+            return this.getFavoriteProducts;
         },
         canProductAction() {
             return this.is_online && !this.sending
@@ -149,14 +154,10 @@ export default {
         currentBot() {
             return window.currentBot
         },
-        self() {
-            return window.self || null
-        },
         inFav() {
-            if (!this.self.config?.favorites)
+            if (this.favorites.length===0)
                 return false
-            return this.self
-                .config.favorites?.indexOf(this.item.id) !== -1
+            return this.favorites.indexOf(this.item.id) !== -1
         },
     },
     mounted() {
