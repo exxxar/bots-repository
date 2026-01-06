@@ -40,7 +40,7 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
                         <i class="fa-solid fa-heart"></i>
                         <span style="font-size:10px;">Избранное</span>
                         <span class="cart-marker"
-                              style="padding:0px 5px;"
+                              style="padding:0px 5px;right:20px;"
                               v-if="favCount>0">
                             {{ favCount }}
                         </span>
@@ -131,7 +131,9 @@ export default {
         },
 
         favCount() {
-            return this.getSelf.config?.favorites?.length || this.favorites.length || 0
+            if (!this.getSelf?.config?.favorites)
+                return 0
+            return this.getSelf?.config?.favorites?.length || this.favorites.length || 0
         },
         canBay() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
