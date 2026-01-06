@@ -320,7 +320,6 @@ class BotSlugLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Не все параметры функции заданы!");
 
 
-        $slug = BotMenuSlug::query()->find($this->slug->id);
 
 
         $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
@@ -353,7 +352,8 @@ class BotSlugLogicFactory extends BaseLogicFactory
 
         }
 
-        if (!is_null($slug)) {
+        if (!is_null($this->slug)) {
+            $slug = BotMenuSlug::query()->find($this->slug->id);
             $tmp = $slug->config ?? [];
             $slug->config = [];
             $slug->save();
