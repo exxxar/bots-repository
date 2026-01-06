@@ -4,10 +4,10 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
 </script>
 
 <template>
-    <div class="p-2" v-if="bot">
+    <template v-if="bot">
 
         <!-- Список выбранных столиков -->
-        <div class="p-2" v-if="sortedSelectedTables.length>0">
+        <div v-if="sortedSelectedTables.length>0">
 
             <template v-if="self.is_admin">
                 <AdminReservations></AdminReservations>
@@ -83,7 +83,7 @@ import AdminReservations from "@/ClientTg/Components/V2/Admin/Shop/Tables/AdminR
         </p>
 
 
-    </div>
+    </template>
 
     <nav
         v-if="my_bookings.length>0"

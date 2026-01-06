@@ -1,7 +1,7 @@
 <template>
 
     <!-- Кнопка-триггер модального окна -->
-    <button type="button" class="btn-info btn w-100 p-3 mb-2" data-bs-toggle="modal"
+    <button type="button" class="btn-info btn w-100 p-3 my-2" data-bs-toggle="modal"
             data-bs-target="#admin-booking-modal">
         <i class="fa-solid fa-calendar"></i>
          Выгрузить брони

@@ -1,80 +1,124 @@
 <script setup>
 import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog.vue";
 import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
+
+import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBookingPlanner.vue";
 </script>
 <template>
 
-
-    <ShopProductCatalog
-        v-if="settings"
-        :settings="settings">
-        <template #navigation>
-            <nav
-                class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0 "
-                style="border-radius:10px 10px 0px 0px;z-index:999!important;">
-                <div class="btn-group w-100" role="group" aria-label="Basic example">
-                    <button type="button"
-                            data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu"
-                            class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                        <i class="fa-solid fa-bars"></i>
-                        <span style="font-size:10px;">Меню</span>
-                    </button>
-                    <button
-                        @click="goToBooking"
-                        type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                        <i class="fa-solid fa-calendar-check"></i>
-                        <span style="font-size:10px;">Бронь</span>
-                    </button>
-                    <button
-                        @click="goToCart"
-                        type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span style="font-size:10px;">Корзина</span>
-                        <span class="cart-marker" v-if="cartTotalCount>0">
+    <template v-if="tab==='shop'">
+        <ShopProductCatalog
+            v-if="settings"
+            :settings="settings">
+            <template #navigation>
+                <nav
+                    class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0 "
+                    style="border-radius:10px 10px 0px 0px;z-index:999!important;">
+                    <div class="btn-group w-100" role="group" aria-label="Basic example">
+                        <button type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu"
+                                class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                            <i class="fa-solid fa-bars"></i>
+                            <span style="font-size:10px;">Меню</span>
+                        </button>
+                        <button
+                            @click="goToBooking"
+                            type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span style="font-size:10px;">Бронь</span>
+                        </button>
+                        <button
+                            @click="goToCart"
+                            type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span style="font-size:10px;">Корзина</span>
+                            <span class="cart-marker" v-if="cartTotalCount>0">
                             {{ cartTotalPrice || 0 }}₽
                         </span>
-                    </button>
-                    <button
-                        @click="loadFavProducts"
-                        type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                        <i class="fa-solid fa-heart"></i>
-                        <span style="font-size:10px;">Избранное</span>
-                        <span class="cart-marker"
-                              style="padding:0px 5px;right:20px;"
-                              v-if="favCount>0">
+                        </button>
+                        <button
+                            @click="loadFavProducts"
+                            type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                            <i class="fa-solid fa-heart"></i>
+                            <span style="font-size:10px;">Избранное</span>
+                            <span class="cart-marker"
+                                  style="padding:0px 5px;right:20px;"
+                                  v-if="favCount>0">
                             {{ favCount }}
                         </span>
 
-                    </button>
+                        </button>
+                    </div>
+
+                </nav>
+
+            </template>
+        </ShopProductCatalog>
+    </template>
+
+    <template v-if="tab==='booking'">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <TableBookingPlanner></TableBookingPlanner>
+
                 </div>
+            </div>
+        </div>
 
-            </nav>
-            <!--            <nav
+    </template>
 
-                            class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0"
-                            style="border-radius:10px 10px 0px 0px;z-index:999!important;">
-                            <button
-                                v-if="canBay"
-                                @click="goToCart"
-                                style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                                class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between ">
+    <nav
+        class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0 "
+        style="border-radius:10px 10px 0px 0px;z-index:999!important;">
+        <div class="btn-group w-100" role="group" aria-label="Basic example">
+            <button type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu"
+                    class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                <i class="fa-solid fa-bars"></i>
+                <span style="font-size:10px;">Меню</span>
+            </button>
+            <template v-if="tab==='shop'">
+                <button
+                    @click="tab='booking'"
+                    type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span style="font-size:10px;">Бронь</span>
+                </button>
+            </template>
+            <template v-if="tab==='booking'">
+                <button
+                    @click="tab='shop'"
+                    type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                    <i class="fa-solid fa-shop"></i>
+                    <span style="font-size:10px;">Магазин</span>
+                </button>
+            </template>
+            <button
+                @click="goToCart"
+                type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span style="font-size:10px;">Корзина</span>
+                <span class="cart-marker" v-if="cartTotalCount>0">
+                            {{ cartTotalPrice || 0 }}₽
+                        </span>
+            </button>
+            <button
+                @click="loadFavProducts"
+                type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                <i class="fa-solid fa-heart"></i>
+                <span style="font-size:10px;">Избранное</span>
+                <span class="cart-marker"
+                      style="padding:0px 5px;right:20px;"
+                      v-if="favCount>0">
+                            {{ favCount }}
+                        </span>
 
-                        <span class="d-block" style="position:relative;"><i class="fa-solid fa-cart-shopping mr-2">
-                        </i><sup class="bg-white text-primary sup-badge" v-if="cartTotalCount>0">{{ cartTotalCount }}</sup>Корзина </span>
-                                <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>
-                            </button>
-                            <p
-                                v-else
-                                style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                                data-bs-toggle="modal" data-bs-target="#schedule-list-display"
-                                class="btn btn-secondary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between "
-                            >
-                                В данный момент покупки недоступны
-                            </p>
-                        </nav>-->
-        </template>
-    </ShopProductCatalog>
+            </button>
+        </div>
 
+    </nav>
 
     <!-- Modal -->
     <div class="modal fade" id="fav-product-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -114,6 +158,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+            tab:'shop',
             settings: null,
             favorites_products: [],
         }
