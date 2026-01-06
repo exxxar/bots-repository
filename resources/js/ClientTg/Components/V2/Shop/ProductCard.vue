@@ -10,9 +10,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
             class="img-container">
             <img
-                @click="showProductDetails"
                 class="rounded-3"
-                v-if="(item.images||[]).length>0"
+
                 v-lazy="item.images[0]">
             <div class="controls">
                 <div class="top d-flex justify-content-between w-100 align-items-center">
@@ -40,6 +39,9 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                 </div>
 
             </div>
+            <div
+                @click="showProductDetails"
+                class="click-zone"></div>
         </div>
 
         <div class="card-body px-0">
@@ -47,7 +49,9 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                 v-if="item.old_price>0"
                 style="margin-right: 10px;"
                 class="text-primary text-center">Акция</p>
-            <p class="text-center mb-2" style="font-size: 10px;">{{ item.title.slice(0, 50) }} <span
+            <p
+                @click="showProductDetails"
+                class="text-center mb-2" style="font-size: 10px;">{{ item.title.slice(0, 50) }} <span
                 v-if="item.title.length>50">...</span></p>
 
 
@@ -345,5 +349,14 @@ export default {
         border-radius: 5px;
         font-size: 10px;
     }
+}
+
+.click-zone {
+    height: 80%;
+    width: 100%;
+    position: absolute;
+    z-index: 3;
+    top: 30px;
+    left: 0;
 }
 </style>
