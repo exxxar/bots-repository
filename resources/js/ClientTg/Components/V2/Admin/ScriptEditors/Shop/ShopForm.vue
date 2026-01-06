@@ -399,22 +399,25 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
         </ul>
 
 
-        <div class="divider my-3">Кнопка связи с менеджером</div>
+        <template v-if="form.manager">
+            <div class="divider my-3">Кнопка связи с менеджером</div>
 
-        <div class="form-floating mb-2">
-            <input type="text"
-                   @blur="normalizeTelegramLink"
-                   v-model="form.manager.link"
-                   class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Полная ссылка на менеджера</label>
-        </div>
+            <div class="form-floating mb-2">
+                <input type="text"
+                       @blur="normalizeTelegramLink"
+                       v-model="form.manager.link"
+                       class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput">Полная ссылка на менеджера</label>
+            </div>
 
-        <div class="form-floating mb-2">
-            <input type="text"
-                   v-model="form.manager.title"
-                   class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Текст на кнопке</label>
-        </div>
+            <div class="form-floating mb-2">
+                <input type="text"
+                       v-model="form.manager.title"
+                       class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput">Текст на кнопке</label>
+            </div>
+        </template>
+
 
     </div>
 
@@ -590,6 +593,9 @@ export default {
     },
     methods: {
         normalizeTelegramLink() {
+
+            if (!this.form.manager)
+                return;
             // Убираем пробелы по краям
             let  input = this.form.manager?.link || '';
 
