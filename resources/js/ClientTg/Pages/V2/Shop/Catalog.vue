@@ -79,21 +79,23 @@ import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBook
                 <i class="fa-solid fa-bars"></i>
                 <span style="font-size:10px;">Меню</span>
             </button>
-            <template v-if="tab==='shop'">
-                <button
-                    @click="tab='booking'"
-                    type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                    <i class="fa-solid fa-calendar-check"></i>
-                    <span style="font-size:10px;">Бронь</span>
-                </button>
-            </template>
-            <template v-if="tab==='booking'">
-                <button
-                    @click="tab='shop'"
-                    type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                    <i class="fa-solid fa-shop"></i>
-                    <span style="font-size:10px;">Магазин</span>
-                </button>
+            <template v-if="bot.settings.can_use_booking">
+                <template v-if="tab==='shop'">
+                    <button
+                        @click="tab='booking'"
+                        type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span style="font-size:10px;">Бронь</span>
+                    </button>
+                </template>
+                <template v-if="tab==='booking'">
+                    <button
+                        @click="tab='shop'"
+                        type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                        <i class="fa-solid fa-shop"></i>
+                        <span style="font-size:10px;">Магазин</span>
+                    </button>
+                </template>
             </template>
             <button
                 @click="goToCart"
@@ -158,7 +160,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            tab:'shop',
+            tab: 'shop',
             settings: null,
             favorites_products: [],
         }
@@ -175,14 +177,14 @@ export default {
         bot() {
             return window.currentBot
         },
-        favorites(){
-          return this.getFavoriteProducts
+        favorites() {
+            return this.getFavoriteProducts
         },
-        self(){
-          return window.self || null
+        self() {
+            return window.self || null
         },
         favCount() {
-            if (this.favorites.length===0)
+            if (this.favorites.length === 0)
                 return 0
             return this.favorites.length
         },
