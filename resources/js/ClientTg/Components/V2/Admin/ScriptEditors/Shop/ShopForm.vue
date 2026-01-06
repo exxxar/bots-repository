@@ -587,7 +587,15 @@ export default {
 
         this.loaded_params = false
         this.$nextTick(() => {
-            this.form = this.modelValue
+
+            Object.keys(this.modelValue).forEach(key => {
+                if (key in this.form) {
+                    this.form[key] = this.modelValue[key];
+                }
+            });
+
+          //  this.form = this.modelValue
+
             this.loaded_params = true
         })
     },
