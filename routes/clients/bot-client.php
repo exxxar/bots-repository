@@ -373,8 +373,7 @@ Route::prefix("bot-client")
                 Route::post("/products", [ProductController::class, "index"]);
                 Route::post("/products-by-category", [ProductController::class, "listByCategories"]);
                 Route::post("/products-more-by-category", [ProductController::class, "loadMoreProductsByCategories"]);
-                Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"])
-                    ->middleware(["slug"]);
+                Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"]);
                 Route::post("/checkout", [ProductController::class, "checkout"]);
 
 
