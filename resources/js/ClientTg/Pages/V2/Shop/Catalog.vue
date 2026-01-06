@@ -40,7 +40,7 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
                         <i class="fa-solid fa-heart"></i>
                         <span style="font-size:10px;">Избранное</span>
                         <span class="cart-marker"
-                              style="padding:0px 5px;right:20px;"
+                              style="padding:0px 5px;"
                               v-if="favCount>0">
                             {{ favCount }}
                         </span>
