@@ -130,7 +130,7 @@ export default {
             return window.currentBot
         },
         favCount(){
-          return window.self.config.favorites?.length || 0
+          return window.self.config?.favorites?.length || 0
         },
         canBay() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
