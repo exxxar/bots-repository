@@ -138,7 +138,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['inCart', 'getReviews', 'getReviewsPaginateObject','getSelf','getFavoriteProducts']),
+        ...mapGetters(['inCart', 'getReviews', 'getReviewsPaginateObject', 'getSelf', 'getFavoriteProducts']),
         currentPrice() {
             return this.item.current_price / 100
         },
@@ -155,7 +155,7 @@ export default {
             return window.currentBot
         },
         inFav() {
-            if (this.favorites.length===0)
+            if (this.favorites.length === 0)
                 return false
             return this.favorites.indexOf(this.item.id) !== -1
         },
@@ -178,17 +178,6 @@ export default {
             this.$router.push({name: 'ProductV2', params: {productId: this.item.id}})
         },
         addToFavorite() {
-            const fav = window.self.config?.favorites || []
-
-            let index = fav.findIndex(f => f === this.item.id)
-
-            if (index !== -1)
-                fav.splice(index, 1)
-            else
-                fav.push(this.item.id)
-
-            window.self.config.favorites = fav
-
             this.$store.dispatch("toggleProductInFavorites", {
                 form: {
                     id: this.item.id
@@ -205,6 +194,22 @@ export default {
             }).catch(() => {
 
             })
+
+            const fav = window.self.config?.favorites || []
+
+            let index = fav.findIndex(f => f === this.item.id)
+
+            if (index !== -1)
+                fav.splice(index, 1)
+            else
+                fav.push(this.item.id)
+
+            if (window.self.config == null)
+                window.self.config = {
+                    favorites: fav
+                }
+            else
+                window.self.config.favorites = fav
         },
         incProductCart() {
             this.sending = true
