@@ -86,10 +86,10 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
                 </div>
                 <div class="modal-body">
                     <div
-                        v-if="favorites.length>0"
+                        v-if="favorites_products.length>0"
                         class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
                         <div class="col"
-                             v-for="(product, index) in favorites">
+                             v-for="(product, index) in favorites_products">
 
                             <ProductCard
                                 :item="product"
@@ -115,7 +115,7 @@ export default {
     data() {
         return {
             settings: null,
-            favorites: [],
+            favorites_products: [],
         }
     },
     computed: {
@@ -123,19 +123,23 @@ export default {
             'inCart',
             'cartProducts',
             'cartTotalCount',
+            'getFavoriteProducts',
             'cartTotalPrice',
             'getSelf']),
 
         bot() {
             return window.currentBot
         },
+        favorites(){
+          return this.getFavoriteProducts
+        },
         self(){
           return window.self || null
         },
         favCount() {
-            if (!this.self.config?.favorites)
+            if (this.favorites.length===0)
                 return 0
-            return this.self.config?.favorites?.length || this.favorites.length || 0
+            return this.favorites.length
         },
         canBay() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
@@ -189,7 +193,7 @@ export default {
                 modalInstance.show()
 
             this.$store.dispatch("getFavList").then((resp) => {
-                this.favorites = resp.data || []
+                this.favorites_products = resp.data || []
 
             }).catch(() => {
 
