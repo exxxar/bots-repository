@@ -316,15 +316,11 @@ class BotSlugLogicFactory extends BaseLogicFactory
      */
     public function updateScriptParams(array $data): BotSecurityResource
     {
-        if (is_null($this->bot) || is_null($this->slug))
+        if (is_null($this->bot))
             throw new HttpException(404, "Не все параметры функции заданы!");
 
 
         $slug = BotMenuSlug::query()->find($this->slug->id);
-
-
-        if (is_null($slug))
-            throw new HttpException(404, "Команда не найдена!");
 
 
         $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
@@ -357,8 +353,13 @@ class BotSlugLogicFactory extends BaseLogicFactory
 
         }
 
-        $tmp = $slug->config ?? [];
-        $tmp = $this->validateConfig($tmp);
+        if (!is_null($slug)) {
+            $tmp = $slug->config ?? [];
+            $slug->config = [];
+            $slug->save();
+        }
+
+        $tmp = $this->validateConfig($tmp ?? []);
         $data = $this->validateConfig($data);
 
         foreach (array_keys($data) as $key) {
@@ -367,8 +368,7 @@ class BotSlugLogicFactory extends BaseLogicFactory
 
 
         $this->setConfig($tmp);
-        $slug->config = [];
-        $slug->save();
+
 
         return new BotSecurityResource($this->bot);
     }

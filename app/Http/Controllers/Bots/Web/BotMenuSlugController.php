@@ -101,7 +101,6 @@ class BotMenuSlugController extends Controller
         return BusinessLogic::slugs()
             ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
             ->updateScriptParams($request->all());
     }
 

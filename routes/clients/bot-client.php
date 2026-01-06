@@ -674,8 +674,7 @@ Route::prefix("bot-client")
 
                 Route::post("/slug", "createSlug");
                 Route::post("/slug-update", "updateSlug");
-                Route::post("/slug-script-params", "updateScriptParams")
-                    ->middleware(["slug"]);
+                Route::post("/slug-script-params", "updateScriptParams");
                 Route::post("/duplicate/{slugId}", "duplicate");
                 Route::get("/reload-params/{slugId}", "reloadParams");
                 Route::delete("/{slugId}", "destroy");
