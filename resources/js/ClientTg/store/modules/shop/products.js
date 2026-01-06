@@ -99,6 +99,30 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async getFavList(context) {
+        let link = `${BASE_PRODUCTS_LINK}/fav-list`
+
+        let _axios = util.makeAxiosFactory(link, "POST")
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async toggleProductInFavorites(context, payload = {form: null}) {
+        let link = `${BASE_PRODUCTS_LINK}/toggle-favorite`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload.form)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async storeProductCategory(context, payload = {category: null}) {
         let link = `${BASE_PRODUCTS_LINK}/store-category`
 

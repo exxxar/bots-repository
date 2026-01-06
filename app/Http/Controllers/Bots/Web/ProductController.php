@@ -28,7 +28,6 @@ class ProductController extends Controller
 {
 
 
-
     public function sendSBPInvoice(Request $request)
     {
         $request->validate([
@@ -249,7 +248,7 @@ class ProductController extends Controller
             return response()->json([
                 "distance" => 0,
                 "price" => 0,
-                "config"=>[]
+                "config" => []
             ]);
 
         $config = $request->bot->config ?? null;
@@ -271,7 +270,7 @@ class ProductController extends Controller
                 "distance" => 0,
                 "price" => 0,
                 "address" => null,
-                "config"=>[]
+                "config" => []
             ], 404);
 
 
@@ -288,18 +287,17 @@ class ProductController extends Controller
                 "address" => $address
             ]);
 
-        foreach ($partners as $bot)
-        {
+        foreach ($partners as $bot) {
             $config = $bot->config ?? [];
             $price_per_km = $config["price_per_km"] ?? 100;
-            $min_base_delivery_price =  $config["min_base_delivery_price"] ?? 100;
+            $min_base_delivery_price = $config["min_base_delivery_price"] ?? 100;
 
             $partnerBoxConfig[$bot->bot_domain] = (object)[
-                "id"=>$bot->id,
-                "price"=>0,
-                "title"=>$bot->title ?? $bot->bot_domain ?? '-',
-                "distance"=>0,
-                "address"=>$address
+                "id" => $bot->id,
+                "price" => 0,
+                "title" => $bot->title ?? $bot->bot_domain ?? '-',
+                "distance" => 0,
+                "address" => $address
             ];
 
             if (($geo->lat ?? 0) > 0 && ($geo->lon ?? 0) > 0) {
@@ -309,14 +307,13 @@ class ProductController extends Controller
 
                 $distance = floatval($tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0);
 
-                if ($distance < 100)
-                {
+                if ($distance < 100) {
 
                     $partnerBoxConfig[$bot->bot_domain]->distance = $distance;
                     $partnerBoxConfig[$bot->bot_domain]->price = round($min_base_delivery_price + $distance * $price_per_km, 2);
 
                     $sumDistance += $partnerBoxConfig[$bot->bot_domain]->distance;
-                    $sumPrice +=$partnerBoxConfig[$bot->bot_domain]->price;
+                    $sumPrice += $partnerBoxConfig[$bot->bot_domain]->price;
                 }
             }
 
@@ -324,10 +321,10 @@ class ProductController extends Controller
         }
 
         return response()->json([
-            "distance" =>$sumDistance,
+            "distance" => $sumDistance,
             "price" => $sumPrice,
             "address" => $address,
-            "config"=>$partnerBoxConfig,
+            "config" => $partnerBoxConfig,
         ]);
     }
 
@@ -548,6 +545,29 @@ class ProductController extends Controller
                 needRemoved: $request->get("need_removed") ?? false,
                 needAll: $request->get("need_all") ?? false
             );
+    }
+
+    public function getFavList(Request $request): ProductCollection
+    {
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->favList();
+    }
+
+    public function toggleProductInFavorites(Request $request)
+    {
+        $request->validate([
+            "id" => "required"
+        ]);
+
+        return response()
+            ->json([
+                "favorites" => BusinessLogic::botUsers()
+                    ->setBot($request->bot ?? null)
+                    ->setBotUser($request->botUser ?? null)
+                    ->toggleProductInFavorites($request->id)
+            ]);
     }
 
     /**

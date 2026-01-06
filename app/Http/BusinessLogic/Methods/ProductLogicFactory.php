@@ -140,6 +140,20 @@ class ProductLogicFactory extends BaseLogicFactory
 
     }
 
+    public function favList(): ProductCollection
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Параметры функции не заданы!");
+
+        $favIds = $this->botUser->config["favorites"] ?? [];
+
+        $products = Product::query()
+            ->whereIn("id", $favIds)
+            ->get();
+
+        return new ProductCollection($products);
+
+    }
 
     /**
      * @throws HttpException

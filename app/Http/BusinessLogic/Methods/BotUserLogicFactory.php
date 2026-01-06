@@ -57,7 +57,7 @@ class BotUserLogicFactory extends BaseLogicFactory
 
             $orders = Order::query()
                 ->where("bot_id", $this->bot->id)
-                ->where("customer_id",$botUser->id)
+                ->where("customer_id", $botUser->id)
                 ->count();
 
             $refCount = BotUser::query()
@@ -70,8 +70,8 @@ class BotUserLogicFactory extends BaseLogicFactory
                 ->find($botUser->parent_id) ?? null;
 
             return (object)[
-                "photos"=>$client->json(),
-                "profile"=>new BotUserResource($botUser)
+                "photos" => $client->json(),
+                "profile" => new BotUserResource($botUser)
             ];
 
         } catch (\Exception $e) {
@@ -151,6 +151,29 @@ class BotUserLogicFactory extends BaseLogicFactory
             ->paginate($size);
 
         return new BotUserCollection($friends);
+    }
+
+    public function toggleProductInFavorites($id): array
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Параметры не соответствуют условию!");
+
+        $config = $this->botUser->config ?? [];
+
+        if (in_array($id, $config["favorites"] ?? [])) {
+            $config["favorites"] = array_values(array_diff($config["favorites"], [$id]));
+        } else {
+
+            if (isset($config["favorites"]))
+                $config["favorites"][] = $id;
+            else
+                $config["favorites"] = [$id];
+        }
+
+        $this->botUser->config = $config;
+        $this->botUser->save();
+
+        return $config["favorites"];
     }
 
     /**
@@ -463,7 +486,7 @@ class BotUserLogicFactory extends BaseLogicFactory
             $botUser->city ?? "Не указано",
             $botUser->address ?? "Не указано",
             $botUser->sex ? "муж" : "жен",
-            $config["need_bot_mailing"] ? "включены": "отключены"
+            $config["need_bot_mailing"] ? "включены" : "отключены"
         );
         BotMethods::bot()
             ->whereBot($this->bot)
@@ -561,7 +584,7 @@ class BotUserLogicFactory extends BaseLogicFactory
             $botUser->is_admin ? "да" : "нет",
             $botUser->is_work ? "да" : "нет",
             $botUser->is_manager ? "да" : "нет",
-            $config["need_bot_mailing"] ? "включены": "отключены"
+            $config["need_bot_mailing"] ? "включены" : "отключены"
         );
         BotMethods::bot()
             ->whereBot($this->bot)

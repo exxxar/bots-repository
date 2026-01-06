@@ -384,6 +384,8 @@ Route::prefix("bot-client")
                 Route::post("/checkout-link", [ProductController::class, "createCheckoutLink"])
                     ->middleware(["slug"]);
                 Route::post("/products/store-category", [ProductController::class, "storeCategory"]);
+                Route::post("/products/fav-list", [ProductController::class, "getFavList"]);
+                Route::post("/products/toggle-favorite", [ProductController::class, "toggleProductInFavorites"]);
                 Route::post("/products/export-all-products", [ProductController::class, "exportAllProducts"]);
                 Route::post("/products/load-recommended-products", [ProductController::class, "loadRecommendedProducts"]);
                 Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);

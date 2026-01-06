@@ -7,9 +7,10 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
     <div class="card  border-0 product-card">
 
         <div
-            @click="showProductDetails"
+
             class="img-container">
             <img
+                @click="showProductDetails"
                 class="rounded-3"
                 v-if="(item.images||[]).length>0"
                 v-lazy="item.images[0]">
@@ -26,16 +27,27 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                          </span>
                     </div>
                     <span
-                        v-if="item.old_price>0"
+                        @click="addToFavorite"
                         style="margin-right: 10px;"
-                        class="badge bg-primary fw-bold">%</span>
+                        class="badge bg-primary fw-bold">
+                        <i class="fa-solid  fa-heart"
+                           v-if="inFav"
+                           style="font-size:14px;"></i>
+                        <i class="fa-regular fa-heart"
+                           style="font-size:14px;"
+                           v-else></i>
+                    </span>
                 </div>
 
             </div>
         </div>
 
         <div class="card-body px-0">
-            <p class="text-center mb-2" style="font-size: 12px;">{{ item.title.slice(0, 50) }} <span
+            <p
+                v-if="item.old_price>0"
+                style="margin-right: 10px;"
+                class="text-primary text-center">Акция</p>
+            <p class="text-center mb-2" style="font-size: 10px;">{{ item.title.slice(0, 50) }} <span
                 v-if="item.title.length>50">...</span></p>
 
 
@@ -110,7 +122,6 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
     </div>
 
 
-
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -120,8 +131,8 @@ export default {
     props: ["item", "displayType", "collectionMode", "canSelect"],
     data() {
         return {
-            sending:false,
-            is_online:true,
+            sending: false,
+            is_online: true,
         }
     },
     computed: {
@@ -138,7 +149,14 @@ export default {
         currentBot() {
             return window.currentBot
         },
-
+        self() {
+            return window.self || null
+        },
+        inFav() {
+            if (!this.self.config.favorites)
+                return false
+            return this.self.config.favorites?.indexOf(this.item.id) !== -1
+        },
     },
     mounted() {
 
@@ -151,11 +169,40 @@ export default {
         });
     },
     methods: {
-        showProductDetails(){
-          this.$productInfo.show(this.item)
+        showProductDetails() {
+            this.$productInfo.show(this.item)
         },
         goToProduct() {
             this.$router.push({name: 'ProductV2', params: {productId: this.item.id}})
+        },
+        addToFavorite() {
+            const fav = window.self.config?.favorites || []
+
+            let index = fav.findIndex(f => f === this.item.id)
+
+            if (index !== -1)
+                fav.splice(index, 1)
+            else
+                fav.push(this.item.id)
+
+            window.self.config.favorites = fav
+
+            this.$store.dispatch("toggleProductInFavorites", {
+                form: {
+                    id: this.item.id
+                }
+            }).then((resp) => {
+                this.$notify({
+                    title: "Избранное",
+                    text: this.inFav ? 'Товар убран из избранного!' : 'Товар успешно добавлен в избранное!',
+                    type: 'success'
+                })
+
+                window.self.config.favorites = resp.data.favorites
+
+            }).catch(() => {
+                this.prize_modal.hide()
+            })
         },
         incProductCart() {
             this.sending = true
@@ -167,7 +214,7 @@ export default {
                 this.sending = false
                 this.$notify({
                     title: "Добавление товара",
-                    text: 'Товар "'+this.item.title+'" успешно добавлен',
+                    text: 'Товар "' + this.item.title + '" успешно добавлен',
                     type: 'success'
                 })
             }).catch(() => {
@@ -189,7 +236,7 @@ export default {
                 this.sending = false
                 this.$notify({
                     title: "Удаление товара",
-                    text:  'Товар "'+this.item.title+'" успешно убран из корзины',
+                    text: 'Товар "' + this.item.title + '" успешно убран из корзины',
                     type: 'success'
                 })
             }).catch(() => {

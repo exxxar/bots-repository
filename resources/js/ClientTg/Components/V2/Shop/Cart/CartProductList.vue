@@ -207,6 +207,11 @@ export default {
             }).then((resp) => {
                 this.action = resp.action
 
+                this.$notify({
+                    title: "Выбор приза",
+                    text: 'Приз успешно выбран!',
+                    type: 'success'
+                })
                 this.$emit("select-prize", {
                     prize: item,
                     action_id: this.action.id
@@ -214,6 +219,7 @@ export default {
 
                 this.selected_prize = null
                 this.prize_modal.hide()
+                window.location.reload()
             }).catch(()=>{
                 this.prize_modal.hide()
             })

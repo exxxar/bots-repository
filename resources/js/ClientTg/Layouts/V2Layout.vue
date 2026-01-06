@@ -282,6 +282,9 @@ import Preloader from "@/ClientTg/Components/V2/Shop/Preloader.vue";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <p class="alert alert-danger mb-2" v-if="!canBay">
+                        Внимание в данный момент покупки недоступны!
+                    </p>
                     <ScheduleList
                         v-if="bot"
                         :schedule="bot.company.schedule"></ScheduleList>
@@ -352,11 +355,20 @@ export default {
         self(){
           return window.self || null
         },
+        settings(){
+          return this.bot.settings
+        },
         isWork() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
                 return true
 
             return (this.bot.company || {is_work: true}).is_work
+        },
+        canBay() {
+            if (!window.isCorrectSchedule(this.bot.company.schedule))
+                return true
+
+            return (this.bot.company || {is_work: true}).is_work || (this.settings ? this.settings.can_buy_after_closing : true)
         },
         preparedMenuItem() {
             if (!this.bot.settings)

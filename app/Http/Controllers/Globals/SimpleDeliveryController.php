@@ -282,9 +282,9 @@ class SimpleDeliveryController extends SlugController
     {
         $bot = $request->bot ?? null;
         $botUser = $request->botUser ?? null;
-        $slug = $request->slug ?? null;
+     //   $slug = $request->slug ?? null;
 
-        if (is_null($bot) || is_null($botUser) || is_null($slug))
+        if (is_null($bot) || is_null($botUser) )
             throw new HttpException("Не заданы необходимые параметры функции", 400);
 
 
@@ -339,7 +339,7 @@ class SimpleDeliveryController extends SlugController
         ];
 
 
-        if (!is_null($slug->config ?? null)) {
+        if (!is_null($bot->config ?? null)) {
             $tmp = [];
 
             foreach ($slug->config ?? [] as $item) {
