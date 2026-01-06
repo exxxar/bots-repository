@@ -155,7 +155,8 @@ export default {
         inFav() {
             if (!this.self.config?.favorites)
                 return false
-            return this.self.config?.favorites?.indexOf(this.item.id) !== -1
+            return this.self
+                .config.favorites?.indexOf(this.item.id) !== -1
         },
     },
     mounted() {
@@ -201,7 +202,7 @@ export default {
                 window.self.config.favorites = resp.data.favorites
 
             }).catch(() => {
-                this.prize_modal.hide()
+
             })
         },
         incProductCart() {
