@@ -129,8 +129,11 @@ export default {
         bot() {
             return window.currentBot
         },
+        self(){
+          return window.self || null
+        },
         favCount(){
-          return window.self.config?.favorites?.length || 0
+          return this.self.config?.favorites?.length || 0
         },
         canBay() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))

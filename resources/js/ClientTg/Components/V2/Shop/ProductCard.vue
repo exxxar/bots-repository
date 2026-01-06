@@ -153,9 +153,9 @@ export default {
             return window.self || null
         },
         inFav() {
-            if (!this.self.config.favorites)
+            if (!this.self.config?.favorites)
                 return false
-            return this.self.config.favorites?.indexOf(this.item.id) !== -1
+            return this.self.config?.favorites?.indexOf(this.item.id) !== -1
         },
     },
     mounted() {
