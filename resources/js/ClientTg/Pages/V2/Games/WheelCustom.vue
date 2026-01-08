@@ -12,7 +12,7 @@ import Auth1Form from "@/ClientTg/Components/V2/Admin/ScriptEditors/WheelCustom/
             <div class="col-12" >
                 <button
                     type="button"
-                    @click="tab='config'"
+                    @click="tab=tab==='main'?'config':'main'"
                     class="btn btn-outline-light text-primary w-100 mb-2"
                     style="font-size:12px;">
                     <i class="fa-regular fa-pen-to-square "></i> Редактор скрипта
@@ -186,6 +186,12 @@ import Auth1Form from "@/ClientTg/Components/V2/Admin/ScriptEditors/WheelCustom/
         </template>
 
         <template v-if="tab==='config'">
+
+            <button
+                @click="tab='main'"
+                class="btn btn-light text-secondary mb-3">Назад
+            </button>
+
             <WheelCustomScriptEditor v-if="script_data" v-model="script_data"></WheelCustomScriptEditor>
         </template>
 
