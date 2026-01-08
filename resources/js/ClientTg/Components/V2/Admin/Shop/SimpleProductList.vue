@@ -1,6 +1,7 @@
 <script setup>
 import ProductCard from "@/ClientTg/Components/V2/Admin/Shop/AdminProductCard.vue";
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
+import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 </script>
 <template>
     <template
@@ -17,9 +18,28 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                 {{product.title}}
             </li>
         </ul>
+        <template v-if="cat.products_count > cat.products.length">
+            <div class="col-12">
+
+                <button
+                    @click="loadMore(cat.id, cat.products.length)"
+                    class="btn btn-outline-light text-primary p-3 my-3 w-100" type="button">
+                    <span v-if="!load_content">Загрузить еще
+                    ({{ cat.products_count - cat.products.length }})
+                    </span>
+                    <span v-else class="d-inline-flex align-items-center">
+                        Загружаем....
+                            <span class="spinner-border" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </span>
+                    </span>
+                </button>
+
+            </div>
+        </template>
 
     </template>
-
+    <PreloaderV1 v-else/>
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -64,6 +84,29 @@ export default {
 
     },
     methods: {
+        loadMore(catId, offset) {
+            this.load_content = true
+            return this.$store.dispatch("loadMoreProductsByCategory", {
+                partner_id: this.selected_partner?.bot_partner_id || null,
+                category_id: catId,
+                offset: offset,
+            }).then((resp) => {
+
+                let count = resp.length || 0
+
+
+                this.load_content = false
+                if (count === 0)
+                {
+                    this.products.find(p => p.id === catId).products_count = offset
+                    return
+                }
+
+                this.products.find(p => p.id === catId).products.push(...resp)
+            }).catch(() => {
+                this.load_content = false
+            })
+        },
         changeDirection(direction) {
             this.sort.direction = direction
             this.loadOrders(0)

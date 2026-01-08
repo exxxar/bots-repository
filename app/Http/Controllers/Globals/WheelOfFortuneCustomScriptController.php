@@ -504,7 +504,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $bot = $request->bot ?? null;
         $botUser = $request->botUser ?? null;
-        $slug = $request->slug ?? null;
+           $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($slug))
             throw new HttpException("Не все параметры функции заданы!", 404);
@@ -532,35 +532,39 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $data["before_script"] = $data["before_script"] ?? null;
         $data["after_script"] = $data["after_script"] ?? null;
         $wheels = json_decode($data["wheels"] ?? '[]');
+
         unset($data["wheels"]);
         unset($data["use_in_shop"]);
 
 
         $config = Collection::make($slug->config ?? []);
 
-        $tmp = $slug->config ?? [];
+        $tmpConfig = $slug->config ?? [];
 
-        foreach ($tmp as $key => $item) {
+        foreach ($tmpConfig as $key => $item) {
             if ($item["key"] == "wheel_text" || $item["key"] == "wheels") {
-                unset($tmp[$key]);
+                unset($tmpConfig[$key]);
                 continue;
             }
 
             $configItem = $config->where("key", $item["key"])->first() ?? null;
+
+
             $configItem["value"] = $data[$item["key"]] ?? null;
             $configItem["bg_color"] = isset($item["bg_color"]) ? $data[$item["bg_color"]] ?? null : null;
             $configItem["smile"] = isset($item["smile"]) ? $data[$item["smile"]] ?? null : null;
-            $tmp[$key] = $configItem;
+            $tmpConfig[$key] = $configItem;
 
 
         }
+
 
         foreach (array_keys($data) as $key) {
 
             $configItem = $config->where("key", $key)->first() ?? null;
 
             if (is_null($configItem)) {
-                $tmp[] = [
+                $tmpConfig[] = [
                     "key" => $key,
                     "type" => "json",
                     "value" => $data[$key]
@@ -572,24 +576,28 @@ class WheelOfFortuneCustomScriptController extends SlugController
         if (count($wheels) > 0)
             foreach ($wheels as $wheel) {
                 $wheel = (object)$wheel;
-                $tmp[] = [
+                $tmpConfig[] = [
                     "key" => $wheel->key,
                     "type" => $wheel->type,
                     "value" => $wheel->value,
                     "bg_color" => $wheel->bg_color ?? null,
-                    "smile" => $wheel->smile ?? null
+                    "smile" => $wheel->smile ?? null,
+                    "effect_value" => $wheel->effect_value ?? null,
+                    "effect_product" => $wheel->effect_product ?? null
+
                 ];
             }
 
-        $slug->config = $tmp;
+        $slug->config = $tmpConfig;
         $slug->save();
 
         BusinessLogic::bots()
             ->setBot($bot)
             ->setBotUser($botUser)
             ->setConfig([
-                "wheel_of_fortune" => $tmp
+                "wheel_of_fortune" => $tmpConfig
             ]);
+
 
         return new BotMenuSlugResource($slug);
     }

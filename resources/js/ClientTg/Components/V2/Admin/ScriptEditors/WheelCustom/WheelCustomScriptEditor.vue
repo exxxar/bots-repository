@@ -20,7 +20,8 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
                    type="checkbox"
                    v-model="form.use_in_shop"
                    role="switch" id="script-settings-wheel-of-fortune-use_in_shop">
-            <label class="form-check-label" for="script-settings-wheel-of-fortune-use_in_shop">Использовать выигрыши колеса фортуны в корзине товаров
+            <label class="form-check-label" for="script-settings-wheel-of-fortune-use_in_shop">Использовать выигрыши
+                колеса фортуны в корзине товаров
                 : <span v-bind:class="{'text-primary fw-bold':form.use_in_shop}">вкл</span> \
                 <span v-bind:class="{'text-primary fw-bold':!form.use_in_shop}">выкл</span></label>
         </div>
@@ -97,7 +98,7 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
                     v-model="form.before_script"
                     id="select-custom-script" aria-label="Floating label select example">
                 <option :value="null" selected>Не выбрано</option>
-                <option :value="script.id" v-for="script in scripts">{{script.title || '-'}}</option>
+                <option :value="script.id" v-for="script in scripts">{{ script.title || '-' }}</option>
 
             </select>
             <label for="select-custom-script">Персональный скрипт</label>
@@ -116,8 +117,8 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
         <template v-if="form.wheels.length>0"
                   v-for="(item, index) in form.wheels">
 
-            <div class="input-group mb-2 align-items-start">
-                <div class="form-floating">
+            <div class="mb-2 align-items-start d-flex">
+                <div class="form-floating w-100" style="padding-right:5px;">
                     <textarea class="form-control border-light"
                               v-model="form.wheels[index].value"
                               maxlength="4000"
@@ -137,105 +138,30 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
                 <div class="dropdown">
                     <button
                         v-bind:style="{'background-color':form.wheels[index].bg_color}"
-                        class="ml-2 btn dropdown-toggle btn-outline-light" type="button" data-bs-toggle="dropdown"
+                        class="btn btn-outline-light" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
+                        <i class="fa-solid fa-gear text-secondary"></i>
                     </button>
 
-                    <div class="dropdown-menu" style="min-width:300px;">
-                        <div class="dropdown-item">
-                            <div class="form-floating">
-                                <select class="form-select"
-                                        id="floatingSelect"
-                                        @change="selectProduct(null, index)"
-                                        v-model="form.wheels[index].type"
-                                        required
-                                        aria-label="Floating label select example">
-                                    <option
-                                        :value="prizeType.key"
-                                        v-for="prizeType in wheel_types">{{ prizeType.title || '-' }}
-                                    </option>
-                                </select>
-                                <label for="floatingSelect">Тип приза</label>
-                            </div>
-                        </div>
-                        <div class="dropdown-item" v-if="form.wheels[index].type!=='text'">
-                            <div class="form-floating mb-3">
-                                <input type="number"
-                                       min="0"
-                                       v-model="form.wheels[index].effect_value"
-                                       class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Значение эффекта</label>
-                            </div>
-                        </div>
-                        <div class="dropdown-item">
-
-                            <input type="color"
-                                   @change="changeWheelColor(index)"
-                                   v-model="form.wheels[index].bg_color"
-                                   style="min-height:30px;"
-                                   class="form-control p-0" id="floatingInput" placeholder="name@example.com">
-                        </div>
-
-                        <div
-                            style="max-height: 200px;overflow-y: auto;"
-                            class="row row-cols-5 w-100 p-2">
-                            <div
-                                class="col mb-2" v-for="smile in smiles">
-                                <a
-                                    v-bind:class="{'bg-primary':smile===(form.wheels[index]||{smile:null}).smile}"
-                                    @click="addSmile(index, smile)"
-                                    href="javascript:void(0)"
-                                    class="btn btn-outline-light"
-                                >{{ smile }}</a>
-                            </div
-                            >
-                        </div>
-
-                        <hr class="dropdown-divider p-0">
-                        <div class="dropdown-item">
-                            <button type="button"
-                                    @click="removeWheel(index)"
-                                    class="btn btn-outline-danger w-100"><i class="fa-solid fa-trash text-danger"></i>
+                    <ul class="dropdown-menu w-100">
+                        <li><a class="dropdown-item"
+                               @click="selectPrize(index)"
+                               href="javascript:void(0)">
+                            <i class="fa-solid fa-cog"></i>
+                            Настроить</a></li>
+                        <li>
+                            <a class="dropdown-item"
+                               @click="removeWheel(index)"
+                               href="javascript:void(0)">
+                                <i class="fa-solid fa-trash text-danger"></i>
                                 Удалить
-                            </button>
-                        </div>
-
-
-                    </div>
-
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
-                <!--                <div class="d-flex flex-column px-2">
-
-
-
-                                </div>-->
 
             </div>
-
-            <template v-if="form.wheels[index].type==='effect_product'">
-                <div class="dropdown">
-                    <button
-                        class="w-100 btn dropdown-toggle mb-2 btn-outline-light text-primary" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                     <span v-if="!form.wheels[index].effect_product">Выбрать товар</span>
-                     <span v-else>{{form.wheels[index].effect_product?.title||'Без названия'}}</span>
-                    </button>
-
-                    <div class="dropdown-menu" style="min-width:300px;">
-                        <div
-                            style="max-height: 300px;overflow-y: auto;"
-                            class="w-100 px-2">
-                                <SimpleProductList
-                                    :selected="[form.wheels[index].effect_product?.id]"
-                                    v-on:select="selectProduct($event, index)"
-                                />
-                        </div>
-
-                    </div>
-                </div>
-            </template>
-
 
 
         </template>
@@ -253,12 +179,107 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
         </button>
     </form>
 
+    <!-- Modal -->
+    <div class="modal fade" id="prize-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор приз</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <template v-if="selected_prize_index!=null">
+
+                        <template v-if="tab==='main'">
+                            <div class="form-floating mb-2">
+                                <select class="form-select"
+                                        id="floatingSelect"
+                                        @change="selectProduct(null, selected_prize_index)"
+                                        v-model="form.wheels[selected_prize_index].type"
+                                        required
+                                        aria-label="Floating label select example">
+                                    <option
+                                        :value="prizeType.key"
+                                        v-for="prizeType in wheel_types">{{ prizeType.title || '-' }}
+                                    </option>
+                                </select>
+                                <label for="floatingSelect">Тип приза</label>
+                            </div>
+
+
+                            <button
+                                v-if="form.wheels[selected_prize_index].type==='effect_product'"
+                                @click="tab='products'"
+                                class="w-100 btn mb-2 btn-outline-light text-primary p-3" type="button"
+                                aria-expanded="false">
+                                <span v-if="!form.wheels[selected_prize_index].effect_product">Выбрать товар</span>
+                                <span
+                                    v-else>{{ form.wheels[selected_prize_index].effect_product?.title || 'Без названия' }}</span>
+                            </button>
+
+                            <template v-if="form.wheels[selected_prize_index].type!=='text'">
+                                <div class="form-floating mb-2">
+                                    <input type="number"
+                                           min="0"
+                                           v-model="form.wheels[selected_prize_index].effect_value"
+                                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                                    <label for="floatingInput">Значение эффекта</label>
+                                </div>
+                            </template>
+                            <input type="color"
+                                   @change="changeWheelColor(selected_prize_index)"
+                                   v-model="form.wheels[selected_prize_index].bg_color"
+                                   style="min-height:30px;"
+                                   class="form-control p-0 mb-2" id="floatingInput" placeholder="name@example.com">
+
+                            <div
+                                style="max-height: 200px;overflow-y: auto;"
+                                class="row row-cols-5 w-100 p-2 mb-2">
+                                <div
+                                    class="col mb-2" v-for="smile in smiles">
+                                    <a
+                                        v-bind:class="{'bg-primary':smile===(form.wheels[selected_prize_index]||{smile:null}).smile}"
+                                        @click="addSmile(selected_prize_index, smile)"
+                                        href="javascript:void(0)"
+                                        class="btn btn-outline-light"
+                                    >{{ smile }}</a>
+                                </div
+                                >
+                            </div>
+                        </template>
+                        <template v-if="tab==='products'">
+
+                            <button
+                                @click="tab='main'"
+                                class="btn btn-light text-secondary mb-3">Назад
+                            </button>
+
+                            <SimpleProductList
+                                :selected="[form.wheels[selected_prize_index].effect_product?.id]"
+                                v-on:select="selectProduct($event, selected_prize_index)"
+                            />
+                        </template>
+                    </template>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success w-100 p-3" data-bs-dismiss="modal">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 export default {
     props: ["modelValue"],
     data() {
         return {
+            tab: 'main',
+            prize_config_modal: null,
+            selected_prize_index: null,
             smiles: ["🥤", "🥗", "🍔", "🍗", "🍟", "🥓", "🌯", "🍱", "🍜", "🍲", "🍧", "🍨", "🧁", "🥞",
                 "🤖", "🎲", "🎯", "😊", "😎", "🌻", "👽", "💌", "📚", "🐶", "👻", "🏀", "👓", "🎓",
                 "1️⃣", "2️⃣", '3️⃣', "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟", "💡", "🚀", "⭐", "💎", "☘", "🏆", "🎁"],
@@ -273,10 +294,10 @@ export default {
                     key: "product_discount",
                     title: "Скидка на товары, %"
                 },
-                {
+             /*   {
                     key: "delivery_discount",
                     title: "Скидка на доставку, %"
-                },
+                },*/
                 {
                     key: "cashback",
                     title: "Начисление кэшбэка, руб"
@@ -286,18 +307,18 @@ export default {
                     title: "Скидка на конкретный товар, %"
                 }
             ],
-            scripts:[
+            scripts: [
                 {
-                    id:'marketplace_1',
-                    title:'Под маркетплейс (вариант 1)',
+                    id: 'marketplace_1',
+                    title: 'Под маркетплейс (вариант 1)',
                 },
                 {
-                    id:'auth_1',
-                    title:'Форма регистрации',
+                    id: 'auth_1',
+                    title: 'Форма регистрации',
                 },
                 {
-                    id:'review_1',
-                    title:'Форма отзыва',
+                    id: 'review_1',
+                    title: 'Форма отзыва',
                 }
             ],
             form: {
@@ -309,8 +330,8 @@ export default {
                 callback_message: null,
                 win_message: null,
                 btn_text: null,
-                before_script:null,
-                after_script:null,
+                before_script: null,
+                after_script: null,
                 wheels: []
             }
         }
@@ -325,6 +346,8 @@ export default {
 
     },
     mounted() {
+
+        this.prize_config_modal = new bootstrap.Modal('#prize-modal', {})
         this.loaded_params = false
         this.$nextTick(() => {
             this.form = this.modelValue
@@ -333,8 +356,17 @@ export default {
 
     },
     methods: {
-        selectProduct(item, index){
+        selectPrize(index) {
+            this.selected_prize_index = null
+            this.tab = 'main'
+            this.$nextTick(() => {
+                this.selected_prize_index = index
+                this.prize_config_modal.show()
+            })
+        },
+        selectProduct(item, index) {
             this.form.wheels[index].effect_product = item
+            this.tab = 'main'
         },
         changeWheelColor(index) {
 
@@ -358,7 +390,7 @@ export default {
                     key: "wheel_text",
                     type: "text",
                     value: null,
-                    effect_value:0,
+                    effect_value: 0,
                     effect_product: null, //объект скидки: товар
                 })
 

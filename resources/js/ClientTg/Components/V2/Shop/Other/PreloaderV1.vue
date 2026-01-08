@@ -12,7 +12,7 @@
             <div class="bar5"></div>
             <div class="bar6"></div>
         </div>
-        <p class="fw-bold text-primary">Загружаем...</p>
+        <p class="fw-bold text-primary" style="margin-top:50px;">Загружаем...</p>
     </div>
 </template>
 <script>
