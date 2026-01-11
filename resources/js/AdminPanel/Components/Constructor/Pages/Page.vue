@@ -1230,13 +1230,28 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             class="cursor-pointer text-primary fw-bold text-decoration-underline">настройках бота!</span>
                     </div>
 
-                    <div class="form-floating mb-2">
-                        <input type="number"
-                               min="100"
-                               :disabled="bot.payment_provider_token == null"
-                               v-model="pageForm.price"
-                               class="form-control" id="page-price" placeholder="Цена" required>
-                        <label for="page-price">Цена за открытие страницы, руб</label>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-floating mb-2">
+                                <input type="number"
+                                       min="100"
+                                       :disabled="bot.payment_provider_token == null"
+                                       v-model="pageForm.price"
+                                       class="form-control" id="page-price" placeholder="Цена" required>
+                                <label for="page-price">Цена за открытие страницы, руб</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-floating mb-2">
+                                <input type="number"
+                                       min="1"
+                                       :disabled="bot.payment_provider_token == null"
+                                       v-model="pageForm.price_period"
+                                       class="form-control" id="page-price-period" placeholder="Период" required>
+                                <label for="page-price-period">Период оплаты, дней</label>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -1799,6 +1814,7 @@ export default {
                     description: null,
                 },
                 price_description: null,
+                price_period: 1,
 
                 videos: [],
                 images: [],

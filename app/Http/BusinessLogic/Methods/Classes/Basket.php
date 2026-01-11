@@ -439,7 +439,6 @@ class Basket
         //todo: сделать ссылку в модели бота
 
         $linkUserId = $this->botUser->telegram_chat_id;
-        $summaryProductMessage = "";
 
         $keyboard = [
             [

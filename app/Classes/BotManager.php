@@ -176,8 +176,7 @@ class BotManager extends BotCore
                 Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
             }
 
-        } else
-        {
+        } else {
             $this->botUser->updated_at = Carbon::now();
             $this->botUser->save();
 
@@ -521,6 +520,7 @@ class BotManager extends BotCore
 
         if (!is_null($page->price ?? null)) {
 
+
             $action = ActionStatus::query()
                 ->where("user_id", $botUser->user_id)
                 ->where("bot_id", $bot->id)
@@ -537,13 +537,18 @@ class BotManager extends BotCore
                         'current_attempts' => 0,
                         'data' => (object)[
                             "payed_at" => null,
+                            "payed_until" => null,
                         ],
                         'bot_user_id' => $botUser->id
                     ]);
 
-            $isPayed = $action->data["payed_at"] ?? null;
+            $payedAt = $action->data["payed_at"] ?? null;
+            $payedUntil = $action->data["payed_until"] ?? null;
 
-            if (is_null($isPayed)) {
+            if (!is_null($payedUntil))
+                $payedAt = Carbon::parse($payedUntil)->timestamp < Carbon::now() ? null : $payedAt;
+
+            if (is_null($payedAt)) {
 
                 $price = $page->price * 100;
 

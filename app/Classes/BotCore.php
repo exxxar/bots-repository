@@ -708,6 +708,8 @@ abstract class BotCore
                 ->where("id", $pageId)
                 ->first();
 
+            $period = $page->price_period ?? 1;
+
             $action = ActionStatus::query()
                 ->where("user_id", $botUser->user_id)
                 ->where("bot_id", $bot->id)
@@ -718,7 +720,8 @@ abstract class BotCore
                 return;
 
             $action->data = (object)[
-                "payed_at" => Carbon::now()
+                "payed_at" => Carbon::now(),
+                "payed_until"=>Carbon::now()->addDays($period)
             ];
             $action->save();
 
