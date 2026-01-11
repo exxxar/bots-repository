@@ -450,6 +450,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
 
         $dictionary = [
+            "slug_id"=>$slug->id,
             "rules_text" => "Правила колеса фортуны",
             "callback_message" => "Спасибо за участие в розыгрыше, {{name}}!",
             "main_text" => "Колесо фортуны!",
@@ -504,7 +505,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $bot = $request->bot ?? null;
         $botUser = $request->botUser ?? null;
-           $slug = $request->slug ?? null;
+
+        $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($slug))
             throw new HttpException("Не все параметры функции заданы!", 404);
@@ -519,8 +521,11 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $config = $bot->config ?? [];
         $config["selected_script_id"] = (($data["use_in_shop"] ?? false) == "true") ? $slug->id : null;
+
         $bot->config = $config;
         $bot->save();
+
+
 
         $data["can_play"] = (($data["can_play"] ?? false) == "true");
         $data["rules_text"] = $data["rules_text"] ?? "Правила игры";
@@ -548,8 +553,6 @@ class WheelOfFortuneCustomScriptController extends SlugController
             }
 
             $configItem = $config->where("key", $item["key"])->first() ?? null;
-
-
             $configItem["value"] = $data[$item["key"]] ?? null;
             $configItem["bg_color"] = isset($item["bg_color"]) ? $data[$item["bg_color"]] ?? null : null;
             $configItem["smile"] = isset($item["smile"]) ? $data[$item["smile"]] ?? null : null;
@@ -557,6 +560,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
 
         }
+
 
 
         foreach (array_keys($data) as $key) {
@@ -590,6 +594,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $slug->config = $tmpConfig;
         $slug->save();
+
+
 
         BusinessLogic::bots()
             ->setBot($bot)

@@ -2,6 +2,7 @@
 
 namespace App\Logging;
 
+use Illuminate\Support\Facades\Log;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -19,7 +20,6 @@ class DynamicLogChannel
 
     public function __invoke($config)
     {
-
         $botName = self::$botDomain ?? 'system';
 
 

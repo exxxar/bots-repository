@@ -215,7 +215,9 @@ import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProduct
                                 aria-expanded="false">
                                 <span v-if="!form.wheels[selected_prize_index].effect_product">Выбрать товар</span>
                                 <span
-                                    v-else>{{ form.wheels[selected_prize_index].effect_product?.title || 'Без названия' }}</span>
+                                    v-else>{{
+                                        form.wheels[selected_prize_index].effect_product?.title || 'Без названия'
+                                    }}</span>
                             </button>
 
                             <template v-if="form.wheels[selected_prize_index].type!=='text'">
@@ -294,10 +296,10 @@ export default {
                     key: "product_discount",
                     title: "Скидка на товары, %"
                 },
-             /*   {
-                    key: "delivery_discount",
-                    title: "Скидка на доставку, %"
-                },*/
+                /*   {
+                       key: "delivery_discount",
+                       title: "Скидка на доставку, %"
+                   },*/
                 {
                     key: "cashback",
                     title: "Начисление кэшбэка, руб"
@@ -336,6 +338,11 @@ export default {
             }
         }
     },
+    computed: {
+        bot() {
+            return window.currentBot
+        },
+    },
     watch: {
         'form': {
             handler: function (newValue) {
@@ -352,6 +359,7 @@ export default {
         this.$nextTick(() => {
             this.form = this.modelValue
             this.loaded_params = true
+            this.form.use_in_shop = this.bot.settings.selected_script_id == this.form.slug_id
         })
 
     },

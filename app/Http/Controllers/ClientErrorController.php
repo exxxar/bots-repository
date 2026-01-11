@@ -6,6 +6,7 @@ use App\Http\Requests\TrafficSourceStoreRequest;
 use App\Http\Requests\TrafficSourceUpdateRequest;
 use App\Http\Resources\TrafficSourceCollection;
 use App\Http\Resources\TrafficSourceResource;
+use App\Logging\DynamicLogChannel;
 use App\Models\TrafficSource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -29,7 +30,9 @@ class ClientErrorController extends Controller
             'src' => 'nullable|string',
         ]);
 
-        Log::error('Client error'.print_r($data, true));
+        DynamicLogChannel::setGlobalBotDomain("client");
+
+        Log::error('Client error=>'.print_r($data, true));
 
         return response()->json(['status' => 'ok']);
     }

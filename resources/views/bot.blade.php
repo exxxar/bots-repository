@@ -124,6 +124,7 @@
         crossorigin="anonymous"></script>
 </body>
 <script>
+
     window.onload = function () {
         let bot = window.currentBot || null
 
