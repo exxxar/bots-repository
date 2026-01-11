@@ -320,8 +320,6 @@ class BotSlugLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Не все параметры функции заданы!");
 
 
-
-
         $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
         $data["need_automatic_delivery_request"] = (($data["need_automatic_delivery_request"] ?? false) == "true");
         $data["can_use_card"] = (($data["can_use_card"] ?? false) == "true");
