@@ -4,8 +4,8 @@ defineProps({
     bot: {
         type: Object,
     },
-    theme:{
-      type: String,
+    theme: {
+        type: String,
     },
     slug_id: {
         type: String,
@@ -22,7 +22,7 @@ import Layout from "@/ClientTg/Layouts/V2Layout.vue";
             <notifications position="top right"
                            ignoreDuplicates="true"
                            max="3"
-                           width="100%" speed="10" />
+                           width="100%" speed="10"/>
 
             <router-view
                 :bot="bot"/>
@@ -143,7 +143,6 @@ export default {
         window.currentScript = this.slug_id || null
 
 
-
         this.$notify({
             title: 'Главная',
             text: "Успешно!",
@@ -155,6 +154,9 @@ export default {
 
             this.$router.push({name: 'MenuV2'})
         })
+    },
+    mounted() {
+        this.tg.requestFullscreen()
     },
     methods: {
         open(url) {

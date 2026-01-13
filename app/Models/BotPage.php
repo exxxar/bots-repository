@@ -58,6 +58,7 @@ class BotPage extends Model
         'id' => 'integer',
         'bot_menu_slug_id' => 'integer',
         'folder_id' => 'integer',
+        'price_period' => 'integer',
         'images' => 'array',
         'videos' => 'array',
         'audios' => 'array',
