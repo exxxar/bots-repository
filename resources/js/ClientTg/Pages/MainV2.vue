@@ -156,7 +156,7 @@ export default {
         })
     },
     mounted() {
-        this.tg.requestFullscreen()
+       this.tg.addToHomeScreen()
     },
     methods: {
         open(url) {
