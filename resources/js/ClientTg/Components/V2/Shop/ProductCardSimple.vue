@@ -22,11 +22,20 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                     </h6>
 
                     <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
-                        <span v-if="!config.discount_price">{{ currentPrice }}₽</span>
+                        <span v-if="!config.discount_price">{{ currentPrice }}₽
+                            <template v-if="item.old_price > 0">
+                                <span
+                                     class="text-decoration-line-through">{{ item.old_price || 0 }}₽</span>
+                                <span class="text-danger fw-bold">
+                                    -{{ (item.old_price || 0) - (item.current_price || 0) }}₽</span>
+                            </template>
+                        </span>
                         <span v-else> {{ config.discount_price }}₽ <span
-                            class="text-decoration-line-through">{{ item.current_price  || 0 }}₽</span>
+                            class="text-decoration-line-through">{{ item.current_price || 0 }}₽</span>
                             (<span class="text-danger fw-bold">-{{ config.discount_amount || 0 }}₽</span>)
                         </span>
+
+
                         <span v-if="!item?.is_weight_product||false">={{ currentPrice * inCart(item.id) }}₽</span>
                         <span v-else>{{ (currentPrice * inCart(item.id)) / (item.weight_config?.step || 100) }}₽</span>
                     </h6>
