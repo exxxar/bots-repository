@@ -124,16 +124,18 @@
                     </div>
                 </div>
             </template>
-            <div
-                class="form-floating mb-2">
-                <input type="number"
-                       min="1"
-                       max="200"
-                       v-model="deliveryForm.table_number"
-                       class="form-control" id="deliveryForm-table-number"
-                       placeholder="Номер столика">
-                <label for="deliveryForm-table-number">Номер столика</label>
-            </div>
+            <template v-if="deliveryForm.pick_up_type=='0'">
+                <div
+                    class="form-floating mb-2">
+                    <input type="number"
+                           min="1"
+                           max="200"
+                           v-model="deliveryForm.table_number"
+                           class="form-control" id="deliveryForm-table-number"
+                           placeholder="Номер столика">
+                    <label for="deliveryForm-table-number">Номер столика</label>
+                </div>
+            </template>
         </template>
 
         <div class="form-floating">

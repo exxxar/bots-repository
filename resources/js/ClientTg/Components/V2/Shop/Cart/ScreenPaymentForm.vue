@@ -158,12 +158,15 @@ export default {
             return window.currentBot.settings || null
         },
         finallyPrice() {
+
+            let ActivatePromoPrice = (this.modelValue.promo?.activate_price||0)
+
             return !this.modelValue?.use_cashback ?
                 Math.max(1, (this.cartTotalPrice -
-                    (this.cartTotalPrice >= this.modelValue.promo.activate_price ?
+                    (this.cartTotalPrice >= ActivatePromoPrice ?
                         this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price :
                 Math.max(1, (this.cartTotalPrice - this.cashbackLimit -
-                    (this.cartTotalPrice >= this.modelValue.promo.activate_price ?
+                    (this.cartTotalPrice >= ActivatePromoPrice ?
                         this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price
         },
     },
