@@ -465,7 +465,7 @@ class Basket
             //  $resultMessage .= $this->checkWheelOfFortuneAction();
             $resultMessage .= $this->fsPrepareDisabilities();
 
-            $resultMessage .= $partnerProductBox[$key]["message"] ?? '';
+            $resultMessage .= $box->message ?? 'Неуказанный продукт (ошибка)';
 
             $localSummaryCount = $partnerProductBox[$key]["summary_count"] ?? 0;
             $localSummaryPrice = $partnerProductBox[$key]["summary_price"] ?? 0;
