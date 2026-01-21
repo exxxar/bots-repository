@@ -41,8 +41,9 @@ class GeoLogicFactory extends BaseLogicFactory
 
         $params = [
             'q' => $address,
-            'format' => 'json',
-            'limit' => 1
+            'format' => 'jsonv2',
+            'polygon_geojson' => 1,
+            'accept-language' => "ru-RU",
         ];
         $options = [
             'http' => [
