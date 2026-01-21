@@ -256,6 +256,7 @@ class Basket
 
                     $unitOfMeasure = "гр.";
                 }
+
                 $tmpMessage = is_null($comment) ?
                     sprintf("💎%s x%s $unitOfMeasure=%s руб.\n",
                         $product->title,
@@ -464,7 +465,7 @@ class Basket
             //  $resultMessage .= $this->checkWheelOfFortuneAction();
             $resultMessage .= $this->fsPrepareDisabilities();
 
-            $resultMessage .= $box->message;
+            $resultMessage .= $partnerProductBox[$key]["message"] ?? '';
 
             $localSummaryCount = $partnerProductBox[$key]["summary_count"] ?? 0;
             $localSummaryPrice = $partnerProductBox[$key]["summary_price"] ?? 0;
@@ -479,7 +480,7 @@ class Basket
 
             $summaryProductMessage .= "\n<b>﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌</b>\n" .
                 "Заказ из <b>$box->title</b>\n"
-                . $box->message
+                . ($partnerProductBox[$key]["message"] ?? '')
                 . "\nСкидка по товарам: <b>-$localSummaryDiscount руб.</b>"
                 . "\nИтого: <b>" . $localSummaryPrice . " руб.</b> за <b>$localSummaryCount ед.</b>";
 
