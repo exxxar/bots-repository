@@ -400,15 +400,16 @@ class Basket
             ->prepareReviews($order->id, $ids);
 
 
+
         foreach ($partnerProductBox as $key => $box) {
-            $box = (object)$box;
+            $box = (object)$partnerProductBox[$key];
 
             $botInBox = Bot::query()->find($box->id);
 
             $this->fsPrepareFrontPad($order, $tmpOrderProductInfo, $botInBox->id);
 
             $iiko = $botInBox->iiko ?? null;
-
+            Log::info("iiko =>" . print_r($iiko, true));
             if (!is_null($iiko)) {
                 try {
                     BusinessLogic::iiko()

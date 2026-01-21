@@ -134,6 +134,8 @@ class FrontPadLogicFactory extends BaseLogicFactory
             ->where("bot_id", $this->bot->id)
             ->first();
 
+        Log::info("2frontPad =>" . print_r($frontPad, true) . " " . print_r($products, true) . " " . print_r($productsKol, true));
+
         if (is_null($frontPad) || is_null($frontPad->token ?? null))
             throw new HttpException(404, "FrontPad не подключен!");
 
@@ -188,7 +190,7 @@ class FrontPadLogicFactory extends BaseLogicFactory
 
         ]);
 
-
+        Log::info("result" . print_r($result->json(), true));
         if ($result->json("result") == 'error') {
             if ($result->json("error") == "cash_close") {
                 BotMethods::bot()
