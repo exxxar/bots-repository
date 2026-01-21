@@ -410,7 +410,7 @@ class Basket
 
             $iiko = $botInBox->iiko ?? null;
 
-            if ($iiko && is_null($iiko->api_login ?? null)) {
+            if ($iiko && !is_null($iiko->api_login ?? null)) {
 
                 try {
                     BusinessLogic::iiko()
