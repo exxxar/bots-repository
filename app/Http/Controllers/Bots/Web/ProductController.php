@@ -297,8 +297,11 @@ class ProductController extends Controller
                 "price" => 0,
                 "title" => $bot->title ?? $bot->bot_domain ?? '-',
                 "distance" => 0,
-                "address" => $address
+                "address" => $address,
+                "shop_coords"=>$bot->config["shop_coords"] ?? null,
+                "client_coords"=>$geo->lat.", ".$geo->lon,
             ];
+
 
             if (($geo->lat ?? 0) > 0 && ($geo->lon ?? 0) > 0) {
                 $tmpDistance = BusinessLogic::geo()
