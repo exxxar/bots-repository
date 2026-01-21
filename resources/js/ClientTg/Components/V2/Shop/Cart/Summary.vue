@@ -252,7 +252,7 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                             </h6>
                             <h6 class="fw-bold d-flex justify-content-between">
                                 Общая сумма за доставку
-                                <span class="badge bg-primary">{{ deliveryForm.price }} руб.</span>
+                                <span class="badge bg-primary">{{ deliveryForm.delivery_price }} руб.</span>
                             </h6>
                         </div>
 
