@@ -132,7 +132,7 @@ class Basket
 
         $channel = $this->bot->order_channel ?? $this->bot->main_channel ?? null;
 
-      //  $userLink = "<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n";
+        //  $userLink = "<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n";
         if ($hasPhoto)
             $tmpMessage = "#оплатачеком\n" .
                 ($whenReady ? "🟢" : "🟡") . "Заказ №:" . ($order->id ?? '-') . "\n" .
@@ -400,7 +400,6 @@ class Basket
             ->prepareReviews($order->id, $ids);
 
 
-
         foreach ($partnerProductBox as $key => $box) {
             $box = (object)$partnerProductBox[$key];
 
@@ -409,8 +408,9 @@ class Basket
             $this->fsPrepareFrontPad($order, $tmpOrderProductInfo, $botInBox->id);
 
             $iiko = $botInBox->iiko ?? null;
-            Log::info("iiko =>" . print_r($iiko, true));
-            if (!is_null($iiko)) {
+
+            if ($iiko && is_null($iiko->api_login ?? null)) {
+
                 try {
                     BusinessLogic::iiko()
                         ->setBot($this->bot)
@@ -535,9 +535,7 @@ class Basket
         $summaryProductMessage .= "\n\n<a href='tg://user?id=$linkUserId'>Перейти к чату с пользователем</a>\n";
 
 
-
-        if ($this->bot->config["partners"]["is_active"] ?? false)
-        {
+        if ($this->bot->config["partners"]["is_active"] ?? false) {
             sleep(1);
             BotMethods::bot()
                 ->whereBot($this->bot)
@@ -620,7 +618,7 @@ class Basket
             throw new HttpException(400, "Не указан адрес пункта выдачи");
 
         $productMessage = "#заказдоставка\n";
-   //     $productMessage .= $this->checkWheelOfFortuneAction();
+        //     $productMessage .= $this->checkWheelOfFortuneAction();
 
         $basket = \App\Models\Basket::query()
             ->where("bot_id", $this->bot->id)
