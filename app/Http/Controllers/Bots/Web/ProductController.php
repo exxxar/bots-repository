@@ -307,14 +307,14 @@ class ProductController extends Controller
 
                 $distance = floatval($tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0);
 
-                if ($distance < 100) {
+
 
                     $partnerBoxConfig[$bot->bot_domain]->distance = $distance;
                     $partnerBoxConfig[$bot->bot_domain]->price = round($min_base_delivery_price + $distance * $price_per_km, 2);
 
                     $sumDistance += $partnerBoxConfig[$bot->bot_domain]->distance;
                     $sumPrice += $partnerBoxConfig[$bot->bot_domain]->price;
-                }
+
             }
 
 
