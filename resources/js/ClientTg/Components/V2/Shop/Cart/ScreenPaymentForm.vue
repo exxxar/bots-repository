@@ -160,14 +160,15 @@ export default {
         finallyPrice() {
 
             let ActivatePromoPrice = (this.modelValue.promo?.activate_price||0)
+            let Discount = this.modelValue.promo?.discount || 0
 
             return !this.modelValue?.use_cashback ?
                 Math.max(1, (this.cartTotalPrice -
                     (this.cartTotalPrice >= ActivatePromoPrice ?
-                        this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price :
+                        Discount : 0))) + this.modelValue.delivery_price :
                 Math.max(1, (this.cartTotalPrice - this.cashbackLimit -
                     (this.cartTotalPrice >= ActivatePromoPrice ?
-                        this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price
+                        Discount : 0))) + this.modelValue.delivery_price
         },
     },
     watch: {
