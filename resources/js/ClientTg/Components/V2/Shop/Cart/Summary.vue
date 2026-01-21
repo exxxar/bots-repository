@@ -73,7 +73,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                                           @click="recalcDeliveryPrice">(пересчитать)</span></span>
                                     <span v-else>не рассчитана</span>
                                 </template>
-                                <span v-else>Рассчитывается курьером</span>
+                                <span v-else>Рассчитывается курьером <span class="text-primary underline fw-bold cursor-pointer"
+                                                                           @click="recalcDeliveryPrice">(повторить расчет)</span></span>
                             </p>
                         </li>
 
