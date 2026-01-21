@@ -279,7 +279,7 @@ class ProductController extends Controller
 
         $partnerBoxConfig = [];
 
-        $city = $this->ensureCityPrefix($request->city ?? "");
+        $city = $request->city ?? "";
         $street = $this->ensureStreetPrefix($request->street ?? "");
         $address = "$city, $street, " . ($request->building ?? "");
         $geo = BusinessLogic::geo()
