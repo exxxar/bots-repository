@@ -405,7 +405,7 @@ class Basket
 
             $botInBox = Bot::query()->find($box->id);
 
-            $this->fsPrepareFrontPad($order, $tmpOrderProductInfo, $box->id);
+            $this->fsPrepareFrontPad($order, $tmpOrderProductInfo, $botInBox->id);
 
             $iiko = $botInBox->iiko ?? null;
 

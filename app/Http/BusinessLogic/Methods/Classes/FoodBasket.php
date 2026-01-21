@@ -7,6 +7,7 @@ use App\Facades\BusinessLogic;
 use App\Models\Bot;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Mpdf\Mpdf;
 use Telegram\Bot\FileUpload\InputFile;
@@ -231,9 +232,10 @@ trait FoodBasket
 
     private function fsPrepareFrontPad($order, $tmpOrderProductInfo, $partnerId = null)
     {
+        Log::info("fsPrepareFrontPad=>".print_r($tmpOrderProductInfo, true)." ".$partnerId);
         $bot =   is_null($partnerId) ? $this->bot : Bot::query()->find($partnerId);
         $frontPad = $bot->frontPad ?? null;
-
+        Log::info("frontPad=>".print_r($frontPad, true));
         if (is_null($frontPad))
             return;
 
@@ -242,6 +244,7 @@ trait FoodBasket
         $time = $this->data["time"] ?? null;
         $cash =  self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
 
+        Log::info("tmpOrderProductInfo=>".print_r($tmpOrderProductInfo, true));
         BusinessLogic::frontPad()
             ->setBot($bot)
             ->newOrder([
