@@ -71,7 +71,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                     v-if="deliveryForm.delivery_price>0">{{ deliveryForm.delivery_price }}₽
                                     <span class="text-primary underline fw-bold cursor-pointer"
                                                           @click="recalcDeliveryPrice">(пересчитать)</span></span>
-                                    <span v-else>не рассчитана</span>
+                                    <span v-else>не рассчитана <span class="text-primary underline fw-bold cursor-pointer"
+                                                                     @click="recalcDeliveryPrice">(пересчитать)</span></span>
                                 </template>
                                 <span v-else>Рассчитывается курьером <span class="text-primary underline fw-bold cursor-pointer"
                                                                            @click="recalcDeliveryPrice">(повторить расчет)</span></span>
