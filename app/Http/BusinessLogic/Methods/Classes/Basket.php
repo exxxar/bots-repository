@@ -213,25 +213,25 @@ class Basket
 
             $deliveryDetails = (array)$deliveryDetails;
 
+            if (empty($partnerProductBox[$partner->bot_domain])) {
+                $partnerProductBox[$partner->bot_domain]["order_channel"] = $partner->order_channel ?? null;
+                $partnerProductBox[$partner->bot_domain]["id"] = $partner->id;
+                $partnerProductBox[$partner->bot_domain]["title"] = $partner->title ?? $partner->bot_domain ?? 'Без названия';
+                $partnerProductBox[$partner->bot_domain]["message"] = "";
+                $partnerProductBox[$partner->bot_domain]["extra_charge"] = (Partner::query()
+                    ->where("bot_id", $item->bot_id)
+                    ->where("bot_partner_id", $item->bot_partner_id)
+                    ->first())->extra_charge ?? 0;
+                $partnerProductBox[$partner->bot_domain]["summary_price"] = 0;
+                $partnerProductBox[$partner->bot_domain]["summary_count"] = 0;
+                $partnerProductBox[$partner->bot_domain]["summary_discount"] =0;
+                $partnerProductBox[$partner->bot_domain]["delivery_price"] = $deliveryDetails[$partner->bot_domain]->price ?? 0;
+                $partnerProductBox[$partner->bot_domain]["distance"] = $deliveryDetails[$partner->bot_domain]->distance ?? 0;
+                $partnerProductBox[$partner->bot_domain]["address"] = $deliveryDetails[$partner->bot_domain]->address ?? '-';
+                $partnerProductBox[$partner->bot_domain]["thread"] = $partner->topics["delivery"] ??
+                    $this->bot->topics["delivery"] ?? null;
 
-            $partnerProductBox[$partner->bot_domain]["order_channel"] = $partner->order_channel ?? null;
-            $partnerProductBox[$partner->bot_domain]["id"] = $partner->id;
-            $partnerProductBox[$partner->bot_domain]["title"] = $partner->title ?? $partner->bot_domain ?? 'Без названия';
-            $partnerProductBox[$partner->bot_domain]["message"] = empty($partnerProductBox[$partner->bot_domain]["message"]??'') ?
-                "" : $partnerProductBox[$partner->bot_domain]["message"];
-            $partnerProductBox[$partner->bot_domain]["extra_charge"] = (Partner::query()
-                ->where("bot_id", $item->bot_id)
-                ->where("bot_partner_id", $item->bot_partner_id)
-                ->first())->extra_charge ?? 0;
-            $partnerProductBox[$partner->bot_domain]["summary_price"] =  0;
-            $partnerProductBox[$partner->bot_domain]["summary_count"] = 0;
-            $partnerProductBox[$partner->bot_domain]["summary_discount"] = 0;
-            $partnerProductBox[$partner->bot_domain]["delivery_price"] = $deliveryDetails[$partner->bot_domain]->price ?? 0;
-            $partnerProductBox[$partner->bot_domain]["distance"] = $deliveryDetails[$partner->bot_domain]->distance ?? 0;
-            $partnerProductBox[$partner->bot_domain]["address"] = $deliveryDetails[$partner->bot_domain]->address ?? '-';
-            $partnerProductBox[$partner->bot_domain]["thread"] = $partner->topics["delivery"] ??
-                $this->bot->topics["delivery"] ?? null;
-
+            }
 
             $price = 0;
 
