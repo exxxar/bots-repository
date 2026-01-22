@@ -117,6 +117,76 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
             </template>
         </nav>
     </form>
+
+    <div class="modal fade" id="delivery-price-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title">Детали расчета цены доставки</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <template v-if="!deliveryForm || loading_delivery" >
+                        <div class="d-flex justify-content-center align-items-center" style="height:100px;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Загрузка...</span>
+                            </div>
+                        </div>
+                        <p class="text-primary text-center fw-bold">Рассчитываем стоимость доставки</p>
+                    </template>
+
+
+                    <template v-if="deliveryForm&&!loading_delivery">
+                        <div class="container">
+                            <h6 class="fw-bold mb-2">
+                                <span v-if="(deliveryForm.delivery_details||[]).length>1">Цена доставки формируется из</span>
+                                <span v-else>Цена доставки</span>
+                            </h6>
+                            <ul class="list-group mb-2 list-group-flush">
+                                <template v-if="(deliveryForm.delivery_details||[]).length>0">
+                                    <li class="list-group-item" v-for="item in Object.keys(deliveryForm.delivery_details)">
+                                        <div class="d-flex justify-content-between w-100">
+                                            <span class="fw-bold">{{ deliveryForm.delivery_details[item].title }}</span>
+                                            <span>
+                                             <span
+                                                 class="badge bg-primary mx-2">{{
+                                                     deliveryForm.delivery_details[item].distance
+                                                 }} км</span>
+                                             <span
+                                                 class="badge bg-primary">{{
+                                                     deliveryForm.delivery_details[item].price
+                                                 }} руб.</span>
+                                        </span>
+                                        </div>
+                                    </li>
+
+                                </template>
+
+                            </ul>
+                            <h6 class="fw-bold d-flex justify-content-between">
+                                Общее расстояние
+                                <span class="badge bg-primary">{{ deliveryForm.distance }} км</span>
+                            </h6>
+                            <h6 class="fw-bold d-flex justify-content-between">
+                                Общая сумма за доставку
+                                <span class="badge bg-primary">{{ deliveryForm.delivery_price }} руб.</span>
+                            </h6>
+                        </div>
+                    </template>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary p-3 w-100"
+                            data-bs-dismiss="modal">Закрыть
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 
@@ -131,7 +201,8 @@ export default {
             deliveryForm: null,
             offer_agreement: true,
             delivery_price_request_step: 0,
-
+            loading_delivery:false,
+            delivery_message:'',
             need_select_table_by_number: false,
             need_request_delivery_price: true,
             error_delivery_price_message: null,
@@ -220,11 +291,16 @@ export default {
             this.need_request_delivery_price = false
             this.error_delivery_price_message = null
 
-
+            this.loading_delivery = true
             this.$notify({
                 title: "Корзина",
                 text: "Мы начали процесс расчета цены доставки",
             })
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('delivery-price-modal'))
+
+            if (modal)
+                modal.show()
 
             this.$store.dispatch("requestDeliveryPrice", {
                 city: this.deliveryForm.city,
@@ -243,6 +319,9 @@ export default {
                     text: "Цена доставки успешно просчитана",
                     type: "success"
                 })
+
+                this.loading_delivery = false
+
             }).catch(() => {
                 this.deliveryForm.delivery_price = 0
                 this.deliveryForm.distance = 0
@@ -254,6 +333,8 @@ export default {
                     text: "Ошибка расчёта цены доставки",
                     type: "error"
                 })
+
+                this.loading_delivery = false
             })
         },
         startCheckout() {
