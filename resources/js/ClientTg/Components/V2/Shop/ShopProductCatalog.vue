@@ -449,15 +449,18 @@ export default {
     methods: {
         selectPartner(partner) {
 
-            this.selected_partner = partner
-            this.extra_charge = partner.extra_charge || 0
-
+            this.selected_partner = null
+            this.extra_charge = 0
 
             this.products = []
             this.collections = []
             this.categories = []
 
             this.$nextTick(() => {
+
+                this.selected_partner = partner
+                this.extra_charge = partner.extra_charge || 0
+
                 this.loadProducts(0)
                 this.loadCollections(0)
                 this.shop = 1
@@ -620,7 +623,7 @@ export default {
 
             this.load_content = false
             return this.$store.dispatch("loadProductsByCategory", {
-                partner_id: this.selected_partner?.bot_partner_id || null,
+                partner_id: this.selected_partner?.id || null,
                 /*  dataObject: {
                       search: this.search,
                       categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,

@@ -62,7 +62,7 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                         </li>
 
                         <li class="list-group-item" v-if="!deliveryForm.need_pickup">
-                            <p class="mb-0 d-flex justify-content-between">
+                            <p class="mb-2 d-flex justify-content-between">
                                 Цена доставки
 
                                 <!-- Автоматический расчет -->
@@ -79,14 +79,11 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                             не рассчитана
                                         </template>
 
-                                                    <span
-                                                        class="text-primary underline fw-bold cursor-pointer"
-                                                        @click="recalcDeliveryPrice"
-                                                    >
-                                                        (пересчитать)
-                                                    </span>
+
                                     </span>
                                 </template>
+
+
 
                                 <!-- Ручной расчет курьером -->
                                 <span
@@ -102,6 +99,14 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                     </span>
                                 </span>
                             </p>
+
+                            <button
+                                type="button"
+                                class="w-100 p-3 btn btn-primary"
+                                @click="recalcDeliveryPrice"
+                                v-if="deliveryForm.delivery_price===0">
+                                <i class="fa-solid fa-money-bill-wave"></i> Рассчитать цену доставки
+                            </button>
                         </li>
 
 

@@ -56,17 +56,17 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
             v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
     </p>
 
-    <template v-if="!loading&&partners.length>0">
+    <template v-if="!loading&&(partners||[]).length>0">
 
         <!-- Список партнеров -->
-        <div class="row row-cols-1">
-            <div class="col" v-for="partner in partners" :key="partner.id">
+        <div class="row row-cols-1 mb-5">
+            <div class="col" v-for="(partner, index) in partners" :key="index">
                 <div class="card mb-2" v-bind:class="{'border-danger':partner.before_deleted}">
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ partner.title }}</h5>
                         <p class="card-text">
                             <strong>Число товаров: </strong> {{ partner.products?.length || 0 }}<br>
-                            <strong>Договор работает до: </strong> {{ partner.contract_expiration }}<br>
+                            <strong>Договор работает до: </strong> {{ partner.contract_expiration || '-' }}<br>
                             <strong>Статус: </strong>
                             <span
                                 :class="{'text-success': partner.is_active, 'text-danger': !partner.is_active}">
@@ -306,43 +306,6 @@ export default {
             })
 
 
-        },
-        // Заглушка для загрузки партнеров с сервера
-        loadPartnersTest() {
-            // Здесь будет запрос к серверу, например:
-            // axios.get('/api/partners').then(response => { this.partners = response.data; });
-
-            // Для демонстрации создадим несколько партнеров
-            this.partners = [
-                {
-                    id: 1,
-                    bot_name: 'Телега1',
-                    product_count: 120,
-                    contract_expiration: '2026-12-31',
-                    status: 'active',
-                },
-                {
-                    id: 2,
-                    bot_name: 'Телега2',
-                    product_count: 80,
-                    contract_expiration: '2025-05-15',
-                    status: 'inactive',
-                },
-                {
-                    id: 3,
-                    bot_name: 'Телега3',
-                    product_count: 200,
-                    contract_expiration: '2027-11-01',
-                    status: 'active',
-                },
-                {
-                    id: 4,
-                    bot_name: 'Телега4',
-                    product_count: 50,
-                    contract_expiration: '2024-08-19',
-                    status: 'inactive',
-                },
-            ];
         },
 
         // Применение фильтров

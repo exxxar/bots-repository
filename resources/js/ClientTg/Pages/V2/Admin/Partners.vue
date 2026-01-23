@@ -35,7 +35,7 @@ import SelfConfigForm from "@/ClientTg/Components/V2/Admin/Partners/SelfConfigFo
                 <button
                     v-if="form.display_self"
                     @click="openSelfConfigModal"
-                    type="button" class="btn btn-outline-primary p-3 w-100 mb-2">Свои параметы отображения
+                    type="button" class="btn btn-outline-primary p-3 w-100 mb-2">Свои параметры отображения
                 </button>
             </div>
 
@@ -55,8 +55,8 @@ import SelfConfigForm from "@/ClientTg/Components/V2/Admin/Partners/SelfConfigFo
                     <li class="nav-item">
                         <button
                             type="button"
+                            :disabled="true"
                             class="nav-link"
-                            @click="tab=1"
                             style="font-weight:bold;"
                             v-bind:class="{'active':tab===1}"
                         >Статистика продаж
@@ -65,14 +65,12 @@ import SelfConfigForm from "@/ClientTg/Components/V2/Admin/Partners/SelfConfigFo
 
                 </ul>
             </div>
-            <div class="col-12" v-show="tab===0">
+            <div class="col-12" v-if="!loading">
                 <PartnerList></PartnerList>
-                <AddPartnerForm></AddPartnerForm>
+                <AddPartnerForm v-on:callback="callbackAddPartner"></AddPartnerForm>
             </div>
 
-            <div class="col-12" v-if="tab===1">
 
-            </div>
         </div>
     </div>
 
@@ -100,6 +98,7 @@ export default {
     data() {
         return {
             config_modal: null,
+            loading:false,
             tab: 0,
             form: {
                 is_active: false,
@@ -129,6 +128,12 @@ export default {
 
 
     methods: {
+        callbackAddPartner(){
+          this.loading = true
+          this.$nextTick(()=>{
+              this.loading = false
+          })
+        },
         openSelfConfigModal() {
             this.config_modal.show()
         },

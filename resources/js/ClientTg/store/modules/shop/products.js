@@ -218,7 +218,9 @@ const actions = {
 
         let link = `${BASE_PRODUCTS_LINK}-by-category`
         let method = 'POST'
-        let _axios = util.makeAxiosFactory(link, method, payload.dataObject)
+        let _axios = util.makeAxiosFactory(link, method, {
+            partner_id:  payload.partner_id
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

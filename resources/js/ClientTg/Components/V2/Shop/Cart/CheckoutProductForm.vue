@@ -165,14 +165,19 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
                                 </template>
 
                             </ul>
-                            <h6 class="fw-bold d-flex justify-content-between">
-                                Общее расстояние
-                                <span class="badge bg-primary">{{ deliveryForm.distance }} км</span>
-                            </h6>
-                            <h6 class="fw-bold d-flex justify-content-between">
-                                Общая сумма за доставку
-                                <span class="badge bg-primary">{{ deliveryForm.delivery_price }} руб.</span>
-                            </h6>
+                            <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
+                                <h6 class="fw-bold d-flex justify-content-between" >
+                                    Общее расстояние
+                                    <span class="badge bg-primary" >{{ deliveryForm.distance }} км</span>
+                                </h6>
+                                <h6 class="fw-bold d-flex justify-content-between">
+                                    Общая сумма за доставку
+                                    <span class="badge bg-primary" >{{ deliveryForm.delivery_price }} руб.</span>
+                                </h6>
+                            </template>
+                            <template v-else>
+                                <p class="alert alert-light">Цена доставки будет рассчитана курьером! Проверьте корректность введенного вами адреса и попробуйте расчитать доставку еще раз!</p>
+                            </template>
                         </div>
                     </template>
 

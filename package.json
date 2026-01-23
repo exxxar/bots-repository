@@ -67,6 +67,7 @@
         "vue3-fortune-wheel": "^1.1.37",
         "vue3-json-editor": "^1.1.5",
         "vue3-lazyload": "^0.3.6",
+        "vue3-openstreet-map": "^0.0.93",
         "vue3-perfect-scrollbar": "^1.6.1",
         "vue3-popper": "^1.5.0",
         "vue3-quill": "^0.3.0",
