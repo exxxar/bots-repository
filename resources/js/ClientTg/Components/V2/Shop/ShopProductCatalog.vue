@@ -623,7 +623,7 @@ export default {
 
             this.load_content = false
             return this.$store.dispatch("loadProductsByCategory", {
-                partner_id: this.selected_partner?.id || null,
+                partner_id: this.selected_partner?.bot_partner_id || null,
                 /*  dataObject: {
                       search: this.search,
                       categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,
