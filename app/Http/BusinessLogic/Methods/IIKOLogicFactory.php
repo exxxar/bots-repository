@@ -5,6 +5,7 @@ namespace App\Http\BusinessLogic\Methods;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\IikoResource;
 use App\Models\AmoCrm;
+use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\Iiko;
 use App\Models\Product;
@@ -239,6 +240,13 @@ class IIKOLogicFactory extends BaseLogicFactory
 
         if ($validator->fails())
             throw new ValidationException($validator);
+
+        $basket = Basket::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        foreach($basket as $item)
+            $item->delete();
 
         $products = Product::query()
             ->where("bot_id", $this->bot->id)

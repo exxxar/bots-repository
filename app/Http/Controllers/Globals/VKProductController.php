@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Globals;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BotSecurityResource;
+use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -273,6 +274,13 @@ class VKProductController extends Controller
     public function shopMode($code)
     {
 
+        $basket = Basket::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        foreach($basket as $item)
+            $item->delete();
+
 
         $products = Product::query()
             ->where("bot_id", $this->bot->id)
@@ -283,6 +291,7 @@ class VKProductController extends Controller
             $product->deleted_at = Carbon::now();
             $product->save();
         }
+
 
 
         $this->fpProducts = !is_null($this->bot->frontPad ?? null) && !is_null($this->bot->frontPad->token ?? null) ?

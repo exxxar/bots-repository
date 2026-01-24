@@ -148,6 +148,7 @@ class ProductLogicFactory extends BaseLogicFactory
         $favIds = $this->botUser->config["favorites"] ?? [];
 
         $products = Product::query()
+            ->withTrashed()
             ->whereIn("id", $favIds)
             ->get();
 
