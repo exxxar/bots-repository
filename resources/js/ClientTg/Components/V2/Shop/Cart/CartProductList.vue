@@ -10,12 +10,13 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
             </div>
         </div>
         <div class="row">
-            <div class="col-12" v-for="(item, index) in cartProducts">
+            <div :key='item.id' class="col-12" v-for="(item, index) in cartProducts">
 
                 <ProductCardSimple
                     :comment="item.comment"
                     v-if="(item.product||null)!=null"
                     :config="item.params"
+                    :key="'product-' + item.product.id"
                     :item="item.product">
                     <template #partner>
                         <p class="mb-0" v-if="item.partner">
@@ -29,8 +30,9 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
 
                 <CollectionCardSimple
                     :comment="item.comment"
-                    v-if="(item.collection||null)!=null"
+                    v-else-if="(item.collection||null)!=null"
                     :params="item.params"
+                    :key="'collection-' + item.collection.id"
                     :item="item.collection">
                     <template #partner>
                         <p class="mb-0" v-if="item.partner">
@@ -49,7 +51,9 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
         <template
             v-if="settings.need_prizes_from_wheel_of_fortune && (filteredActionData||[]).length>0">
             <h6 class="opacity-75 mb-2 mt-2 ">Выбор приза Колеса фортуны</h6>
-            <Carousel v-bind="config">
+            <Carousel
+                :itemsToShow="2.5" :wrapAround="false"
+                v-bind="config">
                 <Slide :key="'empty-prize'">
                     <div
                         @click="openPrizeModal(null)"

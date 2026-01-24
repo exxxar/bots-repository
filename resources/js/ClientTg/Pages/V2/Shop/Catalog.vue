@@ -11,46 +11,7 @@ import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBook
             v-if="settings"
             :settings="settings">
             <template #navigation>
-                <nav
-                    class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0 "
-                    style="border-radius:10px 10px 0px 0px;z-index:999!important;">
-                    <div class="btn-group w-100" role="group" aria-label="Basic example">
-                        <button type="button"
-                                data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu"
-                                class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                            <i class="fa-solid fa-bars"></i>
-                            <span style="font-size:10px;">Меню</span>
-                        </button>
-                        <button
-                            @click="goToBooking"
-                            type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                            <i class="fa-solid fa-calendar-check"></i>
-                            <span style="font-size:10px;">Бронь</span>
-                        </button>
-                        <button
-                            @click="goToCart"
-                            type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <span style="font-size:10px;">Корзина</span>
-                            <span class="cart-marker" v-if="cartTotalCount>0">
-                            {{ cartTotalPrice || 0 }}₽
-                        </span>
-                        </button>
-                        <button
-                            @click="loadFavProducts"
-                            type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                            <i class="fa-solid fa-heart"></i>
-                            <span style="font-size:10px;">Избранное</span>
-                            <span class="cart-marker"
-                                  style="padding:0px 5px;right:20px;"
-                                  v-if="favCount>0">
-                            {{ favCount }}
-                        </span>
 
-                        </button>
-                    </div>
-
-                </nav>
 
             </template>
         </ShopProductCatalog>
@@ -62,7 +23,6 @@ import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBook
             <div class="row">
                 <div class="col-12">
                     <TableBookingPlanner></TableBookingPlanner>
-
                 </div>
             </div>
         </div>
@@ -70,57 +30,66 @@ import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBook
     </template>
 
     <nav
-        class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0 "
-        style="border-radius:10px 10px 0px 0px;z-index:999!important;">
-        <div class="btn-group w-100" role="group" aria-label="Basic example">
+        class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0"
+        style="border-radius:10px 10px 0 0; z-index:999!important;"
+    >
+        <div class="ios-nav-group w-100">
+
             <button type="button"
-                    data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu"
-                    class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebar-menu"
+                    aria-controls="sidebar-menu"
+                    class="btn btn-primary ios-btn">
                 <i class="fa-solid fa-bars"></i>
-                <span style="font-size:10px;">Меню</span>
+                <span class="ios-label">Меню</span>
             </button>
-            <template v-if="bot.settings.can_use_booking">
-                <template v-if="tab==='shop'">
-                    <button
-                        @click="tab='booking'"
-                        type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                        <i class="fa-solid fa-calendar-check"></i>
-                        <span style="font-size:10px;">Бронь</span>
-                    </button>
-                </template>
-                <template v-if="tab==='booking'">
-                    <button
-                        @click="tab='shop'"
-                        type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
-                        <i class="fa-solid fa-shop"></i>
-                        <span style="font-size:10px;">Магазин</span>
-                    </button>
-                </template>
-            </template>
+
+            <button
+                v-if="tab==='shop'"
+                @click="tab='booking'"
+                type="button"
+                class="btn btn-primary ios-btn">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span class="ios-label">Бронь</span>
+            </button>
+
+            <button
+                v-if="tab==='booking'"
+                @click="tab='shop'"
+                type="button"
+                class="btn btn-primary ios-btn">
+                <i class="fa-solid fa-shop"></i>
+                <span class="ios-label">Магазин</span>
+            </button>
+
             <button
                 @click="goToCart"
-                type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                type="button"
+                class="btn btn-primary ios-btn position-relative">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <span style="font-size:10px;">Корзина</span>
-                <span class="cart-marker" v-if="cartTotalCount>0">
-                            {{ cartTotalPrice || 0 }}₽
-                        </span>
+                <span class="ios-label">Корзина</span>
+
+                <span class="cart-marker" v-if="cartTotalCount > 0">
+                {{ cartTotalPrice || 0 }}₽
+            </span>
             </button>
+
             <button
                 @click="loadFavProducts"
-                type="button" class="btn btn-primary p-2 d-flex flex-column justify-content-center">
+                type="button"
+                class="btn btn-primary ios-btn position-relative">
                 <i class="fa-solid fa-heart"></i>
-                <span style="font-size:10px;">Избранное</span>
-                <span class="cart-marker"
-                      style="padding:0px 5px;right:20px;"
-                      v-if="favCount>0">
-                            {{ favCount }}
-                        </span>
+                <span class="ios-label">Избранное</span>
 
+                <span class="cart-marker" v-if="favCount > 0">
+                {{ favCount }}
+            </span>
             </button>
-        </div>
 
+        </div>
     </nav>
+
+
 
     <!-- Modal -->
     <div class="modal fade" id="fav-product-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -268,16 +237,36 @@ export default {
 }
 </script>
 <style lang="scss">
+.ios-nav-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.ios-btn {
+    flex: 1;
+    margin: 0 2px;
+    padding: 6px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* критично для iOS */
+    justify-content: center !important;
+}
+
+.ios-label {
+    font-size: 10px;
+}
+
 .cart-marker {
     position: absolute;
-    top: 4px;
-    right: 5px;
-    /* height: 14px; */
-    background: var(--bs-info);
+    top: -2px;
+    right: 10px;
+    background: #dc3545;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 12px;
     font-size: 10px;
-    /* width: 100%; */
-    padding: 0px 2px;
-    border-radius: 3px;
 }
+
 
 </style>

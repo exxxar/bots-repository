@@ -10,6 +10,19 @@ window.axios = axios;
 window.self.config = window.self.config || {};
 window.self.config.favorites = [];
 
+window.getDeviceType = function () {
+    const ua = navigator.userAgent.toLowerCase();
+
+    const isIOS =
+        /iphone|ipad|ipod/.test(ua) ||
+        (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+
+    if (isIOS) return "ios";
+    if (/android/.test(ua)) return "android";
+    return "desktop";
+}
+
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**

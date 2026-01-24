@@ -60,7 +60,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
 
         <!-- Список партнеров -->
         <div class="row row-cols-1 mb-5">
-            <div class="col" v-for="(partner, index) in partners" :key="index">
+            <div class="col" v-for="(partner, index) in partners" :key="partner.id">
                 <div class="card mb-2" v-bind:class="{'border-danger':partner.before_deleted}">
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ partner.title }}</h5>
@@ -263,17 +263,24 @@ export default {
             this.loading = true
             this.$store.dispatch("loadPartners", {
                 dataObject: {
-                    search: this.search,
-                    order_by: this.sort.param || null,
+                    ...(this.search ? { search: this.search } : {}),
+                    ...(this.sort.param ? { order_by: this.sort.param } : {}),
                     direction: this.sort.direction || 'asc'
                 },
                 page: pageIndex
             }).then(resp => {
-                this.partners = this.getPartners || []
+
+                this.partners = (this.getPartners || []).map(p => ({
+                    ...p,
+                    products: Array.isArray(p.products) ? p.products : [],
+                    contract_expiration: p.contract_expiration || '-'
+                }));
+
                 this.partners_paginate_object = this.getPartnersPaginateObject || null
                 this.loading = false
-            }).catch(() => {
+            }).catch(err => {
                 this.loading = false
+                console.error("LOAD PARTNERS ERROR:", err)
             })
         },
         removePartner() {
