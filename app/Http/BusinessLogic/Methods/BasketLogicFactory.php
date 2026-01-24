@@ -81,20 +81,26 @@ class BasketLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Не все параметры заданы!");
 
         $allProductsInBasket = is_null($tableId) ? Basket::query()
-            ->with(["collection"])
+            ->with(['product' => fn($q) => $q->withTrashed()])
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("table_approved_at")
             ->whereNull("ordered_at")
             ->get() :
             Basket::query()
-                ->with(["collection"])
+                ->with(['product' => fn($q) => $q->withTrashed()])
                 ->where("bot_user_id", $this->botUser->id)
                 ->where("table_id", $tableId)
                 ->where("bot_id", $this->bot->id)
                 ->whereNull("table_approved_at")
                 ->whereNull("ordered_at")
                 ->get();
+
+        foreach ($allProductsInBasket as $item) {
+            if (!is_null($item->product->deleted_at)) {
+                $item->delete();
+            }
+        }
 
         return new BasketCollection($allProductsInBasket);
     }
@@ -268,6 +274,7 @@ class BasketLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Не все параметры заданы!");
 
         $productInBasket = Basket::query()
+            ->with(['product' => fn($q) => $q->withTrashed()])
             ->where(function ($q) use ($itemId) {
                 return $q->where("product_id", $itemId)
                     ->orWhere("product_collection_id", $itemId);
@@ -277,6 +284,11 @@ class BasketLogicFactory extends BaseLogicFactory
             ->whereNull("ordered_at")
             ->whereNull("table_approved_at")
             ->first();
+
+        if (!is_null($productInBasket->product->deleted_at ?? null)) {
+            $productInBasket->delete();
+            throw new HttpException(403, "Товар не найден!");
+        }
 
         if (is_null($productInBasket))
             throw new HttpException(404, "Товар в корзине не найден!");
@@ -318,7 +330,7 @@ class BasketLogicFactory extends BaseLogicFactory
 
 
         $productInBasket = Basket::query()
-            ->with(["product"])
+            ->with(['product' => fn($q) => $q->withTrashed()])
             ->where(function ($q) use ($itemId) {
                 return $q->where("product_id", $itemId)
                     ->orWhere("product_collection_id", $itemId);
@@ -328,6 +340,11 @@ class BasketLogicFactory extends BaseLogicFactory
             ->whereNull("ordered_at")
             ->whereNull("table_approved_at")
             ->first();
+
+        if (!is_null($productInBasket->product->deleted_at ?? null)) {
+            $productInBasket->delete();
+            throw new HttpException(403, "Товар не найден!");
+        }
 
         if (is_null($productInBasket))
             throw new HttpException(404, "Товар в корзине не найден!");
