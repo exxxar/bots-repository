@@ -29,6 +29,14 @@
                             class="fa-solid fa-mug-hot"></i>
                     </a>
                 </div>
+                <div class="col mb-2">
+                    <a href="javascript:void(0)"
+                        @click="InitCoffee"
+                       class="btn w-100 p-3 coffee-cup-btn bg-danger">
+                        <i class="fas fa-sync-alt"></i>
+
+                    </a>
+                </div>
             </div>
 
             <!-- Прогресс -->
