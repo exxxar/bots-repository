@@ -1,7 +1,7 @@
 <template>
     <div v-if="settings.coffee.enabled" class="coffee-wrapper">
 
-        <template v-if="!coffee">
+        <template v-if="!self.config?.coffee">
             <p class="alert alert-light mb-2">
                 Вы еще не начали собирать чашечки кофе:) Начнем?
             </p>
@@ -12,7 +12,7 @@
             </button>
         </template>
 
-        <template v-if="coffee">
+        <template v-if="self.config?.coffee">
             <!-- Заголовок -->
             <h5 class="fw-bold mb-3">Ваш прогресс кофе</h5>
 
