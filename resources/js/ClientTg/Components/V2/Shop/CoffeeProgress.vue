@@ -1,9 +1,9 @@
 <template>
-    <div v-if="settings.coffee.enabled" class="coffee-wrapper">
+    <div v-if="settings.coffee?.enabled" class="coffee-wrapper">
 
-        <template v-if="!self.config?.coffee">
+        <template v-if="!coffee">
             <p class="alert alert-light mb-2">
-                Вы еще не начали собирать чашечки кофе:) Начнем?
+               Получите вкусный кофе совершенно бесплатно! Узнайте сколько у вас чашечек кофе прямо сейчас!
             </p>
             <button
                 type="button"
@@ -12,7 +12,7 @@
             </button>
         </template>
 
-        <template v-if="self.config?.coffee">
+        <template v-if="coffee">
             <!-- Заголовок -->
             <h5 class="fw-bold mb-3">Ваш прогресс кофе</h5>
 
@@ -100,18 +100,6 @@ export default {
             showMarkQR: false,
             selectedCupIndex: null,
             coffee: null,
-            settings: {
-                coffee: {
-                    enabled: true,       // модуль включён
-                    max: 7,              // всего нужно 7 кружек
-                    rules: `
-1. За каждую покупку кофе — 1 отметка.
-2. После 7 кружек — 1 кофе бесплатно.
-3. Отметки действуют 30 дней.
-4. Бесплатный кофе нельзя обменять на деньги.
-        `
-                }
-            },
 
 
         };
@@ -129,11 +117,14 @@ export default {
         bot() {
             return window.currentBot
         },
+        settings() {
+            return this.bot.settings || null
+        },
         self() {
             return this.getSelf
         },
         maxCups() {
-            return this.bot.settings.coffee?.max || 0;
+            return this.settings.coffee?.max || 0;
         },
 
         usedCups() {
@@ -170,7 +161,7 @@ export default {
                     count: 0
                 }
             }).catch(() => {
-                this.coffee =  {
+                this.coffee = {
                     count: 0
                 }
             })
