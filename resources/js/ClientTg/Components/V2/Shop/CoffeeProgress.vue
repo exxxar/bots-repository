@@ -3,7 +3,7 @@
 
         <template v-if="!coffee">
             <p class="alert alert-light mb-2">
-               Получите вкусный кофе совершенно бесплатно! Узнайте сколько у вас чашечек кофе прямо сейчас!
+                Получите вкусный кофе совершенно бесплатно! Узнайте сколько у вас чашечек кофе прямо сейчас!
             </p>
             <button
                 type="button"
@@ -30,12 +30,15 @@
                     </a>
                 </div>
                 <div class="col mb-2">
-                    <a href="javascript:void(0)"
-                        @click="InitCoffee"
-                       class="btn w-100 p-3 coffee-cup-btn bg-danger">
-                        <i class="fas fa-sync-alt"></i>
+                    <button
+                        type="button"
+                        :disabled="spent_time>0"
+                        @click="refreshCoffee"
+                        class="btn w-100 p-3 coffee-cup-btn bg-success text-white">
 
-                    </a>
+                        <span v-if="spent_time > 0">{{ spent_time }} сек.</span>
+                        <span v-else><i class="fas fa-sync-alt"></i></span>
+                    </button>
                 </div>
             </div>
 
@@ -91,6 +94,7 @@
 
 <script>
 import {mapGetters} from "vuex";
+import {startTimer} from "@/ClientTg/utils/commonMethods.js";
 
 export default {
     name: "CoffeeProgress",
@@ -102,6 +106,7 @@ export default {
 
     data() {
         return {
+            spent_time: 0,
             intervalId: null,
             showRules: false,
             showExchangeQR: false,
@@ -160,9 +165,19 @@ export default {
     },
 
     mounted() {
-
+        window.addEventListener("trigger-spent-timer", (event) => { // (1)
+            this.spent_time = event.detail
+        });
     },
     methods: {
+        refreshCoffee() {
+            startTimer(10);
+            this.$notify({
+                title: "Кофе",
+                text: "Обновляем карточки"
+            })
+            this.InitCoffee();
+        },
         InitCoffee() {
             return this.$store.dispatch('initCoffee').then((resp) => {
                 this.coffee = resp || {
