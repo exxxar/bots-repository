@@ -36,7 +36,7 @@
                         @click="refreshCoffee"
                         class="btn w-100 p-3 coffee-cup-btn bg-success text-white">
 
-                        <span v-if="spent_time > 0">{{ spent_time }} сек.</span>
+                        <span style="font-size:14px;" v-if="spent_time > 0">{{ spent_time }} сек.</span>
                         <span v-else><i class="fas fa-sync-alt"></i></span>
                     </button>
                 </div>
