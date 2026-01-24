@@ -46,7 +46,6 @@ import CoffeeProgress from "@/ClientTg/Components/V2/Shop/CoffeeProgress.vue";
             </button>
 
 
-
             <button
                 v-if="tab==='shop'"
                 @click="tab='booking'"
@@ -93,8 +92,7 @@ import CoffeeProgress from "@/ClientTg/Components/V2/Shop/CoffeeProgress.vue";
             <template v-if="settings">
                 <button type="button"
                         v-if="settings.coffee?.enabled"
-                        data-bs-toggle="modal"
-                        data-bs-target="#coffee-modal"
+                        @click="showCoffee"
                         class="btn btn-success ios-btn">
                     <i class="fa-solid fa-mug-hot"></i>
                     <span class="ios-label">Кофе</span>
@@ -106,7 +104,6 @@ import CoffeeProgress from "@/ClientTg/Components/V2/Shop/CoffeeProgress.vue";
     </nav>
 
 
-
     <!-- Modal -->
     <div class="modal fade" id="coffee-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -116,7 +113,7 @@ import CoffeeProgress from "@/ClientTg/Components/V2/Shop/CoffeeProgress.vue";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <CoffeeProgress></CoffeeProgress>
+                    <CoffeeProgress v-if="!coffee_load"></CoffeeProgress>
                 </div>
 
             </div>
@@ -163,6 +160,7 @@ export default {
     data() {
         return {
             tab: 'shop',
+            coffee_load: false,
             settings: null,
             favorites_products: [],
         }
@@ -224,6 +222,18 @@ export default {
 
     },
     methods: {
+        showCoffee() {
+            this.coffee_load = true
+            this.$nextTick(() => {
+                this.coffee_load = false
+
+                const modalEl = document.getElementById('coffee-modal');
+
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                if (modal)
+                    modal.show();
+            })
+        },
         goToBooking() {
             this.$router.push({name: 'TableBookingV2'});
         },

@@ -179,7 +179,7 @@ export default {
             clearInterval(this.intervalId)
         },
         waitForAccept() {
-            let waitIterationCount = 5
+            let waitIterationCount = 10
             const currentCount = this.coffee.count
             this.intervalId = setInterval(() => {
                 this.InitCoffee().then(resp => {
@@ -187,7 +187,7 @@ export default {
                     if (currentCount !== this.coffee.count || waitIterationCount <= 0)
                         this.clearWaitInterval()
                 });
-            }, 10000)
+            }, 5000)
         },
         onCupClick(cup) {
             if (cup.filled) return;
