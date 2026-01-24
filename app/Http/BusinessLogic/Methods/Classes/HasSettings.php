@@ -255,6 +255,11 @@ trait HasSettings
         "free_shipping_starts_from" => 0,
         "shop_display_type" => 0,
         "payment_info" => "Текст не найден",
+        "coffee"=>[
+          "rules"=>"",
+          "max"=>7,
+          "enabled"=>false
+        ],
         "wheel_of_fortune" => [
             "rules" => "Правила колеса фортуны",
             "can_play" => false,

@@ -60,6 +60,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async initCoffee(context){
+        let link = `${BASE_BOT_USERS_LINK}/init-coffee`
+        let _axios = util.makeAxiosFactory(link, 'POST')
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
+
     async updateBotUser(context, payload= {botUserForm: null}){
         let link = `${BASE_BOT_USERS_LINK}/update-bot-user`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.botUserForm)

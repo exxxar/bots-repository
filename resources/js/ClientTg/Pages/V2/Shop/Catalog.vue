@@ -3,6 +3,7 @@ import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog
 import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
 
 import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBookingPlanner.vue";
+import CoffeeProgress from "@/ClientTg/Components/V2/Shop/CoffeeProgress.vue";
 </script>
 <template>
 
@@ -43,6 +44,8 @@ import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBook
                 <i class="fa-solid fa-bars"></i>
                 <span class="ios-label">Меню</span>
             </button>
+
+
 
             <button
                 v-if="tab==='shop'"
@@ -86,9 +89,39 @@ import TableBookingPlanner from "@/ClientTg/Components/V2/Shop/Booking/TableBook
             </span>
             </button>
 
+
+            <template v-if="settings">
+                <button type="button"
+                        v-if="settings.coffee?.enabled"
+                        data-bs-toggle="modal"
+                        data-bs-target="#coffee-modal"
+                        class="btn btn-success ios-btn">
+                    <i class="fa-solid fa-mug-hot"></i>
+                    <span class="ios-label">Кофе</span>
+                </button>
+            </template>
+
+
         </div>
     </nav>
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="coffee-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Кофе</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <CoffeeProgress></CoffeeProgress>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
     <!-- Modal -->

@@ -15,6 +15,13 @@ use Illuminate\Validation\ValidationException;
 
 class BotUsersController extends Controller
 {
+    public function initCoffee(Request $request): object|array
+    {
+        return BusinessLogic::botUsers()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->initCoffee();
+    }
 
     public function loadFriendList(Request $request): BotUserCollection
     {

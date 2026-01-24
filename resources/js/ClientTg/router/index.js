@@ -6,8 +6,8 @@ import ProductsInCategory from '@/ClientTg/Pages/V1/Shop/ProductsInCategory.vue'
 import Product from '@/ClientTg/Pages/V1/Shop/Product.vue';
 import Favorites from '@/ClientTg/Pages/V1/Shop/Favorites.vue';
 import Basket from '@/ClientTg/Pages/V1/Shop/Basket.vue';
-import CheckOut from '@/ClientTg/Pages/V1/Shop/CheckOut.vue';
-import Settings from '@/ClientTg/Pages/V1/Shop/Settings.vue';
+
+
 import Schedule from '@/ClientTg/Pages/V1/Shop/Schedule.vue';
 import Quizzes from '@/ClientTg/Pages/V1/Quiz/Quizzes.vue';
 import SingleQuiz from '@/ClientTg/Pages/V1/Quiz/SingleQuiz.vue';
@@ -22,11 +22,10 @@ import FriendsGame from '@/ClientTg/Pages/V1/Shop/FriendsGame.vue';
 
 import FoodConstructors from '@/ClientTg/Pages/V1/FoodConstructors.vue';
 
-//support pages
-import Terms from '@/ClientTg/Pages/V1/Shop/Terms.vue';
-import OurTeam from '@/ClientTg/Pages/V1/Shop/OurTeam.vue';
-import ContactUs from '@/ClientTg/Pages/V1/Shop/ContactUs.vue';
-import Help from '@/ClientTg/Pages/V1/Shop/Help.vue';
+
+
+
+
 import Wheel from '@/ClientTg/Pages/V1/Shop/Wheel.vue';
 import WheelCustom from '@/ClientTg/Pages/V1/Shop/WheelCustom.vue';
 import CashOut from '@/ClientTg/Pages/V1/Shop/CashOut.vue';
@@ -96,12 +95,7 @@ export const routes = [
         meta: {title: 'Приведи друзей', hide_menu: true}
     },
 
-    /*{
-        name: 'PaymentSBP',
-        path: '/payment-sbp-main/:amount',
-        component: PaymentSBP,
-        meta: {title: 'Оплата по СБП', hide_menu: true}
-    },*/
+
     {
         name: 'ClientPromocode',
         path: '/promocode-main',
@@ -184,12 +178,6 @@ export const routes = [
         component: Categories,
         meta: {title: 'Категории товаров'}
     },
-    {
-        name: 'checkout',
-        path: '/checkout',
-        component: CheckOut,
-        meta: {title: 'Корзина'}
-    },
 
 
     {
@@ -222,42 +210,15 @@ export const routes = [
         component: Quest,
         meta: {title: 'Инста-квест', hide_menu: true}
     },
-    {
-        name: 'help',
-        path: '/help',
-        component: Help,
-        meta: {title: 'Помощь'}
-    },
-    {
-        name: 'contactus',
-        path: '/contact-us',
-        component: ContactUs,
-        meta: {title: 'Наши контакты'}
-    },
-    {
-        name: 'ourteam',
-        path: '/our-team',
-        component: OurTeam,
-        meta: {title: 'Наша команда'}
-    },
-    {
-        name: 'terms',
-        path: '/terms',
-        component: Terms,
-        meta: {title: 'Условия использования'}
-    },
+
+
     {
         name: 'product',
         path: '/products/:productId',
         component: Product,
         meta: {title: 'Продукт'}
     },
-    {
-        name: 'settings',
-        path: '/settings',
-        component: Settings,
-        meta: {title: 'Настройки'}
-    },
+
     {
         name: 'basket',
         path: '/basket',
@@ -516,7 +477,6 @@ import SendInvoiceV2 from "@/ClientTg/Pages/V2/Admin/Invoice.vue";
 import PageEditorV2 from "@/ClientTg/Pages/V2/Admin/PageEditor.vue";
 import TableBookingV2 from "@/ClientTg/Pages/V2/Shop/Bookings.vue";
 
-
 const simplePrefix = "/s"
 export const simpleRoutes = [
 
@@ -526,6 +486,7 @@ export const simpleRoutes = [
         component: UploadV2,
         meta: {title: 'Загрузка файлов'}
     },
+
     {
         name: 'SendInvoiceV2',
         path: simplePrefix + '/send-invoice',

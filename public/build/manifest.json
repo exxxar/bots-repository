@@ -40,8 +40,8 @@
     "src": "TelegramChannelHelper.css"
   },
   "V1Layout.css": {
-    "file": "assets/V1Layout-5ac8cdc0.css",
-    "src": "resources/js/Mobile/Pages/MobileForPage.css"
+    "file": "assets/MobileForPage-5ac8cdc0.css",
+    "src": "V1Layout.css"
   },
   "_BotForm-5fa0db6e.js": {
     "css": [
@@ -209,11 +209,11 @@
       "_index.es-80153880.js"
     ]
   },
-  "_V1Layout-6dc304f8.js": {
+  "_V1Layout-3c73c56c.js": {
     "css": [
-      "assets/V1Layout-5ac8cdc0.css"
+      "assets/MobileForPage-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-6dc304f8.js",
+    "file": "assets/V1Layout-3c73c56c.js",
     "imports": [
       "_index.es-80153880.js",
       "resources/js/ClientTg/app.js"
@@ -313,17 +313,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-50908aa8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Mobile/app.css": {
     "file": "assets/app-e3b0c442.css",
@@ -746,11 +746,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-ec8a4b17.js",
+    "file": "assets/MainV1-4b4073dc.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-80153880.js",
-      "_V1Layout-6dc304f8.js",
+      "_V1Layout-3c73c56c.js",
       "resources/js/ClientTg/app.js",
       "_vue3-simple-typeahead-445ba0ac.js",
       "_vue3-json-editor.esm.prod-27728e51.js",
@@ -775,7 +775,7 @@
     "css": [
       "assets/MainV2-ac87afce.css"
     ],
-    "file": "assets/MainV2-fb9c2689.js",
+    "file": "assets/MainV2-dc99c67e.js",
     "imports": [
       "_index.es-80153880.js",
       "_vue3-simple-typeahead-445ba0ac.js",
@@ -805,9 +805,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-7ea003e5.js",
+    "file": "assets/Result-8169ba57.js",
     "imports": [
-      "_V1Layout-6dc304f8.js",
+      "_V1Layout-3c73c56c.js",
       "resources/js/ClientTg/app.js",
       "_index.es-80153880.js",
       "_vue3-simple-typeahead-445ba0ac.js",
@@ -826,15 +826,6 @@
     "isDynamicEntry": true,
     "src": "resources/js/ClientTg/Pages/V1/Result.vue"
   },
-  "resources/js/ClientTg/Pages/V1/Shop/AboutUs.vue": {
-    "file": "assets/AboutUs-d823653d.js",
-    "imports": [
-      "__plugin-vue_export-helper-c27b6911.js",
-      "_index.es-80153880.js"
-    ],
-    "isDynamicEntry": true,
-    "src": "resources/js/ClientTg/Pages/V1/Shop/AboutUs.vue"
-  },
   "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css": {
     "file": "assets/CashReceipt-55274ec9.css",
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
@@ -850,24 +841,8 @@
     "isDynamicEntry": true,
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue"
   },
-  "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.css": {
-    "file": "assets/PaymentSBP-19dd6baa.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.css"
-  },
-  "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue": {
-    "css": [
-      "assets/PaymentSBP-19dd6baa.css"
-    ],
-    "file": "assets/PaymentSBP-dd0c1c9c.js",
-    "imports": [
-      "_index.es-80153880.js",
-      "__plugin-vue_export-helper-c27b6911.js"
-    ],
-    "isDynamicEntry": true,
-    "src": "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue"
-  },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-6d95e974.js",
+    "file": "assets/CashBack-e1e6cf13.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-80153880.js",
@@ -897,9 +872,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Fastoran/Main.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-770181fc.js",
+    "file": "assets/Result-0e7a5f3d.js",
     "imports": [
-      "_V1Layout-6dc304f8.js",
+      "_V1Layout-3c73c56c.js",
       "_index.es-80153880.js",
       "resources/js/ClientTg/app.js",
       "_vue3-simple-typeahead-445ba0ac.js",
@@ -919,26 +894,24 @@
     "src": "resources/js/ClientTg/Pages/V2/Result.vue"
   },
   "resources/js/ClientTg/app.css": {
-    "file": "assets/app-c613a669.css",
+    "file": "assets/app-a151ecf1.css",
     "src": "resources/js/ClientTg/app.css"
   },
   "resources/js/ClientTg/app.js": {
     "css": [
-      "assets/app-c613a669.css"
+      "assets/app-a151ecf1.css"
     ],
     "dynamicImports": [
       "resources/js/ClientTg/Pages/MainV1.vue",
       "resources/js/ClientTg/Pages/MainV2.vue",
       "resources/js/ClientTg/Pages/V1/Error.vue",
       "resources/js/ClientTg/Pages/V1/Result.vue",
-      "resources/js/ClientTg/Pages/V1/Shop/AboutUs.vue",
       "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue",
-      "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue",
       "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue",
       "resources/js/ClientTg/Pages/V2/Fastoran/Main.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-cc5b58e6.js",
+    "file": "assets/app-39a3584e.js",
     "imports": [
       "_index.es-80153880.js",
       "_vue3-simple-typeahead-445ba0ac.js",
@@ -1083,7 +1056,7 @@
     "src": "resources/js/Landing/app.js"
   },
   "resources/js/Mobile/Pages/Main.vue": {
-    "file": "assets/Main-5ea8a4ae.js",
+    "file": "assets/Main-2bb96e74.js",
     "imports": [
       "resources/js/Mobile/app.js",
       "_index.es-80153880.js",
@@ -1096,14 +1069,14 @@
     "src": "resources/js/Mobile/Pages/Main.vue"
   },
   "resources/js/Mobile/Pages/MobileForPage.css": {
-    "file": "assets/V1Layout-5ac8cdc0.css",
-    "src": "resources/js/Mobile/Pages/MobileForPage.css"
+    "file": "assets/MobileForPage-5ac8cdc0.css",
+    "src": "V1Layout.css"
   },
   "resources/js/Mobile/Pages/MobileForPage.vue": {
     "css": [
-      "assets/V1Layout-5ac8cdc0.css"
+      "assets/MobileForPage-5ac8cdc0.css"
     ],
-    "file": "assets/MobileForPage-f1e8b3ce.js",
+    "file": "assets/MobileForPage-bd0359ef.js",
     "imports": [
       "_index.es-80153880.js",
       "_vue3-simple-typeahead-445ba0ac.js",
@@ -1114,7 +1087,7 @@
     "src": "resources/js/Mobile/Pages/MobileForPage.vue"
   },
   "resources/js/Mobile/Pages/MobileForTemplate.vue": {
-    "file": "assets/MobileForTemplate-1d15e09f.js",
+    "file": "assets/MobileForTemplate-707c9cfc.js",
     "imports": [
       "resources/js/Mobile/Pages/ProductList.vue",
       "resources/js/Mobile/app.js",
@@ -1149,7 +1122,7 @@
       "resources/js/Mobile/Pages/MobileForTemplate.vue",
       "resources/js/Mobile/Pages/ProductList.vue"
     ],
-    "file": "assets/app-3dff4540.js",
+    "file": "assets/app-a4d87e64.js",
     "imports": [
       "_index.es-80153880.js",
       "_vue3-simple-typeahead-445ba0ac.js",

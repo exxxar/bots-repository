@@ -43,6 +43,137 @@ class SystemDiagnosticController extends Controller
             ->replyDice();
     }
 
+    protected function getAdminContext(...$data): ?array
+    {
+        $bot = BotManager::bot()->getSelf();
+        $adminBotUser = BotManager::bot()->currentBotUser();
+        $tgId = $data[3] ?? null;
+
+        if (!$adminBotUser->is_admin) {
+            BotManager::bot()->reply("Вы не можете выполнить данную операцию");
+            return null;
+        }
+
+        return [$bot, $tgId];
+    }
+
+    protected function getBotUser($bot, $tgId)
+    {
+        $botUser = BotUser::query()
+            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $tgId)
+            ->first();
+
+        if (is_null($botUser)) {
+            BotManager::bot()->reply("Пользователь не найден");
+            return null;
+        }
+
+        return $botUser;
+    }
+
+    protected function updateCoffeeCount(
+        BotUser  $botUser,
+        callable $modifier
+    ): void
+    {
+        $config = $botUser->config ?? [];
+        $current = $config["coffee"]["count"] ?? 0;
+
+        $config["coffee"]["count"] = $modifier($current);
+        $botUser->config = $config;
+        $botUser->save();
+    }
+
+    protected function notifyCoffeeChange(
+        $bot,
+        BotUser $botUser,
+        string $adminText,
+        string $userText
+    ): void
+    {
+        $userCoffeeCount = $botUser->config["coffee"]["count"] ?? 0;
+        $maxCoffeeCount = $bot->config["coffee"]["max"] ?? 0;
+
+        BotManager::bot()->reply(
+            sprintf($adminText, $userCoffeeCount, $maxCoffeeCount)
+        );
+
+        sleep(1);
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                sprintf($userText, $userCoffeeCount, $maxCoffeeCount)
+            );
+    }
+
+    public function addOneCoffee(...$data)
+    {
+        $context = $this->getAdminContext(...$data);
+        if (!$context) return;
+
+        [$bot, $tgId] = $context;
+
+        $botUser = $this->getBotUser($bot, $tgId);
+        if (!$botUser) return;
+
+        $this->updateCoffeeCount($botUser, fn($count) => $count + 1);
+
+        $this->notifyCoffeeChange(
+            $bot,
+            $botUser,
+            "Вы успешно добавили <b>1</b> кофе!\nУ пользователя: <b>%d</b> из <b>%d</b> чашек.",
+            "Вам добавили <b>1</b> кофе!\nУ вас: <b>%d</b> из <b>%d</b> чашек."
+        );
+    }
+
+    public function removeOneCoffee(...$data)
+    {
+        $context = $this->getAdminContext(...$data);
+        if (!$context) return;
+
+        [$bot, $tgId] = $context;
+
+        $botUser = $this->getBotUser($bot, $tgId);
+        if (!$botUser) return;
+
+        $this->updateCoffeeCount(
+            $botUser,
+            fn($count) => max(0, $count - 1)
+        );
+
+        $this->notifyCoffeeChange(
+            $bot,
+            $botUser,
+            "Вы успешно списали <b>1</b> кофе!\nУ пользователя: <b>%d</b> из <b>%d</b> чашек.",
+            "Вам списали <b>1</b> кофе!\nУ вас: <b>%d</b> из <b>%d</b> чашек."
+        );
+    }
+
+
+    public function useCoffeePoints(...$data)
+    {
+        $context = $this->getAdminContext(...$data);
+        if (!$context) return;
+
+        [$bot, $tgId] = $context;
+
+        $botUser = $this->getBotUser($bot, $tgId);
+        if (!$botUser) return;
+
+        $this->updateCoffeeCount($botUser, fn() => 0);
+
+        $this->notifyCoffeeChange(
+            $bot,
+            $botUser,
+            "Вы успешно списали <b>всё</b> кофе!\nУ пользователя: <b>%d</b> из <b>%d</b> чашек.",
+            "Вам списали <b>всё</b> кофе!\nУ вас: <b>%d</b> из <b>%d</b> чашек."
+        );
+    }
+
+
     public function uploadFilesToBot(...$data)
     {
 
@@ -136,20 +267,19 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    public function createTopics(...$data){
+    public function createTopics(...$data)
+    {
         $bot = BotManager::bot()->getSelf();
 
         $chatType = $data[0]->chat->type ?? null;
 
-        if ($chatType!="supergroup")
-        {
+        if ($chatType != "supergroup") {
             BotManager::bot()
                 ->reply("Топики возможно создать только в группах с включенным разделом <b>Темы</b>!");
             return;
         }
 
-        if (is_null($bot->order_channel))
-        {
+        if (is_null($bot->order_channel)) {
             BotManager::bot()
                 ->reply("Топики создаются в канале с заказами, вы должны сперва установить id канал заказов, нажав кнопку <b>Сохранить как канал заказов</b>!");
             return;
@@ -203,7 +333,7 @@ class SystemDiagnosticController extends Controller
             ],
         ];
 
-         BusinessLogic::bots()
+        BusinessLogic::bots()
             ->setBot($bot)
             ->createBotTopics($threads);
     }

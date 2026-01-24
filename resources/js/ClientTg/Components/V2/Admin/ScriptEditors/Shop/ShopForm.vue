@@ -301,7 +301,6 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             </div>
 
 
-
         </template>
 
         <div class="divider my-3">Настройка СБП</div>
@@ -506,7 +505,8 @@ export default {
                 need_hide_delivery_period: false,
                 can_use_booking: false,
 
-                tables_variants:[],
+                tables_variants: [],
+
                 manager: {
                     link: null,
                     title: 'Написать',
@@ -594,7 +594,7 @@ export default {
                 }
             });
 
-          //  this.form = this.modelValue
+            //  this.form = this.modelValue
 
             this.loaded_params = true
         })
@@ -605,7 +605,7 @@ export default {
             if (!this.form.manager)
                 return;
             // Убираем пробелы по краям
-            let  input = this.form.manager?.link || '';
+            let input = this.form.manager?.link || '';
 
             // Если уже есть https://t.me — возвращаем как есть
             if (input.includes("https://t.me")) {
@@ -620,7 +620,7 @@ export default {
 
             // Если просто указан username без @
             if (!input.startsWith("https://") && !input.includes("t.me") && /^[a-zA-Z0-9_]+$/.test(input)) {
-                this.form.manager.link =  "https://t.me/" + input;
+                this.form.manager.link = "https://t.me/" + input;
             }
 
         },

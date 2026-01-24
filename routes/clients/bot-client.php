@@ -44,7 +44,9 @@ Route::prefix("bot-client")
             ->middleware(["tgAuth.any"]);
 
 
-
+        Route::get("/coffee", function (){
+            return ['update' => false];
+        });
 
         /*Route::post("/send-to-queue", [BotController::class, "sendToQueue"])
             ->middleware(["tgAuth.any"]);*/
@@ -515,6 +517,12 @@ Route::prefix("bot-client")
                     ->middleware(["tgAuth.admin"]);
                 Route::post("/update-profile", "updateProfile")
                     ->middleware(["tgAuth.any"]);
+
+                Route::post("/init-coffee", "initCoffee")
+                    ->middleware(["tgAuth.any"]);
+                Route::post("/coffee-result", "initCoffee")
+                    ->middleware(["tgAuth.any"]);
+
                 Route::post("/get-user-profile-photos", "getUserProfilePhotos")
                     ->middleware(["tgAuth.any"]);
             });

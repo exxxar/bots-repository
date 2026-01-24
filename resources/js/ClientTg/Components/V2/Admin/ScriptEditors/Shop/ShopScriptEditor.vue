@@ -4,6 +4,7 @@ import ShopForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopForm
 import CompanyForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Company/CompanyForm.vue";
 import CertificateForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/CertificateForm.vue";
 import TablePlanner from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/Tables/TablePlanner.vue";
+import CoffeeConfigForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/CoffeeConfigForm.vue";
 </script>
 <template>
 
@@ -27,6 +28,15 @@ import TablePlanner from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/Tabl
                     style=";line-height:100%;white-space: nowrap;"
                     v-bind:class="{'active':tab===4}"
                     aria-current="page"><i class="fa-solid fa-table mr-2"></i> Столики и бронь
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-info  btn p-3"
+                    @click="tab=5"
+                    style=";line-height:100%;white-space: nowrap;"
+                    v-bind:class="{'active':tab===5}"
+                    aria-current="page"><i class="fa fa-coffee mr-2"></i> Кофе в подарок
                 </button>
 
                 <button
@@ -77,11 +87,21 @@ import TablePlanner from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/Tabl
 
         <div v-if="tab===4" class="py-3">
 
-
-
             <TablePlanner
                 v-if="form"
                 v-model="form"></TablePlanner>
+
+            <button
+                style="z-index: 100;"
+                type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
+            </button>
+        </div>
+
+        <div v-if="tab===5" class="py-3">
+
+            <CoffeeConfigForm
+                v-if="form"
+                v-model="form"></CoffeeConfigForm>
 
             <button
                 style="z-index: 100;"

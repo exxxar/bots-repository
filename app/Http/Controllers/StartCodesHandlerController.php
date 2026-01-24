@@ -28,6 +28,61 @@ use Telegram\Bot\FileUpload\InputFile;
 class StartCodesHandlerController extends Controller
 {
 
+    public function requestCoffee(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+
+        $tgUserId = $data[1] ?? null;
+
+        $adminBotUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$adminBotUser->is_admin) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $adminBotUser->telegram_chat_id,
+                    "Данное действие для вас недоступно"
+                );
+            return;
+        }
+
+        $botUser = BotUser::query()
+            ->where("telegram_chat_id", $tgUserId)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+
+        if (is_null($botUser)) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $adminBotUser->telegram_chat_id,
+                    "Такой пользователь недоступен:("
+                );
+            return;
+        }
+
+        $userCoffeeCount = $botUser->config["coffee"]["count"] ?? 0;
+        $maxCoffeeCount = $bot->config["coffee"]["max"] ?? 0;
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendInlineKeyboard(
+                $adminBotUser->telegram_chat_id,
+                "❤️Бонусный кофе:\nБаланс пользователя:<b>$userCoffeeCount</b> из <b>$maxCoffeeCount</b> чашек.",
+                [
+                    [
+                        ["text" => "🔼Начислить 1 кофе", "callback_data" => "/add_one_coffee $tgUserId"],
+                        ["text" => "🔽Списать 1 кофе", "callback_data" => "/remove_one_coffee $tgUserId"],
+                        ["text" => "☕Списать все кофе", "callback_data" => "/use_coffee_points $tgUserId"],
+                    ],
+
+                ]
+            );
+    }
+
     public function addTableOfficiant(...$data)
     {
         $bot = BotManager::bot()

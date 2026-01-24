@@ -38,6 +38,11 @@ BotManager::bot()
     ->route("/pay_tax_fee ([0-9]+)", "payTaxFee")
     ->route("/send_review ([0-9]+)", "sendReview")
     ->route("/send_tips ([0-9]+)", "sendTips")
+
+    ->route("/add_one_coffee ([0-9]+)", "addOneCoffee")
+    ->route("/remove_one_coffee ([0-9]+)", "removeOneCoffee")
+    ->route("/use_coffee_points ([0-9]+)", "useCoffeePoints")
+
     ->route("/auto_send_cashback ([0-9]+)", "autoSendCashBack")
     ->route("/send_to_delivery ([0-9]+)", "sendToDelivery")
     ->route("/success_complete_order ([0-9]+)", "successCompleteOrder")

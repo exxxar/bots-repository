@@ -153,6 +153,24 @@ class BotUserLogicFactory extends BaseLogicFactory
         return new BotUserCollection($friends);
     }
 
+    public function initCoffee(): array
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Параметры не соответствуют условию!");
+
+        $config = $this->botUser->config ?? [];
+
+        if (!isset($config["coffee"]))
+            $config["coffee"] = (object)[
+                "count" => 0
+            ];
+
+        $this->botUser->config = $config;
+        $this->botUser->save();
+
+        return $config["coffee"];
+    }
+
     public function toggleProductInFavorites($id): array
     {
         if (is_null($this->bot) || is_null($this->botUser))
