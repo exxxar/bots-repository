@@ -75,9 +75,15 @@ class StartCodesHandlerController extends Controller
                 [
                     [
                         ["text" => "🔼Начислить 1 кофе", "callback_data" => "/add_one_coffee $tgUserId"],
-                        ["text" => "🔽Списать 1 кофе", "callback_data" => "/remove_one_coffee $tgUserId"],
-                        ["text" => "☕Списать все кофе", "callback_data" => "/use_coffee_points $tgUserId"],
+
                     ],
+                    [
+                        ["text" => "🔽Списать 1 кофе", "callback_data" => "/remove_one_coffee $tgUserId"],
+
+                    ],
+                    [
+                        ["text" => "☕Списать все кофе", "callback_data" => "/use_coffee_points $tgUserId"],
+                    ]
 
                 ]
             );

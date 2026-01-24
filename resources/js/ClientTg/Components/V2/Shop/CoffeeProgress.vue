@@ -166,7 +166,13 @@ export default {
     methods: {
         InitCoffee() {
             return this.$store.dispatch('initCoffee').then((resp) => {
-                this.coffee = resp
+                this.coffee = resp || {
+                    count: 0
+                }
+            }).catch(() => {
+                this.coffee =  {
+                    count: 0
+                }
             })
         },
         clearWaitInterval() {
