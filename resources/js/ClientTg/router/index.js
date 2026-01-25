@@ -1,127 +1,73 @@
-import { createWebHashHistory, createRouter } from "vue-router";
+import {createWebHashHistory, createRouter} from "vue-router";
 
-const lazy = (path) => () => import(path);
+import Home from '@/ClientTg/Pages/V1/Shop/Home.vue';
+import Products from '@/ClientTg/Pages/V1/Shop/Products.vue';
+import ProductsInCategory from '@/ClientTg/Pages/V1/Shop/ProductsInCategory.vue';
+import Product from '@/ClientTg/Pages/V1/Shop/Product.vue';
+import Favorites from '@/ClientTg/Pages/V1/Shop/Favorites.vue';
+import Basket from '@/ClientTg/Pages/V1/Shop/Basket.vue';
 
-// V1 SHOP
-const Home = lazy('@/ClientTg/Pages/V1/Shop/Home.vue');
-const Products = lazy('@/ClientTg/Pages/V1/Shop/Products.vue');
-const ProductsInCategory = lazy('@/ClientTg/Pages/V1/Shop/ProductsInCategory.vue');
-const Product = lazy('@/ClientTg/Pages/V1/Shop/Product.vue');
-const Favorites = lazy('@/ClientTg/Pages/V1/Shop/Favorites.vue');
-const Basket = lazy('@/ClientTg/Pages/V1/Shop/Basket.vue');
-const Schedule = lazy('@/ClientTg/Pages/V1/Shop/Schedule.vue');
-const ClientPromocode = lazy('@/ClientTg/Pages/V1/Shop/Promocode.vue');
-const FriendsGame = lazy('@/ClientTg/Pages/V1/Shop/FriendsGame.vue');
-const Wheel = lazy('@/ClientTg/Pages/V1/Shop/Wheel.vue');
-const WheelCustom = lazy('@/ClientTg/Pages/V1/Shop/WheelCustom.vue');
-const CashOut = lazy('@/ClientTg/Pages/V1/Shop/CashOut.vue');
-const SaveUp = lazy('@/ClientTg/Pages/V1/Shop/SaveUp.vue');
-const Quest = lazy('@/ClientTg/Pages/V1/Shop/Quest.vue');
-const Empty = lazy('@/ClientTg/Pages/V1/Shop/Empty.vue');
-const Booking = lazy('@/ClientTg/Pages/V1/Shop/Booking.vue');
-const Admins = lazy('@/ClientTg/Pages/V1/Shop/Admins.vue');
-const Vip = lazy('@/ClientTg/Pages/V1/Shop/Vip.vue');
-const ProfileForm = lazy('@/ClientTg/Pages/V1/Shop/ProfileForm.vue');
-const Categories = lazy('@/ClientTg/Pages/V1/Shop/Categories.vue');
 
-// V1 QUIZ
-const Quizzes = lazy('@/ClientTg/Pages/V1/Quiz/Quizzes.vue');
-const SingleQuiz = lazy('@/ClientTg/Pages/V1/Quiz/SingleQuiz.vue');
+import Schedule from '@/ClientTg/Pages/V1/Shop/Schedule.vue';
+import Quizzes from '@/ClientTg/Pages/V1/Quiz/Quizzes.vue';
+import SingleQuiz from '@/ClientTg/Pages/V1/Quiz/SingleQuiz.vue';
+import Appointments from '@/ClientTg/Pages/V1/Appointment/Appointments.vue';
+import OneArmedBanditPage from '@/ClientTg/Pages/V1/OneArmedBanditPage.vue';
 
-// V1 APPOINTMENTS
-const Appointments = lazy('@/ClientTg/Pages/V1/Appointment/Appointments.vue');
 
-// V1 GAMES
-const OneArmedBanditPage = lazy('@/ClientTg/Pages/V1/OneArmedBanditPage.vue');
+import DeliveryMain from '@/ClientTg/Pages/V1/Delivery/Main.vue';
 
-// V1 DELIVERY
-const DeliveryMain = lazy('@/ClientTg/Pages/V1/Delivery/Main.vue');
-const DeliverymanForm = lazy('@/ClientTg/Pages/V1/Delivery/DeliveryManForm.vue');
+import ClientPromocode from '@/ClientTg/Pages/V1/Shop/Promocode.vue';
+import FriendsGame from '@/ClientTg/Pages/V1/Shop/FriendsGame.vue';
 
-// V1 FOOD CONSTRUCTOR
-const FoodConstructors = lazy('@/ClientTg/Pages/V1/FoodConstructors.vue');
+import FoodConstructors from '@/ClientTg/Pages/V1/FoodConstructors.vue';
 
-// V1 ADMIN
-const AdminMain = lazy('@/ClientTg/Pages/V1/Admin/Main.vue');
-const AdminChatLog = lazy('@/ClientTg/Pages/V1/Admin/ChatHistory.vue');
-const AdminPromotion = lazy('@/ClientTg/Pages/V1/Admin/Promotion.vue');
-const AdminStatistic = lazy('@/ClientTg/Pages/V1/Admin/Statistic.vue');
-const AdminWorkStatus = lazy('@/ClientTg/Pages/V1/Admin/WorkStatus.vue');
-const AdminOrders = lazy('@/ClientTg/Pages/V1/Admin/Orders.vue');
-const AdminUsers = lazy('@/ClientTg/Pages/V1/Admin/Users.vue');
-const AdminActions = lazy('@/ClientTg/Pages/V1/Admin/Actions.vue');
-const AdminShopManager = lazy('@/ClientTg/Pages/V1/Admin/ShopManager.vue');
-const AdminCompanyManager = lazy('@/ClientTg/Pages/V1/Admin/CompanyManager.vue');
-const AdminBotManager = lazy('@/ClientTg/Pages/V1/Admin/BotManager.vue');
-const AdminBotPage = lazy('@/ClientTg/Pages/V1/Admin/BotManager/Pages.vue');
-const AdminBotSlug = lazy('@/ClientTg/Pages/V1/Admin/BotManager/Slugs.vue');
-const AdminBotDialog = lazy('@/ClientTg/Pages/V1/Admin/BotManager/Dialogs.vue');
-const AdminBotKeyboard = lazy('@/ClientTg/Pages/V1/Admin/BotManager/Keyboards.vue');
-const AdminBotAmo = lazy('@/ClientTg/Pages/V1/Admin/BotManager/Amo.vue');
-const AdminBotYClients = lazy('@/ClientTg/Pages/V1/Admin/BotManager/YClients.vue');
-const AdminBonusProduct = lazy('@/ClientTg/Pages/V1/Admin/BonusProduct.vue');
-const AdminMessageToUser = lazy('@/ClientTg/Pages/V1/Admin/MessageToUser.vue');
 
-// V1 MANAGER
-const ManagerMain = lazy('@/ClientTg/Pages/V1/Manager/Main.vue');
-const ManagerForm = lazy('@/ClientTg/Pages/V1/Manager/Manager.vue');
-const ManagerClients = lazy('@/ClientTg/Pages/V1/Manager/Clients.vue');
-const ManagerProfile = lazy('@/ClientTg/Pages/V1/Manager/Profile.vue');
-const ManagerPartners = lazy('@/ClientTg/Pages/V1/Manager/Partners.vue');
 
-// V2 IMPORTS (same pattern)
-const CatalogV2 = lazy('@/ClientTg/Pages/V2/Shop/Catalog.vue');
-const WaiterCatalogV2 = lazy('@/ClientTg/Pages/V2/Waiter/Catalog.vue');
-const ContactsV2 = lazy('@/ClientTg/Pages/V2/Shop/Contacts.vue');
-const OrdersV2 = lazy('@/ClientTg/Pages/V2/Shop/MyOrders.vue');
-const ProfileV2 = lazy('@/ClientTg/Pages/V2/Shop/Profile.vue');
-const ProductV2 = lazy('@/ClientTg/Pages/V2/Shop/Product.vue');
-const ShopCartV2 = lazy('@/ClientTg/Pages/V2/Shop/ShopCart.vue');
-const FeedBackV2 = lazy('@/ClientTg/Pages/V2/Other/FeedBack.vue');
-const MenuV2 = lazy('@/ClientTg/Pages/V2/Shop/Menu.vue');
-const OneArmedBanditV2 = lazy('@/ClientTg/Components/V2/Games/OneArmedBanditPage.vue');
-const CashBackV2 = lazy('@/ClientTg/Pages/V2/Shop/MyCashBack.vue');
-const FriendsV2 = lazy('@/ClientTg/Pages/V2/Shop/MyFriends.vue');
-const WheelOfFortuneV2 = lazy('@/ClientTg/Pages/V2/Shop/WheelOfFortune.vue');
-const StoryManagerV2 = lazy('@/ClientTg/Pages/V2/Admin/StoryManager.vue');
-const MailingV2 = lazy('@/ClientTg/Pages/V2/Admin/Mailing.vue');
-const ClientsV2 = lazy('@/ClientTg/Pages/V2/Admin/Clients.vue');
-const ShopV2 = lazy('@/ClientTg/Pages/V2/Admin/Shop.vue');
-const AdminOrdersV2 = lazy('@/ClientTg/Pages/V2/Admin/Orders.vue');
-const StatisticV2 = lazy('@/ClientTg/Pages/V2/Admin/Statistic.vue');
-const PromoCodesV2 = lazy('@/ClientTg/Pages/V2/Admin/Promocodes.vue');
-const PagePasswordV2 = lazy('@/ClientTg/Pages/V2/Shop/PagePassword.vue');
-const InstaQuestV2 = lazy('@/ClientTg/Pages/V2/Shop/InstaQuest.vue');
-const RequestPhotoV2 = lazy('@/ClientTg/Pages/V2/Shop/RequestPhoto.vue');
-const FriendsGameV2 = lazy('@/ClientTg/Pages/V2/Shop/FriendsGame.vue');
-const PromoCodeFormV2 = lazy('@/ClientTg/Pages/V2/Shop/PromoCode.vue');
-const VipProfileV2_1 = lazy('@/ClientTg/Pages/V2/Shop/VipProfileV1.vue');
-const SimpleProfileV2_1 = lazy('@/ClientTg/Pages/V2/Shop/SimpleProfileV1.vue');
-const VipProfileV2_2 = lazy('@/ClientTg/Pages/V2/Shop/VipProfileV2.vue');
-const WheelCustomV2 = lazy('@/ClientTg/Pages/V2/Games/WheelCustom.vue');
-const AdminMenuV2 = lazy('@/ClientTg/Pages/V2/Admin/AdminMenu.vue');
-const BotManagerV2 = lazy('@/ClientTg/Pages/V2/Admin/BotManager.vue');
-const PageManagerV2 = lazy('@/ClientTg/Pages/V2/Admin/Pages.vue');
-const LinkManagerV2 = lazy('@/ClientTg/Pages/V2/Admin/Links.vue');
-const IntegrationsV2 = lazy('@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue');
-const PartnersV2 = lazy('@/ClientTg/Pages/V2/Admin/Partners.vue');
-const AmoV2 = lazy('@/ClientTg/Pages/V2/Admin/Integrations/Amo.vue');
-const CdekV2 = lazy('@/ClientTg/Pages/V2/Admin/Integrations/Cdek.vue');
-const DialogsV2 = lazy('@/ClientTg/Pages/V2/Admin/Dialogs.vue');
-const SlugsV2 = lazy('@/ClientTg/Pages/V2/Admin/Scripts.vue');
-const YClientsV2 = lazy('@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue');
-const IikoV2 = lazy('@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue');
-const BitrixV2 = lazy('@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue');
-const FrontPadV2 = lazy('@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue');
-const UploadV2 = lazy('@/ClientTg/Pages/V2/Other/FileUpload.vue');
-const ReferralV2 = lazy('@/ClientTg/Pages/V2/Shop/Referral.vue');
-const TableMenuV2 = lazy('@/ClientTg/Pages/V2/Shop/Tables/TableMenu.vue');
-const TableCartV2 = lazy('@/ClientTg/Pages/V2/Shop/Tables/TableCart.vue');
-const TablesManagerV2 = lazy('@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue');
-const TableV2 = lazy('@/ClientTg/Pages/V2/Admin/Tables/Table.vue');
-const SendInvoiceV2 = lazy('@/ClientTg/Pages/V2/Admin/Invoice.vue');
-const PageEditorV2 = lazy('@/ClientTg/Pages/V2/Admin/PageEditor.vue');
-const TableBookingV2 = lazy('@/ClientTg/Pages/V2/Shop/Bookings.vue');
+
+
+import Wheel from '@/ClientTg/Pages/V1/Shop/Wheel.vue';
+import WheelCustom from '@/ClientTg/Pages/V1/Shop/WheelCustom.vue';
+import CashOut from '@/ClientTg/Pages/V1/Shop/CashOut.vue';
+import SaveUp from '@/ClientTg/Pages/V1/Shop/SaveUp.vue';
+import Quest from '@/ClientTg/Pages/V1/Shop/Quest.vue';
+import Empty from '@/ClientTg/Pages/V1/Shop/Empty.vue';
+import Booking from '@/ClientTg/Pages/V1/Shop/Booking.vue';
+import Admins from '@/ClientTg/Pages/V1/Shop/Admins.vue';
+import Vip from '@/ClientTg/Pages/V1/Shop/Vip.vue';
+import ProfileForm from '@/ClientTg/Pages/V1/Shop/ProfileForm.vue';
+
+import Categories from '@/ClientTg/Pages/V1/Shop/Categories.vue';
+
+import AdminMain from '@/ClientTg/Pages/V1/Admin/Main.vue';
+import AdminChatLog from '@/ClientTg/Pages/V1/Admin/ChatHistory.vue';
+import AdminPromotion from '@/ClientTg/Pages/V1/Admin/Promotion.vue';
+import AdminStatistic from '@/ClientTg/Pages/V1/Admin/Statistic.vue';
+import AdminWorkStatus from '@/ClientTg/Pages/V1/Admin/WorkStatus.vue';
+import AdminOrders from '@/ClientTg/Pages/V1/Admin/Orders.vue';
+import AdminUsers from '@/ClientTg/Pages/V1/Admin/Users.vue';
+import AdminActions from '@/ClientTg/Pages/V1/Admin/Actions.vue';
+import AdminShopManager from '@/ClientTg/Pages/V1/Admin/ShopManager.vue';
+import AdminCompanyManager from '@/ClientTg/Pages/V1/Admin/CompanyManager.vue';
+import AdminBotManager from '@/ClientTg/Pages/V1/Admin/BotManager.vue';
+import AdminBotPage from '@/ClientTg/Pages/V1/Admin/BotManager/Pages.vue';
+import AdminBotSlug from '@/ClientTg/Pages/V1/Admin/BotManager/Slugs.vue';
+import AdminBotDialog from '@/ClientTg/Pages/V1/Admin/BotManager/Dialogs.vue';
+import AdminBotKeyboard from '@/ClientTg/Pages/V1/Admin/BotManager/Keyboards.vue';
+import AdminBotAmo from '@/ClientTg/Pages/V1/Admin/BotManager/Amo.vue';
+import AdminBotYClients from '@/ClientTg/Pages/V1/Admin/BotManager/YClients.vue';
+import AdminBonusProduct from '@/ClientTg/Pages/V1/Admin/BonusProduct.vue';
+import AdminMessageToUser from '@/ClientTg/Pages/V1/Admin/MessageToUser.vue';
+
+
+import ManagerMain from '@/ClientTg/Pages/V1/Manager/Main.vue';
+import ManagerForm from '@/ClientTg/Pages/V1/Manager/Manager.vue';
+import ManagerClients from '@/ClientTg/Pages/V1/Manager/Clients.vue';
+import ManagerProfile from '@/ClientTg/Pages/V1/Manager/Profile.vue';
+import ManagerPartners from '@/ClientTg/Pages/V1/Manager/Partners.vue';
+
+
+import DeliverymanForm from '@/ClientTg/Pages/V1/Delivery/DeliveryManForm.vue';
 
 
 export const routes = [
@@ -475,6 +421,61 @@ export const deliveryRoutes = [
 
 
 ];
+
+import CatalogV2 from '@/ClientTg/Pages/V2/Shop/Catalog.vue';
+import WaiterCatalogV2 from '@/ClientTg/Pages/V2/Waiter/Catalog.vue';
+import ContactsV2 from '@/ClientTg/Pages/V2/Shop/Contacts.vue';
+import OrdersV2 from '@/ClientTg/Pages/V2/Shop/MyOrders.vue';
+import ProfileV2 from '@/ClientTg/Pages/V2/Shop/Profile.vue';
+import ProductV2 from '@/ClientTg/Pages/V2/Shop/Product.vue';
+import ShopCartV2 from '@/ClientTg/Pages/V2/Shop/ShopCart.vue';
+
+import FeedBackV2 from "@/ClientTg/Pages/V2/Other/FeedBack.vue";
+import MenuV2 from "@/ClientTg/Pages/V2/Shop/Menu.vue";
+import OneArmedBanditV2 from '@/ClientTg/Components/V2/Games/OneArmedBanditPage.vue';
+import CashBackV2 from '@/ClientTg/Pages/V2/Shop/MyCashBack.vue';
+import FriendsV2 from '@/ClientTg/Pages/V2/Shop/MyFriends.vue';
+import WheelOfFortuneV2 from '@/ClientTg/Pages/V2/Shop/WheelOfFortune.vue';
+import StoryManagerV2 from '@/ClientTg/Pages/V2/Admin/StoryManager.vue';
+import MailingV2 from '@/ClientTg/Pages/V2/Admin/Mailing.vue';
+import ClientsV2 from '@/ClientTg/Pages/V2/Admin/Clients.vue';
+import ShopV2 from '@/ClientTg/Pages/V2/Admin/Shop.vue';
+import AdminOrdersV2 from '@/ClientTg/Pages/V2/Admin/Orders.vue';
+import StatisticV2 from '@/ClientTg/Pages/V2/Admin/Statistic.vue';
+import PromoCodesV2 from '@/ClientTg/Pages/V2/Admin/Promocodes.vue';
+import PagePasswordV2 from '@/ClientTg/Pages/V2/Shop/PagePassword.vue';
+import InstaQuestV2 from "@/ClientTg/Pages/V2/Shop/InstaQuest.vue";
+import RequestPhotoV2 from "@/ClientTg/Pages/V2/Shop/RequestPhoto.vue";
+import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
+import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
+import VipProfileV2_1 from "@/ClientTg/Pages/V2/Shop/VipProfileV1.vue";
+import SimpleProfileV2_1 from "@/ClientTg/Pages/V2/Shop/SimpleProfileV1.vue";
+import VipProfileV2_2 from "@/ClientTg/Pages/V2/Shop/VipProfileV2.vue";
+import WheelCustomV2 from "@/ClientTg/Pages/V2/Games/WheelCustom.vue";
+import AdminMenuV2 from "@/ClientTg/Pages/V2/Admin/AdminMenu.vue";
+import BotManagerV2 from "@/ClientTg/Pages/V2/Admin/BotManager.vue";
+import PageManagerV2 from "@/ClientTg/Pages/V2/Admin/Pages.vue";
+import LinkManagerV2 from "@/ClientTg/Pages/V2/Admin/Links.vue";
+import IntegrationsV2 from "@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue";
+import PartnersV2 from "@/ClientTg/Pages/V2/Admin/Partners.vue";
+
+import AmoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Amo.vue";
+import CdekV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Cdek.vue";
+import DialogsV2 from "@/ClientTg/Pages/V2/Admin/Dialogs.vue";
+import SlugsV2 from "@/ClientTg/Pages/V2/Admin/Slugs.vue";
+import YClientsV2 from "@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue";
+import IikoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue";
+import BitrixV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue";
+import FrontPadV2 from "@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue";
+import UploadV2 from "@/ClientTg/Pages/V2/Other/FileUpload.vue";
+import ReferralV2 from "@/ClientTg/Pages/V2/Shop/Referral.vue";
+import TableMenuV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableMenu.vue";
+import TableCartV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableCart.vue";
+import TablesManagerV2 from "@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue";
+import TableV2 from "@/ClientTg/Pages/V2/Admin/Tables/Table.vue";
+import SendInvoiceV2 from "@/ClientTg/Pages/V2/Admin/Invoice.vue";
+import PageEditorV2 from "@/ClientTg/Pages/V2/Admin/PageEditor.vue";
+import TableBookingV2 from "@/ClientTg/Pages/V2/Shop/Bookings.vue";
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
