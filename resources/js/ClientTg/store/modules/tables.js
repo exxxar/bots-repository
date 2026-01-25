@@ -237,10 +237,10 @@ const actions = {
         let link = `${BASE_TABLES_LINK}/current`
         let method = 'POST'
 
-        let storedTable = localStorage.getItem("cashman_current_active_table") || null
+      /*  let storedTable = localStorage.getItem("cashman_current_active_table") || null
 
         if (storedTable)
-            storedTable = JSON.parse(storedTable)
+            storedTable = JSON.parse(storedTable)*/
 
         let _axios = util.makeAxiosFactory(link, method, {
             table_id: storedTable?.id || null

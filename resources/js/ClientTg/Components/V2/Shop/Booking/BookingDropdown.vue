@@ -105,7 +105,7 @@ export default {
             this.selectedTable = null
             this.$nextTick(() => {
                 this.selectedTable = item
-                localStorage.setItem("cashman_current_active_table", JSON.stringify(item))
+              //  localStorage.setItem("cashman_current_active_table", JSON.stringify(item))
 
                 this.$emit("select", this.selectedTable)
             })
@@ -114,10 +114,10 @@ export default {
             return this.$store.dispatch("myUpcomingBookings").then((resp) => {
                 this.my_bookings = resp.data || []
 
-                let storedTable = localStorage.getItem("cashman_current_active_table") || null
+              /*  let storedTable = localStorage.getItem("cashman_current_active_table") || null
 
                 if (storedTable)
-                    storedTable = JSON.parse(storedTable)
+                    storedTable = JSON.parse(storedTable)*/
 
                 this.selectedTable = this.my_bookings.find(item => item.id === storedTable?.id) || null
             })
@@ -147,7 +147,7 @@ export default {
                     type: "success"
                 })
 
-                localStorage.removeItem("cashman_current_active_table")
+             //   localStorage.removeItem("cashman_current_active_table")
 
                 this.myUpcomingBookings();
 

@@ -432,7 +432,7 @@ class BasketLogicFactory extends BaseLogicFactory
         $productId = $data["product_id"] ?? null;
         $productCount = $data["count"] ?? 1;
 
-        $tableId = $data["table_id"] ?? null;
+        $tableId = /*$data["table_id"] ??*/ null;
 
         $product = Product::query()
             ->withTrashed()
@@ -458,17 +458,21 @@ class BasketLogicFactory extends BaseLogicFactory
             ->first();
 
 
-        $tableWithClient = is_null($tableId) ? Table::query()
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("closed_at")
-            ->whereHas('clients', function ($query) {
-                $query->where('id', $this->botUser->id);
-            })->first() :
-            Table::query()
+        if (!is_null($tableId)) {
+            //проверить всю эту логику
+            $tableWithClient = is_null($tableId) ? Table::query()
                 ->where("bot_id", $this->bot->id)
-                ->where("id", $tableId)
                 ->whereNull("closed_at")
-                ->first();
+                ->whereHas('clients', function ($query) {
+                    $query->where('id', $this->botUser->id);
+                })->first() :
+                Table::query()
+                    ->where("bot_id", $this->bot->id)
+                    ->where("id", $tableId)
+                    ->whereNull("closed_at")
+                    ->first();
+        }
+
 
         $isWeightProduct = $product->is_weight_product ?? false;
 

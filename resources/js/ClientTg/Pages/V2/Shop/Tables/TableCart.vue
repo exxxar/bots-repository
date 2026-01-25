@@ -505,10 +505,10 @@ export default {
     },
     mounted() {
 
-        let storedTable = localStorage.getItem("cashman_current_active_table") || null
+     /*   let storedTable = localStorage.getItem("cashman_current_active_table") || null
 
         if (storedTable)
-            this.selectedTable = JSON.parse(storedTable)
+            this.selectedTable = JSON.parse(storedTable)*/
 
         this.loadCurrentTableData()
         this.loadBasketData()
@@ -519,11 +519,11 @@ export default {
     },
     methods: {
         changeOrderStatus() {
-            let storedTable = localStorage.getItem("cashman_current_active_table") || null
+          /*  let storedTable = localStorage.getItem("cashman_current_active_table") || null
 
             if (storedTable)
                 storedTable = JSON.parse(storedTable)
-
+*/
             this.$store.dispatch("acceptTableOder", {
                 dataObject: {
                     table_id: storedTable?.id,
@@ -554,7 +554,7 @@ export default {
             this.selectedTable = null
             this.$nextTick(() => {
                 this.selectedTable = item
-                localStorage.setItem("cashman_current_active_table", JSON.stringify(item))
+               // localStorage.setItem("cashman_current_active_table", JSON.stringify(item))
                 this.loadCurrentTableData()
                 this.loadBasketData()
             })

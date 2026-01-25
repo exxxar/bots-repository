@@ -121,14 +121,12 @@ const actions = {
 
         let link = `${BASE_BASKET_LINK}?page=${page}&size=${size}`
 
-        let storedTable = localStorage.getItem("cashman_current_active_table") || null
+      /*  let storedTable = localStorage.getItem("cashman_current_active_table") || null
 
         if (storedTable)
-            storedTable = JSON.parse(storedTable)
+            storedTable = JSON.parse(storedTable)*/
 
-        let _axios = util.makeAxiosFactory(link, "POST",{
-            table_id: storedTable?.id || null
-        })
+        let _axios = util.makeAxiosFactory(link, "POST")
 
         return _axios.then((response) => {
             let dataObject = response.data
@@ -164,14 +162,14 @@ const actions = {
     async addProductToCart(context, payload) {
         let link = `${BASE_BASKET_LINK}/inc-product`
 
-        let storedTable = localStorage.getItem("cashman_current_active_table") || null
+      /*  let storedTable = localStorage.getItem("cashman_current_active_table") || null
 
         if (storedTable)
-            storedTable = JSON.parse(storedTable)
+            storedTable = JSON.parse(storedTable)*/
 
         let _axios = util.makeAxiosFactory(link, "POST", {
             product_id: payload.id,
-            table_id:storedTable?.id || null
+            //table_id:storedTable?.id || null
         })
 
         return _axios.then((response) => {
