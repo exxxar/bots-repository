@@ -109,7 +109,7 @@ class BasketLogicFactory extends BaseLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function addCollection(array $data): BasketCollection
+    public function addCollection(array $data)
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры заданы!");
@@ -192,20 +192,13 @@ class BasketLogicFactory extends BaseLogicFactory
 
         }
 
-        $allProductsInBasket = Basket::query()
-            ->where("bot_user_id", $this->botUser->id)
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("ordered_at")
-            ->get();
-
-        return new BasketCollection($allProductsInBasket);
     }
 
     /**
      * @throws ValidationException
      * @throws HttpException
      */
-    public function incrementCollection(array $data): BasketCollection
+    public function incrementCollection(array $data)
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры заданы!");
@@ -255,14 +248,7 @@ class BasketLogicFactory extends BaseLogicFactory
 
         }
 
-        $allProductsInBasket = Basket::query()
-            ->where("bot_user_id", $this->botUser->id)
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("ordered_at")
-            ->whereNull("table_approved_at")
-            ->get();
 
-        return new BasketCollection($allProductsInBasket);
     }
 
     /**
@@ -328,7 +314,6 @@ class BasketLogicFactory extends BaseLogicFactory
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры заданы!");
 
-
         $productInBasket = Basket::query()
             ->with(['product' => fn($q) => $q->withTrashed()])
             ->where(function ($q) use ($itemId) {
@@ -341,27 +326,30 @@ class BasketLogicFactory extends BaseLogicFactory
             ->whereNull("table_approved_at")
             ->first();
 
+        if (is_null($productInBasket)) {
+            throw new HttpException(404, "Товар в корзине не найден!");
+        }
+
         if (!is_null($productInBasket->product->deleted_at ?? null)) {
             $productInBasket->delete();
             throw new HttpException(403, "Товар не найден!");
         }
 
-        if (is_null($productInBasket))
-            throw new HttpException(404, "Товар в корзине не найден!");
 
         $productCount = 1;
-
         $product = $productInBasket->product;
 
+        if ($product && $product->is_weight_product ?? false) {
 
-        if ($product->is_weight_product ?? false) {
+            $weightConfig = is_array($product->weight_config)
+                ? (object)$product->weight_config
+                : json_decode($product->weight_config ?? '{}');
 
-            $weightConfig = (object)$product->weight_config ?? null;
             $min = $weightConfig->min ?? 0;
             $max = $weightConfig->max ?? 0;
             $step = $weightConfig->step ?? 0;
 
-            $productCount = is_null($productInBasket) ? $min : $step;
+            $productCount = $productInBasket->count == 0 ? $min : $step;
 
             if (($productInBasket->count ?? 0) >= $max && $max > 0)
                 $productCount = 0;
@@ -376,7 +364,7 @@ class BasketLogicFactory extends BaseLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function addProductComment(array $data): BasketCollection
+    public function addProductComment(array $data)
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры заданы!");
@@ -414,21 +402,14 @@ class BasketLogicFactory extends BaseLogicFactory
 
         }
 
-        $allProductsInBasket = Basket::query()
-            ->where("bot_user_id", $this->botUser->id)
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("ordered_at")
-            ->whereNull("table_approved_at")
-            ->get();
 
-        return new BasketCollection($allProductsInBasket);
     }
 
     /**
      * @throws ValidationException
      * @throws HttpException
      */
-    public function addAndIncrementProduct(array $data): BasketCollection
+    public function addAndIncrementProduct(array $data)
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры заданы!");
@@ -440,21 +421,32 @@ class BasketLogicFactory extends BaseLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-        $botIds = [$this->bot->id, ...$this->bot->partners()->get()->pluck("bot_partner_id")];
+
+        $config = $this->bot->config ?? [];
+        $hasPartners = $config["partners"]["is_active"] ?? false;
+
+        $botIds = $hasPartners ?
+            [$this->bot->id, ...$this->bot->partners()->get()->pluck("bot_partner_id")] :
+            [$this->bot->id];
 
         $productId = $data["product_id"] ?? null;
         $productCount = $data["count"] ?? 1;
 
         $tableId = $data["table_id"] ?? null;
 
-
         $product = Product::query()
+            ->withTrashed()
             ->whereIn("bot_id", $botIds)
             ->where("id", $productId)
             ->first();
 
         if (is_null($product))
             throw new HttpException(404, "Продукт не найден в системе!");
+
+        if (!is_null($product->deleted_at)) {
+            $product->delete();
+            throw new HttpException(403, "Продукт недоступен!");
+        }
 
 
         $productInBasket = Basket::query()
@@ -498,7 +490,7 @@ class BasketLogicFactory extends BaseLogicFactory
             $extraCharge = 0;
             if ($product->bot_id != $this->bot->id) {
                 $partner = Partner::query()
-                    ->where("bot_id", "")
+                    ->where("bot_id", $this->bot->id)
                     ->where("bot_partner_id", $product->bot_id)
                     ->first();
 
@@ -529,15 +521,7 @@ class BasketLogicFactory extends BaseLogicFactory
 
         }
 
-        $allProductsInBasket = Basket::query()
-            ->where("bot_user_id", $this->botUser->id)
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("ordered_at")
-            ->whereNull("table_approved_at")
-            ->get();
 
-
-        return new BasketCollection($allProductsInBasket);
     }
 
     /**
@@ -594,7 +578,7 @@ class BasketLogicFactory extends BaseLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function decrementAndRemoveCollection(array $data): BasketCollection
+    public function decrementAndRemoveCollection(array $data)
     {
 
         if (is_null($this->bot) || is_null($this->botUser))
@@ -647,21 +631,14 @@ class BasketLogicFactory extends BaseLogicFactory
 
         }
 
-        $allProductsInBasket = Basket::query()
-            ->where("bot_user_id", $this->botUser->id)
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("ordered_at")
-            ->whereNull("table_approved_at")
-            ->get();
 
-        return new BasketCollection($allProductsInBasket);
 
     }
 
     /**
      * @throws HttpException
      */
-    public function decrementAndRemoveProduct($productId): BasketCollection
+    public function decrementAndRemoveProduct($productId)
     {
 
         if (is_null($this->bot) || is_null($this->botUser))
@@ -684,15 +661,6 @@ class BasketLogicFactory extends BaseLogicFactory
         } else
             $productInBasket->delete();
 
-        $allProductsInBasket = Basket::query()
-            ->with(["product"])
-            ->where("bot_user_id", $this->botUser->id)
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("ordered_at")
-            ->whereNull("table_approved_at")
-            ->first();
-
-        return new BasketCollection($allProductsInBasket);
 
     }
 

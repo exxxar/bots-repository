@@ -171,12 +171,15 @@ class BasketController extends Controller
 
     public function commentProductInBasket(Request $request): BasketCollection
     {
-
+        BusinessLogic::basket()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->addProductComment($request->all());
 
         return BusinessLogic::basket()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->addProductComment($request->all());
+            ->productsInBasket();
     }
 
     /**
@@ -185,20 +188,25 @@ class BasketController extends Controller
     public function incProductInBasket(Request $request): BasketCollection
     {
 
+        BusinessLogic::basket()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->addAndIncrementProduct($request->all());
+
 
         return BusinessLogic::basket()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->addAndIncrementProduct($request->all());
+            ->productsInBasket();
     }
 
     /**
      * @throws ValidationException
      */
-    public function incCollectionInBasket(Request $request): BasketCollection
+    public function incCollectionInBasket(Request $request)
     {
         $variantId = $request->variant_id ?? null;
-        return is_null($variantId) ?
+        is_null($variantId) ?
             BusinessLogic::basket()
                 ->setBot($request->bot ?? null)
                 ->setBotUser($request->botUser ?? null)
@@ -207,6 +215,11 @@ class BasketController extends Controller
                 ->setBot($request->bot ?? null)
                 ->setBotUser($request->botUser ?? null)
                 ->incrementCollection($request->all());
+
+        return BusinessLogic::basket()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->productsInBasket();
     }
 
 
@@ -216,10 +229,15 @@ class BasketController extends Controller
             "product_id" => "required"
         ]);
 
-        return BusinessLogic::basket()
+        BusinessLogic::basket()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->decrementAndRemoveProduct($request->product_id ?? null);
+
+        return BusinessLogic::basket()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->productsInBasket();
     }
 
     public function decCollectionInBasket(Request $request): BasketCollection
@@ -228,10 +246,15 @@ class BasketController extends Controller
             "product_collection_id" => "required"
         ]);
 
-        return BusinessLogic::basket()
+        BusinessLogic::basket()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->decrementAndRemoveCollection($request->all());
+
+        return BusinessLogic::basket()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->productsInBasket();
     }
 
 
