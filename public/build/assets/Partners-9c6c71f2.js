@@ -1,0 +1,1 @@
+import{P as e}from"./PartnersList-e3f31b6f.js";import{o as t,k as s,n as a,l as r}from"./index.es-c4852431.js";import"./_plugin-vue_export-helper-c27b6911.js";const o={class:"card card-style p-3"},c={class:"content"},m={__name:"Partners",setup(n){return(_,d)=>(t(),s("div",o,[a("div",c,[r(e)])]))}};export{m as default};

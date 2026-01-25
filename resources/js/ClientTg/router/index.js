@@ -1,74 +1,110 @@
-import {createWebHashHistory, createRouter} from "vue-router";
+import { createWebHashHistory, createRouter } from "vue-router";
 
-import Home from '@/ClientTg/Pages/V1/Shop/Home.vue';
-import Products from '@/ClientTg/Pages/V1/Shop/Products.vue';
-import ProductsInCategory from '@/ClientTg/Pages/V1/Shop/ProductsInCategory.vue';
-import Product from '@/ClientTg/Pages/V1/Shop/Product.vue';
-import Favorites from '@/ClientTg/Pages/V1/Shop/Favorites.vue';
-import Basket from '@/ClientTg/Pages/V1/Shop/Basket.vue';
+import { defineAsyncComponent } from 'vue'
 
-
-import Schedule from '@/ClientTg/Pages/V1/Shop/Schedule.vue';
-import Quizzes from '@/ClientTg/Pages/V1/Quiz/Quizzes.vue';
-import SingleQuiz from '@/ClientTg/Pages/V1/Quiz/SingleQuiz.vue';
-import Appointments from '@/ClientTg/Pages/V1/Appointment/Appointments.vue';
-import OneArmedBanditPage from '@/ClientTg/Pages/V1/OneArmedBanditPage.vue';
-
-
-import DeliveryMain from '@/ClientTg/Pages/V1/Delivery/Main.vue';
-
-import ClientPromocode from '@/ClientTg/Pages/V1/Shop/Promocode.vue';
-import FriendsGame from '@/ClientTg/Pages/V1/Shop/FriendsGame.vue';
-
-import FoodConstructors from '@/ClientTg/Pages/V1/FoodConstructors.vue';
-
-
-
-
-
-import Wheel from '@/ClientTg/Pages/V1/Shop/Wheel.vue';
-import WheelCustom from '@/ClientTg/Pages/V1/Shop/WheelCustom.vue';
-import CashOut from '@/ClientTg/Pages/V1/Shop/CashOut.vue';
-import SaveUp from '@/ClientTg/Pages/V1/Shop/SaveUp.vue';
-import Quest from '@/ClientTg/Pages/V1/Shop/Quest.vue';
-import Empty from '@/ClientTg/Pages/V1/Shop/Empty.vue';
-import Booking from '@/ClientTg/Pages/V1/Shop/Booking.vue';
-import Admins from '@/ClientTg/Pages/V1/Shop/Admins.vue';
-import Vip from '@/ClientTg/Pages/V1/Shop/Vip.vue';
-import ProfileForm from '@/ClientTg/Pages/V1/Shop/ProfileForm.vue';
-
-import Categories from '@/ClientTg/Pages/V1/Shop/Categories.vue';
-
-import AdminMain from '@/ClientTg/Pages/V1/Admin/Main.vue';
-import AdminChatLog from '@/ClientTg/Pages/V1/Admin/ChatHistory.vue';
-import AdminPromotion from '@/ClientTg/Pages/V1/Admin/Promotion.vue';
-import AdminStatistic from '@/ClientTg/Pages/V1/Admin/Statistic.vue';
-import AdminWorkStatus from '@/ClientTg/Pages/V1/Admin/WorkStatus.vue';
-import AdminOrders from '@/ClientTg/Pages/V1/Admin/Orders.vue';
-import AdminUsers from '@/ClientTg/Pages/V1/Admin/Users.vue';
-import AdminActions from '@/ClientTg/Pages/V1/Admin/Actions.vue';
-import AdminShopManager from '@/ClientTg/Pages/V1/Admin/ShopManager.vue';
-import AdminCompanyManager from '@/ClientTg/Pages/V1/Admin/CompanyManager.vue';
-import AdminBotManager from '@/ClientTg/Pages/V1/Admin/BotManager.vue';
-import AdminBotPage from '@/ClientTg/Pages/V1/Admin/BotManager/Pages.vue';
-import AdminBotSlug from '@/ClientTg/Pages/V1/Admin/BotManager/Slugs.vue';
-import AdminBotDialog from '@/ClientTg/Pages/V1/Admin/BotManager/Dialogs.vue';
-import AdminBotKeyboard from '@/ClientTg/Pages/V1/Admin/BotManager/Keyboards.vue';
-import AdminBotAmo from '@/ClientTg/Pages/V1/Admin/BotManager/Amo.vue';
-import AdminBotYClients from '@/ClientTg/Pages/V1/Admin/BotManager/YClients.vue';
-import AdminBonusProduct from '@/ClientTg/Pages/V1/Admin/BonusProduct.vue';
-import AdminMessageToUser from '@/ClientTg/Pages/V1/Admin/MessageToUser.vue';
-
-
-import ManagerMain from '@/ClientTg/Pages/V1/Manager/Main.vue';
-import ManagerForm from '@/ClientTg/Pages/V1/Manager/Manager.vue';
-import ManagerClients from '@/ClientTg/Pages/V1/Manager/Clients.vue';
-import ManagerProfile from '@/ClientTg/Pages/V1/Manager/Profile.vue';
-import ManagerPartners from '@/ClientTg/Pages/V1/Manager/Partners.vue';
-
-
-import DeliverymanForm from '@/ClientTg/Pages/V1/Delivery/DeliveryManForm.vue';
-
+const Home = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Home.vue'))
+const Products = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Products.vue'))
+const ProductsInCategory = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/ProductsInCategory.vue'))
+const Product = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Product.vue'))
+const Favorites = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Favorites.vue'))
+const Basket = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Basket.vue'))
+const Schedule = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Schedule.vue'))
+const Quizzes = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Quiz/Quizzes.vue'))
+const SingleQuiz = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Quiz/SingleQuiz.vue'))
+const Appointments = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Appointment/Appointments.vue'))
+const OneArmedBanditPage = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/OneArmedBanditPage.vue'))
+const DeliveryMain = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Delivery/Main.vue'))
+const ClientPromocode = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Promocode.vue'))
+const FriendsGame = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/FriendsGame.vue'))
+const FoodConstructors = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/FoodConstructors.vue'))
+const Wheel = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Wheel.vue'))
+const WheelCustom = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/WheelCustom.vue'))
+const CashOut = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/CashOut.vue'))
+const SaveUp = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/SaveUp.vue'))
+const Quest = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Quest.vue'))
+const Empty = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Empty.vue'))
+const Booking = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Booking.vue'))
+const Admins = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Admins.vue'))
+const Vip = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Vip.vue'))
+const ProfileForm = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/ProfileForm.vue'))
+const Categories = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Shop/Categories.vue'))
+const AdminMain = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/Main.vue'))
+const AdminChatLog = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/ChatHistory.vue'))
+const AdminPromotion = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/Promotion.vue'))
+const AdminStatistic = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/Statistic.vue'))
+const AdminWorkStatus = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/WorkStatus.vue'))
+const AdminOrders = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/Orders.vue'))
+const AdminUsers = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/Users.vue'))
+const AdminActions = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/Actions.vue'))
+const AdminShopManager = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/ShopManager.vue'))
+const AdminCompanyManager = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/CompanyManager.vue'))
+const AdminBotManager = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BotManager.vue'))
+const AdminBotPage = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BotManager/Pages.vue'))
+const AdminBotSlug = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BotManager/Slugs.vue'))
+const AdminBotDialog = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BotManager/Dialogs.vue'))
+const AdminBotKeyboard = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BotManager/Keyboards.vue'))
+const AdminBotAmo = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BotManager/Amo.vue'))
+const AdminBotYClients = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BotManager/YClients.vue'))
+const AdminBonusProduct = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/BonusProduct.vue'))
+const AdminMessageToUser = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Admin/MessageToUser.vue'))
+const ManagerMain = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Manager/Main.vue'))
+const ManagerForm = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Manager/Manager.vue'))
+const ManagerClients = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Manager/Clients.vue'))
+const ManagerProfile = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Manager/Profile.vue'))
+const ManagerPartners = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Manager/Partners.vue'))
+const DeliverymanForm = defineAsyncComponent(() => import('@/ClientTg/Pages/V1/Delivery/DeliveryManForm.vue'))
+const CatalogV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Catalog.vue'))
+const WaiterCatalogV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Waiter/Catalog.vue'))
+const ContactsV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Contacts.vue'))
+const OrdersV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/MyOrders.vue'))
+const ProfileV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Profile.vue'))
+const ProductV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Product.vue'))
+const ShopCartV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/ShopCart.vue'))
+const FeedBackV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Other/FeedBack.vue'))
+const MenuV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Menu.vue'))
+const OneArmedBanditV2 = defineAsyncComponent(() => import('@/ClientTg/Components/V2/Games/OneArmedBanditPage.vue'))
+const CashBackV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/MyCashBack.vue'))
+const FriendsV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/MyFriends.vue'))
+const WheelOfFortuneV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/WheelOfFortune.vue'))
+const StoryManagerV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/StoryManager.vue'))
+const MailingV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Mailing.vue'))
+const ClientsV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Clients.vue'))
+const ShopV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Shop.vue'))
+const AdminOrdersV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Orders.vue'))
+const StatisticV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Statistic.vue'))
+const PromoCodesV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Promocodes.vue'))
+const PagePasswordV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/PagePassword.vue'))
+const InstaQuestV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/InstaQuest.vue'))
+const RequestPhotoV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/RequestPhoto.vue'))
+const FriendsGameV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/FriendsGame.vue'))
+const PromoCodeFormV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/PromoCode.vue'))
+const VipProfileV2_1 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/VipProfileV1.vue'))
+const SimpleProfileV2_1 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/SimpleProfileV1.vue'))
+const VipProfileV2_2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/VipProfileV2.vue'))
+const WheelCustomV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Games/WheelCustom.vue'))
+const AdminMenuV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/AdminMenu.vue'))
+const BotManagerV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/BotManager.vue'))
+const PageManagerV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Pages.vue'))
+const LinkManagerV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Links.vue'))
+const IntegrationsV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue'))
+const PartnersV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Partners.vue'))
+const AmoV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Integrations/Amo.vue'))
+const CdekV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Integrations/Cdek.vue'))
+const DialogsV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Dialogs.vue'))
+const SlugsV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Slugs.vue'))
+const YClientsV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue'))
+const IikoV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue'))
+const BitrixV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue'))
+const FrontPadV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue'))
+const UploadV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Other/FileUpload.vue'))
+const ReferralV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Referral.vue'))
+const TableMenuV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Tables/TableMenu.vue'))
+const TableCartV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Tables/TableCart.vue'))
+const TablesManagerV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue'))
+const TableV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Tables/Table.vue'))
+const SendInvoiceV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Invoice.vue'))
+const PageEditorV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/PageEditor.vue'))
+const TableBookingV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Bookings.vue'))
 
 export const routes = [
 
@@ -421,61 +457,6 @@ export const deliveryRoutes = [
 
 
 ];
-
-import CatalogV2 from '@/ClientTg/Pages/V2/Shop/Catalog.vue';
-import WaiterCatalogV2 from '@/ClientTg/Pages/V2/Waiter/Catalog.vue';
-import ContactsV2 from '@/ClientTg/Pages/V2/Shop/Contacts.vue';
-import OrdersV2 from '@/ClientTg/Pages/V2/Shop/MyOrders.vue';
-import ProfileV2 from '@/ClientTg/Pages/V2/Shop/Profile.vue';
-import ProductV2 from '@/ClientTg/Pages/V2/Shop/Product.vue';
-import ShopCartV2 from '@/ClientTg/Pages/V2/Shop/ShopCart.vue';
-
-import FeedBackV2 from "@/ClientTg/Pages/V2/Other/FeedBack.vue";
-import MenuV2 from "@/ClientTg/Pages/V2/Shop/Menu.vue";
-import OneArmedBanditV2 from '@/ClientTg/Components/V2/Games/OneArmedBanditPage.vue';
-import CashBackV2 from '@/ClientTg/Pages/V2/Shop/MyCashBack.vue';
-import FriendsV2 from '@/ClientTg/Pages/V2/Shop/MyFriends.vue';
-import WheelOfFortuneV2 from '@/ClientTg/Pages/V2/Shop/WheelOfFortune.vue';
-import StoryManagerV2 from '@/ClientTg/Pages/V2/Admin/StoryManager.vue';
-import MailingV2 from '@/ClientTg/Pages/V2/Admin/Mailing.vue';
-import ClientsV2 from '@/ClientTg/Pages/V2/Admin/Clients.vue';
-import ShopV2 from '@/ClientTg/Pages/V2/Admin/Shop.vue';
-import AdminOrdersV2 from '@/ClientTg/Pages/V2/Admin/Orders.vue';
-import StatisticV2 from '@/ClientTg/Pages/V2/Admin/Statistic.vue';
-import PromoCodesV2 from '@/ClientTg/Pages/V2/Admin/Promocodes.vue';
-import PagePasswordV2 from '@/ClientTg/Pages/V2/Shop/PagePassword.vue';
-import InstaQuestV2 from "@/ClientTg/Pages/V2/Shop/InstaQuest.vue";
-import RequestPhotoV2 from "@/ClientTg/Pages/V2/Shop/RequestPhoto.vue";
-import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
-import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
-import VipProfileV2_1 from "@/ClientTg/Pages/V2/Shop/VipProfileV1.vue";
-import SimpleProfileV2_1 from "@/ClientTg/Pages/V2/Shop/SimpleProfileV1.vue";
-import VipProfileV2_2 from "@/ClientTg/Pages/V2/Shop/VipProfileV2.vue";
-import WheelCustomV2 from "@/ClientTg/Pages/V2/Games/WheelCustom.vue";
-import AdminMenuV2 from "@/ClientTg/Pages/V2/Admin/AdminMenu.vue";
-import BotManagerV2 from "@/ClientTg/Pages/V2/Admin/BotManager.vue";
-import PageManagerV2 from "@/ClientTg/Pages/V2/Admin/Pages.vue";
-import LinkManagerV2 from "@/ClientTg/Pages/V2/Admin/Links.vue";
-import IntegrationsV2 from "@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue";
-import PartnersV2 from "@/ClientTg/Pages/V2/Admin/Partners.vue";
-
-import AmoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Amo.vue";
-import CdekV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Cdek.vue";
-import DialogsV2 from "@/ClientTg/Pages/V2/Admin/Dialogs.vue";
-import SlugsV2 from "@/ClientTg/Pages/V2/Admin/Slugs.vue";
-import YClientsV2 from "@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue";
-import IikoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue";
-import BitrixV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue";
-import FrontPadV2 from "@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue";
-import UploadV2 from "@/ClientTg/Pages/V2/Other/FileUpload.vue";
-import ReferralV2 from "@/ClientTg/Pages/V2/Shop/Referral.vue";
-import TableMenuV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableMenu.vue";
-import TableCartV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableCart.vue";
-import TablesManagerV2 from "@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue";
-import TableV2 from "@/ClientTg/Pages/V2/Admin/Tables/Table.vue";
-import SendInvoiceV2 from "@/ClientTg/Pages/V2/Admin/Invoice.vue";
-import PageEditorV2 from "@/ClientTg/Pages/V2/Admin/PageEditor.vue";
-import TableBookingV2 from "@/ClientTg/Pages/V2/Shop/Bookings.vue";
 
 const simplePrefix = "/s"
 export const simpleRoutes = [

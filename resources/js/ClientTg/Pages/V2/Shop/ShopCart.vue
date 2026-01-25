@@ -285,7 +285,14 @@ export default {
         },
 
         loadBasketData() {
-            return this.$store.dispatch("loadProductsInBasket")
+            return this.$store.dispatch("loadProductsInBasket", {
+                dataObject: {
+                    search: '',
+                    categories: ''
+                },
+                page: 0,
+                size: 12
+            })
         },
         startCheckout() {
             let data = new FormData();

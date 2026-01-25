@@ -1,4 +1,31 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
+.ios-nav-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.ios-btn {
+    flex: 1;
+    margin: 0 2px;
+    padding: 6px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* критично для iOS */
+    justify-content: center !important;
+}
+
+.ios-label {
+    font-size: 10px;
+}
+
+.cart-marker {
+    position: absolute;
+    top: -2px;
+    right: 10px;
+    background: #dc3545;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 10px;
+}

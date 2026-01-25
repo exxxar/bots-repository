@@ -1,0 +1,1 @@
+.wrap{display:flex;align-items:center;justify-content:center;position:relative}.wrap .start-panel{position:absolute;z-index:99;height:110px;width:110px;display:flex;justify-content:center;align-items:center;border-radius:50%;box-shadow:0 0 5px 1px #000}.wrap div#wheel svg{font-size:32px}

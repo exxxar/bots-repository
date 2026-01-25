@@ -20,7 +20,9 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Scripts -->
     @routes
-    @vite(['resources/js/ClientTg/app.js', "resources/js/ClientTg/Pages/{$page['component']}.vue"])
+    @vite(['resources/js/ClientTg/app.js',
+    'resources/css/ClientTg/app.css',
+    "resources/js/ClientTg/Pages/{$page['component']}.vue"])
     @inertiaHead
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
