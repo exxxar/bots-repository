@@ -1670,7 +1670,7 @@ export default {
         window.addEventListener("select-notes-event", (e) => {
             let param = e.detail.param;
             let note = e.detail.note;
-            eval(`${this}.${param}=${note}`)
+           // eval(`${this}.${param}=${note}`)
         } );
 
 

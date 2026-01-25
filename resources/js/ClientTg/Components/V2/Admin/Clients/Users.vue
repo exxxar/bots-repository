@@ -134,7 +134,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
-import {saveAs} from 'file-saver';
+
 
 export default {
     props: ["selectedBotUser"],

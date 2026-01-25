@@ -1,0 +1,1 @@
+import{T as e}from"./TableBookingPlanner-66e3ceca.js";import{o as s,j as t,l as o,k as a}from"./index.es-db843bab.js";import"./_plugin-vue_export-helper-c27b6911.js";const c={class:"container py-3"},n={class:"row"},_={class:"col-12"},r={data(){}},k=Object.assign(r,{__name:"Bookings",setup(i){return(l,d)=>(s(),t("div",c,[o("div",n,[o("div",_,[a(e)])])]))}});export{k as default};

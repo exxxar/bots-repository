@@ -494,7 +494,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {mapGetters} from "vuex";
-import {saveAs} from 'file-saver';
+
 import {Chart, Grid, Line, Bar, Tooltip, Pie, Responsive} from 'vue3-charts'
 
 export default {

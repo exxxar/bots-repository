@@ -7,6 +7,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
     server: {https: false},
+    build: { chunkSizeWarningLimit: 1500 },
     plugins: [
         laravel({
 

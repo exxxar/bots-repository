@@ -105,8 +105,14 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
             <button
                 v-if="cartTotalCount>0"
                 @click="clearCart"
-                class="btn btn-outline-primary p-3 w-100">
+                class="btn btn-outline-primary p-3 w-100 mb-2">
                 <i class="fa-solid  fa-trash-can mr-2"></i><span class="color-white">Очистить корзину</span>
+            </button>
+
+            <button
+                @click="$emit('change-tab', 1)"
+                class="btn btn-primary p-3 w-100">
+                <i class="fa-solid fa-money-bill mr-2"></i><span class="color-white">Перейти к оформлению</span>
             </button>
         </template>
 

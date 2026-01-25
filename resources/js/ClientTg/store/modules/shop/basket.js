@@ -132,11 +132,13 @@ const actions = {
 
         return _axios.then((response) => {
             let dataObject = response.data
+            console.error( dataObject)
             context.commit("setBasket", dataObject.data)
             delete dataObject.data
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
+            console.error( err.response?.data?.errors || [])
             context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })

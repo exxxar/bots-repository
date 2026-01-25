@@ -68,6 +68,13 @@ import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductReco
         <div class="d-flex justify-content-center flex-column align-items-center">
             <i class="fa-brands fa-shopify mb-3" style="font-size:36px;"></i>
             <p>Корзина пустая:(</p>
+
+            <a
+                class="btn btn-primary"
+                @click="loadBasketData()"
+                href="javascript:void(0)">
+                <i class="fa-solid fa-arrows-rotate"></i> Обновить корзину
+            </a>
         </div>
     </div>
 
@@ -76,20 +83,35 @@ import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductReco
         class="navbar navbar-expand-sm fixed-bottom p-2 bg-transparent border-0"
         style="border-radius:10px 10px 0px 0px;">
         <div v-if="cartTotalCount>0" class="w-100">
-            <button type="button"
-                    v-if="tab===0"
-                    @click="tab=1"
-                    style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">
-                Оформление заказа
-            </button>
-            <!--            <button type="button"
-                                v-if="tab>=1"
-                                @click="tab=0"
-                                style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                                class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">
-                            Корзина с товаром
-                        </button>-->
+
+            <div class="ios-nav-group w-100" v-if="tab===0">
+                <button type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebar-menu"
+                        aria-controls="sidebar-menu"
+                        class="btn btn-primary ios-btn">
+                    <i class="fa-solid fa-bars"></i>
+                    <span class="ios-label">Меню</span>
+                </button>
+
+                <button
+                    @click="goToCatalog"
+                    type="button"
+                    class="btn btn-primary ios-btn">
+                    <i class="fa-solid fa-shop"></i>
+                    <span class="ios-label">Магазин</span>
+                </button>
+
+                <button type="button"
+                        v-if="tab===0"
+                        @click="tab=1"
+                        style="flex:3;"
+                        class="btn btn-primary ios-btn p-2">
+                    <i class="fa-solid fa-money-bill"></i>
+                    <span class="ios-label">Оформить заказ</span>
+                </button>
+
+            </div>
         </div>
         <div v-else class="w-100">
             <button type="button"
@@ -161,7 +183,7 @@ export default {
                 image_info: null,
                 delivery_price: 0,
                 distance: 0,
-                delivery_details:[],
+                delivery_details: [],
                 allergy: null,
                 action_prize: null,
             },

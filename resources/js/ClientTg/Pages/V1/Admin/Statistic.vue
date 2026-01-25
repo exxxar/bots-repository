@@ -122,7 +122,6 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
-import {saveAs} from 'file-saver';
 
 export default {
     data() {
