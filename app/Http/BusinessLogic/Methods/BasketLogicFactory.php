@@ -532,18 +532,12 @@ class BasketLogicFactory extends BaseLogicFactory
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры заданы!");
 
-
-        $baskets = Basket::query()
+        Basket::query()
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
             ->whereNull("table_approved_at")
-            ->get();
-
-        foreach ($baskets as $basket) {
-            $basket->ordered_at = Carbon::now();
-            $basket->save();
-        }
+            ->delete();
 
     }
 
