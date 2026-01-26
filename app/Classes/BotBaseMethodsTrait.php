@@ -532,6 +532,8 @@ trait BotBaseMethodsTrait
 
         ];
 
+        Log::info("sendInvoice=>".print_r($tmp, true));
+
         if (!empty($keyboard ?? [])) {
             $tmp['reply_markup'] = json_encode([
                 'inline_keyboard' => $keyboard,
