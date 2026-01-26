@@ -729,8 +729,10 @@ class BotLogicFactory extends BaseLogicFactory
             );
 
         $products = Product::with(['productCategories'])
-            ->take(10)
+            ->take(30)
             ->get();
+
+        $index = 0;
 
         foreach ($products as $product) {
 
@@ -741,16 +743,22 @@ class BotLogicFactory extends BaseLogicFactory
 
             // изменяем нужные поля
             $newProduct->bot_id = $newBot->id;
-            $newProduct->title = 'Тест ' . $counter;
+            $newProduct->title = 'Тест ' . $index;
             $newProduct->current_price = rand(100, 999);
 
             $newProduct->save();
 
-            // копируем категории
-            $newProduct->productCategories()->sync(
-                $product->productCategories->pluck('id')->toArray()
-            );
+            if ($index == 0 || $index % 3 == 0)
+                $category = ProductCategory::query()
+                    ->create([
+                        'title' => 'Тест ' . $index,
+                        'bot_id' => $newBot->id,
+                        'is_active' => true
+                    ]);
 
+            // копируем категории
+            $newProduct->productCategories()->sync([$category->id]);
+            $index++;
         }
 
         $encryptedRole = base64_encode(md5("is_admin"));
