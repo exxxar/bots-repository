@@ -433,6 +433,7 @@ class BotLogicFactory extends BaseLogicFactory
         $company = Company::query()->create([
             'title' => $companyName,
             'slug' => Str::uuid(),
+            'schedule' => $this->bot->company->schedule ?? null,
             'description' => "Автоматические создание нового клиента от " . Carbon::now("+3")->format("Y-m-d H:i:s"),
             'creator_id' => $this->botUser->id ?? null,
         ]);
@@ -509,6 +510,7 @@ class BotLogicFactory extends BaseLogicFactory
         $newBot = $this->bot->replicate();
 
         $newBot->bot_domain = $serviceBotDomain;
+        $newBot->title = $companyName;
         $newBot->bot_token = $token;
         $newBot->bot_token_dev = null;
         $newBot->main_channel = null;
