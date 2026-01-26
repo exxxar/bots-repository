@@ -758,7 +758,9 @@ class BotLogicFactory extends BaseLogicFactory
 
         BotMethods::bot()
             ->whereBot($this->bot)
-            ->sendInlineKeyboard($this->botUser, "Ваш бот готов! Вот ваша ссылка: https://t.me/$serviceBotDomain", [
+            ->sendInlineKeyboard(
+                $this->botUser->telegram_chat_id,
+                "Ваш бот готов! Вот ваша ссылка: https://t.me/$serviceBotDomain", [
                 [
                     [
                         "text" => "Перейти (как админ)", "url" => "$link"
