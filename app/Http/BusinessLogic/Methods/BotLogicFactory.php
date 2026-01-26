@@ -467,7 +467,7 @@ class BotLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Начали создавать копию бота!"
             );
-
+        sleep(0.3);
         Http::post("$website/setMyName", [
             'name' => $companyName,
         ]);
@@ -506,7 +506,7 @@ class BotLogicFactory extends BaseLogicFactory
                 "Добавили: название, короткое описание, полное описание, список команд и кнопку Меню с ссылкой на магазин"
             );
 
-
+        sleep(0.3);
         $newBot = $this->bot->replicate();
 
         $newBot->bot_domain = $serviceBotDomain;
@@ -534,7 +534,7 @@ class BotLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Копируем существующие страницы"
             );
-
+        sleep(0.3);
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
             ->where("bot_id", $this->bot->id)
@@ -612,7 +612,7 @@ class BotLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Копируем существующие скрипты"
             );
-
+        sleep(0.3);
         $slugs = BotMenuSlug::query()
             ->where("bot_id", $this->bot->id)
             ->get();
@@ -644,7 +644,7 @@ class BotLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Копируем существующие менюшки"
             );
-
+        sleep(0.3);
         $keyboards = BotMenuTemplate::query()
             ->where("bot_id", $this->bot->id)
             ->get();
@@ -677,6 +677,9 @@ class BotLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Копируем диалоги"
             );
+
+        sleep(0.3);
+
         $dialogs = BotDialogCommand::query()
             ->where("bot_id", $this->bot->id)
             ->get();
@@ -729,7 +732,7 @@ class BotLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Копируем категории и товары"
             );
-
+        sleep(0.3);
         $products = Product::with(['productCategories'])
             ->take(30)
             ->get();
@@ -765,7 +768,7 @@ class BotLogicFactory extends BaseLogicFactory
 
         $encryptedRole = base64_encode(md5("is_admin"));
         $link = "https://t.me/$serviceBotDomain?start=$encryptedRole";
-
+        sleep(0.3);
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
