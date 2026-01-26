@@ -425,6 +425,8 @@ class BotLogicFactory extends BaseLogicFactory
         if (is_null($this->botUser) || is_null($this->bot))
             throw new HttpException(403, "Условия функции не выполнены");
 
+        ini_set('max_execution_time', 30000);
+
         $companyName = $data["company_name"] ?? 'Новый клиент';
         $token = $data["bot_token"] ?? null;
 
@@ -444,6 +446,26 @@ class BotLogicFactory extends BaseLogicFactory
         $responseData = $result->object()->ok ? $result->object()->result : null;
 
         $serviceBotDomain = $responseData->username ?? null;
+
+        $isNewBotExist = Bot::query()->where("bot_domain", $serviceBotDomain)
+            ->first();
+
+        if (!is_null($isNewBotExist)) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id,
+                    "Бот $serviceBotDomain уже есть в системе!"
+                );
+            return;
+        }
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Начали создавать копию бота!"
+            );
 
         Http::post("$website/setMyName", [
             'name' => $companyName,
@@ -476,6 +498,13 @@ class BotLogicFactory extends BaseLogicFactory
             ],
         ]);
 
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Добавили: название, короткое описание, полное описание, список команд и кнопку Меню с ссылкой на магазин"
+            );
+
 
         $newBot = $this->bot->replicate();
 
@@ -484,6 +513,7 @@ class BotLogicFactory extends BaseLogicFactory
         $newBot->bot_token_dev = null;
         $newBot->main_channel = null;
         $newBot->order_channel = null;
+        $newBot->config = $this->bot->config ?? null;
         $newBot->company_id = $company->id;
         $newBot->is_template = false;
         $newBot->template_description = null;
@@ -494,6 +524,14 @@ class BotLogicFactory extends BaseLogicFactory
         $newBot->is_active = true;
         $newBot->save();
 
+        BotManager::bot()->setWebhooks($newBot->id);
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Копируем существующие страницы"
+            );
 
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
@@ -566,6 +604,13 @@ class BotLogicFactory extends BaseLogicFactory
 
             }
 
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Копируем существующие скрипты"
+            );
+
         $slugs = BotMenuSlug::query()
             ->where("bot_id", $this->bot->id)
             ->get();
@@ -590,6 +635,13 @@ class BotLogicFactory extends BaseLogicFactory
                 $slug->save();
 
             }
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Копируем существующие менюшки"
+            );
 
         $keyboards = BotMenuTemplate::query()
             ->where("bot_id", $this->bot->id)
@@ -617,6 +669,12 @@ class BotLogicFactory extends BaseLogicFactory
 
             }
 
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Копируем диалоги"
+            );
         $dialogs = BotDialogCommand::query()
             ->where("bot_id", $this->bot->id)
             ->get();
@@ -661,76 +719,53 @@ class BotLogicFactory extends BaseLogicFactory
 
             }
 
-        $warnings = BotWarning::query()
-            ->where("bot_id", $this->bot->id)
-            ->get();
+        $newBotId = $newBot->id;
+        $counter = 1;
 
-        if (!empty($warnings))
-            foreach ($warnings as $warning) {
-                $isReplicated = in_array((object)[
-                    "type" => "warning",
-                    "id" => $warning->id
-                ], $replicated);
-
-                if ($isReplicated)
-                    continue;
-
-                $replicated[] = (object)[
-                    "type" => "warning",
-                    "id" => $warning->id
-                ];
-
-                $newWarning = $warning->replicate();
-                $newWarning->bot_id = $newBot->id;
-                $newWarning->save();
-            }
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Копируем категории и товары"
+            );
 
         $newBotId = $newBot->id;
         $counter = 1;
 
         DB::transaction(function () use ($newBotId, &$counter) {
 
-            ProductCategory::with(['products', 'products.productOptions'])
-                ->chunk(50, function ($categories) use (&$counter, $newBotId) {
+            // выбираем товары, которые нужно копировать
+            $products = Product::with(['productCategories', 'productOptions'])
+                ->get();
 
-                    foreach ($categories as $category) {
+            foreach ($products as $product) {
 
-                        // выбираем 3 случайных товара
-                        $products = $category->products()
-                            ->inRandomOrder()
-                            ->take(3)
-                            ->get();
+                // создаём копию товара
+                $newProduct = $product->replicate([
+                    'bot_id', 'title', 'current_price'
+                ]);
 
-                        foreach ($products as $product) {
+                // изменяем нужные поля
+                $newProduct->bot_id = $newBotId;
+                $newProduct->title = 'Тест ' . $counter;
+                $newProduct->current_price = rand(100, 999);
 
-                            // создаём копию товара
-                            $newProduct = $product->replicate([
-                                'bot_id', 'title', 'current_price'
-                            ]);
+                $newProduct->save();
 
-                            // изменяем нужные поля
-                            $newProduct->bot_id = $newBotId;
-                            $newProduct->title = 'Тест ' . $counter;
-                            $newProduct->current_price = rand(100, 999);
+                // копируем категории
+                $newProduct->productCategories()->sync(
+                    $product->productCategories->pluck('id')->toArray()
+                );
 
-                            $newProduct->save();
+                // копируем productOptions
+                foreach ($product->productOptions as $option) {
+                    $newProduct->productOptions()->create(
+                        $option->only(['title', 'value', 'price'])
+                    );
+                }
 
-                            // копируем категории (включая текущую)
-                            $newProduct->productCategories()->sync(
-                                $product->productCategories->pluck('id')->toArray()
-                            );
-
-                            // копируем productOptions
-                            foreach ($product->productOptions as $option) {
-                                $newProduct->productOptions()->create(
-                                    $option->only(['title', 'value', 'price'])
-                                );
-                            }
-
-                            $counter++;
-                        }
-                    }
-                });
+                $counter++;
+            }
         });
 
 
@@ -739,7 +774,7 @@ class BotLogicFactory extends BaseLogicFactory
             ->sendInlineKeyboard($this->botUser, "Ваш бот готов! Вот ваша ссылка: https://t.me/$serviceBotDomain", [
                 [
                     [
-                        "text" =>"Перейти в бота", "url" => "https://t.me/$serviceBotDomain"
+                        "text" => "Перейти в бота", "url" => "https://t.me/$serviceBotDomain"
                     ]
                 ]
             ]);
