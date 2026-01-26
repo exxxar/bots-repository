@@ -30,6 +30,20 @@ use Illuminate\Validation\ValidationException;
 
 class BotController extends Controller
 {
+    public function selfDuplicate(Request $request)
+    {
+        $request->validate([
+            "bot_token" => "required",
+            "company_name" => "required"
+        ]);
+
+        BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBot($request->botUser ?? null)
+            ->copySelfBot($request->all());
+
+        return response()->noContent();
+    }
 
     public function loadCurrentServerList(): \Illuminate\Http\JsonResponse
     {
@@ -52,15 +66,15 @@ class BotController extends Controller
             ->where("bot_id", $bot->id)
             ->where(function ($q) use ($pageName) {
                 $q->where("command", "like", "%$pageName");
-                    //->orWhere("command", "/$pageName");
+                //->orWhere("command", "/$pageName");
             })->first();
 
-        Log::info("switch-to-page=>".$request->page);
+        Log::info("switch-to-page=>" . $request->page);
 
         if (is_null($slug))
             return response()->noContent(404);
 
-        Log::info("switch-to-page(slug)=>".print_r($slug->toArray()??'-', true));
+        Log::info("switch-to-page(slug)=>" . print_r($slug->toArray() ?? '-', true));
 
         $page = BotPage::query()
             ->where("bot_menu_slug_id", $slug->id)
@@ -69,7 +83,7 @@ class BotController extends Controller
 
         if (is_null($page))
             return response()->noContent(404);
-        Log::info("switch-to-page(page)=>".print_r($page->toArray()??'-', true));
+        Log::info("switch-to-page(page)=>" . print_r($page->toArray() ?? '-', true));
 
         BotManager::bot()
             ->runPage($page->id,
@@ -954,7 +968,7 @@ class BotController extends Controller
     public function updateBotTheme(Request $request): BotResource
     {
         $request->validate([
-            "theme"=>"required"
+            "theme" => "required"
         ]);
 
         return BusinessLogic::bots()

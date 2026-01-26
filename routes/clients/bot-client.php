@@ -618,6 +618,7 @@ Route::prefix("bot-client")
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
                 Route::post("/save-frontpad", [FrontPadController::class, "saveFrontPad"]);
+                Route::post("/self-duplicate",  "selfDuplicate");
                 Route::post("/frontpad-excel-update", [FrontPadController::class, "import"]);
                 Route::post("/frontpad-update", [FrontPadController::class, "updateProducts"]);
                 Route::post("/load-amo-fields", [AmoCrmController::class, "loadAmoFields"]);

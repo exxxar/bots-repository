@@ -171,19 +171,19 @@
                 </button>
             </div>
 
-<!--            <div class="col">
-                <button type="button"
-                        @click="goTo('SlugsV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/statistic.png'" class="menu-item-img img-fluid" alt="">
+            <!--            <div class="col">
+                            <button type="button"
+                                    @click="goTo('SlugsV2')"
+                                    style="min-height:250px;"
+                                    class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                                <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                                    <img v-lazy="'/images/shop-v2-2/statistic.png'" class="menu-item-img img-fluid" alt="">
 
-                        <p class="my-2">Основные функции</p>
-                    </div>
+                                    <p class="my-2">Основные функции</p>
+                                </div>
 
-                </button>
-            </div>-->
+                            </button>
+                        </div>-->
 
             <div class="col">
                 <button type="button"
@@ -202,11 +202,74 @@
             </div>
 
         </div>
+
+        <hr class="text-light my-3">
+        <p class="alert alert-light">
+            Вы можете сделать точную копию данного бота без товаров <span
+            class="fst-italic">(с тестовым набором данных)</span> и запустить его в один клик.
+        </p>
+        <button type="button"
+                class="btn btn-danger w-100 p-3"
+                data-bs-toggle="modal" data-bs-target="#fast-bot-create-modal"
+        >
+            Создать копию бота
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="fast-bot-create-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Создание бота</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form v-on:submit.prevent="createBot">
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control"
+                                   placeholder="Токен"
+                                   aria-label="Токен"
+                                   v-model="botForm.company_name"
+                                   maxlength="255"
+                                   aria-describedby="bot-token" required>
+                            <label id="bot-token">
+                                Название заведения
+                            </label>
+                        </div>
+
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control"
+                                   placeholder="Токен"
+                                   aria-label="Токен"
+                                   v-model="botForm.bot_token"
+                                   maxlength="255"
+                                   aria-describedby="bot-token" required>
+                            <label id="bot-token">
+                                Токен бота
+                            </label>
+                        </div>
+
+                        <button class="btn btn-primary w-100 p-3">Создать</button>
+                    </form>
+                </div>
+
+            </div>
         </div>
+    </div>
 </template>
 <script>
 export default {
-    computed:{
+    data() {
+        return {
+            botForm: {
+                bot_token: null,
+                company_name: null,
+            }
+        }
+    },
+    computed: {
         tg() {
             return window.Telegram.WebApp;
         },
@@ -220,7 +283,12 @@ export default {
             this.$router.back()
         })
     },
-    methods:{
+    methods: {
+        createBot() {
+            this.$store.dispatch("duplicateSelfBot", this.botForm).then(() => {
+                this.tg.close()
+            })
+        },
         goTo(name) {
             this.$router.push({name: name})
         },
