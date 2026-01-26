@@ -286,8 +286,9 @@ export default {
     methods: {
         createBot() {
             this.$store.dispatch("duplicateSelfBot", this.botForm).then(() => {
-                this.tg.close()
             })
+
+            this.tg.close()
         },
         goTo(name) {
             this.$router.push({name: name})

@@ -729,45 +729,32 @@ class BotLogicFactory extends BaseLogicFactory
                 "Копируем категории и товары"
             );
 
-        $newBotId = $newBot->id;
-        $counter = 1;
 
-        DB::transaction(function () use ($newBotId, &$counter) {
 
-            // выбираем товары, которые нужно копировать
-            $products = Product::with(['productCategories', 'productOptions'])
-                ->get();
+        $products = Product::with(['productCategories'])
+            ->take(10)
+            ->get();
 
-            foreach ($products as $product) {
+        foreach ($products as $product) {
 
-                // создаём копию товара
-                $newProduct = $product->replicate([
-                    'bot_id', 'title', 'current_price'
-                ]);
+            // создаём копию товара
+            $newProduct = $product->replicate([
+                'bot_id', 'title', 'current_price'
+            ]);
 
-                // изменяем нужные поля
-                $newProduct->bot_id = $newBotId;
-                $newProduct->title = 'Тест ' . $counter;
-                $newProduct->current_price = rand(100, 999);
+            // изменяем нужные поля
+            $newProduct->bot_id = $newBot->id;
+            $newProduct->title = 'Тест ' . $counter;
+            $newProduct->current_price = rand(100, 999);
 
-                $newProduct->save();
+            $newProduct->save();
 
-                // копируем категории
-                $newProduct->productCategories()->sync(
-                    $product->productCategories->pluck('id')->toArray()
-                );
+            // копируем категории
+            $newProduct->productCategories()->sync(
+                $product->productCategories->pluck('id')->toArray()
+            );
 
-                // копируем productOptions
-                foreach ($product->productOptions as $option) {
-                    $newProduct->productOptions()->create(
-                        $option->only(['title', 'value', 'price'])
-                    );
-                }
-
-                $counter++;
-            }
-        });
-
+        }
 
         BotMethods::bot()
             ->whereBot($this->bot)
