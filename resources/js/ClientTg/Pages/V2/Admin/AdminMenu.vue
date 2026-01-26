@@ -285,10 +285,26 @@ export default {
     },
     methods: {
         createBot() {
+            this.$notify({
+                title: 'Создание нового бота',
+                text: "Начинаем создавать!",
+            });
             this.$store.dispatch("duplicateSelfBot", this.botForm).then(() => {
+                this.$notify({
+                    title: 'Создание нового бота',
+                    text: "Успешно!",
+                    type: "success",
+                });
+                this.tg.close()
+            }).catch(() => {
+                this.$notify({
+                    title: 'Создание нового бота',
+                    text: "Что-то пошло не так!",
+                    type: "error",
+                });
             })
 
-            this.tg.close()
+
         },
         goTo(name) {
             this.$router.push({name: name})

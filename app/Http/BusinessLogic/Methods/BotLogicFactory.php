@@ -719,7 +719,6 @@ class BotLogicFactory extends BaseLogicFactory
 
             }
 
-        $newBotId = $newBot->id;
         $counter = 1;
 
         BotMethods::bot()
@@ -728,8 +727,6 @@ class BotLogicFactory extends BaseLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Копируем категории и товары"
             );
-
-
 
         $products = Product::with(['productCategories'])
             ->take(10)
@@ -756,12 +753,15 @@ class BotLogicFactory extends BaseLogicFactory
 
         }
 
+        $encryptedRole = base64_encode(md5("is_admin"));
+        $link = "https://t.me/$serviceBotDomain?start=$encryptedRole";
+
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard($this->botUser, "Ваш бот готов! Вот ваша ссылка: https://t.me/$serviceBotDomain", [
                 [
                     [
-                        "text" => "Перейти в бота", "url" => "https://t.me/$serviceBotDomain"
+                        "text" => "Перейти (как админ)", "url" => "$link"
                     ]
                 ]
             ]);

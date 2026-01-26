@@ -28,6 +28,33 @@ use Telegram\Bot\FileUpload\InputFile;
 class StartCodesHandlerController extends Controller
 {
 
+    public function roleInviteAction(...$data){
+        $roleMd5 = $data[1] ?? null;
+
+        $encryptedRole = md5("is_admin");
+
+        if ($encryptedRole!=$roleMd5)
+        {
+            BotManager::bot()
+                ->reply("Что-то пошло не так!");
+            return;
+        }
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        if ($botUser->is_admin)
+        {
+            BotManager::bot()
+                ->reply("У вас уже установлена роль <b>Администратор</b>. Ваша роль изменена не будет!");
+            return;
+        }
+        $botUser->is_admin = true;
+        $botUser->save();
+
+        BotManager::bot()->reply("Вам назначена роль <b>Администратор</b>");
+
+    }
+
     public function requestCoffee(...$data)
     {
         $bot = BotManager::bot()
