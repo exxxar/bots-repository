@@ -88,7 +88,7 @@ Route::prefix("bot-client")
 
         Route::prefix("tables")
             ->controller(\App\Http\Controllers\Bots\Web\TableController::class)
-            ->middleware(["tgAuth.any", "slug"])
+            ->middleware(["tgAuth.any"])
             ->group(function () {
                 Route::post('/current', "currentTable");
                 Route::post('/table-data', "loadTableData");

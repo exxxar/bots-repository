@@ -179,7 +179,7 @@ class TableLogicFactory extends BaseLogicFactory
      */
     public function tablePay(array $data)
     {
-        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+        if (is_null($this->bot) || is_null($this->botUser) )
             throw new HttpException(404, "Не все параметры функции заданы!");
 
 
@@ -202,7 +202,6 @@ class TableLogicFactory extends BaseLogicFactory
         return BusinessLogic::payment()
             ->setBot($this->bot)
             ->setBotUser($this->botUser)
-            ->setSlug($this->slug)
             ->sbpTablePayment($data, $table);
     }
 
@@ -413,7 +412,7 @@ class TableLogicFactory extends BaseLogicFactory
 
     public function requestApproveTable($tableId): void
     {
-        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+        if (is_null($this->bot) || is_null($this->botUser) )
             throw new HttpException(404, "Не все параметры функции заданы!");
 
         $table = Table::query()
@@ -426,7 +425,7 @@ class TableLogicFactory extends BaseLogicFactory
         if (is_null($table))
             throw new HttpException(404, "Столик в данный момент не занят!");
 
-        $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s&hide_menu#/s/admin/tables-manager/" . $table->id;
+        $path = env("APP_URL") . "/bot-client/simple/%s?slug=route&hide_menu#/s/admin/tables-manager/" . $table->id;
 
         $keyboard = [
             [
@@ -434,8 +433,7 @@ class TableLogicFactory extends BaseLogicFactory
                     "web_app" => [
                         "url" => sprintf(
                             $path,
-                            $this->bot->bot_domain,
-                            $this->slug->id ?? 'route'
+                            $this->bot->bot_domain
                         )
                     ]
                 ],
@@ -449,7 +447,6 @@ class TableLogicFactory extends BaseLogicFactory
                 !is_null($table->officiant) ? $keyboard : []
             );
 
-        http://localhost:8000/bot-client/simple/nextitgroup_bot?slug=2606#/s/admin/tables-manager/1
     }
 
     public function closeTable($tableId)

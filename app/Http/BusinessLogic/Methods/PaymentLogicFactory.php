@@ -177,13 +177,13 @@ class PaymentLogicFactory extends BaseLogicFactory
      */
     public function sbpTablePayment(array $data, $table): string
     {
-        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug)) {
+        if (is_null($this->bot) || is_null($this->botUser) ) {
             throw new HttpException(404, "Бот не найден!");
         }
 
         $bot = $this->bot;
         $botUser = $this->botUser;
-        $slug = $this->slug;
+
 
         $isSelf = ($this->data["is_self"] ?? "false") === "true";
 
@@ -213,7 +213,7 @@ class PaymentLogicFactory extends BaseLogicFactory
         $summaryCount = 0;
         $description = "";
 
-        $config = $slug->config ?? null;
+        $config = $bot->config ?? null;
         if (is_null($config)) {
             throw new HttpException(400, "Система не настроена!");
         }

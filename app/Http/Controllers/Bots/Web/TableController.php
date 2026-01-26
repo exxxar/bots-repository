@@ -27,7 +27,6 @@ class TableController extends Controller
                 "url" => BusinessLogic::table()
                     ->setBot($request->bot ?? null)
                     ->setBotUser($request->botUser ?? null)
-                    ->setSlug($request->slug ?? null)
                     ->tablePay(
                         $request->all()
                     )
@@ -43,7 +42,6 @@ class TableController extends Controller
         BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->sendOrderToChat(
                 $request->table_id ?? null,
             );
@@ -61,7 +59,6 @@ class TableController extends Controller
         return BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->storeAdditionalService(
                 $request->table_id ?? null,
                 $request->services ?? []
@@ -78,7 +75,6 @@ class TableController extends Controller
         return BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->changeBasketStatus(
                 $request->table_id ?? null,
                 $request->type ?? 0
@@ -94,7 +90,6 @@ class TableController extends Controller
         return BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->changeTableWaiter($request->table_id ?? null);
     }
 
@@ -107,7 +102,6 @@ class TableController extends Controller
         return BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->getFullTableData($request->table_id ?? null);
     }
 
@@ -116,7 +110,6 @@ class TableController extends Controller
         return BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->current($request->table_id ?? null);
     }
 
@@ -125,7 +118,6 @@ class TableController extends Controller
         return BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->approvedSelfBasket();
     }
 
@@ -134,7 +126,6 @@ class TableController extends Controller
         return BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->waiterTableList($request->size ?? null);
     }
 
@@ -152,7 +143,6 @@ class TableController extends Controller
         BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->requestApproveTable($request->table_id ?? null);
 
         return response()->noContent();
@@ -167,7 +157,6 @@ class TableController extends Controller
         BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->callWaiter($request->table_id ?? null, $request->need_payment ?? false);
 
         return response()->noContent();
@@ -182,7 +171,6 @@ class TableController extends Controller
         BusinessLogic::table()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
             ->closeTable($request->table_id ?? null);
 
         return response()->noContent();
