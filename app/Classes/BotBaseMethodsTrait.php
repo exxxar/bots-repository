@@ -450,27 +450,27 @@ trait BotBaseMethodsTrait
                 $e->getLine());
 
 
-             if (preg_match('/Forbidden/i',  $e->getMessage())) {
-                 Log::error("Forbidden: ".$tmp["chat_id"]);
-                 return;
-             }
-
-            if (preg_match('/Unauthorized/i',  $e->getMessage())) {
-                Log::error("Unauthorized: ".$tmp["chat_id"]);
+            if (preg_match('/Forbidden/i', $e->getMessage())) {
+                Log::error("Forbidden: " . $tmp["chat_id"]);
                 return;
             }
 
-            if (preg_match('/chat not found/i',  $e->getMessage())) {
-                Log::error("Chat not found: ".$tmp["chat_id"]);
+            if (preg_match('/Unauthorized/i', $e->getMessage())) {
+                Log::error("Unauthorized: " . $tmp["chat_id"]);
                 return;
             }
 
-            if (preg_match('/Too Many Requests: retry after/i',  $e->getMessage())) {
-                Log::error("Too Many Requests: ".$tmp["chat_id"]);
+            if (preg_match('/chat not found/i', $e->getMessage())) {
+                Log::error("Chat not found: " . $tmp["chat_id"]);
                 return;
             }
 
-            if (preg_match('/Bad Request: chat_id is empty/i',  $e->getMessage())) {
+            if (preg_match('/Too Many Requests: retry after/i', $e->getMessage())) {
+                Log::error("Too Many Requests: " . $tmp["chat_id"]);
+                return;
+            }
+
+            if (preg_match('/Bad Request: chat_id is empty/i', $e->getMessage())) {
                 Log::error("Bad Request: chat_id is empty");
                 return;
             }
@@ -532,7 +532,7 @@ trait BotBaseMethodsTrait
 
         ];
 
-        Log::info("sendInvoice=>".print_r($tmp, true));
+        Log::info("sendInvoice=>" . print_r($tmp, true));
 
         if (!empty($keyboard ?? [])) {
             $tmp['reply_markup'] = json_encode([
@@ -557,6 +557,11 @@ trait BotBaseMethodsTrait
             $this->bot->sendInvoice($tmp);
         } catch (\Exception $e) {
             $this->sendMessageOnCrash($tmp, "sendInvoice");
+
+            $this->sendMessage(
+                $chatId,
+                "В данный момент платежная система недоступна, обратитесь к администратору"
+            );
 
             Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
@@ -978,7 +983,7 @@ trait BotBaseMethodsTrait
 
     public function sendMediaGroup($chatId, $media, $thread = null)
     {
-        if (count(json_decode($media))>10){
+        if (count(json_decode($media)) > 10) {
             $media = json_encode(array_slice(json_decode($media), 0, 10));
         }
 
@@ -986,7 +991,6 @@ trait BotBaseMethodsTrait
             "chat_id" => $chatId,
             "media" => $media,
         ];
-
 
 
         if (!is_null($thread))
