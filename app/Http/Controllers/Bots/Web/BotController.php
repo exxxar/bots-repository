@@ -39,7 +39,7 @@ class BotController extends Controller
 
         BusinessLogic::bots()
             ->setBot($request->bot ?? null)
-            ->setBot($request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->copySelfBot($request->all());
 
         return response()->noContent();
