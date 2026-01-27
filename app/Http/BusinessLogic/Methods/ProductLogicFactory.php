@@ -108,6 +108,7 @@ class ProductLogicFactory extends BaseLogicFactory
                 'products',
                 $category->products()
                     ->where("bot_id", $botId)
+                    ->whereNull("deleted_at")
                     ->whereNull("in_stop_list_at")
                     ->take(8)
                     ->offset(0)
@@ -121,6 +122,7 @@ class ProductLogicFactory extends BaseLogicFactory
             ->where("bot_id", $botId)
             ->has("productCategories", "=", 0)
             ->whereNull("in_stop_list_at")
+            ->whereNull("deleted_at")
             ->take(8)
             ->offset(0)
             ->get();
