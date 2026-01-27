@@ -73,6 +73,7 @@ class ProductLogicFactory extends BaseLogicFactory
             'products',
             $category->products()
                 ->whereNull("in_stop_list_at")
+                ->where("bot_id", $botId)
                 ->take(8)
                 ->offset($offset)
                 ->get()
@@ -106,6 +107,7 @@ class ProductLogicFactory extends BaseLogicFactory
             $category->setRelation(
                 'products',
                 $category->products()
+                    ->where("bot_id", $botId)
                     ->whereNull("in_stop_list_at")
                     ->take(8)
                     ->offset(0)
