@@ -379,7 +379,7 @@ class BotManager extends BotCore
         return $result;
     }
 
-    protected function testChannels(array $channels)
+    protected function testChannels(array $channels): bool
     {
         if (empty($channels))
             return false;
@@ -1041,41 +1041,6 @@ class BotManager extends BotCore
         }
 
 
-        $config = $bot->config;
-
-        $subscriptions = json_decode($config["subscriptions"] ?? '[]');
-
-        $testSubscriptionActive = $subscriptions->is_active ?? false;
-
-        if ($testSubscriptionActive) {
-            $channelIds = array_column($subscriptions->channels, 'id');
-
-            $result = $this->testChannels($channelIds);
-            $text = $subscriptions->text ?? 'Проверка подписки';
-            if (!$result) {
-
-                $keyboard = collect($subscriptions->channels)
-                    ->filter(fn($ch) => !empty($ch->title) && !empty($ch->link))
-                    ->map(fn($ch) => [
-                        [
-                            'text' => $ch->title,
-                            'url'  => "https://t.me/".str_replace('@', '', $ch->link),
-                        ]
-                    ])
-                    ->values()
-                    ->all();
-
-                $keyboard[] = [
-                    [
-                        'text' => 'Проверить подписку',
-                        'callback_data' => '/start',
-                    ]
-                ];
-
-                $this->replyInlineKeyboard($text, $keyboard);
-            }
-            return true;
-        }
 
         try {
             $this->prepareTemplatePage($page, $channel);
