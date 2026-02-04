@@ -430,15 +430,13 @@ class BotManager extends BotCore
         $config = $bot->config;
 
         $subscriptions = json_decode($config["subscriptions"] ?? '[]');
-        Log::info("bot_config".print_r($subscriptions, true));
+
 
         $testSubscriptionActive = $subscriptions->is_active ?? false;
 
         if ($testSubscriptionActive) {
-            Log::info("1test".print_r("is_active", true));
-            Log::info("2test".print_r($subscriptions->channels, true));
             $channelIds = array_column($subscriptions->channels, 'id');
-            Log::info("3test ids=".print_r($channelIds, true));
+
             $result = $this->testChannels($channelIds);
             $text = $subscriptions->text ?? 'Проверка подписки';
             if (!$result) {
@@ -448,7 +446,7 @@ class BotManager extends BotCore
                     ->map(fn($ch) => [
                         [
                             'text' => $ch->title,
-                            'url'  => "https://t.me/".$ch->link,
+                            'url'  => "https://t.me/".str_replace('@', '', $ch->link),
                         ]
                     ])
                     ->values()
