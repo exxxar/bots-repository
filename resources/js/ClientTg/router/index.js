@@ -105,6 +105,7 @@ const TableV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Tab
 const SendInvoiceV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/Invoice.vue'))
 const PageEditorV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Admin/PageEditor.vue'))
 const TableBookingV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/Bookings.vue'))
+const FoodCalcV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/FoodCalc.vue'))
 
 export const routes = [
 
@@ -461,6 +462,13 @@ export const deliveryRoutes = [
 const simplePrefix = "/s"
 export const simpleRoutes = [
 
+
+    {
+        name: 'FoodCalcV2',
+        path: simplePrefix + '/food-calc',
+        component: FoodCalcV2,
+        meta: {title: 'Калькулятор'}
+    },
     {
         name: 'UploadV2',
         path: simplePrefix + '/upload',

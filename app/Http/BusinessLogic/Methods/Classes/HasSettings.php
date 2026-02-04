@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods\Classes;
 
+use App\Facades\BusinessLogic;
 use App\Http\Resources\ShopConfigPublicResource;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -252,13 +253,25 @@ trait HasSettings
             "checkout_description" => "Ваш товар"
 
         ],
+
+        "subscriptions" => [
+            'text' => 'Подпишись на каналы ниже и получи доступ к проекту',
+            'is_active' => false,
+            'channels' => [
+                [
+                    'title' => 'Канал 1',
+                    'link' => '',
+                    'id' => '',
+                ],
+            ],
+        ],
         "free_shipping_starts_from" => 0,
         "shop_display_type" => 0,
         "payment_info" => "Текст не найден",
-        "coffee"=>[
-          "rules"=>"",
-          "max"=>7,
-          "enabled"=>false
+        "coffee" => [
+            "rules" => "",
+            "max" => 7,
+            "enabled" => false
         ],
         "wheel_of_fortune" => [
             "rules" => "Правила колеса фортуны",
@@ -336,7 +349,7 @@ trait HasSettings
 
             }
 
-            $jsonParams = ["base_payment_service", "themes", "manager", "recommendation", "partners", "tables_variants"];
+            $jsonParams = ["base_payment_service", "themes", "manager", "recommendation", "partners", "tables_variants", "subscriptions"];
 
             foreach ($jsonParams as $param) {
                 if (!is_null($tmp[$param] ?? null)) {
@@ -344,6 +357,24 @@ trait HasSettings
                 }
             }
 
+            $channelsTmp = [];
+            foreach ($tmp["subscriptions"]["channels"] as $channel) {
+                $channel = (object)$channel;
+
+                if (!empty($channel->link)) {
+                    $result = BusinessLogic::bots()
+                        ->setBot($this->bot)
+                        ->requestTelegramChannel([
+                            "channel" => $channel->link
+                        ]);
+                    $channel->id = $result['result']['chat']['id'] ?? null;
+                    if (is_null($channel->id))
+                        $channel->error = "Ошибка получения идентификатора канала";
+                    $channelsTmp[] = $channel;
+                }
+            }
+
+            $tmp["subscriptions"]["channels"] = $channelsTmp;
 
         }
 

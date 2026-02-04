@@ -366,28 +366,7 @@ class BotManager extends BotCore
         }
 
         if (isset($rules["channels"])) {
-
-            foreach ($rules["channels"] as $channel) {
-                try {
-
-                    $data = $this->bot->getChatMember([
-                        "chat_id" => $channel,
-                        "user_id" => $this->botUser->telegram_chat_id,
-                    ]);
-
-                    if ($data["status"] === "left") {
-                        $result = false;
-                        break;
-                    } else
-                        $result = true;
-
-
-                } catch (\Exception $e) {
-                    Log::info($e->getMessage() . " " . $e->getLine());
-                }
-
-            }
-
+            $result = $this->testChannels($rules["channels"]);
         }
 
         if ($result && !is_null($page->rules_if_message))
@@ -396,6 +375,36 @@ class BotManager extends BotCore
         if (!$result && !is_null($page->rules_else_message))
             $this->reply($page->rules_else_message);
 
+
+        return $result;
+    }
+
+    protected function testChannels(array $channels)
+    {
+        if (empty($channels))
+            return false;
+
+
+        foreach ($channels as $channel) {
+            try {
+
+                $data = $this->bot->getChatMember([
+                    "chat_id" => $channel,
+                    "user_id" => $this->botUser->telegram_chat_id,
+                ]);
+
+                if ($data["status"] === "left") {
+                    $result = false;
+                    break;
+                } else
+                    $result = true;
+
+
+            } catch (\Exception $e) {
+                Log::info($e->getMessage() . " " . $e->getLine());
+            }
+
+        }
 
         return $result;
     }
@@ -416,6 +425,41 @@ class BotManager extends BotCore
             return;
 
         $bot = $this->getSelf();
+
+
+        $config = $bot->config;
+
+        $testSubscriptionActive = $config["subscriptions"]["is_active"] ?? false;
+
+        if ($testSubscriptionActive) {
+            $channelIds = array_column($config["subscriptions"]['channels'], 'id');
+            $result = $this->testChannels($channelIds);
+            $text = $config["subscriptions"]["text"] ?? 'Проверка подписки';
+            if (!$result) {
+
+                $keyboard = collect($config["subscriptions"]['channels'])
+                    ->filter(fn($ch) => !empty($ch['title']) && !empty($ch['link']))
+                    ->map(fn($ch) => [
+                        [
+                            'text' => $ch['title'],
+                            'url'  => $ch['link'],
+                        ]
+                    ])
+                    ->values()
+                    ->all();
+
+                $keyboard[] = [
+                    [
+                        'text' => 'Проверить подписку',
+                        'callback_data' => 'start',
+                    ]
+                ];
+
+                $this->replyInlineKeyboard($text, $keyboard);
+            }
+            return;
+        }
+
 
         if ($page->is_external) {
             $this->reply("Передано на внешнее управление (тестовый режим)");
