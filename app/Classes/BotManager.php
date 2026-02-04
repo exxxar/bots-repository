@@ -448,7 +448,7 @@ class BotManager extends BotCore
                     ->map(fn($ch) => [
                         [
                             'text' => $ch->title,
-                            'url'  => $ch->link,
+                            'url'  => "https://t.me/".$ch->link,
                         ]
                     ])
                     ->values()
