@@ -506,7 +506,13 @@ export default {
                 can_use_booking: false,
 
                 tables_variants: [],
-
+                init_certificate: {
+                    title: "Подарочный сертификат",
+                    description: "500 рублей на CashBack",
+                    amount: 500,
+                    type: "cashback",
+                    is_active: false,
+                },
                 manager: {
                     link: null,
                     title: 'Написать',
