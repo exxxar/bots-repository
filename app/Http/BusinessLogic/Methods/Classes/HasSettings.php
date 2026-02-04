@@ -363,7 +363,7 @@ trait HasSettings
                 foreach ($tmp["subscriptions"]["channels"] as $channel) {
                     $channel = (object)$channel;
 
-                    if (!empty($channel->link)&&empty($channel->id)) {
+                    if (!empty($channel->link) && empty($channel->id)) {
                         $result = BusinessLogic::bots()
                             ->setBot($this->bot)
                             ->requestTelegramChannel([
@@ -376,7 +376,9 @@ trait HasSettings
                         $channelsTmp[] = $channel;
                     }
                 }
-                $tmp["subscriptions"]["channels"] = $channelsTmp;
+
+                if (count($channelsTmp) > 0)
+                    $tmp["subscriptions"]["channels"] = $channelsTmp;
             }
 
         }

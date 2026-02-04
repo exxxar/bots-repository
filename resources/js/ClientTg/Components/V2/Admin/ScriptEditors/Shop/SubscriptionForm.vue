@@ -50,7 +50,7 @@
                 <label>Название на кнопке</label>
             </div>
 
-            <div class="form-floating">
+            <div class="form-floating mb-2">
                 <input
                     @blur="validateChannelLink(index)"
                     class="form-control"
@@ -62,12 +62,12 @@
 
             <div class="form-floating">
                 <input
-                    :disabled="true"
+                    disabled
                     class="form-control"
-                    placeholder=" "
+                    placeholder=""
                     v-model="channel.id"
                 >
-                <label>Ссылка</label>
+                <label>ID канала</label>
             </div>
 
             <p
