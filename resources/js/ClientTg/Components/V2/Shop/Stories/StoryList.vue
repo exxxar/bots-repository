@@ -147,7 +147,7 @@ export default {
         startTimer() {
             clearInterval(this.timer);
             this.timer = setInterval(() => {
-                this.progress += 2;
+                this.progress += 0.5;
                 if (this.progress >= 100) {
                     this.nextStory();
                 }
