@@ -367,6 +367,7 @@ trait HasSettings
                         ->requestTelegramChannel([
                             "channel" => $channel->link
                         ]);
+                    dd($result);
                     $channel->id = $result['result']['chat']['id'] ?? null;
                     if (is_null($channel->id))
                         $channel->error = "Ошибка получения идентификатора канала";
