@@ -384,6 +384,7 @@ class BotManager extends BotCore
         if (empty($channels))
             return false;
 
+        $result = true;
 
         foreach ($channels as $channel) {
             try {
@@ -394,10 +395,10 @@ class BotManager extends BotCore
                 ]);
 
                 if ($data["status"] === "left") {
-                    $result = false;
+                    $result &= false;
                     break;
                 } else
-                    $result = true;
+                    $result &= true;
 
 
             } catch (\Exception $e) {
