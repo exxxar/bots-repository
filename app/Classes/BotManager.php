@@ -429,20 +429,21 @@ class BotManager extends BotCore
 
         $config = $bot->config;
 
-        Log::info("bot_config".print_r($config["subscriptions"] ?? [], true));
+        $subscriptions = json_decode($config["subscriptions"] ?? '[]');
+        Log::info("bot_config".print_r($subscriptions, true));
 
-        $testSubscriptionActive = $config["subscriptions"]->is_active ?? false;
+        $testSubscriptionActive = $subscriptions->is_active ?? false;
 
         if ($testSubscriptionActive) {
             Log::info("1test".print_r("is_active", true));
-            Log::info("2test".print_r($config["subscriptions"]->channels, true));
-            $channelIds = array_column($config["subscriptions"]->channels, 'id');
+            Log::info("2test".print_r($subscriptions->channels, true));
+            $channelIds = array_column($subscriptions->channels, 'id');
             Log::info("3test ids=".print_r($channelIds, true));
             $result = $this->testChannels($channelIds);
-            $text = $config["subscriptions"]->text ?? 'Проверка подписки';
+            $text = $subscriptions->text ?? 'Проверка подписки';
             if (!$result) {
 
-                $keyboard = collect($config["subscriptions"]->channels)
+                $keyboard = collect($subscriptions->channels)
                     ->filter(fn($ch) => !empty($ch->title) && !empty($ch->link))
                     ->map(fn($ch) => [
                         [
