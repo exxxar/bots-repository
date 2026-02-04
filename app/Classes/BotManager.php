@@ -429,6 +429,8 @@ class BotManager extends BotCore
 
         $config = $bot->config;
 
+        Log::info("bot_config".print_r($config, true));
+
         $testSubscriptionActive = $config["subscriptions"]["is_active"] ?? false;
 
         if ($testSubscriptionActive) {
