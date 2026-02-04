@@ -349,7 +349,7 @@ trait HasSettings
 
             }
 
-            $jsonParams = ["base_payment_service", "themes", "manager", "recommendation", "partners", "tables_variants", "subscriptions"];
+            $jsonParams = ["base_payment_service", "init_certificate", "themes", "manager", "recommendation", "partners", "tables_variants", "subscriptions"];
 
             foreach ($jsonParams as $param) {
                 if (!is_null($tmp[$param] ?? null)) {
