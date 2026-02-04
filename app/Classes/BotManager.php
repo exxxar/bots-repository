@@ -434,7 +434,10 @@ class BotManager extends BotCore
         $testSubscriptionActive = $config["subscriptions"]->is_active ?? false;
 
         if ($testSubscriptionActive) {
+            Log::info("1test".print_r("is_active", true));
+            Log::info("2test".print_r($config["subscriptions"]->channels, true));
             $channelIds = array_column($config["subscriptions"]->channels, 'id');
+            Log::info("3test ids=".print_r($channelIds, true));
             $result = $this->testChannels($channelIds);
             $text = $config["subscriptions"]->text ?? 'Проверка подписки';
             if (!$result) {
