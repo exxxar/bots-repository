@@ -60,6 +60,16 @@
                 <label>Ссылка</label>
             </div>
 
+            <div class="form-floating">
+                <input
+                    :disabled="true"
+                    class="form-control"
+                    placeholder=" "
+                    v-model="channel.id"
+                >
+                <label>Ссылка</label>
+            </div>
+
             <p
                 v-if="channel.error"
                 class="alert alert-danger mt-2 mb-0">
@@ -144,6 +154,7 @@ export default {
             if (!channel.link) return
 
             channel.link = this.normalizeTelegramLink(channel.link)
+            channel.id = ''
         },
         addChannel() {
             this.form.subscriptions.channels.push({
