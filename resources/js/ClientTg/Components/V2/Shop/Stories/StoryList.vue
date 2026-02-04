@@ -17,7 +17,7 @@
         @click.self="closeStory"
     >
         <div class="modal-dialog modal-dialog-centered w-100 mw-100 m-0 h-100 mh-100">
-            <div class="modal-content bg-transparent border-0 h-100 position-relative">
+            <div class="modal-content bg-transparent border-0 h-100 position-relative" style="overflow-y: auto;">
                 <!-- Полоска времени -->
                 <div class="progress position-absolute top-0 start-0 end-0" style="height: 4px; z-index: 10;">
                     <div
@@ -33,11 +33,24 @@
                     alt="Story"
                 />
                 <!-- Текстовая информация -->
-                <div class="text-white p-3 bg-black bg-opacity-50 position-absolute bottom-0 start-0 end-0">
-                    <h5 class="mb-1">{{ sortedStories[currentStory].title }}</h5>
-                    <p class="mb-0">{{ sortedStories[currentStory].description }}</p>
+                <div
+                    class="text-white p-3 bg-black bg-opacity-50 position-absolute bottom-0 start-0 end-0"
+                    @click="isTextOpen = !isTextOpen"
+                    style="cursor: pointer;"
+                >
+                    <h5 class="mb-1">
+                        {{ sortedStories[currentStory].title }}
+                    </h5>
 
-                    <template v-if="sortedStories[currentStory].link">
+                    <p v-if="isTextOpen" class="mb-2">
+                        {{ sortedStories[currentStory].description }}
+                    </p>
+
+                    <div class="text-center small opacity-75">
+                        {{ isTextOpen ? 'Скрыть' : 'Показать подробнее' }}
+                    </div>
+
+                    <template v-if="isTextOpen && sortedStories[currentStory].link">
                         <a :href="sortedStories[currentStory].link"
                            v-if="sortedStories[currentStory].link_type==='url'||sortedStories[currentStory].link_type==='bot'"
                            target="_blank" class="btn btn-primary rounded-5 w-100 p-3">
@@ -81,6 +94,7 @@ export default {
     },
     data() {
         return {
+            isTextOpen: false,
             currentStory: null,
             progress: 0,
             timer: null,
