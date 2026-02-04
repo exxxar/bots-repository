@@ -358,24 +358,26 @@ trait HasSettings
             }
 
             $channelsTmp = [];
-            foreach ($tmp["subscriptions"]["channels"] as $channel) {
-                $channel = (object)$channel;
+            $subscribeActive = $tmp["subscriptions"]["is_active"] ?? false;
+            if ($subscribeActive) {
+                foreach ($tmp["subscriptions"]["channels"] as $channel) {
+                    $channel = (object)$channel;
 
-                if (!empty($channel->link)) {
-                    $result = BusinessLogic::bots()
-                        ->setBot($this->bot)
-                        ->requestTelegramChannel([
-                            "channel" => $channel->link
-                        ]);
+                    if (!empty($channel->link)) {
+                        $result = BusinessLogic::bots()
+                            ->setBot($this->bot)
+                            ->requestTelegramChannel([
+                                "channel" => $channel->link
+                            ]);
 
-                    $channel->id = $result['result']['chat']['id'] ?? null;
-                    if (is_null($channel->id))
-                        $channel->error = "Ошибка получения идентификатора канала";
-                    $channelsTmp[] = $channel;
+                        $channel->id = $result['result']['chat']['id'] ?? null;
+                        if (is_null($channel->id))
+                            $channel->error = "Ошибка получения идентификатора канала";
+                        $channelsTmp[] = $channel;
+                    }
                 }
+                $tmp["subscriptions"]["channels"] = $channelsTmp;
             }
-
-            $tmp["subscriptions"]["channels"] = $channelsTmp;
 
         }
 
