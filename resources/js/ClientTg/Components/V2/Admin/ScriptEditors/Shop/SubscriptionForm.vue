@@ -52,6 +52,7 @@
 
             <div class="form-floating">
                 <input
+                    @blur="validateChannelLink(index)"
                     class="form-control"
                     placeholder=" "
                     v-model="channel.link"
@@ -121,6 +122,29 @@ export default {
         })
     },
     methods: {
+        normalizeTelegramLink(link) {
+            if (!link) return ''
+
+            // Убираем http:// или https://
+            link = link.replace(/^https?:\/\/t\.me\//, '')
+
+            // Убираем лишние слэши
+            link = link.replace(/^\/+|\/+$/g, '')
+
+            // Добавляем @ в начале
+            if (!link.startsWith('@')) {
+                link = '@' + link
+            }
+
+            return link
+        },
+
+        validateChannelLink(index) {
+            const channel = this.form.subscriptions.channels[index]
+            if (!channel.link) return
+
+            channel.link = this.normalizeTelegramLink(channel.link)
+        },
         addChannel() {
             this.form.subscriptions.channels.push({
                 title: '',
