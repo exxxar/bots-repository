@@ -451,7 +451,7 @@ class BotManager extends BotCore
                 $keyboard[] = [
                     [
                         'text' => 'Проверить подписку',
-                        'callback_data' => 'start',
+                        'callback_data' => '/start',
                     ]
                 ];
 
