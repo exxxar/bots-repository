@@ -312,8 +312,9 @@ abstract class BotCore
                 ];
 
                 $this->replyInlineKeyboard($text, $keyboard);
+                return true;
             }
-            return true;
+
         }
 
 
