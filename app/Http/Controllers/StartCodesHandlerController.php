@@ -696,7 +696,9 @@ class StartCodesHandlerController extends Controller
             'activated' => true,
         ]);
 
-        $certificate = json_decode($config["init_certificate"] ?? '[]');
+        $config = $bot->config ?? [];
+
+        $certificate = json_decode(json_encode($config["init_certificate"] ));
 
         if (!is_null($certificate)) {
 
