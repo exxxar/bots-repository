@@ -282,7 +282,9 @@ abstract class BotCore
 
         $config = $this->getSelf()->config ?? [];
 
-        $subscriptions = json_decode($config["subscriptions"] ?? '[]');
+        $tmpConfigSubscription = json_decode(json_encode($config["subscriptions"] ));
+
+        $subscriptions = $tmpConfigSubscription;//is_array($config["subscriptions"] )? $config["subscriptions"] : json_decode($config["subscriptions"] ?? '[]');
 
         $testSubscriptionActive = $subscriptions->is_active ?? false;
 

@@ -523,7 +523,7 @@ class PromoCodesLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendPhoto(
                 $this->botUser->telegram_chat_id,
-                "Информация о сертификате",
+                "Информация о сертификате: $titleText\n$prizeText",
                 InputFile::createFromContents($imageData, "certificate.png")
             );
     }
