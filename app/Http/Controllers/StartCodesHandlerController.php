@@ -28,13 +28,13 @@ use Telegram\Bot\FileUpload\InputFile;
 class StartCodesHandlerController extends Controller
 {
 
-    public function roleInviteAction(...$data){
+    public function roleInviteAction(...$data)
+    {
         $roleMd5 = $data[1] ?? null;
 
         $encryptedRole = md5("is_admin");
 
-        if ($encryptedRole!=$roleMd5)
-        {
+        if ($encryptedRole != $roleMd5) {
             BotManager::bot()
                 ->reply("Что-то пошло не так!");
             return;
@@ -42,8 +42,7 @@ class StartCodesHandlerController extends Controller
 
         $botUser = BotManager::bot()->currentBotUser();
 
-        if ($botUser->is_admin)
-        {
+        if ($botUser->is_admin) {
             BotManager::bot()
                 ->reply("У вас уже установлена роль <b>Администратор</b>. Ваша роль изменена не будет!");
             return;
@@ -698,19 +697,22 @@ class StartCodesHandlerController extends Controller
 
         $config = $bot->config ?? [];
 
-        $certificate = json_decode(json_encode($config["init_certificate"] ));
+        if (isset($config["init_certificate"])) {
+            $certificate = json_decode(json_encode($config["init_certificate"] ?? ''));
 
-        if (!is_null($certificate)) {
+            if (!is_null($certificate)) {
 
-            if ($certificate->is_active ?? false)
-                BusinessLogic::promoCodes()
-                    ->setBot($bot)
-                    ->setBotUser($botUser)
-                    ->generateFreeCertificate(
-                        $certificate->title ?? 'Промокод на приз',
-                        $certificate->description ?? 'Промокод не найден'
-                    );
+                if ($certificate->is_active ?? false)
+                    BusinessLogic::promoCodes()
+                        ->setBot($bot)
+                        ->setBotUser($botUser)
+                        ->generateFreeCertificate(
+                            $certificate->title ?? 'Промокод на приз',
+                            $certificate->description ?? 'Промокод не найден'
+                        );
+            }
         }
+
 
         $userName1 = BotMethods::prepareUserName($botUser);
         $userName2 = BotMethods::prepareUserName($userBotUser);

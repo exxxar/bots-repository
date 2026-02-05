@@ -282,43 +282,42 @@ abstract class BotCore
 
         $config = $this->getSelf()->config ?? [];
 
-        $tmpConfigSubscription = json_decode(json_encode($config["subscriptions"] ));
+        if (isset($config["subscriptions"])) {
+            $subscriptions = json_decode(json_encode($config["subscriptions"]));
 
-        $subscriptions = $tmpConfigSubscription;//is_array($config["subscriptions"] )? $config["subscriptions"] : json_decode($config["subscriptions"] ?? '[]');
+            $testSubscriptionActive = $subscriptions->is_active ?? false;
 
-        $testSubscriptionActive = $subscriptions->is_active ?? false;
+            if ($testSubscriptionActive) {
+                $channelIds = array_column($subscriptions->channels, 'id');
 
-        if ($testSubscriptionActive) {
-            $channelIds = array_column($subscriptions->channels, 'id');
+                $result = $this->testChannels($channelIds);
+                $text = $subscriptions->text ?? 'Проверка подписки';
+                if (!$result) {
 
-            $result = $this->testChannels($channelIds);
-            $text = $subscriptions->text ?? 'Проверка подписки';
-            if (!$result) {
+                    $keyboard = collect($subscriptions->channels)
+                        ->filter(fn($ch) => !empty($ch->title) && !empty($ch->link))
+                        ->map(fn($ch) => [
+                            [
+                                'text' => $ch->title,
+                                'url' => "https://t.me/" . str_replace('@', '', $ch->link),
+                            ]
+                        ])
+                        ->values()
+                        ->all();
 
-                $keyboard = collect($subscriptions->channels)
-                    ->filter(fn($ch) => !empty($ch->title) && !empty($ch->link))
-                    ->map(fn($ch) => [
+                    $keyboard[] = [
                         [
-                            'text' => $ch->title,
-                            'url'  => "https://t.me/".str_replace('@', '', $ch->link),
+                            'text' => 'Проверить подписку',
+                            'callback_data' => '/start',
                         ]
-                    ])
-                    ->values()
-                    ->all();
+                    ];
 
-                $keyboard[] = [
-                    [
-                        'text' => 'Проверить подписку',
-                        'callback_data' => '/start',
-                    ]
-                ];
+                    $this->replyInlineKeyboard($text, $keyboard);
+                    return true;
+                }
 
-                $this->replyInlineKeyboard($text, $keyboard);
-                return true;
             }
-
         }
-
 
         $matches = [];
 
@@ -761,7 +760,7 @@ abstract class BotCore
 
             $action->data = (object)[
                 "payed_at" => Carbon::now(),
-                "payed_until"=>Carbon::now()->addDays($period)
+                "payed_until" => Carbon::now()->addDays($period)
             ];
             $action->save();
 
@@ -1054,7 +1053,6 @@ abstract class BotCore
                 return;
 
 
-
             if ($this->adminNotificationHandler($message, $query))
                 return;
 
@@ -1175,8 +1173,7 @@ abstract class BotCore
 
                 if ($result == "new")
                     $this->reply("Ваши сообщения будет доставлено администратору в течении 5 минут с момента последнего вашего сообщения. Вы можете продолжить писать.");
-                else
-                {
+                else {
                     $this->replyAction();
                 }
 
