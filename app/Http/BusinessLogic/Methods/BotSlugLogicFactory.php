@@ -316,7 +316,7 @@ class BotSlugLogicFactory extends BaseLogicFactory
      */
     public function updateScriptParams(array $data): BotSecurityResource
     {
-        if (is_null($this->bot))
+        if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Не все параметры функции заданы!");
 
 
@@ -382,6 +382,9 @@ class BotSlugLogicFactory extends BaseLogicFactory
 
 
         $this->setConfig($tmp);
+
+        Log::info("config update by user=>".print_r($this->botUser->toArray(), true));
+
 
 
         return new BotSecurityResource($this->bot);

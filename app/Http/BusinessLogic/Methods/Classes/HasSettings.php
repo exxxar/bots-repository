@@ -5,6 +5,7 @@ namespace App\Http\BusinessLogic\Methods\Classes;
 use App\Facades\BusinessLogic;
 use App\Http\Resources\ShopConfigPublicResource;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 trait HasSettings
@@ -419,6 +420,8 @@ trait HasSettings
         $config["self_updated"] = true;
         $this->bot->config = $config;
         $this->bot->save();
+
+        Log::info("config update params=>".print_r($config, true));
 
     }
 
