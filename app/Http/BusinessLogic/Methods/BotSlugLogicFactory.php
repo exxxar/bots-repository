@@ -320,18 +320,32 @@ class BotSlugLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Не все параметры функции заданы!");
 
 
-        $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
+     /*   $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
         $data["need_automatic_delivery_request"] = (($data["need_automatic_delivery_request"] ?? false) == "true");
         $data["can_use_card"] = (($data["can_use_card"] ?? false) == "true");
         $data["can_use_sbp"] = (($data["can_use_sbp"] ?? false) == "true");
-        $data["is_disabled"] = (($data["is_disabled"] ?? false) == "true");
+        $data["is_disabled"] = (($data["is_disabled"] ?? false) == "true") ;
         $data["is_edit_mode"] = (($data["is_edit_mode"] ?? false) == "true");
         $data["can_buy_after_closing"] = (($data["can_buy_after_closing"] ?? false) == "true");
         $data["need_pay_after_call"] = (($data["need_pay_after_call"] ?? false) == "true");
         $data["need_hide_disabled_products"] = (($data["need_hide_disabled_products"] ?? false) == "true");
         $data["need_hide_delivery_period"] = (($data["need_hide_delivery_period"] ?? false) == "true");
         $data["need_bonuses_section"] = (($data["need_bonuses_section"] ?? false) == "true");
-        $data["can_use_booking"] = (($data["can_use_booking"] ?? false) == "true");
+        $data["can_use_booking"] = (($data["can_use_booking"] ?? false) == "true");*/
+
+        $data["can_use_cash"] = filter_var($data["can_use_cash"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["need_automatic_delivery_request"] = filter_var($data["need_automatic_delivery_request"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["can_use_card"] = filter_var($data["can_use_card"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["can_use_sbp"] = filter_var($data["can_use_sbp"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["is_disabled"] = filter_var($data["is_disabled"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["is_edit_mode"] = filter_var($data["is_edit_mode"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["can_buy_after_closing"] = filter_var($data["can_buy_after_closing"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["need_pay_after_call"] = filter_var($data["need_pay_after_call"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["need_hide_disabled_products"] = filter_var($data["need_hide_disabled_products"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["need_hide_delivery_period"] = filter_var($data["need_hide_delivery_period"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["need_bonuses_section"] = filter_var($data["need_bonuses_section"] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data["can_use_booking"] = filter_var($data["can_use_booking"] ?? false, FILTER_VALIDATE_BOOLEAN);
+
 
         $data["price_per_km"] = (int)($data["price_per_km"] ?? 0);
         $data["interval"] = (int)($data["interval"] ?? 1);

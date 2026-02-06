@@ -49,7 +49,7 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
             class="d-flex flex-column">
 
             <template v-if="settings">
-                <div class="p-2" v-if="settings.is_disabled">
+                <div class="p-2 mt-2" v-if="settings.is_disabled">
                     <div class="alert alert-danger mb-0">
                         <p class="mb-0" v-html="settings.disabled_text"></p>
                     </div>
@@ -332,19 +332,16 @@ export default {
             return this.bot.settings?.partners
         },
         bot() {
-            return window.currentBot
+            return window.currentBot || null
         },
         colorTheme() {
             const theme = document.querySelector("[data-bs-theme]").getAttribute('data-bs-theme')
             return "background-color:" + (theme === "light" ? "white" : "#212529");
         },
-        getCurrentBot() {
-            return window.currentBot
-        },
         cashbackLimit() {
             let maxUserCashback = this.getSelf.cashBack ? this.getSelf.cashBack.amount : 0
             let summaryPrice = this.cartTotalPrice || 0
-            let botCashbackPercent = this.getCurrentBot.max_cashback_use_percent || 0
+            let botCashbackPercent = this.bot.max_cashback_use_percent || 0
 
             let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
 
@@ -616,10 +613,10 @@ export default {
         loadProducts(page = 0) {
             this.tab = 1
 
-            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain) !== null
+            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + this.bot.bot_domain) !== null
 
             if (hasProducts)
-                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain))
+                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + this.bot.bot_domain))
 
             this.load_content = false
             return this.$store.dispatch("loadProductsByCategory", {
@@ -638,7 +635,7 @@ export default {
 
                 this.$nextTick(() => {
                     this.products = resp.data
-                    localStorage.setItem("cashman_preloaded_products_by_categories_" + this.getCurrentBot.bot_domain, JSON.stringify(this.products))
+                    localStorage.setItem("cashman_preloaded_products_by_categories_" + this.bot.bot_domain, JSON.stringify(this.products))
                     this.load_content = false
                     if (!hasProducts)
                         window.scroll(0, 80);
