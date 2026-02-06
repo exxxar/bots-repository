@@ -69,7 +69,7 @@ export default {
 
         const schedule = window.currentBot.company.schedule || [];
 
-        window.isCorrectSchedule = (schedule) => {
+/*        window.isCorrectSchedule = (schedule) => {
             if ((schedule || []).length < 7)
                 return false
 
@@ -79,50 +79,91 @@ export default {
             })
 
             return isCorrect
-        }
+        }*/
+
+        window.isCorrectSchedule = (schedule) => {
+
+            if (!Array.isArray(schedule) || schedule.length !== 7) {
+                return false;
+            }
+
+            return schedule.every(day => {
+                if (!day || typeof day !== "object") {
+                    return false;
+                }
+
+                // closed может быть true/false
+                if (typeof day.closed !== "boolean") {
+                    return false;
+                }
+
+                // если день не закрыт — должны быть start_at и end_at
+                if (!day.closed) {
+                    if (typeof day.start_at !== "string") return false;
+                    if (typeof day.end_at !== "string") return false;
+
+                    // простая проверка формата HH:MM
+                    if (!/^\d{2}:\d{2}$/.test(day.start_at)) return false;
+                    if (!/^\d{2}:\d{2}$/.test(day.end_at)) return false;
+                }
+
+                return true;
+            });
+        };
+
 
         if (window.isCorrectSchedule(schedule)) {
 
-            if (!schedule || (schedule || []).length === 0) {
-                window.currentBot.company.is_work = true
+            // Если расписания нет или оно пустое — считаем, что компания работает
+            if (!schedule || schedule.length === 0) {
+                window.currentBot.company.is_work = true;
+            } else {
+
+                const now = new Date();
+                const day = now.getDay(); // локальный день недели (0–6)
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+
+                const today = schedule[day];
+
+                // Если для текущего дня нет настроек — считаем закрытым
+                if (!today) {
+                    window.currentBot.company.is_work = false;
+                } else {
+
+                    const [startH, startM] = (today.start_at || "08:00")
+                        .split(":")
+                        .map(Number);
+
+                    const [endH, endM] = (today.end_at || "20:00")
+                        .split(":")
+                        .map(Number);
+
+                    const nowMinutes = hours * 60 + minutes;
+                    const startMinutes = startH * 60 + startM;
+                    const endMinutes = endH * 60 + endM;
+
+                    let isWork = false;
+
+                    if (!today.closed) {
+
+                        if (startMinutes <= endMinutes) {
+                            // Обычный график (например 08:00–20:00)
+                            isWork =
+                                nowMinutes >= startMinutes &&
+                                nowMinutes < endMinutes;
+                        } else {
+                            // График через полночь (например 20:00–04:00)
+                            isWork =
+                                nowMinutes >= startMinutes ||
+                                nowMinutes < endMinutes;
+                        }
+
+                    }
+
+                    window.currentBot.company.is_work = isWork;
+                }
             }
-
-
-            if (schedule && (schedule || []).length > 0) {
-
-                const day = (new Date()).getUTCDay();
-
-                const hours = (new Date()).getHours();
-                const minutes = (new Date()).getMinutes();
-
-                let tmpStartAt = schedule[day].start_at || "08:00";
-                let tmpStartHours = parseInt(tmpStartAt.split(":")[0]);
-                let tmpStartMinutes = parseInt(tmpStartAt.split(":")[1]);
-
-                let tmpEndAt = schedule[day].end_at || "20:00";
-                let tmpEndHours = parseInt(tmpEndAt.split(":")[0]);
-                let tmpEndMinutes = parseInt(tmpEndAt.split(":")[1]);
-
-                let isWork = false
-
-                if (tmpStartHours === hours)
-                    isWork = minutes >= tmpStartMinutes
-
-                if (tmpEndHours === hours)
-                    isWork = minutes < tmpEndMinutes
-
-
-                if (hours > tmpStartHours && hours < tmpEndHours && tmpStartHours <= tmpEndHours)
-                    isWork = true;
-
-
-                if ((hours > tmpStartHours || hours <= tmpEndHours) && tmpStartHours >= tmpEndHours)
-                    isWork = true;
-
-
-                window.currentBot.company.is_work = !(schedule[day].closed || false) && isWork
-            }
-
         }
 
 
