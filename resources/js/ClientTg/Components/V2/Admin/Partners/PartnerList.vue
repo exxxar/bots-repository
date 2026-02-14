@@ -5,7 +5,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
 </script>
 <template>
 
-    <!-- Форма поиска -->
+<!--    &lt;!&ndash; Форма поиска &ndash;&gt;
     <form v-on:submit.prevent="applyFilters" class="mt-2 mb-2">
 
         <div class="input-group mb-2">
@@ -37,7 +37,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
                 <option value="is_active">Активные</option>
                 <option value="product_count">По числу товаров</option>
                 <option value="updated_at">По дате добавления</option>
-<!--                <option value="updated_at">По дате договора</option>-->
+&lt;!&ndash;                <option value="updated_at">По дате договора</option>&ndash;&gt;
             </select>
             <label for="floatingSelect">Сортировать заказы по</label>
         </div>
@@ -54,9 +54,9 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
             class="fw-bold"
             @click="changeDirection('asc')"
             v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
-    </p>
+    </p>-->
 
-    <template v-if="hasPartners">
+    <template v-if="partners.length>0">
 
         <!-- Список партнеров -->
         <div class="row row-cols-1 mb-5">
@@ -276,14 +276,14 @@ export default {
             this.loading = true
             this.$store.dispatch("loadPartners", {
                 dataObject: {
-                    ...(this.search ? {search: this.search} : {}),
+                  /*  ...(this.search ? {search: this.search} : {}),
                     ...(this.sort.param ? {order_by: this.sort.param} : {}),
-                    direction: this.sort.direction || 'asc'
+                    direction: this.sort.direction || 'asc'*/
                 },
                 page: pageIndex
             }).then(resp => {
 
-                this.partners = this.getPartners
+                this.partners = this.getPartners || []
 
                 this.partners_paginate_object = this.getPartnersPaginateObject || null
 
