@@ -161,7 +161,6 @@ export const COMPONENT_LIBRARY = [
             marginBottom: null,
             marginLeft: null
         },
-        children: []
     },
     {
         type: 'textarea',
@@ -175,7 +174,6 @@ export const COMPONENT_LIBRARY = [
             marginBottom: null,
             marginLeft: null
         },
-        children: []
     },
     {
         type: 'select',
@@ -188,7 +186,6 @@ export const COMPONENT_LIBRARY = [
             marginBottom: null,
             marginLeft: null
         },
-        children: []
     },
     {
         type: 'carousel',

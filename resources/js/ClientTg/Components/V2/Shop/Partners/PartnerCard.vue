@@ -5,7 +5,7 @@
         <div class="row g-0">
             <div class="col-md-4">
                 <img
-                    style="max-height:170px;"
+                    style="max-height:210px;"
                     v-lazy="'/images-by-bot-id/'+bot.id+'/'+partner.image"
                     class="img-fluid rounded-start img-partner-card" alt="...">
             </div>

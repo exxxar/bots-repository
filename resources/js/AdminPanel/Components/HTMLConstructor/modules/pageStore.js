@@ -1,6 +1,6 @@
 // Логика работы со страницей: добавление, поиск, выбор
 
-import { COMPONENT_LIBRARY } from './componentLibrary'
+import {COMPONENT_LIBRARY} from './componentLibrary'
 
 function clone(obj) {
     return JSON.parse(JSON.stringify(obj))
@@ -16,13 +16,19 @@ export function createComponentByType(type) {
 
     const id = 'cmp_' + Math.random().toString(36).substr(2, 9)
 
-    console.log("create", type, id)
-    return {
+    let res = {
         id,
         type: lib.type,
         props: clone(lib.defaultProps || {}),
-        children: lib.children ? clone(lib.children) : []
+
     }
+
+    if (lib.children)
+        res.children = clone(lib.children)
+
+
+
+    return res
 }
 
 
@@ -45,44 +51,43 @@ export function findComponentById(blocks, id) {
 }
 
 
-
-    // Универсальный поиск родителя и индекса
-export function  findParentAndIndex(list, id) {
-        for (let i = 0; i < list.length; i++) {
-            const item = list[i]
-            if (item.id === id) {
-                return { parent: list, index: i }
-            }
-            if (item.children && item.children.length) {
-                const result = findParentAndIndex(item.children, id)
-                if (result) return result
-            }
+// Универсальный поиск родителя и индекса
+export function findParentAndIndex(list, id) {
+    for (let i = 0; i < list.length; i++) {
+        const item = list[i]
+        if (item.id === id) {
+            return {parent: list, index: i}
         }
-        return null
+        if (item.children && item.children.length) {
+            const result = findParentAndIndex(item.children, id)
+            if (result) return result
+        }
     }
+    return null
+}
 
-    // Перемещение вверх/вниз
-export function   moveComponent(list, id, direction) {
-        const found = findParentAndIndex(list, id)
-        if (!found) return
+// Перемещение вверх/вниз
+export function moveComponent(list, id, direction) {
+    const found = findParentAndIndex(list, id)
+    if (!found) return
 
-        const { parent, index } = found
-        const newIndex = index + direction
+    const {parent, index} = found
+    const newIndex = index + direction
 
-        if (newIndex < 0 || newIndex >= parent.length) return
+    if (newIndex < 0 || newIndex >= parent.length) return
 
-        const temp = parent[index]
-        parent[index] = parent[newIndex]
-        parent[newIndex] = temp
-    }
+    const temp = parent[index]
+    parent[index] = parent[newIndex]
+    parent[newIndex] = temp
+}
 
-    // Вставка копии рядом с оригиналом
-export function   insertNextTo(list, id, newComponent) {
-        const found = findParentAndIndex(list, id)
-        if (!found) return
+// Вставка копии рядом с оригиналом
+export function insertNextTo(list, id, newComponent) {
+    const found = findParentAndIndex(list, id)
+    if (!found) return
 
-        const { parent, index } = found
-        parent.splice(index + 1, 0, newComponent)
-    }
+    const {parent, index} = found
+    parent.splice(index + 1, 0, newComponent)
+}
 
 

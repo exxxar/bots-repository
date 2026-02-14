@@ -15,7 +15,6 @@ import TreeView from "@/AdminPanel/Components/HTMLConstructor/TreeView.vue";
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
                         <li
                             v-if="selectedComponentId"
                             class="nav-item">
@@ -231,6 +230,7 @@ export default {
             // 1) Если есть выбранный компонент — добавляем внутрь него
             if (this.selectedComponentId) {
                 const target = findComponentById(this.page, this.selectedComponentId)
+
 
                 if (target && target.children) {
                     if (!Array.isArray(target.children)) {

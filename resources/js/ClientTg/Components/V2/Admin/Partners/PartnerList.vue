@@ -37,7 +37,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
                 <option value="is_active">Активные</option>
                 <option value="product_count">По числу товаров</option>
                 <option value="updated_at">По дате добавления</option>
-                <option value="updated_at">По дате договора</option>
+<!--                <option value="updated_at">По дате договора</option>-->
             </select>
             <label for="floatingSelect">Сортировать заказы по</label>
         </div>
@@ -67,7 +67,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
                         <p class="card-text">
                             <strong>Число товаров: </strong>
                             {{ partner.products && partner.products.length ? partner.products.length : 0 }} <br>
-                            <strong>Договор работает до: </strong> {{ partner.contract_expiration || '-' }}<br>
+<!--                            <strong>Договор работает до: </strong> {{ partner.contract_expiration || '-' }}<br>-->
                             <strong>Статус: </strong>
                             <span
                                 :class="{'text-success': partner.is_active, 'text-danger': !partner.is_active}">
@@ -123,9 +123,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
             :pagination="partners_paginate_object"/>
     </template>
 
-    <p style="word-break:break-all;">DEBUG 1: {{ getPartners || 'ОШИБКА 1' }}</p>
-    <p style="word-break:break-all;" class="bg-danger">DEBUG 2: {{ partners || 'ОШИБКА 2' }}</p>
-    <p>LEN: {{ (partners || []).length }}</p>
+
 
     <!-- Modal -->
     <div class="modal fade" id="config-partner-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -284,20 +282,11 @@ export default {
                 },
                 page: pageIndex
             }).then(resp => {
-                const rawPartners = Array.isArray(this.getPartners)
-                    ? this.getPartners
-                    : [];
 
-                this.partners = rawPartners.map((p) => ({
-                    ...p,
-                    products: Array.isArray(p && p.products) ? p.products : [],
-                    contract_expiration: p && p.contract_expiration ? p.contract_expiration : '-'
-                }));
+                this.partners = this.getPartners
 
-                this.partners_paginate_object =
-                    this.getPartnersPaginateObject && typeof this.getPartnersPaginateObject === 'object'
-                        ? this.getPartnersPaginateObject
-                        : null;
+                this.partners_paginate_object = this.getPartnersPaginateObject || null
+
 
                 this.loading = false;
             }).catch(err => {
