@@ -5,124 +5,125 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
 </script>
 <template>
 
-<!--    &lt;!&ndash; Форма поиска &ndash;&gt;
-    <form v-on:submit.prevent="applyFilters" class="mt-2 mb-2">
+    <!--    &lt;!&ndash; Форма поиска &ndash;&gt;
+        <form v-on:submit.prevent="applyFilters" class="mt-2 mb-2">
 
-        <div class="input-group mb-2">
+            <div class="input-group mb-2">
 
-            <div class="form-floating">
-                <input type="text"
-                       class="form-control"
-                       placeholder="Поиск партнера"
-                       aria-label="Поиск партнера"
-                       v-model="search"
-                       aria-describedby="button-addon2">
-                <label for="floatingInput">Критерии поиска</label>
+                <div class="form-floating">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Поиск партнера"
+                           aria-label="Поиск партнера"
+                           v-model="search"
+                           aria-describedby="button-addon2">
+                    <label for="floatingInput">Критерии поиска</label>
+                </div>
+
+
+                <button class="btn btn-outline-secondary text-primary"
+                        type="submit"
+                        id="button-addon2">
+                    Найти
+                </button>
+            </div>
+
+            <div class="form-floating my-2">
+                <select
+                    @change="applyFilters"
+                    v-model="sort.param"
+                    class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <option value="title">По названию</option>
+                    <option value="is_active">Активные</option>
+                    <option value="product_count">По числу товаров</option>
+                    <option value="updated_at">По дате добавления</option>
+    &lt;!&ndash;                <option value="updated_at">По дате договора</option>&ndash;&gt;
+                </select>
+                <label for="floatingSelect">Сортировать заказы по</label>
             </div>
 
 
-            <button class="btn btn-outline-secondary text-primary"
-                    type="submit"
-                    id="button-addon2">
-                Найти
-            </button>
-        </div>
+        </form>
 
-        <div class="form-floating my-2">
-            <select
-                @change="applyFilters"
-                v-model="sort.param"
-                class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                <option value="title">По названию</option>
-                <option value="is_active">Активные</option>
-                <option value="product_count">По числу товаров</option>
-                <option value="updated_at">По дате добавления</option>
-&lt;!&ndash;                <option value="updated_at">По дате договора</option>&ndash;&gt;
-            </select>
-            <label for="floatingSelect">Сортировать заказы по</label>
-        </div>
-
-
-    </form>
-
-    <p v-if="sort.param!=null">Направление сортировки:
-        <span
-            class="fw-bold"
-            @click="changeDirection('desc')"
-            v-if="sort.direction==='asc'">по возрастанию <i class="fa-solid fa-caret-up"></i></span>
-        <span
-            class="fw-bold"
-            @click="changeDirection('asc')"
-            v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
-    </p>-->
+        <p v-if="sort.param!=null">Направление сортировки:
+            <span
+                class="fw-bold"
+                @click="changeDirection('desc')"
+                v-if="sort.direction==='asc'">по возрастанию <i class="fa-solid fa-caret-up"></i></span>
+            <span
+                class="fw-bold"
+                @click="changeDirection('asc')"
+                v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
+        </p>-->
 
     <template v-if="partners.length>0">
 
-        <!-- Список партнеров -->
-        <div class="row row-cols-1 mb-5">
-            <div class="col" v-for="(partner, index) in partners" :key="partner.id">
-                <div class="card mb-2" v-bind:class="{'border-danger':partner.before_deleted}">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ partner.title }}</h5>
-                        <p class="card-text">
-                            <strong>Число товаров: </strong>
-                            {{ partner.products && partner.products.length ? partner.products.length : 0 }} <br>
-<!--                            <strong>Договор работает до: </strong> {{ partner.contract_expiration || '-' }}<br>-->
-                            <strong>Статус: </strong>
-                            <span
-                                :class="{'text-success': partner.is_active, 'text-danger': !partner.is_active}">
+        <template v-for="(partner, index) in partners"  :key="partner.id">
+            <div class="card mb-2"
+
+                 v-bind:class="{'border-danger':partner.before_deleted}">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ partner.title }}</h5>
+                    <p class="card-text">
+                        <strong>Число товаров: </strong>
+                        {{ (partner.products || []).length || 0  }} <br>
+                        <!--                            <strong>Договор работает до: </strong> {{ partner.contract_expiration || '-' }}<br>-->
+                        <strong>Статус: </strong>
+                        <span
+                            :class="{'text-success': partner.is_active, 'text-danger': !partner.is_active}">
                 {{ partner.is_active ? 'Активен' : 'Не активен' }}
               </span>
-                        </p>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            <a :href="partner.link"
-                               target="_blank"
-                               class="btn btn-primary"><i class="fa-brands fa-telegram"></i>
-                            </a>
-
-                            <button type="button"
-                                    @click="selectPartner(partner)"
-                                    class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-
-                            <button type="button"
-                                    @click="selectPartnerForProductObserve(partner)"
-                                    class="btn btn-primary"><i class="fa-solid fa-store"></i>
-                            </button>
-                        </div>
-
-
-                        <!-- Активность -->
-                        <div class="form-switch form-check">
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                :id="'is_active-partner-'+partner.id"
-                                v-model="partner.is_active"
-                            />
-                            <label class="form-check-label" :for="'is_active-partner-'+partner.id">
-                                {{ partner.is_active ? 'Активен' : 'Не активен' }}
-                            </label>
-                        </div>
+                    </p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a :href="partner.link"
+                           target="_blank"
+                           class="btn btn-primary"><i class="fa-brands fa-telegram"></i>
+                        </a>
 
                         <button type="button"
-                                @click="selectPartnerForRemove(partner)"
-                                class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                                @click="selectPartner(partner)"
+                                class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+
+                        <button type="button"
+                                @click="selectPartnerForProductObserve(partner)"
+                                class="btn btn-primary"><i class="fa-solid fa-store"></i>
                         </button>
                     </div>
+
+
+                    <!-- Активность -->
+                    <div class="form-switch form-check">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            :id="'is_active-partner-'+partner.id"
+                            v-model="partner.is_active"
+                        />
+                        <label class="form-check-label" :for="'is_active-partner-'+partner.id">
+                            {{ partner.is_active ? 'Активен' : 'Не активен' }}
+                        </label>
+                    </div>
+
+                    <button type="button"
+                            @click="selectPartnerForRemove(partner)"
+                            class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>
             </div>
-        </div>
+        </template>
+
 
         <Pagination
             :simple="true"
             v-on:pagination_page="nextPartners"
             v-if="partners_paginate_object"
             :pagination="partners_paginate_object"/>
-    </template>
 
+        {{ partners || '-----' }}
+    </template>
 
 
     <!-- Modal -->
@@ -276,9 +277,9 @@ export default {
             this.loading = true
             this.$store.dispatch("loadPartners", {
                 dataObject: {
-                  /*  ...(this.search ? {search: this.search} : {}),
-                    ...(this.sort.param ? {order_by: this.sort.param} : {}),
-                    direction: this.sort.direction || 'asc'*/
+                    /*  ...(this.search ? {search: this.search} : {}),
+                      ...(this.sort.param ? {order_by: this.sort.param} : {}),
+                      direction: this.sort.direction || 'asc'*/
                 },
                 page: pageIndex
             }).then(resp => {

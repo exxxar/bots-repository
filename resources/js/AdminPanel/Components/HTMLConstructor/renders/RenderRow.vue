@@ -16,9 +16,11 @@ import Renderer from '@/AdminPanel/Components/HTMLConstructor/Renderer.vue'
 ]"
 
         :style="[
-                     isSelected(block.id)?'border:2px red dashed !important':'',
+                     isSelected(block.id)?'border:2px red dashed !important; min-height:10px;':'border:1px gray dashed; min-height:10px;',
                     ]"
-        class="row border mb-2 p-2" @click.stop="select">
+        class="row p-2"
+
+        @click.stop="select">
         <Renderer :is-selected="isSelected" :blocks="block.children" @select="$emit('select', $event)" />
 
     </div>
