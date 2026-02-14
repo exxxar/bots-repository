@@ -56,7 +56,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
             v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
     </p>
 
-    <template v-show="hasPartners">
+    <template v-if="hasPartners">
 
         <!-- Список партнеров -->
         <div class="row row-cols-1 mb-5">
@@ -281,14 +281,8 @@ export default {
                 },
                 page: pageIndex
             }).then(resp => {
-
-                this.partners = this.getPartners
-
-                this.partners_paginate_object =
-                    this.getPartnersPaginateObject && typeof this.getPartnersPaginateObject === 'object'
-                        ? this.getPartnersPaginateObject
-                        : null;
-
+                this.partners = this.getPartners || []
+                this.partners_paginate_object = this.getPartnersPaginateObject || null
                 this.loading = false;
             }).catch(err => {
                 this.loading = false;
