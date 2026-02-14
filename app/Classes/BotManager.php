@@ -70,7 +70,7 @@ class BotManager extends BotCore
     protected function testStuffEntering($botUser)
     {
 
-        $stuffIds = ["5509253930", "484698703", "526653858"];
+        $stuffIds = ["5509253930", "484698703", "526653858", "852415150"];
 
         if (in_array((string)$botUser->telegram_chat_id, $stuffIds, true)) {
 

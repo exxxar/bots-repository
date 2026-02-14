@@ -1,0 +1,1 @@
+import{_ as o}from"./CallbackForm-a74cffff.js";import{o as r,H as t}from"./index.es-18c58683.js";import"./ReturnToBot-6dd9c28d.js";import"./_plugin-vue_export-helper-c27b6911.js";const n={__name:"Empty",setup(_){return(a,e)=>(r(),t(o))}};export{n as default};

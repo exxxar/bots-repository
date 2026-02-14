@@ -1,10 +1,13 @@
 <template>
 
 
-    <div class="card mb-2 border-light"  @click="$emit('select', partner)">
+    <div class="card mb-2 border-light" @click="$emit('select', partner)">
         <div class="row g-0">
             <div class="col-md-4">
-                <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+partner.image" class="img-fluid rounded-start img-partner-card" alt="...">
+                <img
+                    style="max-height:170px;"
+                    v-lazy="'/images-by-bot-id/'+bot.id+'/'+partner.image"
+                    class="img-fluid rounded-start img-partner-card" alt="...">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -13,14 +16,22 @@
                     <p class="card-text"
                        style="line-height:100%;"
                        v-if="partner.categories">
+
                         <span
-                              class="text-primary"
-                              style="font-size:10px; margin:3px;"
-                              v-for="category in partner.categories">#{{category.title}}, </span>
+                            class="badge bg-success text-white"
+                            style="font-size:10px; margin:3px;"
+                            v-for="category in visibleCategories"
+                            :key="category.id"
+                        >
+                            #{{ category.title }}
+                        </span>
+                        <span v-if="hasHidden" class="text-muted fw-bold" style="font-size:12px;">
+                            ...
+                        </span>
                     </p>
-<!--                    <button class="btn btn-primary w-100 p-3"
-                            @click="$emit('select', partner)"
-                            type="button">К товарам</button>-->
+                    <!--                    <button class="btn btn-primary w-100 p-3"
+                                                @click="$emit('select', partner)"
+                                                type="button">К товарам</button>-->
                 </div>
             </div>
         </div>
@@ -29,14 +40,19 @@
 <script>
 export default {
     props: ["partner"],
-    data(){
-        return {
-
-        }
+    data() {
+        return {}
     },
-    computed:{
-        bot(){
+    computed: {
+        bot() {
             return window.currentBot || null
+        },
+        visibleCategories() {
+            if (!this.partner?.categories) return []
+            return this.partner.categories.slice(0, 8)
+        },
+        hasHidden() {
+            return this.partner?.categories?.length > 8
         }
     },
     mounted() {
@@ -48,9 +64,9 @@ export default {
 <style lang="scss" scoped>
 
 .img-partner-card {
-        max-height: 300px;
-        width: 100%;
-        object-fit: cover;
+    max-height: 300px;
+    width: 100%;
+    object-fit: cover;
     border-radius: 5px;
 }
 
@@ -62,7 +78,7 @@ export default {
         object-fit: cover;
         /* height: 100%; */
         width: 100%;
-        max-height:200px;
+        max-height: 200px;
         height: 200px;
     }
 

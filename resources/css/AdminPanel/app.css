@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.selected-block {
+    border:1px red solid;
+}

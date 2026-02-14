@@ -12,6 +12,10 @@ class PartnerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $botPartner = $this->botPartner ?? null ;
+
+        $link = !is_null($botPartner) ? "https://t.me/".$botPartner->bot_domain : "";
+
         return [
             'id' => $this->id,
             'bot_id'=> $this->bot_id,
@@ -22,6 +26,7 @@ class PartnerResource extends JsonResource
             'is_active'=> $this->is_active,
             'extra_charge'=> $this->extra_charge,
             'config'=> $this->config,
+            'link'=> $link,
             'legal_info'=> $this->legal_info,
             'products' => $this->whenLoaded("products") ,
             'categories' => $this->whenLoaded("categories") ,

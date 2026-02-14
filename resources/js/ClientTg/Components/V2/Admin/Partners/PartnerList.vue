@@ -56,7 +56,7 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
             v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
     </p>
 
-    <template v-if="!loading&&(partners||[]).length>0">
+    <template v-if="hasPartners">
 
         <!-- Список партнеров -->
         <div class="row row-cols-1 mb-5">
@@ -65,7 +65,8 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ partner.title }}</h5>
                         <p class="card-text">
-                            <strong>Число товаров: </strong> {{ partner.products?.length || 0 }}<br>
+                            <strong>Число товаров: </strong>
+                            {{ partner.products && partner.products.length ? partner.products.length : 0 }} <br>
                             <strong>Договор работает до: </strong> {{ partner.contract_expiration || '-' }}<br>
                             <strong>Статус: </strong>
                             <span
@@ -76,6 +77,11 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center">
                         <div class="btn-group">
+                            <a :href="partner.link"
+                               target="_blank"
+                               class="btn btn-primary"><i class="fa-brands fa-telegram"></i>
+                            </a>
+
                             <button type="button"
                                     @click="selectPartner(partner)"
                                     class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>
@@ -117,6 +123,9 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
             :pagination="partners_paginate_object"/>
     </template>
 
+    <p style="word-break:break-all;">DEBUG 1: {{ getPartners || 'ОШИБКА 1' }}</p>
+    <p style="word-break:break-all;" class="bg-danger">DEBUG 2: {{ partners || 'ОШИБКА 2' }}</p>
+    <p>LEN: {{ (partners || []).length }}</p>
 
     <!-- Modal -->
     <div class="modal fade" id="config-partner-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -209,6 +218,12 @@ export default {
     computed: {
         ...mapGetters(['getPartners', 'getPartnersPaginateObject']),
 
+        hasPartners() {
+            return !this.loading &&
+                Array.isArray(this.partners) &&
+                this.partners.length > 0
+        },
+
         filteredPartners() {
             if (!this.search)
                 return this.partners || []
@@ -263,24 +278,31 @@ export default {
             this.loading = true
             this.$store.dispatch("loadPartners", {
                 dataObject: {
-                    ...(this.search ? { search: this.search } : {}),
-                    ...(this.sort.param ? { order_by: this.sort.param } : {}),
+                    ...(this.search ? {search: this.search} : {}),
+                    ...(this.sort.param ? {order_by: this.sort.param} : {}),
                     direction: this.sort.direction || 'asc'
                 },
                 page: pageIndex
             }).then(resp => {
+                const rawPartners = Array.isArray(this.getPartners)
+                    ? this.getPartners
+                    : [];
 
-                this.partners = (this.getPartners || []).map(p => ({
+                this.partners = rawPartners.map((p) => ({
                     ...p,
-                    products: Array.isArray(p.products) ? p.products : [],
-                    contract_expiration: p.contract_expiration || '-'
+                    products: Array.isArray(p && p.products) ? p.products : [],
+                    contract_expiration: p && p.contract_expiration ? p.contract_expiration : '-'
                 }));
 
-                this.partners_paginate_object = this.getPartnersPaginateObject || null
-                this.loading = false
+                this.partners_paginate_object =
+                    this.getPartnersPaginateObject && typeof this.getPartnersPaginateObject === 'object'
+                        ? this.getPartnersPaginateObject
+                        : null;
+
+                this.loading = false;
             }).catch(err => {
-                this.loading = false
-                console.error("LOAD PARTNERS ERROR:", err)
+                this.loading = false;
+                console.error("LOAD PARTNERS ERROR:", err);
             })
         },
         removePartner() {

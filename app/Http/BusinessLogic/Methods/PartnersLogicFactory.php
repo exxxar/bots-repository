@@ -24,7 +24,7 @@ class PartnersLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $partners = Partner::query()
-            ->with(["products"])
+            ->with(["products","botPartner"])
             ->where("bot_id", $this->bot->id)
             ->get();
 

@@ -82,6 +82,7 @@
             <label for="extra_charge">Дополнительная плата</label>
         </div>
 
+<!--
         <div class="form-check form-switch mb-2">
             <input
                 class="form-check-input"
@@ -93,9 +94,10 @@
                 Режим тестирования
             </label>
         </div>
+-->
 
-        <template v-if="!form.demo_mode">
-            <!-- Навигация по табам -->
+<!--        <template v-if="!form.demo_mode">
+            &lt;!&ndash; Навигация по табам &ndash;&gt;
             <ul class="nav nav-tabs mb-2">
                 <li class="nav-item" v-for="tab in tabs" :key="tab.key">
                     <button
@@ -104,12 +106,12 @@
                         :class="{ active: activeTab === tab.key }"
                         @click="activeTab = tab.key"
                     >
-                        {{ tab.label }}
+                        {{ tab.label }} {{tab.key}}
                     </button>
                 </li>
             </ul>
 
-            <!-- Секция Партнёр -->
+            &lt;!&ndash; Секция Партнёр &ndash;&gt;
             <template v-show="activeTab === 'partner'">
                 <h4>Данные партнёра</h4>
                 <div class="row row-cols-1">
@@ -118,7 +120,7 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                v-model="partner[key]"
+                                v-model="form.legal_info.partner[key]"
                                 :id="'partner_' + key"
                                 placeholder=" "
                             />
@@ -128,7 +130,7 @@
                 </div>
             </template>
 
-            <!-- Секция Контракты -->
+            &lt;!&ndash; Секция Контракты &ndash;&gt;
             <template v-show="activeTab === 'contract'">
                 <h4>Контракт</h4>
                 <div class="row row-cols-1">
@@ -148,7 +150,7 @@
                 </div>
             </template>
 
-            <!-- Секция Контакты -->
+            &lt;!&ndash; Секция Контакты &ndash;&gt;
             <template v-show="activeTab === 'contacts'">
                 <h4>Контактные лица</h4>
                 <div
@@ -164,7 +166,7 @@
                                 <input
                                     type="text"
                                     class="form-control"
-                                    v-model="contact[key]"
+                                    v-model="form.legal_info.contacts[key]"
                                     :id="'contact_' + key + i"
                                     placeholder=" "
                                 />
@@ -184,7 +186,7 @@
                 <button class="btn btn-outline-primary" @click="addContact">+ Добавить контакт</button>
             </template>
 
-            <!-- Секция Документы -->
+            &lt;!&ndash; Секция Документы &ndash;&gt;
             <template v-show="activeTab === 'documents'">
                 <h4>Документы</h4>
                 <div
@@ -200,12 +202,12 @@
                     </button>
 
                     <div class="row row-cols-1">
-                        <div class="col mb-2" v-for="(value, key) in doc" :key="key">
+                        <div class="col mb-2" v-for="(value, key) in form.legal_info.documents" :key="key">
                             <div class="form-floating">
                                 <input
                                     type="text"
                                     class="form-control"
-                                    v-model="doc[key]"
+                                    v-model="form.legal_info.documents[key]"
                                     :id="'doc_' + key + i"
                                     placeholder=" "
                                 />
@@ -218,15 +220,10 @@
             </template>
 
 
-        </template>
+        </template>-->
 
 
-        <nav
-
-            class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
-            style="border-radius:10px 10px 0px 0px;">
-            <button type="submit" class="btn btn-primary w-100 p-3">Отправить</button>
-        </nav>
+        <button type="submit" class="btn btn-primary w-100 p-3">Отправить</button>
         <!-- Кнопка отправки -->
 
     </form>

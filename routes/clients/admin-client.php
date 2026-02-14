@@ -75,6 +75,12 @@ Route::middleware(['auth', 'verified'])
             return Inertia::render('PaymentPage');
         })->name('payment-page');
 
+        Route::get('/html-constructor-page', function () {
+            Inertia::setRootView("app");
+
+            return Inertia::render('HTMLConstructorPage');
+        })->name('html-constructor-page');
+
 
         Route::get('/bot-page', function () {
             return redirect()->route("dev-page");
