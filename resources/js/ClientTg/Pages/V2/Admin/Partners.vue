@@ -39,32 +39,6 @@ import SelfConfigForm from "@/ClientTg/Components/V2/Admin/Partners/SelfConfigFo
                 </button>
             </div>
 
-            <div class="col-12">
-                <ul class="nav nav-tabs justify-content-center catalog-tabs">
-
-                    <li class="nav-item">
-                        <button
-                            type="button"
-                            class="nav-link"
-                            @click="tab=0"
-                            style="font-weight:bold;"
-                            v-bind:class="{'active':tab===0}"
-                            aria-current="page">Партнеры
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button
-                            type="button"
-                            :disabled="true"
-                            class="nav-link"
-                            style="font-weight:bold;"
-                            v-bind:class="{'active':tab===1}"
-                        >Статистика продаж
-                        </button>
-                    </li>
-
-                </ul>
-            </div>
             <div class="col-12" v-if="!loading">
                 <PartnerList></PartnerList>
                 <AddPartnerForm v-on:callback="callbackAddPartner"></AddPartnerForm>
