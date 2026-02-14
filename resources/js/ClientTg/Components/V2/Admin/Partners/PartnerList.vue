@@ -56,74 +56,53 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
                 v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
         </p>-->
 
-    <template v-if="partners.length>0">
+    <template v-if="partners.length > 0">
 
-        <template v-for="(partner, index) in partners"  :key="partner.id">
-            <div class="card mb-2"
-
-                 v-bind:class="{'border-danger':partner.before_deleted}">
+        <template v-for="(partner, index) in partners" :key="partner.id">
+            <div class="card mb-2" :class="{'border-danger': partner.before_deleted}">
                 <div class="card-body">
                     <h5 class="card-title fw-bold">{{ partner.title }}</h5>
-                    <p class="card-text">
-                        <strong>Число товаров: </strong>
-                        {{ (partner.products || []).length || 0  }} <br>
-                        <!--                            <strong>Договор работает до: </strong> {{ partner.contract_expiration || '-' }}<br>-->
-                        <strong>Статус: </strong>
-                        <span
-                            :class="{'text-success': partner.is_active, 'text-danger': !partner.is_active}">
-                {{ partner.is_active ? 'Активен' : 'Не активен' }}
-              </span>
-                    </p>
                 </div>
+
                 <div class="card-footer d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                         <a :href="partner.link"
                            target="_blank"
-                           class="btn btn-primary"><i class="fa-brands fa-telegram"></i>
+                           class="btn btn-primary">
+                            <i class="fa-brands fa-telegram"></i>
                         </a>
 
                         <button type="button"
                                 @click="selectPartner(partner)"
-                                class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>
+                                class="btn btn-primary">
+                            <i class="fa-solid fa-pen-to-square"></i>
                         </button>
 
                         <button type="button"
                                 @click="selectPartnerForProductObserve(partner)"
-                                class="btn btn-primary"><i class="fa-solid fa-store"></i>
+                                class="btn btn-primary">
+                            <i class="fa-solid fa-store"></i>
                         </button>
-                    </div>
-
-
-                    <!-- Активность -->
-                    <div class="form-switch form-check">
-                        <input
-                            type="checkbox"
-                            class="form-check-input"
-                            :id="'is_active-partner-'+partner.id"
-                            v-model="partner.is_active"
-                        />
-                        <label class="form-check-label" :for="'is_active-partner-'+partner.id">
-                            {{ partner.is_active ? 'Активен' : 'Не активен' }}
-                        </label>
                     </div>
 
                     <button type="button"
                             @click="selectPartnerForRemove(partner)"
-                            class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                            class="btn btn-danger">
+                        <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
             </div>
         </template>
 
-
         <Pagination
             :simple="true"
             v-on:pagination_page="nextPartners"
             v-if="partners_paginate_object"
-            :pagination="partners_paginate_object"/>
+            :pagination="partners_paginate_object"
+        />
 
-        {{ partners || '-----' }}
     </template>
+
 
 
     <!-- Modal -->
