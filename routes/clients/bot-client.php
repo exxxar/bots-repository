@@ -588,6 +588,7 @@ Route::prefix("bot-client")
                 Route::post("/", "index");
                 Route::post("/store", "store")->middleware(["tgAuth.admin"]);
                 Route::post("/update-settings", "updateSettings")->middleware(["tgAuth.admin"]);
+                Route::post("/update-active-status", "updateActiveStatus")->middleware(["tgAuth.admin"]);
                 Route::post("/change-status", "changeStatus")->middleware(["tgAuth.admin"]);
                 Route::post("/partners-categories", "partnersCategories");
                 Route::post("/update", "update")->middleware(["tgAuth.admin"]);

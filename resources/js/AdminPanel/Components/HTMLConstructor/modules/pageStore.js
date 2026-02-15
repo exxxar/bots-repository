@@ -21,11 +21,14 @@ export function createComponentByType(type) {
         type: lib.type,
         props: clone(lib.defaultProps || {}),
 
+
     }
 
     if (lib.children)
         res.children = clone(lib.children)
 
+    if (lib.propSchema)
+        res.schema = clone(lib.propSchema || {})
 
 
     return res

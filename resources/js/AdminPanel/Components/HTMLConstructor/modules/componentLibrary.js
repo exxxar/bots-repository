@@ -1,4 +1,30 @@
+import MyFancyWidget from "@/AdminPanel/Components/HTMLConstructor/renders/MyFancyWidget.vue";
+
 export const COMPONENT_LIBRARY = [
+
+    {
+        type: 'my-widget',
+        name: 'Fancy Widget',
+        vueComponent: MyFancyWidget,
+        slots: ['header', 'default', 'footer'],
+        defaultProps: {
+            title: 'Заголовок',
+            color: 'primary',
+            count: 5
+        },
+        propSchema: [
+            {
+                key: 'title', label: 'Заголовок', type: 'text'
+            },
+            {
+                key: 'color', label: 'Цвет', type: 'select', options: ['primary', 'success', 'danger']
+            },
+            {
+                key: 'count', label: 'Количество', type: 'number'
+            }
+        ],
+        children: [] // если нужны слоты
+    },
     {
         type: 'button',
         name: 'Кнопка',
@@ -27,7 +53,7 @@ export const COMPONENT_LIBRARY = [
             alt: 'Изображение',
             rounded: false,
             fluid: true,
-            height:'100',
+            height: '100',
             marginTop: null,
             marginRight: null,
             marginBottom: null,
@@ -80,7 +106,7 @@ export const COMPONENT_LIBRARY = [
             flexEnabled: false,
             flexDirection: 'row',          // row | column
             justifyContent: 'start',       // start | center | end | between | around | evenly
-            alignItems: 'start'   ,         // start | center | end | stretch
+            alignItems: 'start',         // start | center | end | stretch
             flexWrap: 'nowrap',   // nowrap | wrap | wrap-reverse
             // start | center | end | stretch
         },
@@ -102,9 +128,7 @@ export const COMPONENT_LIBRARY = [
 
 
         },
-        children: [
-
-        ]
+        children: []
     },
 
     {
@@ -123,7 +147,7 @@ export const COMPONENT_LIBRARY = [
             paddingLeft: null
 
         },
-        children: [ ]
+        children: []
     },
     {
         type: 'text',
@@ -195,8 +219,8 @@ export const COMPONENT_LIBRARY = [
             showIndicators: true,
             showControls: true,
             images: [
-                { id: 'img1', src: 'https://via.placeholder.com/800x300', alt: 'Slide 1' },
-                { id: 'img2', src: 'https://via.placeholder.com/800x300', alt: 'Slide 2' }
+                {id: 'img1', src: 'https://via.placeholder.com/800x300', alt: 'Slide 1'},
+                {id: 'img2', src: 'https://via.placeholder.com/800x300', alt: 'Slide 2'}
             ]
         },
         children: [] // НЕ нужно, карусель управляется через props
@@ -213,9 +237,7 @@ export const COMPONENT_LIBRARY = [
             marginBottom: null,
             marginLeft: null
         },
-        children: [
-
-        ] // ВАЖНО: сюда будут попадать вложенные компоненты
+        children: [] // ВАЖНО: сюда будут попадать вложенные компоненты
     },
     {
         type: 'badge',
@@ -245,10 +267,6 @@ export const COMPONENT_LIBRARY = [
         },
         children: []
     }
-
-
-
-
 
 
 ]

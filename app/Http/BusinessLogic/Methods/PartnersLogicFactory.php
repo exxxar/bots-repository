@@ -24,7 +24,7 @@ class PartnersLogicFactory extends BaseLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $partners = Partner::query()
-            ->with(["products","botPartner"])
+            ->with(["products", "botPartner"])
             ->where("bot_id", $this->bot->id)
             ->get();
 
@@ -275,6 +275,50 @@ class PartnersLogicFactory extends BaseLogicFactory
         $partner->save();
 
         return $config["excludes"];
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function updateActiveStatus(array $data)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "is_active" => "required",
+            "id" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $isActive = ($data["is_active"] ?? false) == "true";;
+        $partnerId = $data["id"];
+
+        $partner = Partner::query()
+            ->where("id", $partnerId)
+            ->first();
+
+        if (is_null($partner))
+            throw new HttpException(404, "Партнер не найден!");
+
+        $partner->is_active = $isActive;
+        $partner->save();
+
+        if (!$isActive) {
+            $basket = Basket::query()
+                ->where("bot_id", $partner->bot_partner_id)
+                ->get();
+
+            foreach ($basket as $item)
+                $item->delete();
+
+
+        }
+
+        return new PartnerResource($partner);
     }
 
     /**

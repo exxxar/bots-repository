@@ -6,6 +6,7 @@ use App\Http\Controllers\Bots\Web\AdminBotController;
 BotManager::bot()
     ->controller(AdminBotController::class)
     ->route("/adminmenu", "getBotAdminMenu2")
+    ->route("/shop", "getBotShop")
     ->route("/adminmenu2", "getBotAdminMenu2")
     ->route("/adminmenuold", "getBotAdminMenu")
     ->route("/admindemo", "getBotAdminMenuDemo")

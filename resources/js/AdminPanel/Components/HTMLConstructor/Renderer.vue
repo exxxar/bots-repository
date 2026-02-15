@@ -1,19 +1,30 @@
-
 <template>
 
-        <component
-            v-for="block in blocks"
-            :key="block.id"
-            :is="resolve(block)"
-            :block="block"
-            :is-selected="isSelected"
-            @delete="$emit('delete', $event)"
-            @select="onSelect"
-        />
+    <component
+        v-for="block in blocks"
+        :key="block.id"
+        :is="resolve(block)"
+        :block="block"
+        :is-selected="isSelected"
+        @delete="$emit('delete', $event)"
+        @select="onSelect"
+    >
+        <template
+            v-for="slotName in block.slots"
+            #[slotName]
+        >
+            <Renderer
+                :blocks="block.children[slotName]"
+                @select="$emit('select', $event)"
+            />
+        </template>
+    </component>
 
 </template>
 
 <script>
+import {COMPONENT_LIBRARY} from "@/AdminPanel/Components/HTMLConstructor/modules/componentLibrary";
+
 import RenderButton from '@/AdminPanel/Components/HTMLConstructor/renders/RenderButton.vue'
 import RenderRow from '@/AdminPanel/Components/HTMLConstructor/renders/RenderRow.vue'
 import RenderCol from '@/AdminPanel/Components/HTMLConstructor/renders/RenderCol.vue'
@@ -41,6 +52,13 @@ export default {
     },
     methods: {
         resolve(block) {
+            const lib = COMPONENT_LIBRARY.find(c => c.type === block.type)
+
+            if (!lib) return null // Если это Vue-компонент
+            if (lib.vueComponent) {
+                return lib.vueComponent
+            }
+
             const map = {
                 button: RenderButton,
                 row: RenderRow,
@@ -56,9 +74,7 @@ export default {
                 collapse: RenderCollapse,
                 alert: RenderAlert,
                 badge: RenderBadge,
-
-
-        }
+            }
             return map[block.type] || 'div'
         },
         onSelect(id) {

@@ -332,6 +332,21 @@ class AdminBotController extends Controller
             ]);
     }
 
+    public function getBotShop()
+    {
+
+        $bot = BotManager::bot()->getSelf();
+
+        \App\Facades\BotManager::bot()
+            ->replyInlineKeyboard("Магазин", [
+                [
+                    ["text" => "Открыть", "web_app" => [
+                        "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route#/s//catalog"//"/restaurant/active-admins/$bot->bot_domain"
+                    ]],
+                ],
+            ]);
+    }
+
     public function getBotAdminMenu()
     {
 

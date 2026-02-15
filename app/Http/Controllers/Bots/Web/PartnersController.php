@@ -33,6 +33,12 @@ class PartnersController extends Controller
             ->updateSettings($request->all());
     }
 
+    public function updateActiveStatus(Request $request){
+        return BusinessLogic::partners()
+            ->setBot($request->bot ?? null)
+            ->updateActiveStatus($request->all());
+    }
+
     public function changeStatus(Request $request){
         $request->validate([
             "product_id" => "required",

@@ -173,7 +173,8 @@ class Bot extends Model
 
     public function partners(): HasMany
     {
-        return $this->hasMany(Partner::class, 'bot_id', 'id');
+        return $this->hasMany(Partner::class, 'bot_id', 'id')
+            ->where('is_active', true);
     }
 
     public function products(): HasMany

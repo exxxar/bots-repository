@@ -4,7 +4,7 @@ import PaddingControls from "@/AdminPanel/Components/HTMLConstructor/PaddingCont
 
 </script>
 <template>
-    <div  style="height:100vh;overflow-y:scroll;">
+    <div style="height:100vh;overflow-y:scroll;">
 
         <div v-if="!component" class="text-muted">
             Выберите компонент на холсте
@@ -80,7 +80,7 @@ import PaddingControls from "@/AdminPanel/Components/HTMLConstructor/PaddingCont
 
             </template>
 
-            <template v-else-if="component.type === 'alert'" >
+            <template v-else-if="component.type === 'alert'">
 
                 <label class="form-label">Текст</label>
                 <textarea class="form-control" v-model="component.props.text"></textarea>
@@ -98,7 +98,8 @@ import PaddingControls from "@/AdminPanel/Components/HTMLConstructor/PaddingCont
                 </select>
 
                 <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" v-model="component.props.dismissible" id="dismissible">
+                    <input class="form-check-input" type="checkbox" v-model="component.props.dismissible"
+                           id="dismissible">
                     <label class="form-check-label" for="dismissible">Закрываемый</label>
                 </div>
 
@@ -388,12 +389,14 @@ import PaddingControls from "@/AdminPanel/Components/HTMLConstructor/PaddingCont
                 <input type="number" class="form-control" v-model.number="component.props.interval">
 
                 <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" v-model="component.props.showIndicators" id="indicators">
+                    <input class="form-check-input" type="checkbox" v-model="component.props.showIndicators"
+                           id="indicators">
                     <label class="form-check-label" for="indicators">Показывать индикаторы</label>
                 </div>
 
                 <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" v-model="component.props.showControls" id="controls">
+                    <input class="form-check-input" type="checkbox" v-model="component.props.showControls"
+                           id="controls">
                     <label class="form-check-label" for="controls">Показывать стрелки</label>
                 </div>
 
@@ -432,14 +435,46 @@ import PaddingControls from "@/AdminPanel/Components/HTMLConstructor/PaddingCont
 
             </template>
 
+            <template  v-else-if="component.type === 'my-widget'">
+
+                    <div v-for="field in component.schema" :key="field.key" class="mb-2">
+
+                        <!-- TEXT -->
+                        <input
+                            v-if="field.type === 'text'"
+                            class="form-control"
+                            :placeholder="field.label"
+                            v-model="component.props[field.key]"
+                        />
+
+                        <!-- NUMBER -->
+                        <input
+                            v-if="field.type === 'number'"
+                            type="number"
+                            class="form-control"
+                            :placeholder="field.label"
+                            v-model.number="component.props[field.key]"
+                        />
+
+                        <!-- SELECT -->
+                        <div v-if="field.type === 'select'">
+                            <label class="form-label">{{ field.label }}</label>
+                            <select class="form-select" v-model="component.props[field.key]">
+                                <option v-for="opt in field.options" :key="opt" :value="opt">
+                                    {{ opt }}
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
 
 
+            </template>
 
 
             <div v-else class="text-muted small">
                 Для этого типа компонента редактор ещё не настроен.
             </div>
-
 
 
             <div class="form-check mb-2">
@@ -509,6 +544,7 @@ import PaddingControls from "@/AdminPanel/Components/HTMLConstructor/PaddingCont
 </template>
 
 <script>
+
 import {
     findComponentById,
     insertNextTo,
@@ -542,7 +578,8 @@ export default {
             if (!this.component)
                 return null
             return this.component.props || this.component.defaultProps
-        }
+        },
+
     },
     methods: {
         addImage() {

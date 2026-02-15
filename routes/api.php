@@ -23,177 +23,62 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware([/*"auth:sanctum"*/])
     ->group(function () {
-
-        Route::prefix("range")
-            ->group(function(){
-
-            /*    Route::post("/range/{restId}","Fastoran\OrderController@getRange");
-                Route::post("/range_with_route/{restId}","Fastoran\OrderController@getRangeWithRoute");
-
-                Route::post("/custom_range","Fastoran\OrderController@getCustomRange");
-
-                Route::post('/wish', 'RestController@sendWish')->name("wish");*/
-
-            });
-
-        Route::prefix("companies")
-            ->controller(CompanyController::class)
-            ->group(function () {
-                Route::get("/", "index");
-                Route::get("/company/{id}", "loadCompanyById")
-                    ->where(["id" => "[0-9]+"]);
-                Route::get("/location-list/{companyId?}", "loadLocations");
-            });
-
-
-        Route::prefix("shops") //bots
-        ->controller(BotController::class)
-            ->group(function () {
-                Route::post("/", "index");
-            });
-
-
-        Route::prefix("products")
-            ->controller(ProductController::class)
-            ->group(function () {
-                Route::post("/", "index");
-                Route::post("/checkout", "checkout");
-                Route::post("/by-ids", "getProductsByIds");
-                Route::post("/random", "randomProducts");
-                Route::post("/categories", "getCategories");
-                Route::post("/in-category", "getProductsInCategory");
-                Route::post("/category/{productId}", "getCategory");
-                Route::post("/{productId}", "getProduct");
-            });
-
-        Route::prefix("orders")
-            ->group(function () {
-                //history
-            });
-
-        Route::prefix("transactions")
-            ->group(function () {
-                //history
-            });
-
-        Route::prefix("locations")
+        Route::prefix("shop")
             ->group(function () {
 
+
+                Route::prefix("reviews")
+                    ->group(function () {
+                        Route::post("/", [ProductController::class, "getReviews"]);
+                        Route::post("/by-product-id", [ProductController::class, "getReviewsByProductId"]);
+                        Route::post("/store-review", [ProductController::class, "storeReview"]);
+                        Route::post("/notify-user", [ProductController::class, "notifyUser"]);
+
+
+                    });
+
+
+
+                Route::post("/products", [ProductController::class, "index"]);
+                Route::post("/products-by-category", [ProductController::class, "listByCategories"]);
+                Route::post("/products-more-by-category", [ProductController::class, "loadMoreProductsByCategories"]);
+                Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"]);
+                Route::post("/checkout", [ProductController::class, "checkout"]);
+
+
+
+                Route::post("/checkout-instruction", [ProductController::class, "checkoutInstruction"])
+                    ->middleware(["slug"]);
+                Route::post("/checkout-link", [ProductController::class, "createCheckoutLink"])
+                    ->middleware(["slug"]);
+                Route::post("/products/store-category", [ProductController::class, "storeCategory"]);
+                Route::post("/products/fav-list", [ProductController::class, "getFavList"]);
+                Route::post("/products/toggle-favorite", [ProductController::class, "toggleProductInFavorites"]);
+                Route::post("/products/export-all-products", [ProductController::class, "exportAllProducts"]);
+                Route::post("/products/load-recommended-products", [ProductController::class, "loadRecommendedProducts"]);
+                Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
+                Route::post("/products/random", [ProductController::class, "randomProducts"]);
+                Route::post("/products/categories", [ProductController::class, "getCategories"]);
+                Route::post("/products/add-product", [ProductController::class, "saveProduct"]);
+                Route::post("/products/change-recommendation-status", [ProductController::class, "changeRecommendationStatus"]);
+                Route::post("/products/categories/recommendation-status", [ProductController::class, "changeCategoryRecommendationStatus"]);
+                Route::post("/products/remove-all-products", [ProductController::class, "removeAllProducts"]);
+                Route::delete("/products/remove-category/{categoryId}", [ProductController::class, "removeCategoryId"]);
+                Route::post("/products/categories/status/{id}", [ProductController::class, "changeCategoryStatus"]);
+                Route::post("/products/add-category", [ProductController::class, "storeCategory"]);
+                Route::post("/products/in-category", [ProductController::class, "getProductsInCategory"]);
+                Route::post("/products/category/{productId}", [ProductController::class, "getCategory"]);
+                Route::post("/products/{productId}", [ProductController::class, "getProduct"]);
+                Route::post("/products/restore-product/{productId}", [ProductController::class, "restore"])
+                    ->middleware(["tgAuth.admin"]);
+                Route::post("/products/stop-list-product/{productId}", [ProductController::class, "stopList"])
+                    ->middleware(["tgAuth.admin"]);
+
+                Route::delete("/products/{productId}", [ProductController::class, "destroy"])
+                    ->middleware(["tgAuth.admin"]);
+
             });
+
     });
 
 
-
-
-/*
- * companies (компании)
- * shops (или bots) - по сути ээто магазины
- * categories - категории товаров
- * products - товары
- * locations - локации
- * orders - заказы
- */
-
-
-Route::apiResource('basket', \App\Http\Controllers\Bots\Web\BasketController::class);
-
-
-Route::apiResource('manager-profile', \App\Http\Controllers\Bots\Web\ManagerProfileController::class);
-
-
-Route::apiResource('bot-external-request', App\Http\Controllers\BotExternalRequestController::class);
-
-
-Route::apiResource('bot-warning', App\Http\Controllers\BotWarningController::class);
-
-
-Route::apiResource('bot-media', App\Http\Controllers\BotMediaController::class);
-
-
-Route::apiResource('cash-back-sub', App\Http\Controllers\CashBackSubController::class);
-
-
-Route::apiResource('documents', App\Http\Controllers\DocumentsController::class);
-
-Route::apiResource('food-constructor', App\Http\Controllers\FoodConstructorController::class);
-
-Route::apiResource('ingredient-category', App\Http\Controllers\IngredientCategoryController::class);
-
-Route::apiResource('ingredient', App\Http\Controllers\IngredientController::class);
-
-
-Route::apiResource('bot-custom-field-setting', App\Http\Controllers\BotCustomFieldSettingController::class);
-
-Route::apiResource('custom-field', App\Http\Controllers\CustomFieldController::class);
-
-
-Route::apiResource('y-clients', \App\Http\Controllers\Bots\Web\YClientsController::class);
-
-
-Route::apiResource('appointment', \App\Http\Controllers\Admin\AppointmentController::class);
-
-Route::apiResource('appointment-event', App\Http\Controllers\AppointmentEventController::class);
-
-Route::apiResource('appointment-schedule', App\Http\Controllers\AppointmentScheduleController::class);
-
-Route::apiResource('appointment-service', App\Http\Controllers\AppointmentServiceController::class);
-
-Route::apiResource('appointment-review', App\Http\Controllers\AppointmentReviewController::class);
-
-
-Route::apiResource('quiz', \App\Http\Controllers\Admin\QuizController::class);
-
-Route::apiResource('quiz-command', App\Http\Controllers\QuizCommandController::class);
-
-Route::apiResource('quiz-result', App\Http\Controllers\QuizResultController::class);
-
-Route::apiResource('quiz-question', App\Http\Controllers\QuizQuestionController::class);
-
-Route::apiResource('quiz-answer', App\Http\Controllers\QuizAnswerController::class);
-
-
-Route::apiResource('chat-log', \App\Http\Controllers\Bots\Web\ChatLogController::class);
-
-
-Route::apiResource('inline-query-slug', \App\Http\Controllers\Admin\InlineQuerySlugController::class);
-
-Route::apiResource('inline-query-item', \App\Http\Controllers\Admin\InlineQueryItemController::class);
-
-
-Route::apiResource('promo-code', \App\Http\Controllers\Admin\PromoCodeController::class);
-
-
-Route::apiResource('bot-dialog-answer', App\Http\Controllers\BotDialogAnswerController::class);
-
-
-Route::apiResource('front-pad', App\Http\Controllers\FrontPadController::class);
-
-
-Route::apiResource('reviews', App\Http\Controllers\ReviewController::class);
-
-
-Route::apiResource('sub-shops', App\Http\Controllers\SubShopController::class);
-
-
-Route::apiResource('shops', App\Http\Controllers\ShopController::class);
-
-Route::apiResource('bitrixes', \App\Http\Controllers\Bots\Web\BitrixController::class);
-
-Route::apiResource('iikos', \App\Http\Controllers\Bots\Web\IikoController::class);
-
-
-Route::apiResource('product-collections', \App\Http\Controllers\Bots\Web\ProductCollectionController::class);
-
-
-Route::apiResource('traffic-sources', App\Http\Controllers\TrafficSourceController::class);
-
-
-Route::apiResource('cdeks', App\Http\Controllers\CdekController::class);
-
-Route::apiResource('folders', App\Http\Controllers\FolderController::class);
-
-
-Route::apiResource('tables', App\Http\Controllers\TableController::class);
-
-
-Route::apiResource('stories', App\Http\Controllers\StoryController::class);

@@ -39,7 +39,17 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async updatePartnersActiveStatus(context, payload) {
+        let link = `${BASE_PARTNERS_LINK}/update-active-status`
 
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async updateSelfPartner(context, payload) {
         let link = `${BASE_PARTNERS_LINK}/update-self`
 
@@ -100,9 +110,9 @@ const actions = {
     },
 
     async removePartner(context, payload = {partnerId:null}) {
-        let link = `${BASE_PARTNERS_LINK}/${payload.partnerId}`
+        let link = `${BASE_PARTNERS_LINK}/remove/${payload.partnerId}`
 
-        let _axios = util.makeAxiosFactory(link, 'DELETE')
+        let _axios = util.makeAxiosFactory(link, 'POST')
         return _axios.then((response) => {
             return Promise.resolve(response.data);
         }).catch(err => {
