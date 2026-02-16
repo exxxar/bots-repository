@@ -341,7 +341,7 @@ class AdminBotController extends Controller
             ->replyInlineKeyboard("Магазин", [
                 [
                     ["text" => "Открыть", "web_app" => [
-                        "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route#/s//catalog"//"/restaurant/active-admins/$bot->bot_domain"
+                        "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route#/s/catalog"//"/restaurant/active-admins/$bot->bot_domain"
                     ]],
                 ],
             ]);

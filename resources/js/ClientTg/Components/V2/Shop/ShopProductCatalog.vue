@@ -13,9 +13,7 @@ import PartnersMain from "@/ClientTg/Components/V2/Shop/Partners/PartnersMain.vu
 import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdown.vue";
 </script>
 <template>
-    {{shop}}
     <template v-if="shop==0">
-
         <PartnersMain v-on:select="selectPartner"></PartnersMain>
     </template>
     <template v-if="shop==1">
