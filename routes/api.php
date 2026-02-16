@@ -24,12 +24,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware([/*"auth:sanctum"*/])
     ->group(function () {
 
-        Route::prefix("schedule")
-            ->controller(\App\Http\Controllers\Globals\ScheduleBotScriptController::class)
-            ->middleware(["tgAuth.any", "slug"])
-            ->group(function () {
-                Route::post('/load-data', "loadData");
-            });
 
         Route::prefix("basket")
             ->controller(\App\Http\Controllers\Bots\Web\BasketController::class)

@@ -46,24 +46,25 @@ import CoffeeProgress from "@/ClientTg/Components/V2/Shop/CoffeeProgress.vue";
             </button>
 
 
-            <button
-                v-if="tab==='shop'"
-                @click="tab='booking'"
-                type="button"
-                class="btn btn-primary ios-btn">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span class="ios-label">Бронь</span>
-            </button>
+            <template v-if="tables.length>0">
+                <button
+                    v-if="tab==='shop'"
+                    @click="tab='booking'"
+                    type="button"
+                    class="btn btn-primary ios-btn">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span class="ios-label">Бронь</span>
+                </button>
 
-            <button
-                v-if="tab==='booking'"
-                @click="tab='shop'"
-                type="button"
-                class="btn btn-primary ios-btn">
-                <i class="fa-solid fa-shop"></i>
-                <span class="ios-label">Магазин</span>
-            </button>
-
+                <button
+                    v-if="tab==='booking'"
+                    @click="tab='shop'"
+                    type="button"
+                    class="btn btn-primary ios-btn">
+                    <i class="fa-solid fa-shop"></i>
+                    <span class="ios-label">Магазин</span>
+                </button>
+            </template>
             <button
                 @click="goToCart"
                 type="button"
@@ -179,6 +180,13 @@ export default {
         },
         favorites() {
             return this.getFavoriteProducts
+        },
+        tables() {
+            let settings = this.bot.settings
+
+            if (!settings.tables_variants)
+                return []
+            return settings.tables_variants
         },
         self() {
             return window.self || null
