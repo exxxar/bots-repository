@@ -42,7 +42,7 @@ class Partner extends Model
         'legal_info' => 'array',
     ];
 
-    protected $with = ["categories" ,"products" ];
+    protected $with = ["categories"  ];
 
     public function bot(): BelongsTo
     {
