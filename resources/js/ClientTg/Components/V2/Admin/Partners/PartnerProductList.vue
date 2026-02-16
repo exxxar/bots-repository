@@ -1,3 +1,6 @@
+<script setup>
+import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
+</script>
 <template>
 
     <div class="form-floating mb-2">
@@ -91,9 +94,12 @@
         </div>
     </template>
 
-    <p
-        v-if="categories.length===0"
-        class="alert alert-light mb-0">Товары и категории еще не загрузись.. Ожидаем...</p>
+    <template    v-if="categories.length===0">
+        <p
+            class="alert alert-info mb-2">Товары и категории еще не загрузились.. Ожидаем...</p>
+        <PreloaderV1></PreloaderV1>
+    </template>
+
 </template>
 <script>
 export default {
