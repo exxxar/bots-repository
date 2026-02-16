@@ -38,19 +38,16 @@ import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductReco
 
 
         <template v-if="tab===1">
-            <div v-touch:swipe.left="doSwipeLeft"
-                 v-touch:swipe.right="doSwipeRight">
-                <CheckoutProductForm
-                    v-if="settings.shop_display_type === 0"
-                    v-on:start-checkout="startCheckout"
-                    v-on:change-tab="changeTab"
-                    v-model="deliveryForm"></CheckoutProductForm>
-                <CheckoutNonFoodGoodsForm
-                    v-else
-                    v-on:start-checkout="startCheckout"
-                    v-on:change-tab="changeTab"
-                    v-model="deliveryForm"></CheckoutNonFoodGoodsForm>
-            </div>
+            <CheckoutProductForm
+                v-if="settings.shop_display_type === 0"
+                v-on:start-checkout="startCheckout"
+                v-on:change-tab="changeTab"
+                v-model="deliveryForm"></CheckoutProductForm>
+            <CheckoutNonFoodGoodsForm
+                v-else
+                v-on:start-checkout="startCheckout"
+                v-on:change-tab="changeTab"
+                v-model="deliveryForm"></CheckoutNonFoodGoodsForm>
         </template>
 
         <template v-if="tab===3">
@@ -69,12 +66,6 @@ import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductReco
             <i class="fa-brands fa-shopify mb-3" style="font-size:36px;"></i>
             <p>Корзина пустая:(</p>
 
-            <a
-                class="btn btn-primary"
-                @click="loadBasketData()"
-                href="javascript:void(0)">
-                <i class="fa-solid fa-arrows-rotate"></i> Обновить корзину
-            </a>
         </div>
     </div>
 

@@ -346,7 +346,6 @@ export default {
             if (this.spent_time > 0)
                 return;
 
-            console.log("startCheckout")
             this.$emit("start-checkout")
 
             startTimer(10);

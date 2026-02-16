@@ -87,7 +87,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 
                                 <!-- Ручной расчет курьером -->
                                 <span
-                                    class="d-flex justify-content-end text-decoration-underline"
+                                    style="text-align:right;"
+                                    class="d-block"
                                     v-else
                                 >
                                     Рассчитывается курьером
