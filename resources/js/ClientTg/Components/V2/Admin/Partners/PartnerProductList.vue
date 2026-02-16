@@ -68,6 +68,20 @@
 
                         </li>
                     </ul>
+                    <template v-if="category.products_count > category.products.length">
+                        <button
+                            @click="loadMore(category.id, category.products.length)"
+                            class="btn btn-outline-light text-primary  p-3 w-100 my-3" type="button">
+                                            <span v-if="!load_content">Загрузить еще
+                                            ({{ category.products_count - category.products.length }})</span>
+                            <span v-else class="d-inline-flex align-items-center">
+                                                Загружаем....
+                                                    <span class="spinner-border" role="status">
+                                                      <span class="visually-hidden">Loading...</span>
+                                                    </span>
+                                            </span>
+                        </button>
+                    </template>
                 </template>
                 <p class="alert alert-light mb-0" v-else>
                     Товар в категории нет
@@ -83,6 +97,7 @@ export default {
     props: ["partner"],
     data() {
         return {
+            load_content: false,
             categories:[],
             extra_charge: 0,
             need_product_config: false,
@@ -98,6 +113,27 @@ export default {
         this.loadProducts()
     },
     methods: {
+        loadMore(catId, offset) {
+            this.load_content = true
+            return this.$store.dispatch("loadMoreProductsByCategory", {
+                partner_id: this.partner?.bot_partner_id || null,
+                category_id: catId,
+                offset: offset,
+            }).then((resp) => {
+
+                let count = resp.length || 0
+                this.load_content = false
+                if (count === 0)
+                {
+                    this.products.find(p => p.id === catId).products_count = offset
+                    return
+                }
+
+                this.products.find(p => p.id === catId).products.push(...resp)
+            }).catch(() => {
+                this.load_content = false
+            })
+        },
         loadProducts(page = 0) {
             this.load_content = false
             return this.$store.dispatch("loadProductsByCategory", {
