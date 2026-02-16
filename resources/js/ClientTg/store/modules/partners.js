@@ -73,7 +73,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async togglePartnerInFavorites(context, payload = {form: null}) {
+        let link = `${BASE_PARTNERS_LINK}/toggle-favorite`
 
+        let _axios = util.makeAxiosFactory(link, "POST", payload.form)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
 
     async listOfPartnersCategories(context, payload) {
         let link = `${BASE_PARTNERS_LINK}/partners-categories`

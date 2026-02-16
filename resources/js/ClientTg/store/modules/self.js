@@ -9,7 +9,8 @@ let state = {
 
 const getters = {
     getSelf: state => state.self || null,
-    getFavoriteProducts:  state => state.self?.config == null? [] : state.self.config?.favorites || []
+    getFavoriteProducts:  state => state.self?.config == null? [] : state.self.config?.favorites || [],
+    getFavoritePartners:  state => state.self?.config == null? [] : state.self.config?.fav_partners || []
 }
 
 const actions = {

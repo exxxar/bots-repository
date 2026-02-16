@@ -18,6 +18,7 @@ import PartnerCard from "@/ClientTg/Components/V2/Shop/Partners/PartnerCard.vue"
 
                 <template v-if="partner.is_active">
                     <PartnerCard :partner="partner"
+                                 v-on:change-fav="loadPartners"
                                  v-on:select="selectPartner"
                                  :key="'partner-'+i"></PartnerCard>
                 </template>
@@ -53,7 +54,28 @@ export default {
     },
     mounted() {
         this.$nextTick(()=>{
-            this.partnerList = this.bot.partners
+            const fav =   window.self.config.fav_partners ?? []
+
+
+            this.partnerList = [...this.bot.partners].sort((a, b) => {
+                if (fav.length) {
+                    const ai = fav.indexOf(a.id);
+                    const bi = fav.indexOf(b.id);
+
+                    // если оба есть в списке — сортируем по позиции
+                    if (ai !== -1 && bi !== -1) return ai - bi;
+
+                    // тот, кто есть в fav — идет выше
+                    if (ai !== -1) return -1;
+                    if (bi !== -1) return 1;
+
+                    // оба не в fav → fallback
+                }
+
+                // fallback сортировка
+                return b.order_position -a.order_position;
+            });
+
 
             if (this.partnerList.length === 0)
                 this.loadPartners(0)

@@ -21,6 +21,7 @@ class Partner extends Model
         'bot_partner_id',
         'title',
         'description',
+        'order_position',
         'image',
         'is_active',
         'extra_charge',
@@ -36,6 +37,7 @@ class Partner extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'order_position' => 'integer',
         'bot_partner_id' => 'integer',
         'is_active' => 'boolean',
         'config' => 'array',

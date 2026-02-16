@@ -16,7 +16,23 @@ class PartnersController extends Controller
     {
         return BusinessLogic::partners()
             ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->list($request->all());
+    }
+
+    public function togglePartnersInFavorites(Request $request)
+    {
+        $request->validate([
+            "id" => "required"
+        ]);
+
+        return response()
+            ->json([
+                "fav_partners" => BusinessLogic::partners()
+                    ->setBot($request->bot ?? null)
+                    ->setBotUser($request->botUser ?? null)
+                    ->togglePartnerInFavorites($request->id)
+            ]);
     }
 
     public function partnersCategories(Request $request): \Illuminate\Database\Eloquent\Collection|array

@@ -18,15 +18,54 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PartnersLogicFactory extends BaseLogicFactory
 {
+
+    public function togglePartnerInFavorites($id): array
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Параметры не соответствуют условию!");
+
+        $config = $this->botUser->config ?? [];
+
+        if (in_array($id, $config["fav_partners"] ?? [])) {
+            $config["fav_partners"] = array_values(array_diff($config["fav_partners"], [$id]));
+        } else {
+
+            if (isset($config["fav_partners"]))
+                $config["fav_partners"][] = $id;
+            else
+                $config["fav_partners"] = [$id];
+        }
+
+        $this->botUser->config = $config;
+        $this->botUser->save();
+
+        return $config["fav_partners"];
+    }
+
+
     public function list(array $data = null): PartnerCollection
     {
-        if (is_null($this->bot))
+        if (is_null($this->bot)||is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");
 
-        $partners = Partner::query()
+        $config = $this->botUser->config ?? [];
+
+        $favPartners = $config["fav_partners"] ?? [];
+
+        $partnersQuery = Partner::query()
             ->with(["products", "botPartner"])
-            ->where("bot_id", $this->bot->id)
-            ->get();
+            ->where("bot_id", $this->bot->id);
+
+        if (!empty($favPartners)) {
+            // сортировка по порядку ID в массиве
+            $ids = implode(',', $favPartners);
+            $partnersQuery->orderByRaw("FIELD(id, $ids) desc");
+        } else {
+            // fallback сортировка
+            $partnersQuery->orderBy("order_position", "DESC");
+        }
+
+        $partners = $partnersQuery->get();
 
         return new PartnerCollection($partners);
     }
@@ -133,6 +172,7 @@ class PartnersLogicFactory extends BaseLogicFactory
             'bot_partner_id' => "required",
             'title' => "",
             'description' => "",
+            'order_position' => "",
             'image' => "",
             'is_active' => "",
             'extra_charge' => "",
@@ -170,6 +210,7 @@ class PartnersLogicFactory extends BaseLogicFactory
                 'title' => $data["title"] ?? $partner->title,
                 'description' => $data["description"] ?? $partner->description,
                 'image' => $data["image"] ?? $partner->image,
+                'order_position' => $data["order_position"] ?? 0,
                 'is_active' => ($data["is_active"] ?? false) == "true",
                 'extra_charge' => $data["extra_charge"] ?? $partner->extra_charge ?? 0,
                 'config' => isset($data["config"]) ? json_decode($data["config"] ?? '[]') : $partner->config,

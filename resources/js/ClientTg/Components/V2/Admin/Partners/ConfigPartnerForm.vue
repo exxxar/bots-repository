@@ -26,6 +26,18 @@
             <label for="title">Заголовок</label>
         </div>
 
+        <div class="mb-2 form-floating">
+            <input
+                type="number"
+                min="0"
+                class="form-control"
+                id="title"
+                v-model="form.order_position"
+                placeholder="Введите номер позиции"
+            />
+            <label for="title">Позиция в выдаче</label>
+        </div>
+
         <!-- Описание -->
         <div class="mb-2 form-floating">
         <textarea
@@ -272,6 +284,7 @@ export default {
                 title: "",
                 description: "",
                 image: "",
+                order_position: 0,
                 is_active: true,
                 extra_charge: 0,
                 demo_mode: true,
