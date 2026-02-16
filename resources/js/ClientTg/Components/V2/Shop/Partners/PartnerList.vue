@@ -52,11 +52,12 @@ export default {
 
     },
     mounted() {
-        this.$nextTick(() => {
-            this.partnerList = this.bot.partners || []
 
-            if (this.partnerList.length === 0)
-                this.loadPartners(0)
+
+        this.$nextTick(() => {
+            this.partnerList = this.bot.partners
+            console.log("parnters", this.partnerList)
+            this.loadPartners(0)
         })
 
     },
