@@ -4,6 +4,7 @@ import PartnerTagList from "@/ClientTg/Components/V2/Shop/Partners/PartnerTagLis
 </script>
 <template>
     <div class="container">
+        <h3>Наши партнеры</h3>
         <PartnerList
             v-on:select="selectPartner"></PartnerList>
 <!--        <PartnerTagList></PartnerTagList>-->

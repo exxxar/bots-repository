@@ -15,6 +15,7 @@ import BookingDropdown from "@/ClientTg/Components/V2/Shop/Booking/BookingDropdo
 <template>
 
     <template v-if="shop==0">
+        {{shop}}
         <PartnersMain v-on:select="selectPartner"></PartnersMain>
     </template>
     <template v-if="shop==1">
