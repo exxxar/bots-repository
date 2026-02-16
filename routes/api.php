@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\API\BotController;
-use App\Http\Controllers\API\CompanyController;
+
+use App\Http\Controllers\API\BasketController;
 use App\Http\Controllers\API\ProductController;
+
+use App\Http\Controllers\API\StoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,18 +23,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware([/*"auth:sanctum"*/])
+Route::middleware(['check.bot'/*"auth:sanctum"*/])
     ->group(function () {
 
 
         Route::prefix("basket")
-            ->controller(\App\Http\Controllers\Bots\Web\BasketController::class)
-            ->middleware(["tgAuth.any"])
+            ->controller(BasketController::class)
             ->group(function () {
                 Route::post('/', "loadProductsInBasket");
                 Route::post('/checkout', "checkout");
                 Route::post('/checkout-link', "checkoutLink");
-                Route::post("/use-wheel-of-fortune-prize","useWheelOfFortunePrize");
+                Route::post("/use-wheel-of-fortune-prize", "useWheelOfFortunePrize");
                 Route::post('/increment/{id}', "incrementItem");
                 Route::post('/decrement/{id}', "decrementItem");
                 Route::post('/inc-product', "incProductInBasket");
@@ -47,13 +48,12 @@ Route::middleware([/*"auth:sanctum"*/])
         Route::prefix("promocodes")
             ->controller(\App\Http\Controllers\Globals\PromocodeScriptController::class)
             ->group(function () {
-                Route::post("/", "list")->middleware(["tgAuth.admin"]);
                 Route::post("/activate-shop-discount", "activateShopDiscount");
             });
 
         Route::prefix("stories")
             ->group(function () {
-                Route::get("/", [App\Http\Controllers\Bots\Web\StoryController::class, "index"]); // Получить список историй
+                Route::get("/", [StoryController::class, "index"]); // Получить список историй
             });
 
         Route::prefix("shop")
@@ -66,12 +66,20 @@ Route::middleware([/*"auth:sanctum"*/])
                 Route::post("/products", [ProductController::class, "index"]);
                 Route::post("/products-by-category", [ProductController::class, "listByCategories"]);
                 Route::post("/products-more-by-category", [ProductController::class, "loadMoreProductsByCategories"]);
-                Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"]);
-
                 Route::post("/products/fav-list", [ProductController::class, "getFavList"]);
                 Route::post("/products/toggle-favorite", [ProductController::class, "toggleProductInFavorites"]);
                 Route::post("/products/load-recommended-products", [ProductController::class, "loadRecommendedProducts"]);
 
+            });
+
+        Route::prefix("orders")
+            ->group(function () {
+                Route::post("/", [ProductController::class, "getOrders"]);
+                Route::post("/send-sbp-invoice", [ProductController::class, "sendSBPInvoice"]);
+                Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
+                Route::post("/decline-order", [ProductController::class, "declineOrder"]);
+                Route::post("/get-order-by-id", [ProductController::class, "loadOrderById"]);
+                Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"]);
             });
 
     });
