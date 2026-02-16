@@ -53,12 +53,11 @@ export default {
     },
     mounted() {
 
+        this.partnerList = this.bot.partners
+        this.loadPartners(0)
 
-        this.$nextTick(() => {
-            this.partnerList = this.bot.partners
-            console.log("parnters", this.partnerList)
-            this.loadPartners(0)
-        })
+        console.log("parnters", this.partnerList)
+
 
     },
     methods: {
