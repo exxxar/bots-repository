@@ -16,55 +16,74 @@
                for="need_product_config">Режим настройки отображения товаров</label>
     </div>
 
-    <ul class="list-group" v-if="partner">
-        <li
-            v-bind:class="{'bg-exclude':excludes.indexOf(product.id)!==-1}"
-            class="list-group-item"
-
-            v-for="(product, index) in partner.products">
-
-            <p class="mb-0 d-flex justify-content-between align-items-center"> {{ product.title }}
-                <span class="badge bg-primary" v-if="extra_charge===0">{{ product.current_price || 0 }}₽</span>
-                <span class="badge bg-info" v-else>{{  parseFloat(product.current_price)+parseFloat((product.current_price*extra_charge / 100).toFixed(2)) }}₽</span>
-            </p>
-
-
-            <div class="row row-cols-1" v-if="need_product_config">
-                <div class="col">
-                    <div class="d-flex mt-2 mb-2 justify-content-center">
-                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-
-                            <input type="radio"
-                                   @change="changeStatus(product.id, 0)"
-                                   :checked="excludes.indexOf(product.id)===-1"
-                                   class="btn-check"
-                                   :name="'config-partner-product-'+product.id"
-                                   :id="'config-partner-product1-'+product.id" autocomplete="off">
-                            <label class="btn btn-outline-primary"
-                                   :for="'config-partner-product1-'+product.id">Отображать</label>
-
-                            <input type="radio"
-                                   @change="changeStatus(product.id, 1)"
-                                   :checked="excludes.indexOf(product.id)!==-1"
-                                   class="btn-check"
-                                   :name="'config-partner-product-'+product.id"
-                                   :id="'config-partner-product2-'+product.id" autocomplete="off">
-                            <label class="btn btn-outline-primary"
-                                   :for="'config-partner-product2-'+product.id">Не отображать</label>
-                        </div>
-                    </div>
-
-                </div>
+    <template v-if="partner&&categories.length>0">
+        <div class="card mb-2" v-for="category in categories">
+            <div class="card-header">
+                {{category.title}}
             </div>
+            <div class="card-body">
+                <template v-if="category.products.length>0">
+                    <ul class="list-group list-group-flush" >
+                        <li
+                            v-bind:class="{'bg-exclude':excludes.indexOf(product.id)!==-1}"
+                            class="list-group-item"
 
-        </li>
-    </ul>
+                            v-for="(product, index) in category.products">
+
+                            <p class="mb-0 d-flex justify-content-between align-items-center"> {{ product.title }}
+                                <span class="badge bg-primary" v-if="extra_charge===0">{{ product.current_price || 0 }}₽</span>
+                                <span class="badge bg-info" v-else>{{
+                                        parseFloat(product.current_price) + parseFloat((product.current_price * extra_charge / 100).toFixed(2))
+                                    }}₽</span>
+                            </p>
+
+
+                            <div class="row row-cols-1" v-if="need_product_config">
+                                <div class="col">
+                                    <div class="d-flex mt-2 mb-2 justify-content-center">
+                                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+
+                                            <input type="radio"
+                                                   @change="changeStatus(product.id, 0)"
+                                                   :checked="excludes.indexOf(product.id)===-1"
+                                                   class="btn-check"
+                                                   :name="'config-partner-product-'+product.id"
+                                                   :id="'config-partner-product1-'+product.id" autocomplete="off">
+                                            <label class="btn btn-outline-primary"
+                                                   :for="'config-partner-product1-'+product.id">Отображать</label>
+
+                                            <input type="radio"
+                                                   @change="changeStatus(product.id, 1)"
+                                                   :checked="excludes.indexOf(product.id)!==-1"
+                                                   class="btn-check"
+                                                   :name="'config-partner-product-'+product.id"
+                                                   :id="'config-partner-product2-'+product.id" autocomplete="off">
+                                            <label class="btn btn-outline-primary"
+                                                   :for="'config-partner-product2-'+product.id">Не отображать</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </li>
+                    </ul>
+                </template>
+                <p class="alert alert-light mb-0" v-else>
+                    Товар в категории нет
+                </p>
+
+            </div>
+        </div>
+    </template>
+
 </template>
 <script>
 export default {
     props: ["partner"],
     data() {
         return {
+            categories:[],
             extra_charge: 0,
             need_product_config: false,
         }
@@ -75,9 +94,33 @@ export default {
         }
     },
     mounted() {
-      this.extra_charge = this.partner.extra_charge || 0
+        this.extra_charge = this.partner.extra_charge || 0
+        this.loadProducts()
     },
     methods: {
+        loadProducts(page = 0) {
+            this.load_content = false
+            return this.$store.dispatch("loadProductsByCategory", {
+                partner_id: this.partner.bot_partner_id || null,
+            }).then((resp) => {
+
+                this.load_content = true
+
+                this.$nextTick(() => {
+                    this.categories = resp.data
+                    this.load_content = false
+
+                })
+
+
+            }).catch(() => {
+                this.load_content = false
+
+                this.$store.dispatch("clearCart").then(() => {
+                    this.loadProducts()
+                })
+            })
+        },
         changeStatus(productId, status) {
             let excludes = this.partner.config?.excludes || []
 

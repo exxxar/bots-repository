@@ -91,12 +91,6 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                     v-else
                                 >
                                     Рассчитывается курьером
-                                    <span
-                                        class="text-primary underline fw-bold cursor-pointer"
-                                        @click="recalcDeliveryPrice"
-                                    >
-                                        (повторить расчет)
-                                    </span>
                                 </span>
                             </p>
 

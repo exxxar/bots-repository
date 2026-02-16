@@ -5,126 +5,124 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
 </script>
 <template>
 
-<!--    &lt;!&ndash; Форма поиска &ndash;&gt;
-    <form v-on:submit.prevent="applyFilters" class="mt-2 mb-2">
+    <!--    &lt;!&ndash; Форма поиска &ndash;&gt;
+        <form v-on:submit.prevent="applyFilters" class="mt-2 mb-2">
 
-        <div class="input-group mb-2">
+            <div class="input-group mb-2">
 
-            <div class="form-floating">
-                <input type="text"
-                       class="form-control"
-                       placeholder="Поиск партнера"
-                       aria-label="Поиск партнера"
-                       v-model="search"
-                       aria-describedby="button-addon2">
-                <label for="floatingInput">Критерии поиска</label>
+                <div class="form-floating">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Поиск партнера"
+                           aria-label="Поиск партнера"
+                           v-model="search"
+                           aria-describedby="button-addon2">
+                    <label for="floatingInput">Критерии поиска</label>
+                </div>
+
+
+                <button class="btn btn-outline-secondary text-primary"
+                        type="submit"
+                        id="button-addon2">
+                    Найти
+                </button>
+            </div>
+
+            <div class="form-floating my-2">
+                <select
+                    @change="applyFilters"
+                    v-model="sort.param"
+                    class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                    <option value="title">По названию</option>
+                    <option value="is_active">Активные</option>
+                    <option value="product_count">По числу товаров</option>
+                    <option value="updated_at">По дате добавления</option>
+                    <option value="updated_at">По дате договора</option>
+                </select>
+                <label for="floatingSelect">Сортировать заказы по</label>
             </div>
 
 
-            <button class="btn btn-outline-secondary text-primary"
-                    type="submit"
-                    id="button-addon2">
-                Найти
-            </button>
-        </div>
+        </form>-->
+    <!--
+        <p v-if="sort.param!=null">Направление сортировки:
+            <span
+                class="fw-bold"
+                @click="changeDirection('desc')"
+                v-if="sort.direction==='asc'">по возрастанию <i class="fa-solid fa-caret-up"></i></span>
+            <span
+                class="fw-bold"
+                @click="changeDirection('asc')"
+                v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
+        </p>-->
 
-        <div class="form-floating my-2">
-            <select
-                @change="applyFilters"
-                v-model="sort.param"
-                class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                <option value="title">По названию</option>
-                <option value="is_active">Активные</option>
-                <option value="product_count">По числу товаров</option>
-                <option value="updated_at">По дате добавления</option>
-                <option value="updated_at">По дате договора</option>
-            </select>
-            <label for="floatingSelect">Сортировать заказы по</label>
-        </div>
+    <!--
+        <template v-if="hasPartners">
+    -->
 
+    <!-- Список партнеров -->
+    <div class="row row-cols-1 mb-5" v-if="partnerList.length>0">
+        <div class="col" v-for="(partner, index) in partnerList" :key="partner.id">
+            <div class="card mb-2" v-bind:class="{'border-danger':partner.before_deleted}">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ partner.title }}</h5>
+                    <p class="card-text mb-2">
+                        <strong>Число товаров: </strong>
+                        {{ partner.products && partner.products.length ? partner.products.length : 0 }} <br>
+                    </p>
 
-    </form>-->
-<!--
-    <p v-if="sort.param!=null">Направление сортировки:
-        <span
-            class="fw-bold"
-            @click="changeDirection('desc')"
-            v-if="sort.direction==='asc'">по возрастанию <i class="fa-solid fa-caret-up"></i></span>
-        <span
-            class="fw-bold"
-            @click="changeDirection('asc')"
-            v-if="sort.direction==='desc'">по убыванию <i class="fa-solid fa-caret-down"></i></span>
-    </p>-->
-
-<!--
-    <template v-if="hasPartners">
--->
-
-        <!-- Список партнеров -->
-        <div class="row row-cols-1 mb-5">
-            <div class="col" v-for="(partner, index) in partnerList" :key="partner.id">
-                <div class="card mb-2" v-bind:class="{'border-danger':partner.before_deleted}">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ partner.title }}</h5>
-                        <p class="card-text mb-2">
-                            <strong>Число товаров: </strong>
-                            {{ partner.products && partner.products.length ? partner.products.length : 0 }} <br>
-                        </p>
-
-                        <!-- Активность -->
-                        <div class="form-switch form-check">
-                            <input
-                                @change="updatePartnersActiveStatus(partner)"
-                                type="checkbox"
-                                class="form-check-input"
-                                :id="'is_active-partner-'+partner.id"
-                                v-model="partner.is_active"
-                            />
-                            <label class="form-check-label" :for="'is_active-partner-'+partner.id">
-                                <strong>Статус: </strong>
-                                <span
-                                    :class="{'text-success': partner.is_active, 'text-danger': !partner.is_active}">
+                    <!-- Активность -->
+                    <div class="form-switch form-check">
+                        <input
+                            @change="updatePartnersActiveStatus(partner)"
+                            type="checkbox"
+                            class="form-check-input"
+                            :id="'is_active-partner-'+partner.id"
+                            v-model="partner.is_active"
+                        />
+                        <label class="form-check-label" :for="'is_active-partner-'+partner.id">
+                            <strong>Статус: </strong>
+                            <span
+                                :class="{'text-success': partner.is_active, 'text-danger': !partner.is_active}">
                 {{ partner.is_active ? 'Активен' : 'Не активен' }}
               </span>
-                            </label>
-                        </div>
+                        </label>
                     </div>
-                    <div class="card-footer d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            <a :href="partner.link"
-                               target="_blank"
-                               class="btn btn-primary"><i class="fa-brands fa-telegram"></i>
-                            </a>
-
-                            <button type="button"
-                                    @click="selectPartner(partner)"
-                                    class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-
-                            <button type="button"
-                                    @click="selectPartnerForProductObserve(partner)"
-                                    class="btn btn-primary"><i class="fa-solid fa-store"></i>
-                            </button>
-                        </div>
-
-
-
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a :href="partner.link"
+                           target="_blank"
+                           class="btn btn-primary"><i class="fa-brands fa-telegram"></i>
+                        </a>
 
                         <button type="button"
-                                @click="selectPartnerForRemove(partner)"
-                                class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                                @click="selectPartner(partner)"
+                                class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+
+                        <button type="button"
+                                @click="selectPartnerForProductObserve(partner)"
+                                class="btn btn-primary"><i class="fa-solid fa-store"></i>
                         </button>
                     </div>
+
+
+                    <button type="button"
+                            @click="selectPartnerForRemove(partner)"
+                            class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>
             </div>
         </div>
-<!--
-        <Pagination
-            :simple="true"
-            v-on:pagination_page="nextPartners"
-            v-if="partners_paginate_object"
-            :pagination="partners_paginate_object"/>
-    </template>-->
+    </div>
+    <!--
+            <Pagination
+                :simple="true"
+                v-on:pagination_page="nextPartners"
+                v-if="partners_paginate_object"
+                :pagination="partners_paginate_object"/>
+        </template>-->
 
 
     <!-- Modal -->
@@ -211,21 +209,20 @@ export default {
             search: null,
             config_modal: null,
             remove_modal: null,
-         /*   partners: [], // Заглушка для списка партнеров
-            partners_paginate_object: null,*/
+            partnerList: []
+            /*   partners: [], // Заглушка для списка партнеров
+               partners_paginate_object: null,*/
         };
     },
     computed: {
-      /*  ...mapGetters(['getPartners', 'getPartnersPaginateObject']),*/
+        ...mapGetters(['getPartners', 'getPartnersPaginateObject']),
         bot() {
             return window.currentBot || null
         },
-        settings(){
+        settings() {
             return this.bot.settings
         },
-        partnerList() {
-            return this.bot.partners || []
-        },
+
         hasPartners() {
             return !this.loading &&
                 Array.isArray(this.partners) &&
@@ -245,20 +242,25 @@ export default {
     },
 
     mounted() {
+        this.$nextTick(() => {
+            this.partnerList = this.bot.partners || []
 
+            if (this.partnerList.length === 0)
+                this.loadPartners(0)
+        })
         this.config_modal = new bootstrap.Modal(document.getElementById('config-partner-modal'));
         this.remove_modal = new bootstrap.Modal(document.getElementById('remove-partner-modal'));
         this.products_modal = new bootstrap.Modal(document.getElementById('products-partner-modal'));
-       // this.loadPartners()
+        // this.loadPartners()
     },
     methods: {
-      /*  changeDirection(direction) {
-            this.sort.direction = direction
-            this.loadPartners(0)
-        },
-        nextPartners(index) {
-            this.loadPartners(index)
-        },*/
+        /*  changeDirection(direction) {
+              this.sort.direction = direction
+              this.loadPartners(0)
+          },
+          nextPartners(index) {
+              this.loadPartners(index)
+          },*/
         selectPartnerForProductObserve(item) {
             this.selected = null
 
@@ -275,7 +277,7 @@ export default {
                 this.remove_modal.show()
             })
         },
-        updatePartnersActiveStatus(partner){
+        updatePartnersActiveStatus(partner) {
             this.$store.dispatch("updatePartnersActiveStatus", {
                 is_active: partner.is_active,
                 id: partner.id
@@ -293,7 +295,7 @@ export default {
                 this.config_modal.show()
             })
         },
-     /*   loadPartners(pageIndex = 0) {
+        loadPartners(pageIndex = 0) {
             this.loading = true
             this.$store.dispatch("loadPartners", {
                 dataObject: {
@@ -303,14 +305,14 @@ export default {
                 },
                 page: pageIndex
             }).then(resp => {
-                this.partners = this.getPartners || []
+                this.partnerList = this.getPartners || []
                 this.partners_paginate_object = this.getPartnersPaginateObject || null
                 this.loading = false;
             }).catch(err => {
                 this.loading = false;
                 console.error("LOAD PARTNERS ERROR:", err);
             })
-        },*/
+        },
         removePartner() {
 
             if (!this.selected)
@@ -344,9 +346,9 @@ export default {
         },
 
         // Применение фильтров
-      /*  applyFilters() {
-            this.loadPartners(); // Перезагружаем партнеров после применения фильтров (поиск или статус)
-        },*/
+        /*  applyFilters() {
+              this.loadPartners(); // Перезагружаем партнеров после применения фильтров (поиск или статус)
+          },*/
     },
 
 };
