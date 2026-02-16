@@ -91,6 +91,9 @@
         </div>
     </template>
 
+    <p
+        v-if="categories.length===0"
+        class="alert alert-light mb-0">Товары и категории еще не загрузись.. Ожидаем...</p>
 </template>
 <script>
 export default {
@@ -125,11 +128,11 @@ export default {
                 this.load_content = false
                 if (count === 0)
                 {
-                    this.products.find(p => p.id === catId).products_count = offset
+                    this.categories.find(p => p.id === catId).products_count = offset
                     return
                 }
 
-                this.products.find(p => p.id === catId).products.push(...resp)
+                this.categories.find(p => p.id === catId).products.push(...resp)
             }).catch(() => {
                 this.load_content = false
             })
