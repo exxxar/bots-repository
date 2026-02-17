@@ -60,9 +60,6 @@ class ShopScriptController extends SlugController
 
     public function simpleHomePage(Request $request, $botDomain)
     {
-        $request->validate([
-            "slug" => "required"
-        ]);
 
         $scriptId = $request->slug ?? null;
 
