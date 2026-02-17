@@ -58,12 +58,13 @@ class ShopScriptController extends SlugController
     }
 
 
-    public function simpleHomePage(Request $request, $botDomain) {
+    public function simpleHomePage(Request $request, $botDomain)
+    {
         $request->validate([
             "slug" => "required"
         ]);
 
-        $scriptId = $request->slug;
+        $scriptId = $request->slug ?? null;
 
         $bot = \App\Models\Bot::query()
             ->with(["company"])
@@ -75,12 +76,12 @@ class ShopScriptController extends SlugController
             return Inertia::render('V1/Error');
         }
 
-        if ($scriptId == "route") {
+        if ($scriptId == "route" || is_null($scriptId)) {
             Inertia::setRootView("bot");
 
             return Inertia::render('MainV2', [
                 'bot' => BotSecurityResource::make($bot),
-                'theme'=>$bot->settings["theme"] ?? null
+                'theme' => $bot->settings["theme"] ?? null
             ]);
         }
 
@@ -106,7 +107,7 @@ class ShopScriptController extends SlugController
         return Inertia::render('MainV2', [
             'bot' => BotSecurityResource::make($bot),
             'slug_id' => $slug->id,
-            'theme'=>$bot->settings["theme"] ?? null
+            'theme' => $bot->settings["theme"] ?? null
         ]);
 
     }

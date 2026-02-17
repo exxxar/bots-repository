@@ -111,7 +111,7 @@ export const routes = [
 
     {
         path: '/',
-        redirect: '/empty'
+        redirect: '/s/menu'
     },
     {
         name: 'empty',

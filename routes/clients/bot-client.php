@@ -700,8 +700,7 @@ Route::prefix("bot-client")
 
 
 
-        Route::get("/simple/{botDomain}", [ShopScriptController::class, "simpleHomePage"])
-            ->where("slug", "[0-9]+|route");
+        Route::get("/simple/{botDomain}", [ShopScriptController::class, "simpleHomePage"]);
 
         Route::get("/{botDomain}", [ShopScriptController::class, "shopHomePage"])
             ->where("slug", "[0-9]+|route");
