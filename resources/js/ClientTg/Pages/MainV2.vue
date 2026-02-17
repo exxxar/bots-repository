@@ -63,6 +63,11 @@ export default {
         }
     },
     created() {
+
+        if (!location.hash) {
+            location.replace(location.pathname + '#/');
+        }
+
         window.currentBot = this.bot.data
         window.theme = this.theme
 
