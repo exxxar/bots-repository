@@ -65,7 +65,7 @@ export default {
     created() {
 
         if (!window.location.hash) {
-            window.location.replace(location.pathname + '#/');
+            window.location.replace(window.location.pathname + '#/');
         }
 
         window.currentBot = this.bot.data
