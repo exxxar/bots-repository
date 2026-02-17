@@ -24,6 +24,7 @@ class PartnerResource extends JsonResource
             'description'=> $this->description,
             'image'=> $this->image,
             'is_active'=> $this->is_active,
+            'products_count'=> $this->products_count ?? 0,
             'extra_charge'=> $this->extra_charge,
             'config'=> $this->config,
             'link'=> $link,

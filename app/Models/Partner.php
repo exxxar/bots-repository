@@ -44,7 +44,14 @@ class Partner extends Model
         'legal_info' => 'array',
     ];
 
-    protected $with = ["categories"  ];
+    protected $with = ["categories"];
+
+    protected $appends = ["products_count"];
+
+    public function getProductsCountAttribute()
+    {
+        return $this->products()->count();
+    }
 
     public function bot(): BelongsTo
     {
@@ -58,11 +65,11 @@ class Partner extends Model
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class,'bot_id','bot_partner_id');
+        return $this->hasMany(Product::class, 'bot_id', 'bot_partner_id');
     }
 
     public function categories(): HasMany
     {
-        return $this->hasMany(ProductCategory::class,'bot_id','bot_partner_id');
+        return $this->hasMany(ProductCategory::class, 'bot_id', 'bot_partner_id');
     }
 }

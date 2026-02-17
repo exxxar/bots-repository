@@ -42,20 +42,23 @@ class PartnersController extends Controller
             ->listOfPartnersCategories();
     }
 
-    public function updateSettings(Request $request){
+    public function updateSettings(Request $request)
+    {
 
         return BusinessLogic::partners()
             ->setBot($request->bot ?? null)
             ->updateSettings($request->all());
     }
 
-    public function updateActiveStatus(Request $request){
+    public function updateActiveStatus(Request $request)
+    {
         return BusinessLogic::partners()
             ->setBot($request->bot ?? null)
             ->updateActiveStatus($request->all());
     }
 
-    public function changeStatus(Request $request){
+    public function changeStatus(Request $request)
+    {
         $request->validate([
             "product_id" => "required",
             "partner_id" => "required",
@@ -88,15 +91,15 @@ class PartnersController extends Controller
     public function update(Request $request): \App\Http\Resources\PartnerResource
     {
         $request->validate([
-            'id'=> "required",
-            'bot_partner_id'=> "required",
-            'title'=> "",
-            'description'=> "",
-            'image'=> "",
-            'is_active'=> "",
-            'extra_charge'=> "",
-            'config'=> "",
-            'legal_info'=> "",
+            'id' => "required",
+            'bot_partner_id' => "required",
+            'title' => "",
+            'description' => "",
+            'image' => "",
+            'is_active' => "",
+            'extra_charge' => "",
+            'config' => "",
+            'legal_info' => "",
         ]);
 
         return BusinessLogic::partners()
@@ -112,8 +115,8 @@ class PartnersController extends Controller
     public function updateSelf(Request $request)
     {
         $request->validate([
-            'title'=> "",
-            'description'=> "",
+            'title' => "",
+            'description' => "",
         ]);
 
         return BusinessLogic::partners()
@@ -123,11 +126,12 @@ class PartnersController extends Controller
 
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
 
-        $bot = $request->bot;
-
+        return BusinessLogic::partners()
+            ->setBot($request->bot ?? null)
+            ->destroy($id);
 
     }
 }

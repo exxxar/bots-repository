@@ -410,4 +410,35 @@ class PartnersLogicFactory extends BaseLogicFactory
 
         return $config["partners"];
     }
+
+    /**
+     * @throws ValidationException
+     */
+    public function destroy($id)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+
+        $partner = Partner::query()
+            ->where("id", $id)
+            ->first();
+
+        if (is_null($partner))
+            throw new HttpException(404, "Партнер не найден!");
+
+        $partner->delete();
+
+
+        $basket = Basket::query()
+            ->where("bot_id", $id)
+            ->get();
+
+        foreach ($basket as $item)
+            $item->delete();
+
+
+        return new PartnerResource($partner);
+    }
+
 }

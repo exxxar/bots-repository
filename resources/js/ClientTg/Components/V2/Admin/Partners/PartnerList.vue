@@ -65,11 +65,12 @@ import PartnerProductList from "@/ClientTg/Components/V2/Admin/Partners/PartnerP
         <div class="col" v-for="(partner, index) in partnerList" :key="partner.id">
             <div class="card mb-2" v-bind:class="{'border-danger':partner.before_deleted}">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold">{{ partner.title }}</h5>
-                    <p class="card-text mb-2">
-                        <strong>Число товаров: </strong>
-                        {{ partner.products && partner.products.length ? partner.products.length : 0 }} <br>
-                    </p>
+                    <h5 class="card-title fw-bold d-flex justify-content-between align-items-center">{{ partner.title }}
+                        <span
+                            style="font-size:12px;"
+                            class="badge bg-info mb-0">Товаров {{partner.products_count || 0}} шт.</span>
+                    </h5>
+
 
                     <!-- Активность -->
                     <div class="form-switch form-check">
@@ -318,10 +319,10 @@ export default {
             if (!this.selected)
                 return
 
-            let preparedIndex = this.partners.findIndex(item => item.id === this.selected.id)
+            let preparedIndex = this.partnerList.findIndex(item => item.id === this.selected.id)
 
             if (preparedIndex !== -1)
-                this.partners[preparedIndex].before_deleted = true
+                this.partnerList[preparedIndex].before_deleted = true
 
             this.$store.dispatch("removePartner", {
                 partnerId: this.selected.id
