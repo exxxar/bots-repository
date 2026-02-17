@@ -17,7 +17,7 @@ class PartnersController extends Controller
         return BusinessLogic::partners()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->list($request->all());
+            ->list($request->all(), true);
     }
 
     public function togglePartnersInFavorites(Request $request)

@@ -43,14 +43,19 @@ class PartnersLogicFactory extends BaseLogicFactory
     }
 
 
-    public function list(array $data = null): PartnerCollection
+    public function list(array $data = null, $isForApi = false): PartnerCollection
     {
-        if (is_null($this->bot)||is_null($this->botUser))
+        if (is_null($this->bot)) {
             throw new HttpException(404, "Бот не найден!");
+        }
+
+        if (!$isForApi && is_null($this->botUser)) {
+            throw new HttpException(404, "Бот и пользователь не найден!");
+        }
 
         $config = $this->botUser->config ?? [];
 
-        $favPartners = $config["fav_partners"] ?? [];
+        $favPartners = !$isForApi ? ($config["fav_partners"] ?? []) : [];
 
         $partnersQuery = Partner::query()
             ->with(["products", "botPartner"])
