@@ -109,10 +109,7 @@ const FoodCalcV2 = defineAsyncComponent(() => import('@/ClientTg/Pages/V2/Shop/F
 
 export const routes = [
 
-    {
-        path: '/',
-        redirect: '/s/menu'
-    },
+
     {
         name: 'empty',
         path: '/empty',
@@ -461,7 +458,11 @@ export const deliveryRoutes = [
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
-
+    {
+        path: '/',
+        component: CatalogV2,
+        meta: {title: 'Меню магазина'}
+    },
 
     {
         name: 'FoodCalcV2',
