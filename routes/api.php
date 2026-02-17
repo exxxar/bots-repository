@@ -2,6 +2,8 @@
 
 
 use App\Http\Controllers\API\BasketController;
+use App\Http\Controllers\API\BotController;
+use App\Http\Controllers\API\PartnersController;
 use App\Http\Controllers\API\ProductController;
 
 use App\Http\Controllers\API\StoryController;
@@ -26,6 +28,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['check.bot'/*"auth:sanctum"*/])
     ->group(function () {
 
+        Route::prefix("shop")
+            ->controller(BotController::class)
+            ->group(function () {
+                Route::post('/info', "getBot");
+            });
 
         Route::prefix("basket")
             ->controller(BasketController::class)
@@ -80,6 +87,14 @@ Route::middleware(['check.bot'/*"auth:sanctum"*/])
                 Route::post("/decline-order", [ProductController::class, "declineOrder"]);
                 Route::post("/get-order-by-id", [ProductController::class, "loadOrderById"]);
                 Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"]);
+            });
+
+        Route::prefix("partners")
+            ->controller(PartnersController::class)
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/toggle-favorite", "togglePartnersInFavorites");
+                Route::post("/partners-categories", "partnersCategories");
             });
 
     });
