@@ -64,8 +64,8 @@ export default {
     },
     created() {
 
-        if (!window.location.hash) {
-            window.location.hash = '#/?'
+        if (window.location.hash.indexOf("#/")===-1) {
+            window.location.hash = '#/?slug=route'
         }
 
         window.currentBot = this.bot.data
