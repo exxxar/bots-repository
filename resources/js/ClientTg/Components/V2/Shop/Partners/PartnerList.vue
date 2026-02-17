@@ -54,7 +54,7 @@ export default {
     },
     mounted() {
         this.$nextTick(()=>{
-            const fav =   window.self.config.fav_partners ?? []
+            const fav =   window.self.config?.fav_partners ?? []
 
 
             this.partnerList = [...this.bot.partners].sort((a, b) => {
