@@ -28,12 +28,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['check.bot'/*"auth:sanctum"*/])
     ->group(function () {
 
-        Route::prefix("shop")
-            ->controller(BotController::class)
-            ->group(function () {
-                Route::post('/info', "getBot");
-            });
-
         Route::prefix("basket")
             ->controller(BasketController::class)
             ->group(function () {
@@ -65,18 +59,23 @@ Route::middleware(['check.bot'/*"auth:sanctum"*/])
 
         Route::prefix("shop")
             ->group(function () {
+                Route::post('/info', [BotController::class, "getBot"]);
+
+                Route::prefix("products")
+                    ->controller(ProductController::class)
+                    ->group(function () {
+                        Route::post("/", "index");
+                        Route::post("/by-category", "listByCategories");
+                        Route::post("/more-by-category",  "loadMoreProductsByCategories");
+                        Route::post("/fav-list",  "getFavList");
+                        Route::post("/toggle-favorite",  "toggleProductInFavorites");
+                        Route::post("/load-recommended-products",  "loadRecommendedProducts");
+                    });
+
                 Route::prefix("reviews")
                     ->group(function () {
                         Route::post("/", [ProductController::class, "getReviews"]);
                     });
-
-                Route::post("/products", [ProductController::class, "index"]);
-                Route::post("/products-by-category", [ProductController::class, "listByCategories"]);
-                Route::post("/products-more-by-category", [ProductController::class, "loadMoreProductsByCategories"]);
-                Route::post("/products/fav-list", [ProductController::class, "getFavList"]);
-                Route::post("/products/toggle-favorite", [ProductController::class, "toggleProductInFavorites"]);
-                Route::post("/products/load-recommended-products", [ProductController::class, "loadRecommendedProducts"]);
-
             });
 
         Route::prefix("orders")
