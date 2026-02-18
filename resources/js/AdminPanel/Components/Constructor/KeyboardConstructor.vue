@@ -514,7 +514,9 @@ export default {
             handler: function (newValue) {
                 if (this.need_mini_app)
                 {
-
+                    delete this.keyboard[this.select.row][this.select.col].url
+                    delete this.keyboard[this.select.row][this.select.col].callback_data
+                    delete this.keyboard[this.select.row][this.select.col].switch_inline_query
                     this.keyboard[this.select.row][this.select.col].web_app = {
                         url: null,
                     }
