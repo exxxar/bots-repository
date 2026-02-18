@@ -36,12 +36,12 @@
     "src": "ClientNewLayout.css"
   },
   "Clients.css": {
-    "file": "assets/Clients-d444394b.css",
-    "src": "resources/js/ClientTg/Pages/V2/Admin/BotManager.css"
+    "file": "assets/BotManager-d444394b.css",
+    "src": "Clients.css"
   },
   "CollectionCardSimple.css": {
     "file": "assets/ProductCardSimple-8d1f2021.css",
-    "src": "CollectionCardSimple.css"
+    "src": "ProductItemSimple.css"
   },
   "CompanyList.css": {
     "file": "assets/CompanyList-441845c8.css",
@@ -105,15 +105,15 @@
   },
   "ProductCardSimple.css": {
     "file": "assets/ProductCardSimple-8d1f2021.css",
-    "src": "CollectionCardSimple.css"
+    "src": "ProductItemSimple.css"
   },
   "ProductItemSimple.css": {
     "file": "assets/ProductCardSimple-8d1f2021.css",
-    "src": "CollectionCardSimple.css"
+    "src": "ProductItemSimple.css"
   },
   "QuizCommandList.css": {
-    "file": "assets/QuizCommandList-610a60eb.css",
-    "src": "resources/js/ClientTg/Pages/V1/Quiz/SingleQuiz.css"
+    "file": "assets/SingleQuiz-610a60eb.css",
+    "src": "QuizCommandList.css"
   },
   "SelectOffice.css": {
     "file": "assets/SelectOffice-334e9e83.css",
@@ -140,8 +140,8 @@
     "src": "TelegramChannelHelper.css"
   },
   "V1Layout.css": {
-    "file": "assets/MobileForPage-5ac8cdc0.css",
-    "src": "V1Layout.css"
+    "file": "assets/V1Layout-5ac8cdc0.css",
+    "src": "resources/js/Mobile/Pages/MobileForPage.css"
   },
   "_AdminProductCard-186b3772.js": {
     "css": [
@@ -293,11 +293,11 @@
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_Clients-a41657ff.js": {
+  "_Clients-39ffa76a.js": {
     "css": [
-      "assets/Clients-d444394b.css"
+      "assets/BotManager-d444394b.css"
     ],
-    "file": "assets/Clients-a41657ff.js",
+    "file": "assets/Clients-39ffa76a.js",
     "imports": [
       "_index.es-9787898f.js",
       "_Pagination-1febf274.js",
@@ -607,12 +607,12 @@
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_QuizCommandList-81e6be1d.js": {
+  "_QuizCommandList-ab0fc973.js": {
     "css": [
-      "assets/QuizCommandList-610a60eb.css",
+      "assets/SingleQuiz-610a60eb.css",
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/QuizCommandList-81e6be1d.js",
+    "file": "assets/QuizCommandList-ab0fc973.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-9787898f.js",
@@ -661,12 +661,12 @@
       "_v4-4a60fe23.js"
     ]
   },
-  "_ShopProductCatalog-b555c163.js": {
+  "_ShopProductCatalog-02f532e6.js": {
     "css": [
       "assets/ShopProductCatalog-be82cc82.css",
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/ShopProductCatalog-b555c163.js",
+    "file": "assets/ShopProductCatalog-02f532e6.js",
     "imports": [
       "_index.es-9787898f.js",
       "_carousel.es-1bba8905.js",
@@ -786,11 +786,11 @@
       "_ReturnToBot-55324846.js"
     ]
   },
-  "_V1Layout-5a5e0336.js": {
+  "_V1Layout-3fafd3fe.js": {
     "css": [
-      "assets/MobileForPage-5ac8cdc0.css"
+      "assets/V1Layout-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-5a5e0336.js",
+    "file": "assets/V1Layout-3fafd3fe.js",
     "imports": [
       "_index.es-9787898f.js",
       "_custom-4bdc3e34.js"
@@ -933,7 +933,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
     "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
@@ -952,7 +952,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
     "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
@@ -971,7 +971,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
     "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
@@ -990,7 +990,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
     "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
@@ -1394,12 +1394,12 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-e5f89d15.js",
+    "file": "assets/MainV1-d3bdeba7.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-9787898f.js",
       "_vue.runtime.esm-bundler-0c8c372d.js",
-      "_V1Layout-5a5e0336.js",
+      "_V1Layout-3fafd3fe.js",
       "_custom-4bdc3e34.js"
     ],
     "isDynamicEntry": true,
@@ -1458,14 +1458,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Admin/BonusProduct.vue"
   },
   "resources/js/ClientTg/Pages/V1/Admin/BotManager.css": {
-    "file": "assets/Clients-d444394b.css",
-    "src": "resources/js/ClientTg/Pages/V2/Admin/BotManager.css"
+    "file": "assets/BotManager-d444394b.css",
+    "src": "Clients.css"
   },
   "resources/js/ClientTg/Pages/V1/Admin/BotManager.vue": {
     "css": [
-      "assets/Clients-d444394b.css"
+      "assets/BotManager-d444394b.css"
     ],
-    "file": "assets/BotManager-4eb5d8de.js",
+    "file": "assets/BotManager-18202d95.js",
     "imports": [
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -1806,9 +1806,9 @@
     "css": [
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/Clients-fd628259.js",
+    "file": "assets/Clients-af070fbd.js",
     "imports": [
-      "_Clients-a41657ff.js",
+      "_Clients-39ffa76a.js",
       "_index.es-9787898f.js",
       "_Pagination-1febf274.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -1873,10 +1873,10 @@
       "assets/Profile-937f47be.css",
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/Profile-6995c8cb.js",
+    "file": "assets/Profile-abae0c4c.js",
     "imports": [
       "_ReturnToBot-55324846.js",
-      "_Clients-a41657ff.js",
+      "_Clients-39ffa76a.js",
       "_PartnersList-59d70949.js",
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -1902,9 +1902,9 @@
     "css": [
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/Quizzes-1fa3efb0.js",
+    "file": "assets/Quizzes-e49b0950.js",
     "imports": [
-      "_QuizCommandList-81e6be1d.js",
+      "_QuizCommandList-ab0fc973.js",
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_Pagination-1febf274.js",
@@ -1914,17 +1914,17 @@
     "src": "resources/js/ClientTg/Pages/V1/Quiz/Quizzes.vue"
   },
   "resources/js/ClientTg/Pages/V1/Quiz/SingleQuiz.css": {
-    "file": "assets/QuizCommandList-610a60eb.css",
-    "src": "resources/js/ClientTg/Pages/V1/Quiz/SingleQuiz.css"
+    "file": "assets/SingleQuiz-610a60eb.css",
+    "src": "QuizCommandList.css"
   },
   "resources/js/ClientTg/Pages/V1/Quiz/SingleQuiz.vue": {
     "css": [
-      "assets/QuizCommandList-610a60eb.css",
+      "assets/SingleQuiz-610a60eb.css",
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/SingleQuiz-8e990c09.js",
+    "file": "assets/SingleQuiz-c1b8f73a.js",
     "imports": [
-      "_QuizCommandList-81e6be1d.js",
+      "_QuizCommandList-ab0fc973.js",
       "_index.es-9787898f.js",
       "_BotMediaObject-e91dbcb3.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -1934,9 +1934,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Quiz/SingleQuiz.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-3fd361a2.js",
+    "file": "assets/Result-84b3ceef.js",
     "imports": [
-      "_V1Layout-5a5e0336.js",
+      "_V1Layout-3fafd3fe.js",
       "_ReturnToBot-55324846.js",
       "_index.es-9787898f.js",
       "_custom-4bdc3e34.js",
@@ -2004,14 +2004,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashOut.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css": {
-    "file": "assets/PagePassword-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
+    "file": "assets/Wheel-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue": {
     "css": [
-      "assets/PagePassword-55274ec9.css"
+      "assets/Wheel-55274ec9.css"
     ],
-    "file": "assets/CashReceipt-7f0b46d0.js",
+    "file": "assets/CashReceipt-19bda255.js",
     "imports": [
       "_index.es-9787898f.js"
     ],
@@ -2055,14 +2055,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/Favorites.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css": {
-    "file": "assets/PagePassword-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
+    "file": "assets/Wheel-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.vue": {
     "css": [
-      "assets/PagePassword-55274ec9.css"
+      "assets/Wheel-55274ec9.css"
     ],
-    "file": "assets/FriendsGame-9d5d5506.js",
+    "file": "assets/FriendsGame-18158363.js",
     "imports": [
       "_ReturnToBot-55324846.js",
       "_index.es-9787898f.js",
@@ -2149,14 +2149,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/ProfileForm.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Promocode.css": {
-    "file": "assets/PagePassword-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
+    "file": "assets/Wheel-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Promocode.vue": {
     "css": [
-      "assets/PagePassword-55274ec9.css"
+      "assets/Wheel-55274ec9.css"
     ],
-    "file": "assets/Promocode-bd779427.js",
+    "file": "assets/Promocode-bbad1f35.js",
     "imports": [
       "_index.es-9787898f.js"
     ],
@@ -2236,14 +2236,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/Vip.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Wheel.css": {
-    "file": "assets/PagePassword-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
+    "file": "assets/Wheel-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Wheel.vue": {
     "css": [
-      "assets/PagePassword-55274ec9.css"
+      "assets/Wheel-55274ec9.css"
     ],
-    "file": "assets/Wheel-68e93a99.js",
+    "file": "assets/Wheel-773b2951.js",
     "imports": [
       "_PlayerForm-71c681a3.js",
       "_index.es-9787898f.js",
@@ -2287,14 +2287,14 @@
     "src": "resources/js/ClientTg/Pages/V2/Admin/AdminMenu.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/BotManager.css": {
-    "file": "assets/Clients-d444394b.css",
-    "src": "resources/js/ClientTg/Pages/V2/Admin/BotManager.css"
+    "file": "assets/BotManager-d444394b.css",
+    "src": "Clients.css"
   },
   "resources/js/ClientTg/Pages/V2/Admin/BotManager.vue": {
     "css": [
-      "assets/Clients-d444394b.css"
+      "assets/BotManager-d444394b.css"
     ],
-    "file": "assets/BotManager-2e75c224.js",
+    "file": "assets/BotManager-4d662e2c.js",
     "imports": [
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -2758,9 +2758,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Other/FileUpload.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-31a548cb.js",
+    "file": "assets/Result-625bc35a.js",
     "imports": [
-      "_V1Layout-5a5e0336.js",
+      "_V1Layout-3fafd3fe.js",
       "_index.es-9787898f.js",
       "_custom-4bdc3e34.js"
     ],
@@ -2788,9 +2788,9 @@
       "assets/PreloaderV1-66015344.css",
       "assets/StoryList-bdc1a140.css"
     ],
-    "file": "assets/Catalog-ffa543df.js",
+    "file": "assets/Catalog-d72d48d7.js",
     "imports": [
-      "_ShopProductCatalog-b555c163.js",
+      "_ShopProductCatalog-02f532e6.js",
       "_ProductCard-a0557a77.js",
       "_TableBookingPlanner-c90fb4f3.js",
       "_index.es-9787898f.js",
@@ -2845,14 +2845,14 @@
     "src": "resources/js/ClientTg/Pages/V2/Shop/FoodCalc.vue"
   },
   "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css": {
-    "file": "assets/PagePassword-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
+    "file": "assets/Wheel-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css"
   },
   "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.vue": {
     "css": [
-      "assets/PagePassword-55274ec9.css"
+      "assets/Wheel-55274ec9.css"
     ],
-    "file": "assets/FriendsGame-ad5fb60f.js",
+    "file": "assets/FriendsGame-5901e7c8.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-9787898f.js"
@@ -2946,14 +2946,14 @@
     "src": "resources/js/ClientTg/Pages/V2/Shop/MyOrders.vue"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css": {
-    "file": "assets/PagePassword-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
+    "file": "assets/Wheel-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PagePassword.vue": {
     "css": [
-      "assets/PagePassword-55274ec9.css"
+      "assets/Wheel-55274ec9.css"
     ],
-    "file": "assets/PagePassword-c18c5954.js",
+    "file": "assets/PagePassword-5d1f4b25.js",
     "imports": [
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -2989,14 +2989,14 @@
     "src": "resources/js/ClientTg/Pages/V2/Shop/Profile.vue"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PromoCode.css": {
-    "file": "assets/PagePassword-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css"
+    "file": "assets/Wheel-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PromoCode.vue": {
     "css": [
-      "assets/PagePassword-55274ec9.css"
+      "assets/Wheel-55274ec9.css"
     ],
-    "file": "assets/PromoCode-30dd7d2d.js",
+    "file": "assets/PromoCode-3b456515.js",
     "imports": [
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -3098,9 +3098,9 @@
       "assets/PreloaderV1-66015344.css",
       "assets/StoryList-bdc1a140.css"
     ],
-    "file": "assets/TableMenu-e62268c6.js",
+    "file": "assets/TableMenu-7f9d07b8.js",
     "imports": [
-      "_ShopProductCatalog-b555c163.js",
+      "_ShopProductCatalog-02f532e6.js",
       "_index.es-9787898f.js",
       "_carousel.es-1bba8905.js",
       "_ProductCard-a0557a77.js",
@@ -3176,9 +3176,9 @@
       "assets/PreloaderV1-66015344.css",
       "assets/StoryList-bdc1a140.css"
     ],
-    "file": "assets/Catalog-eb64ca73.js",
+    "file": "assets/Catalog-fb8217e9.js",
     "imports": [
-      "_ShopProductCatalog-b555c163.js",
+      "_ShopProductCatalog-02f532e6.js",
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_carousel.es-1bba8905.js",
@@ -3415,7 +3415,7 @@
       "resources/js/ClientTg/Pages/V2/Shop/WheelOfFortune.vue",
       "resources/js/ClientTg/Pages/V2/Waiter/Catalog.vue"
     ],
-    "file": "assets/app-3612a1e6.js",
+    "file": "assets/app-b797a19d.js",
     "imports": [
       "_index.es-9787898f.js",
       "_vue3-simple-typeahead-545f27e5.js",
@@ -3554,7 +3554,7 @@
     "css": [
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/Main-575f22a5.js",
+    "file": "assets/Main-e42d4ddd.js",
     "imports": [
       "resources/js/Mobile/app.js",
       "_index.es-9787898f.js",
@@ -3570,15 +3570,15 @@
     "src": "resources/js/Mobile/Pages/Main.vue"
   },
   "resources/js/Mobile/Pages/MobileForPage.css": {
-    "file": "assets/MobileForPage-5ac8cdc0.css",
-    "src": "V1Layout.css"
+    "file": "assets/V1Layout-5ac8cdc0.css",
+    "src": "resources/js/Mobile/Pages/MobileForPage.css"
   },
   "resources/js/Mobile/Pages/MobileForPage.vue": {
     "css": [
-      "assets/MobileForPage-5ac8cdc0.css",
+      "assets/V1Layout-5ac8cdc0.css",
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/MobileForPage-5da1057d.js",
+    "file": "assets/MobileForPage-a5e0a314.js",
     "imports": [
       "_index.es-9787898f.js",
       "_SlugForm-153a1140.js",
@@ -3594,7 +3594,7 @@
     "css": [
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/MobileForTemplate-6df2a258.js",
+    "file": "assets/MobileForTemplate-0494d81c.js",
     "imports": [
       "resources/js/Mobile/Pages/ProductList.vue",
       "resources/js/Mobile/app.js",
@@ -3633,7 +3633,7 @@
       "resources/js/Mobile/Pages/MobileForTemplate.vue",
       "resources/js/Mobile/Pages/ProductList.vue"
     ],
-    "file": "assets/app-520e51e4.js",
+    "file": "assets/app-5b5aa1d1.js",
     "imports": [
       "_index.es-9787898f.js",
       "_vue3-simple-typeahead-545f27e5.js",

@@ -612,7 +612,7 @@ export default {
         loadProducts(page = 0) {
             this.tab = 1
 
-            const key = this.selected_partner?.bot_partner_id || this.bot.id
+            const key = this.selected_partner?.partner_domain || this.bot.bot_domain
 
             let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + key) !== null
 

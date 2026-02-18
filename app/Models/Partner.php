@@ -46,11 +46,16 @@ class Partner extends Model
 
     protected $with = ["categories"];
 
-    protected $appends = ["products_count"];
+    protected $appends = ["products_count","partner_domain"];
 
     public function getProductsCountAttribute()
     {
         return $this->products()->count();
+    }
+
+    public function getPartnerDomainAttribute()
+    {
+        return $this->botPartner()->first()->bot_domain ?? null;
     }
 
     public function bot(): BelongsTo
