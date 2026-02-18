@@ -612,10 +612,12 @@ export default {
         loadProducts(page = 0) {
             this.tab = 1
 
-            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + this.bot.bot_domain) !== null
+            const key = this.selected_partner?.bot_partner_id || this.bot.id
+
+            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + key) !== null
 
             if (hasProducts)
-                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + this.bot.bot_domain))
+                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + key))
 
             this.load_content = false
             return this.$store.dispatch("loadProductsByCategory", {
@@ -634,7 +636,7 @@ export default {
 
                 this.$nextTick(() => {
                     this.products = resp.data
-                    localStorage.setItem("cashman_preloaded_products_by_categories_" + this.bot.bot_domain, JSON.stringify(this.products))
+                    localStorage.setItem("cashman_preloaded_products_by_categories_" + key, JSON.stringify(this.products))
                     this.load_content = false
                     if (!hasProducts)
                         window.scroll(0, 80);
