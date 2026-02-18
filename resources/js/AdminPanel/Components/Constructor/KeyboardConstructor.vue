@@ -129,7 +129,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
 
         </div>
 
-        <div class="mb-3" v-if="type==='reply'&&settings">
+        <div class="mb-2" v-if="type==='reply'&&settings">
 
 
             <div class="form-check">
@@ -172,7 +172,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                 </label>
             </div>
 
-            <div class="form-floating mb-3" v-if="need_input_field_placeholder">
+            <div class="form-floating mb-2" v-if="need_input_field_placeholder">
                 <input type="text"
                        v-model="settings.input_field_placeholder"
                        class="form-control" id="input_field_placeholder" placeholder="Клавиатура">
@@ -211,7 +211,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                     Возможно выбрать только 1 тип действия
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2">
 
                     <label :for="'command-title-'+select.row+'-col-'+select.сol"
                            class="form-label">Название кнопки</label>
@@ -237,118 +237,154 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                 </div>
                 <hr>
 
-                <div class="mb-3" v-if="type==='inline'">
-                    <label :for="'command-row-'+select.row+'-col-'+select.col"
-                           class="form-label">Команда (для меню в сообщении)</label>
-                    <input type="text"
-                           @change="needRemoveField( 'callback_data', select.row, select.col)"
-                           v-model="keyboard[select.row][select.col].callback_data"
-                           class="form-control"
-                           :id="'command-row-'+select.row+'-col-'+select.col"
-                           placeholder="/start">
-                </div>
-                <div class="mb-3" v-if="type==='inline'">
-                    <label :for="'switch-inline-query-row-'+select.row+'-col-'+select.col"
-                           class="form-label">Ссылка на аккаунт в ТЕЛЕГРАММ</label>
-                    <input type="text" class="form-control"
-                           @change="needRemoveField( 'switch_inline_query',select.row, select.col)"
-                           v-model="keyboard[select.row][select.col].switch_inline_query"
-                           :id="'switch-inline-query-row-'+select.row+'-col-'+select.col"
-                           placeholder="@YourAccountLink">
-                </div>
-                <div class="mb-3" v-if="type==='inline'">
-                    <label :for="'url-row-'+select.row+'-col-'+select.col"
-                           class="form-label">Внешняя URL-ссылка</label>
-                    <input type="text" class="form-control"
-                           @change="needRemoveField( 'url',select.row, select.col)"
-                           v-model="keyboard[select.row][select.col].url"
-                           :id="'url-row-'+select.row+'-col-'+colIndex"
-                           placeholder="https://t.me/example">
-                </div>
+                <template v-if="type==='inline'">
 
-                <div class="mb-3" v-if="type==='inline'">
 
-                    <label :for="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
-                           class="form-label">Команда всплывающего меню бота</label>
-
-                    <div class="alert alert-warning" role="alert">
-                        Внимание! Режим всплывающего меню должен быть настроен в BotFather-е в разделе редактирования
-                        бота InlineMode. Сперва нужно включить данный режим.
-                    </div>
-
-                    <div class="input-group mb-3">
-
-                        <input type="text" class="form-control"
-                               @change="needRemoveField( 'switch_inline_query_current_chat',select.row, select.col)"
-                               v-model="keyboard[select.row][select.col].switch_inline_query_current_chat"
-                               :id="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
-                               placeholder="команда">
-
-                        <button type="button"
-                                @click="openInlineQueryModal"
-                                class="btn btn-outline-primary" aria-expanded="false"><i class="fa-solid fa-bars"></i>
-                        </button>
-
-                    </div>
-
-                </div>
-                <div class="mb-3" v-if="type==='inline'">
 
                     <div class="form-check">
                         <input class="form-check-input"
-                               v-model="need_login_url"
+                               v-model="need_mini_app"
                                type="checkbox"
                                id="need-login-url">
                         <label class="form-check-label" for="need-login-url">
-                            Добавить ссылку авторизации
+                            Нужна ссылка на мини-апп
                         </label>
                     </div>
 
-                    <div v-if="need_login_url" class="mb-3">
-                        <label :for="'login-link-row-'+select.row+'-col-'+select.col"
-                               class="form-label">Ссылка авторизации
-                        </label>
 
-                        <input type="text" class="form-control"
-                               v-model="keyboard[select.row][select.col].login_url.url"
-                               :id="'login-link-row-'+select.row+'-col-'+select.col"
-                               placeholder="Ссылка авторизации" required>
+                    <template v-if="!need_mini_app">
+
+                        <div class="mb-2">
+                            <label :for="'command-row-'+select.row+'-col-'+select.col"
+                                   class="form-label">Команда (для меню в сообщении)</label>
+                            <input type="text"
+                                   @change="needRemoveField( 'callback_data', select.row, select.col)"
+                                   v-model="keyboard[select.row][select.col].callback_data"
+                                   class="form-control"
+                                   :id="'command-row-'+select.row+'-col-'+select.col"
+                                   placeholder="/start">
+                        </div>
+                        <div class="mb-2">
+                            <label :for="'switch-inline-query-row-'+select.row+'-col-'+select.col"
+                                   class="form-label">Ссылка на аккаунт в ТЕЛЕГРАММ</label>
+                            <input type="text" class="form-control"
+                                   @change="needRemoveField( 'switch_inline_query',select.row, select.col)"
+                                   v-model="keyboard[select.row][select.col].switch_inline_query"
+                                   :id="'switch-inline-query-row-'+select.row+'-col-'+select.col"
+                                   placeholder="@YourAccountLink">
+                        </div>
+
+                        <div class="mb-2">
+                            <label :for="'url-row-'+select.row+'-col-'+select.col"
+                                   class="form-label">Внешняя URL-ссылка</label>
+                            <input type="text" class="form-control"
+                                   @change="needRemoveField( 'url',select.row, select.col)"
+                                   v-model="keyboard[select.row][select.col].url"
+                                   :id="'url-row-'+select.row+'-col-'+colIndex"
+                                   placeholder="https://t.me/example">
+                        </div>
+                    </template>
+
+                    <template v-if="need_mini_app">
+                        <div class="mb-2">
+                            <label :for="'url-row-'+select.row+'-col-'+select.col"
+                                   class="form-label">URL-ссылка на мини-апп</label>
+                            <input type="text" class="form-control"
+                                   v-model="keyboard[select.row][select.col].web_app.url"
+                                   :id="'url-row-'+select.row+'-col-'+colIndex"
+                                   placeholder="https://t.me/example">
+                        </div>
+                    </template>
+
+                    <div class="mb-2">
+
+                        <label :for="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
+                               class="form-label">Команда всплывающего меню бота</label>
+
+                        <div class="alert alert-warning" role="alert">
+                            Внимание! Режим всплывающего меню должен быть настроен в BotFather-е в разделе
+                            редактирования
+                            бота InlineMode. Сперва нужно включить данный режим.
+                        </div>
+
+                        <div class="input-group mb-2">
+
+                            <input type="text" class="form-control"
+                                   @change="needRemoveField( 'switch_inline_query_current_chat',select.row, select.col)"
+                                   v-model="keyboard[select.row][select.col].switch_inline_query_current_chat"
+                                   :id="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
+                                   placeholder="команда">
+
+                            <button type="button"
+                                    @click="openInlineQueryModal"
+                                    class="btn btn-outline-primary" aria-expanded="false"><i
+                                class="fa-solid fa-bars"></i>
+                            </button>
+
+                        </div>
+
                     </div>
+                    <div class="mb-2">
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   v-model="need_login_url"
+                                   type="checkbox"
+                                   id="need-login-url">
+                            <label class="form-check-label" for="need-login-url">
+                                Добавить ссылку авторизации
+                            </label>
+                        </div>
+
+                        <template v-if="need_login_url">
+                            <div class="mb-2">
+                                <label :for="'login-link-row-'+select.row+'-col-'+select.col"
+                                       class="form-label">Ссылка авторизации
+                                </label>
+
+                                <input type="text" class="form-control"
+                                       v-model="keyboard[select.row][select.col].login_url.url"
+                                       :id="'login-link-row-'+select.row+'-col-'+select.col"
+                                       placeholder="Ссылка авторизации" required>
+                            </div>
 
 
-                    <div v-if="need_login_url" class="mb-3">
-                        <label :for="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
-                               class="form-label">Новый текст кнопки в пересылаемых сообщениях
-                        </label>
+                            <div class="mb-2">
+                                <label :for="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
+                                       class="form-label">Новый текст кнопки в пересылаемых сообщениях
+                                </label>
 
-                        <input type="text" class="form-control"
-                               v-model="keyboard[select.row][select.col].login_url.forward_text"
-                               :id="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
-                               placeholder="Текст кнопки">
+                                <input type="text" class="form-control"
+                                       v-model="keyboard[select.row][select.col].login_url.forward_text"
+                                       :id="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
+                                       placeholder="Текст кнопки">
+                            </div>
+
+                            <div class="mb-2">
+                                <label :for="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
+                                       class="form-label">Имя бота, которое будет использоваться для авторизации
+                                </label>
+
+                                <input type="text" class="form-control"
+                                       v-model="keyboard[select.row][select.col].login_url.bot_username"
+                                       :id="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
+                                       placeholder="Имя бота">
+                            </div>
+
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input"
+                                       v-model="keyboard[select.row][select.col].login_url.request_write_access"
+                                       type="checkbox"
+                                       id="need-request_write_access">
+                                <label class="form-check-label" for="need-request_write_access">
+                                    Запросить отправку сообщений ботом
+                                </label>
+                            </div>
+                        </template>
+
                     </div>
-
-                    <div v-if="need_login_url" class="mb-3">
-                        <label :for="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
-                               class="form-label">Имя бота, которое будет использоваться для авторизации
-                        </label>
-
-                        <input type="text" class="form-control"
-                               v-model="keyboard[select.row][select.col].login_url.bot_username"
-                               :id="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
-                               placeholder="Имя бота">
-                    </div>
-
-
-                    <div class="form-check mb-3" v-if="need_login_url">
-                        <input class="form-check-input"
-                               v-model="keyboard[select.row][select.col].login_url.request_write_access"
-                               type="checkbox"
-                               id="need-request_write_access">
-                        <label class="form-check-label" for="need-request_write_access">
-                            Запросить отправку сообщений ботом
-                        </label>
-                    </div>
-                </div>
+                </template>
 
 
                 <div class="form-check" v-if="type==='reply'">
@@ -474,6 +510,20 @@ export default {
             },
             deep: true
         },
+        need_mini_app: {
+            handler: function (newValue) {
+                if (this.need_mini_app)
+                {
+
+                    this.keyboard[this.select.row][this.select.col].web_app = {
+                        url: null,
+                    }
+                }
+                else
+                    delete this.keyboard[this.select.row][this.select.col].web_app
+            },
+            deep: true
+        },
         keyboard: {
             handler: function (newValue) {
                 this.save()
@@ -495,6 +545,7 @@ export default {
                 is_persistent: false,
             },
             need_login_url: false,
+            need_mini_app: false,
             pageModal: null,
             inlineQueryModal: null,
             mode: 0,
@@ -597,6 +648,8 @@ export default {
                     if (item !== 'text' && item !== param)
                         delete this.keyboard[rowIndex][colIndex][item]
                 })
+
+
 
         },
         save() {

@@ -547,20 +547,23 @@ export default {
                 need_health_restrictions: true,
                 need_prizes_from_wheel_of_fortune: true,
                 selected_script_id: null,
-
+                partners: {
+                    is_active: false,
+                    display_self: false,
+                },
                 subscriptions: {
                     text: "Подпишись на каналы ниже и получи доступ к проекту",
                     is_active: false,
-                    channels:[
+                    channels: [
                         {
-                            title:'Канал 1',
-                            link:'',
-                            id:'',
+                            title: 'Канал 1',
+                            link: '',
+                            id: '',
                         },
                         {
-                            title:'Канал 2',
-                            link:'',
-                            id:'',
+                            title: 'Канал 2',
+                            link: '',
+                            id: '',
                         }
                     ]
                 }
