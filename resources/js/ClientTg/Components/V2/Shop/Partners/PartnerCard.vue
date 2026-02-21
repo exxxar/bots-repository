@@ -1,14 +1,15 @@
 <template>
 
 
-    <div class="card mb-2 border-light shadow-sm rounded-3 ">
+    <div
+        style="background-size: cover;"
+        :style="[
+                  'background-image:url('+'/images-by-bot-id/'+bot.id+'/'+partner.image+''
+                ]"
+        class="card mb-2 border-light shadow-sm rounded-3 ">
         <div class="row g-0">
             <div class="col-4">
-                <img
-                    @click="$emit('select', partner)"
-                    style="max-height:210px;"
-                    v-lazy="'/images-by-bot-id/'+bot.id+'/'+partner.image"
-                    class="img-fluid rounded-start img-partner-card" alt="...">
+
                 <div class="partner-controls">
                        <span
                            @click="addToFavorite"
@@ -23,10 +24,15 @@
                     </span>
                 </div>
             </div>
-            <div class="col-8 d-flex align-items-center">
-                <div class="card-body" @click="$emit('select', partner)">
-                    <h5 class="my-2 fw-bold">{{ partner.title }}</h5>
-                    <p class="fst-italic mb-2" v-if="partner.description">{{ partner.description || '' }}</p>
+            <div class="col-8 d-flex align-items-center" style="background:rgba(0,0,0,0.69);">
+                <div class="card-body d-flex flex-column justify-content-between"
+                     style="height:180px;"
+                     @click="$emit('select', partner)">
+
+                    <div>
+                        <h5 class="my-2 fw-bold text-white">{{ partner.title }}</h5>
+                        <p class="fst-italic mb-2 text-white" v-if="partner.description">{{ partner.description || '' }}</p>
+                    </div>
                     <!--                    <p class="card-text"
                                            style="line-height:100%;"
                                            v-if="partner.categories">
@@ -43,12 +49,16 @@
                                                 ...
                                             </span>
                                         </p>-->
-                    <button class="btn btn-primary w-100 p-2"
+                    <button
+
+                        class="btn btn-primary w-100 p-2"
                             @click="$emit('select', partner)"
                             type="button">К товарам
                     </button>
                 </div>
+
             </div>
+
         </div>
     </div>
 </template>
@@ -130,7 +140,7 @@ export default {
 .partner-controls {
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
 }
 
 .partner-controls .badge {
