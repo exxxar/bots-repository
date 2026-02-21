@@ -613,7 +613,7 @@ export default {
             this.tab = 1
             this.load_content = true
 
-            const key = this.selected_partner?.partner_domain || this.bot.bot_domain
+            const key = this.selected_partner?.partner_domain || null
 
             this.$nextTick(()=>{
                 let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + key) !== null
