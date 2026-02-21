@@ -47,7 +47,7 @@
                     {{ item.title || 'Не указано' }}
                     <span
                         style="margin-left:10px;"
-                        class="badge bg-primary">{{ item.products_count || 0 }}</span>
+                        class="badge bg-primary">{{ item.products?.length || 0 }}</span>
                 </button>
             </div>
         </div>
@@ -104,7 +104,7 @@
                                 @click="selectCategory(item)"
                             >
                                 {{ item.title || 'Не указано' }}
-                                <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ item.products_count || 0 }}</span>
+                                <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ item.products?.length || 0 }}</span>
                             </button>
                         </div>
 
