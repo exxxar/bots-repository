@@ -87,7 +87,7 @@ class ProductCategory extends Model
                 'title' => $category->title,
                 'order_position' => $category->order_position,
                 'is_active' => $category->is_active,
-                'products' => ($products[$category->id] ?? collect())->take(8)->values(),
+                'products' => ($products[$category->id] ?? collect())->values(),
             ];
         }
 
