@@ -37,14 +37,14 @@
   },
   "Clients.css": {
     "file": "assets/BotManager-d444394b.css",
-    "src": "resources/js/ClientTg/Pages/V1/Admin/BotManager.css"
+    "src": "resources/js/ClientTg/Pages/V2/Admin/BotManager.css"
   },
   "CollectionCardSimple.css": {
     "file": "assets/ProductItemSimple-8d1f2021.css",
     "src": "CollectionCardSimple.css"
   },
   "CompanyList.css": {
-    "file": "assets/CompanyList-10e6b607.css",
+    "file": "assets/CompanyList-441845c8.css",
     "src": "CompanyList.css"
   },
   "InlineInjectionsHelper.css": {
@@ -661,12 +661,12 @@
       "_v4-4a60fe23.js"
     ]
   },
-  "_ShopProductCatalog-9ebf261f.js": {
+  "_ShopProductCatalog-aaa7d5f0.js": {
     "css": [
       "assets/ShopProductCatalog-beba31db.css",
       "assets/Pagination-4757d200.css"
     ],
-    "file": "assets/ShopProductCatalog-9ebf261f.js",
+    "file": "assets/ShopProductCatalog-aaa7d5f0.js",
     "imports": [
       "_index.es-9787898f.js",
       "_carousel.es-1bba8905.js",
@@ -932,14 +932,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/ForgotPassword-4659d3f3.js",
+    "file": "assets/ForgotPassword-e3e1f3b2.js",
     "imports": [
       "_index.es-9787898f.js",
       "_GuestLayout-ac938251.js",
@@ -951,14 +951,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/Login-afd59f17.js",
+    "file": "assets/Login-d0d87e91.js",
     "imports": [
       "_index.es-9787898f.js",
       "_GuestLayout-ac938251.js",
@@ -970,14 +970,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Login.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/Register-c8c2f358.js",
+    "file": "assets/Register-65bd12c1.js",
     "imports": [
       "_index.es-9787898f.js",
       "_GuestLayout-ac938251.js",
@@ -989,14 +989,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Register.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
-    "file": "assets/ForgotPassword-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
-      "assets/ForgotPassword-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/RegisterStep2-3a7e7c7e.js",
+    "file": "assets/RegisterStep2-f487f324.js",
     "imports": [
       "_GuestLayout-ac938251.js",
       "_index.es-9787898f.js"
@@ -1361,7 +1361,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-28c54eaf.js",
+    "file": "assets/app-537cfa2c.js",
     "imports": [
       "_index.es-9787898f.js",
       "_index-950a418f.js"
@@ -1459,7 +1459,7 @@
   },
   "resources/js/ClientTg/Pages/V1/Admin/BotManager.css": {
     "file": "assets/BotManager-d444394b.css",
-    "src": "resources/js/ClientTg/Pages/V1/Admin/BotManager.css"
+    "src": "resources/js/ClientTg/Pages/V2/Admin/BotManager.css"
   },
   "resources/js/ClientTg/Pages/V1/Admin/BotManager.vue": {
     "css": [
@@ -1554,7 +1554,7 @@
   },
   "resources/js/ClientTg/Pages/V1/Admin/BotManager/Slugs.css": {
     "file": "assets/Slugs-d4262d69.css",
-    "src": "resources/js/ClientTg/Pages/V2/Admin/Slugs.css"
+    "src": "resources/js/ClientTg/Pages/V1/Admin/BotManager/Slugs.css"
   },
   "resources/js/ClientTg/Pages/V1/Admin/BotManager/Slugs.vue": {
     "css": [
@@ -2004,14 +2004,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashOut.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.css": {
-    "file": "assets/CashReceipt-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css"
+    "file": "assets/Promocode-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue": {
     "css": [
-      "assets/CashReceipt-55274ec9.css"
+      "assets/Promocode-55274ec9.css"
     ],
-    "file": "assets/CashReceipt-c61875b4.js",
+    "file": "assets/CashReceipt-cfa8bcd6.js",
     "imports": [
       "_index.es-9787898f.js"
     ],
@@ -2055,14 +2055,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/Favorites.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css": {
-    "file": "assets/CashReceipt-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css"
+    "file": "assets/Promocode-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.vue": {
     "css": [
-      "assets/CashReceipt-55274ec9.css"
+      "assets/Promocode-55274ec9.css"
     ],
-    "file": "assets/FriendsGame-3c0e52c9.js",
+    "file": "assets/FriendsGame-9dd7fa8b.js",
     "imports": [
       "_ReturnToBot-55324846.js",
       "_index.es-9787898f.js",
@@ -2149,14 +2149,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/ProfileForm.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Promocode.css": {
-    "file": "assets/CashReceipt-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css"
+    "file": "assets/Promocode-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Promocode.vue": {
     "css": [
-      "assets/CashReceipt-55274ec9.css"
+      "assets/Promocode-55274ec9.css"
     ],
-    "file": "assets/Promocode-657fa4a6.js",
+    "file": "assets/Promocode-67812b51.js",
     "imports": [
       "_index.es-9787898f.js"
     ],
@@ -2236,14 +2236,14 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/Vip.vue"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Wheel.css": {
-    "file": "assets/CashReceipt-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css"
+    "file": "assets/Promocode-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css"
   },
   "resources/js/ClientTg/Pages/V1/Shop/Wheel.vue": {
     "css": [
-      "assets/CashReceipt-55274ec9.css"
+      "assets/Promocode-55274ec9.css"
     ],
-    "file": "assets/Wheel-ba89961d.js",
+    "file": "assets/Wheel-77f17d96.js",
     "imports": [
       "_PlayerForm-71c681a3.js",
       "_index.es-9787898f.js",
@@ -2288,7 +2288,7 @@
   },
   "resources/js/ClientTg/Pages/V2/Admin/BotManager.css": {
     "file": "assets/BotManager-d444394b.css",
-    "src": "resources/js/ClientTg/Pages/V1/Admin/BotManager.css"
+    "src": "resources/js/ClientTg/Pages/V2/Admin/BotManager.css"
   },
   "resources/js/ClientTg/Pages/V2/Admin/BotManager.vue": {
     "css": [
@@ -2617,7 +2617,7 @@
   },
   "resources/js/ClientTg/Pages/V2/Admin/Slugs.css": {
     "file": "assets/Slugs-d4262d69.css",
-    "src": "resources/js/ClientTg/Pages/V2/Admin/Slugs.css"
+    "src": "resources/js/ClientTg/Pages/V1/Admin/BotManager/Slugs.css"
   },
   "resources/js/ClientTg/Pages/V2/Admin/Slugs.vue": {
     "css": [
@@ -2788,9 +2788,9 @@
       "assets/PreloaderV1-66015344.css",
       "assets/StoryList-bdc1a140.css"
     ],
-    "file": "assets/Catalog-e181fc1c.js",
+    "file": "assets/Catalog-1f57b261.js",
     "imports": [
-      "_ShopProductCatalog-9ebf261f.js",
+      "_ShopProductCatalog-aaa7d5f0.js",
       "_ProductCard-eb191958.js",
       "_TableBookingPlanner-c90fb4f3.js",
       "_index.es-9787898f.js",
@@ -2845,14 +2845,14 @@
     "src": "resources/js/ClientTg/Pages/V2/Shop/FoodCalc.vue"
   },
   "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css": {
-    "file": "assets/CashReceipt-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css"
+    "file": "assets/Promocode-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css"
   },
   "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.vue": {
     "css": [
-      "assets/CashReceipt-55274ec9.css"
+      "assets/Promocode-55274ec9.css"
     ],
-    "file": "assets/FriendsGame-e64de59d.js",
+    "file": "assets/FriendsGame-dbc49be5.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-9787898f.js"
@@ -2946,14 +2946,14 @@
     "src": "resources/js/ClientTg/Pages/V2/Shop/MyOrders.vue"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PagePassword.css": {
-    "file": "assets/CashReceipt-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css"
+    "file": "assets/Promocode-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PagePassword.vue": {
     "css": [
-      "assets/CashReceipt-55274ec9.css"
+      "assets/Promocode-55274ec9.css"
     ],
-    "file": "assets/PagePassword-8e0f72a7.js",
+    "file": "assets/PagePassword-4c38cd70.js",
     "imports": [
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -2989,14 +2989,14 @@
     "src": "resources/js/ClientTg/Pages/V2/Shop/Profile.vue"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PromoCode.css": {
-    "file": "assets/CashReceipt-55274ec9.css",
-    "src": "resources/js/ClientTg/Pages/V2/Shop/FriendsGame.css"
+    "file": "assets/Promocode-55274ec9.css",
+    "src": "resources/js/ClientTg/Pages/V1/Shop/FriendsGame.css"
   },
   "resources/js/ClientTg/Pages/V2/Shop/PromoCode.vue": {
     "css": [
-      "assets/CashReceipt-55274ec9.css"
+      "assets/Promocode-55274ec9.css"
     ],
-    "file": "assets/PromoCode-41c483a7.js",
+    "file": "assets/PromoCode-4fc357c8.js",
     "imports": [
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -3098,9 +3098,9 @@
       "assets/PreloaderV1-66015344.css",
       "assets/StoryList-bdc1a140.css"
     ],
-    "file": "assets/TableMenu-5d64ee8b.js",
+    "file": "assets/TableMenu-9a9902ca.js",
     "imports": [
-      "_ShopProductCatalog-9ebf261f.js",
+      "_ShopProductCatalog-aaa7d5f0.js",
       "_index.es-9787898f.js",
       "_carousel.es-1bba8905.js",
       "_ProductCard-eb191958.js",
@@ -3176,9 +3176,9 @@
       "assets/PreloaderV1-66015344.css",
       "assets/StoryList-bdc1a140.css"
     ],
-    "file": "assets/Catalog-ad21a2e6.js",
+    "file": "assets/Catalog-b8eb3524.js",
     "imports": [
-      "_ShopProductCatalog-9ebf261f.js",
+      "_ShopProductCatalog-aaa7d5f0.js",
       "_index.es-9787898f.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_carousel.es-1bba8905.js",
@@ -3415,7 +3415,7 @@
       "resources/js/ClientTg/Pages/V2/Shop/WheelOfFortune.vue",
       "resources/js/ClientTg/Pages/V2/Waiter/Catalog.vue"
     ],
-    "file": "assets/app-1ecdce35.js",
+    "file": "assets/app-f64c3fa5.js",
     "imports": [
       "_index.es-9787898f.js",
       "_vue3-simple-typeahead-545f27e5.js",
