@@ -619,13 +619,12 @@ export default {
             this.products = []
             const key = this.selected_partner?.partner_domain || null
 
-            this.$nextTick(() => {
-                let hasProducts = localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key) !== null
+            let hasProducts = localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key) !== null
 
-                if (hasProducts)
-                    this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key))
-                this.load_content = false
-            })
+            if (hasProducts)
+                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key))
+            this.load_content = false
+
 
             return this.$store.dispatch("loadProductsByCategory", {
                 partner_id: this.selected_partner?.bot_partner_id || null,
