@@ -45,42 +45,56 @@ class ProductCategory extends Model
 
     public static function getCategoriesWithProducts(int $botId)
     {
-        $rows = DB::table('product_categories as pc')
-            ->select([
-                'pc.id as category_id',
-                'pc.title as category_title',
-                'pc.order_position',
-                'pc.is_active',
+        // Один SQL-запрос, совместимый с MySQL 5.7
+        $rows = DB::select("
+        SELECT
+            pc.id AS category_id,
+            pc.title AS category_title,
+            pc.order_position,
+            pc.is_active,
 
-                'p.id as product_id',
-                'p.title as product_title',
-                'p.price',
-                'p.photo',
-                'p.bot_id',
+            p.id AS product_id,
+            p.title AS product_title,
+            p.price,
+            p.photo,
+            p.bot_id,
 
-                DB::raw('ROW_NUMBER() OVER (
-                PARTITION BY pc.id
-                ORDER BY p.id
-            ) as rn'),
+            (
+                SELECT COUNT(*)
+                FROM products p2
+                JOIN product_category_product pcp2
+                    ON pcp2.product_id = p2.id
+                WHERE pcp2.product_category_id = pc.id
+                  AND p2.deleted_at IS NULL
+                  AND p2.in_stop_list_at IS NULL
+            ) AS products_count
 
-                DB::raw('(SELECT COUNT(*)
-                      FROM products p2
-                      JOIN product_category_product pcp2
-                        ON pcp2.product_id = p2.id
-                      WHERE pcp2.product_category_id = pc.id
-                        AND p2.deleted_at IS NULL
-                        AND p2.in_stop_list_at IS NULL
-                    ) AS products_count')
-            ])
-            ->join('product_category_product as pcp', 'pcp.product_category_id', '=', 'pc.id')
-            ->join('products as p', 'p.id', '=', 'pcp.product_id')
-            ->where('pc.bot_id', $botId)
-            ->where('pc.is_active', true)
-            ->whereNull('p.deleted_at')
-            ->whereNull('p.in_stop_list_at')
-            ->having('rn', '<=', 8)
-            ->orderBy('pc.order_position')
-            ->get();
+        FROM product_categories pc
+
+        JOIN product_category_product pcp
+            ON pcp.product_category_id = pc.id
+
+        JOIN products p
+            ON p.id = pcp.product_id
+
+        WHERE pc.bot_id = ?
+          AND pc.is_active = 1
+          AND p.deleted_at IS NULL
+          AND p.in_stop_list_at IS NULL
+
+          -- Берём только первые 8 товаров на категорию
+          AND (
+                SELECT COUNT(*)
+                FROM product_category_product pcp3
+                JOIN products p3 ON p3.id = pcp3.product_id
+                WHERE pcp3.product_category_id = pc.id
+                  AND p3.deleted_at IS NULL
+                  AND p3.in_stop_list_at IS NULL
+                  AND p3.id <= p.id
+            ) <= 8
+
+        ORDER BY pc.order_position, p.id
+    ", [$botId]);
 
         // Группируем результат
         $categories = [];
@@ -112,6 +126,7 @@ class ProductCategory extends Model
 
         return array_values($categories);
     }
+
 
 
 
