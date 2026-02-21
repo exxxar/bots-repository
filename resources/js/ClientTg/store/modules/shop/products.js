@@ -395,19 +395,19 @@ const actions = {
 const mutations = {
     setProducts(state, payload) {
         state.products = payload || [];
-        localStorage.setItem('cashman_products', JSON.stringify(payload));
+       // localStorage.setItem('cashman_products', JSON.stringify(payload));
     },
     setCategories(state, payload) {
         state.categories = payload || [];
-        localStorage.setItem('cashman_categories', JSON.stringify(payload));
+      //  localStorage.setItem('cashman_categories', JSON.stringify(payload));
     },
     setCategoriesPaginateObject(state, payload) {
         state.categories_paginate_object = payload || [];
-        localStorage.setItem('cashman_categories_paginate_object', JSON.stringify(payload));
+       // localStorage.setItem('cashman_categories_paginate_object', JSON.stringify(payload));
     },
     setProductsPaginateObject(state, payload) {
         state.products_paginate_object = payload || [];
-        localStorage.setItem('cashman_products_paginate_object', JSON.stringify(payload));
+       //localStorage.setItem('cashman_products_paginate_object', JSON.stringify(payload));
     }
 }
 
