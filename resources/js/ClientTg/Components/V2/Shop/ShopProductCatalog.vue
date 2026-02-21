@@ -612,9 +612,10 @@ export default {
         loadProducts(page = 0) {
             this.tab = 1
             this.load_content = true
-            this.$nextTick(()=>{
-                const key = this.selected_partner?.partner_domain || this.bot.bot_domain
 
+            const key = this.selected_partner?.partner_domain || this.bot.bot_domain
+
+            this.$nextTick(()=>{
                 let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + key) !== null
 
                 if (hasProducts)

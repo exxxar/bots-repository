@@ -174,11 +174,11 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
                                 </h6>
                                 <h6 class="fw-bold d-flex justify-content-between">
                                     Общее расстояние
-                                    <span class="badge bg-primary">{{ deliveryForm.distance }} км</span>
+                                    <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
                                 </h6>
                                 <h6 class="fw-bold d-flex justify-content-between">
                                     Общая сумма за доставку
-                                    <span class="badge bg-primary">{{ deliveryForm.delivery_price }} руб.</span>
+                                    <span class="badge bg-primary">{{ deliveryForm.delivery_price.toFixed(2) }} руб.</span>
                                 </h6>
                             </template>
                             <template v-else>

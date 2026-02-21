@@ -7,12 +7,14 @@ use App\Events\CashBackEvent;
 use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Classes\Banking\TinkoffBankService;
+
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCategoryCollection;
 use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\ActionStatus;
+use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
@@ -243,6 +245,7 @@ class ProductController extends Controller
         ]);
 
         $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
 
         if (is_null($bot))
             return response()->json([
@@ -253,13 +256,15 @@ class ProductController extends Controller
 
         $config = $request->bot->config ?? null;
 
+        $basketBotIds = Basket::query()
+            ->where("bot_user_id",$botUser->id)
+            ->where("bot_id",$bot->id)
+            ->whereNull("ordered_at")
+            ->get()
+            ->pluck("bot_partner_id");
+
         $partners = \App\Models\Bot::query()
-            ->whereIn('id', function ($q) use ($bot) {
-                $q->select('bot_partner_id')
-                    ->from('baskets')
-                    ->where('bot_id', $bot->id)
-                    ->whereNull('ordered_at');
-            })
+            ->whereIn('id', $basketBotIds)
             ->distinct('bot_partner_id')
             ->get();
 
