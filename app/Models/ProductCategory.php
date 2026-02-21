@@ -45,7 +45,6 @@ class ProductCategory extends Model
 
     public static function getCategoriesWithProducts(int $botId)
     {
-        // Один SQL-запрос, совместимый с MySQL 5.7
         $rows = DB::select("
         SELECT
             pc.id AS category_id,
@@ -62,20 +61,20 @@ class ProductCategory extends Model
             (
                 SELECT COUNT(*)
                 FROM products p2
-                JOIN product_category_product pcp2
-                    ON pcp2.product_id = p2.id
-                WHERE pcp2.product_category_id = pc.id
+                JOIN product_product_category ppc2
+                    ON ppc2.product_id = p2.id
+                WHERE ppc2.product_category_id = pc.id
                   AND p2.deleted_at IS NULL
                   AND p2.in_stop_list_at IS NULL
             ) AS products_count
 
         FROM product_categories pc
 
-        JOIN product_category_product pcp
-            ON pcp.product_category_id = pc.id
+        JOIN product_product_category ppc
+            ON ppc.product_category_id = pc.id
 
         JOIN products p
-            ON p.id = pcp.product_id
+            ON p.id = ppc.product_id
 
         WHERE pc.bot_id = ?
           AND pc.is_active = 1
@@ -85,9 +84,9 @@ class ProductCategory extends Model
           -- Берём только первые 8 товаров на категорию
           AND (
                 SELECT COUNT(*)
-                FROM product_category_product pcp3
-                JOIN products p3 ON p3.id = pcp3.product_id
-                WHERE pcp3.product_category_id = pc.id
+                FROM product_product_category ppc3
+                JOIN products p3 ON p3.id = ppc3.product_id
+                WHERE ppc3.product_category_id = pc.id
                   AND p3.deleted_at IS NULL
                   AND p3.in_stop_list_at IS NULL
                   AND p3.id <= p.id
