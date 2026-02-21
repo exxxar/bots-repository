@@ -611,15 +611,17 @@ export default {
         },
         loadProducts(page = 0) {
             this.tab = 1
+            this.load_content = true
+            this.$nextTick(()=>{
+                const key = this.selected_partner?.partner_domain || this.bot.bot_domain
 
-            const key = this.selected_partner?.partner_domain || this.bot.bot_domain
+                let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + key) !== null
 
-            let hasProducts = localStorage.getItem("cashman_preloaded_products_by_categories_" + key) !== null
+                if (hasProducts)
+                    this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + key))
+                this.load_content = false
+            })
 
-            if (hasProducts)
-                this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_by_categories_" + key))
-
-            this.load_content = false
             return this.$store.dispatch("loadProductsByCategory", {
                 partner_id: this.selected_partner?.bot_partner_id || null,
                 /*  dataObject: {
@@ -638,7 +640,7 @@ export default {
                     this.products = resp.data
                     localStorage.setItem("cashman_preloaded_products_by_categories_" + key, JSON.stringify(this.products))
                     this.load_content = false
-                    if (!hasProducts)
+                    if (this.products.length>0)
                         window.scroll(0, 80);
                 })
 
