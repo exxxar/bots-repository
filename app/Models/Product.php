@@ -63,7 +63,6 @@ class Product extends Model
         'weight_config' => 'array',
     ];
 
-    protected $with = ["productOptions"];
 
 
     public function bot(): BelongsTo

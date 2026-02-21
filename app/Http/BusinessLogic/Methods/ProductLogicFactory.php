@@ -89,8 +89,9 @@ class ProductLogicFactory extends BaseLogicFactory
     public function listByCategories(array $data = null)
     {
 
-        if (is_null($this->bot))
+        if (is_null($this->bot)) {
             throw new HttpException(404, "Бот не найден!");
+        }
 
         $botId = $data["partner_id"] ?? $this->bot->id;
 
@@ -101,48 +102,40 @@ class ProductLogicFactory extends BaseLogicFactory
                 $q->whereNull('deleted_at')
                     ->whereNull("in_stop_list_at");
             }])
+            ->with(['products' => function ($q) use ($botId) {
+                $q->where("bot_id", $botId)
+                    ->whereNull("deleted_at")
+                    ->whereNull("in_stop_list_at")
+                    ->take(8);
+            }])
             ->has("products", ">", 0)
             ->orderBy("order_position", "ASC")
             ->get();
 
-
-        foreach ($categories as $category) {
-            $category->setRelation(
-                'products',
-                $category->products()
-                    ->where("bot_id", $botId)
-                    ->whereNull("deleted_at")
-                    ->whereNull("in_stop_list_at")
-                    ->take(8)
-                    ->offset(0)
-                    ->get()
-            );
-        }
-
-
-        // Товары без категории
         $withoutCategory = Product::query()
             ->where("bot_id", $botId)
-            ->has("productCategories", "=", 0)
+            ->doesntHave("productCategories")
             ->whereNull("in_stop_list_at")
             ->whereNull("deleted_at")
             ->take(8)
-            ->offset(0)
             ->get();
 
-        $tmpCategory = [
-            "id" => -1,
-            "is_active" => true,
-            "order_position" => 0,
-            "title" => "Без категории",
-            "bot_id" => $botId,
-            "products" => $withoutCategory->toArray(),
-            "products_count" => $withoutCategory->count()
-        ];
 
         return (object)[
-            "data" => [$tmpCategory, ...$categories->toArray()]
+            "data" => [
+                [
+                    "id" => -1,
+                    "is_active" => true,
+                    "order_position" => 0,
+                    "title" => "Без категории",
+                    "bot_id" => $botId,
+                    "products" => $withoutCategory->toArray(),
+                    "products_count" => $withoutCategory->count()
+                ],
+                ...$categories->toArray()
+            ]
         ];
+
 
 
     }

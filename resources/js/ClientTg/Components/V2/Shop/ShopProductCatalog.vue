@@ -617,13 +617,13 @@ export default {
             this.load_content = true
 
             this.products = []
-            const key = this.selected_partner?.partner_domain || null
+          //  const key = this.selected_partner?.partner_domain || null
 
-            let hasProducts = localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key) !== null
+         /* //  let hasProducts = localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key) !== null
 
             if (hasProducts)
                 this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key))
-            this.load_content = false
+            this.load_content = false*/
 
 
             return this.$store.dispatch("loadProductsByCategory", {
@@ -639,7 +639,7 @@ export default {
             }).then((resp) => {
 
                 this.products = resp.data
-                localStorage.setItem("cashman_preloaded_products_new_by_categories_" + key, JSON.stringify(this.products))
+               // localStorage.setItem("cashman_preloaded_products_new_by_categories_" + key, JSON.stringify(this.products))
                 this.load_content = false
                 if (this.products.length > 0)
                     window.scroll(0, 80);
