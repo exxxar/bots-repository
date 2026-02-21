@@ -54,8 +54,9 @@ class ProductCategory extends Model
 
             p.id AS product_id,
             p.title AS product_title,
-            p.price,
-            p.photo,
+            p.current_price,
+            p.old_price,
+            p.images,
             p.bot_id,
 
             (
@@ -116,8 +117,9 @@ class ProductCategory extends Model
                 $categories[$id]['products'][] = [
                     'id' => $row->product_id,
                     'title' => $row->product_title,
-                    'price' => $row->price,
-                    'photo' => $row->photo,
+                    'current_price' => $row->current_price,
+                    'old_price' => $row->old_price,
+                    'images' => $row->images,
                     'bot_id' => $row->bot_id,
                 ];
             }
@@ -125,6 +127,7 @@ class ProductCategory extends Model
 
         return array_values($categories);
     }
+
 
 
 
