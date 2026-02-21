@@ -43,10 +43,11 @@ class ProductCategory extends Model
         return $this->belongsTo(Bot::class);
     }
 
-    public static function getCategoriesWithProducts(int $botId)
+    public static  function getCategoriesWithProducts(int $botId)
     {
-        // 1) Загружаем категории
+        // 1) Категории
         $categories = ProductCategory::query()
+            ->select('id', 'title', 'order_position', 'is_active')
             ->where('bot_id', $botId)
             ->where('is_active', true)
             ->orderBy('order_position')
@@ -58,9 +59,16 @@ class ProductCategory extends Model
 
         $categoryIds = $categories->pluck('id')->toArray();
 
-        // 2) Загружаем товары всех категорий одним запросом
+        // 2) Товары (минимум полей)
         $products = Product::query()
-            ->select('products.*', 'ppc.product_category_id')
+            ->select(
+                'products.id',
+                'products.title',
+                'products.current_price',
+                'products.old_price',
+                'products.images',
+                'ppc.product_category_id'
+            )
             ->join('product_product_category as ppc', 'ppc.product_id', '=', 'products.id')
             ->whereIn('ppc.product_category_id', $categoryIds)
             ->where('products.bot_id', $botId)
@@ -85,6 +93,7 @@ class ProductCategory extends Model
 
         return $result;
     }
+
 
 
 
