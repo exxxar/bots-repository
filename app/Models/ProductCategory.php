@@ -43,7 +43,7 @@ class ProductCategory extends Model
         return $this->belongsTo(Bot::class);
     }
 
-    public function getCategoriesWithProducts(int $botId)
+    public static function getCategoriesWithProducts(int $botId)
     {
         // 1) Загружаем категории
         $categories = DB::table('product_categories as pc')
