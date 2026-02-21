@@ -448,18 +448,26 @@ export default {
             this.selected_partner = null
             this.extra_charge = 0
 
+            this.load_content = true
             this.products = []
             this.collections = []
             this.categories = []
 
             this.$nextTick(() => {
-
                 this.selected_partner = partner
                 this.extra_charge = partner.extra_charge || 0
+
+                const key = this.selected_partner?.partner_domain || null
+
+                let hasProducts = localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key) !== null
+
+                if (hasProducts)
+                    this.products = JSON.parse(localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key))
 
                 this.loadProducts(0)
                 this.loadCollections(0)
                 this.shop = 1
+                this.load_content = false
             })
             this.$preloader.show()
         },
@@ -598,8 +606,7 @@ export default {
 
 
                 this.load_content = false
-                if (count === 0)
-                {
+                if (count === 0) {
                     this.products.find(p => p.id === catId).products_count = offset
                     return
                 }
@@ -615,7 +622,7 @@ export default {
 
             const key = this.selected_partner?.partner_domain || null
 
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 let hasProducts = localStorage.getItem("cashman_preloaded_products_new_by_categories_" + key) !== null
 
                 if (hasProducts)
@@ -641,7 +648,7 @@ export default {
                     this.products = resp.data
                     localStorage.setItem("cashman_preloaded_products_new_by_categories_" + key, JSON.stringify(this.products))
                     this.load_content = false
-                    if (this.products.length>0)
+                    if (this.products.length > 0)
                         window.scroll(0, 80);
                 })
 
