@@ -25,6 +25,7 @@ use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -89,53 +90,102 @@ class ProductLogicFactory extends BaseLogicFactory
     public function listByCategories(array $data = null)
     {
 
-        if (is_null($this->bot)) {
+        if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
-        }
 
         $botId = $data["partner_id"] ?? $this->bot->id;
 
-        $categories = ProductCategory::query()
-            ->where("bot_id", $botId)
-            ->where("is_active", true)
-            ->withCount(['products' => function ($q) {
-                $q->whereNull('deleted_at')
-                    ->whereNull("in_stop_list_at");
-            }])
-            ->with(['products' => function ($q) use ($botId) {
-                $q->where("bot_id", $botId)
-                    ->whereNull("deleted_at")
-                    ->whereNull("in_stop_list_at")
-                    ->take(8);
-            }])
-            ->has("products", ">", 0)
-            ->orderBy("order_position", "ASC")
+        $rows = DB::table('product_categories as pc')
+            ->select([
+                'pc.id as category_id',
+                'pc.title as category_title',
+                'pc.order_position',
+                'pc.is_active',
+
+                'p.id as product_id',
+                'p.title as product_title',
+                'p.price',
+                'p.photo',
+                'p.bot_id',
+
+                DB::raw('ROW_NUMBER() OVER (
+            PARTITION BY pc.id
+            ORDER BY p.id
+        ) as rn'),
+
+                DB::raw('(SELECT COUNT(*)
+                  FROM products p2
+                  JOIN product_category_product pcp2
+                    ON pcp2.product_id = p2.id
+                  WHERE pcp2.product_category_id = pc.id
+                    AND p2.deleted_at IS NULL
+                    AND p2.in_stop_list_at IS NULL
+                ) AS products_count')
+            ])
+            ->join('product_category_product as pcp', 'pcp.product_category_id', '=', 'pc.id')
+            ->join('products as p', 'p.id', '=', 'pcp.product_id')
+            ->where('pc.bot_id', $botId)
+            ->where('pc.is_active', true)
+            ->whereNull('p.deleted_at')
+            ->whereNull('p.in_stop_list_at')
+            ->having('rn', '<=', 8)
+            ->orderBy('pc.order_position')
             ->get();
 
+        $categories = [];
+
+        foreach ($rows as $row) {
+            $id = $row->category_id;
+
+            if (!isset($categories[$id])) {
+                $categories[$id] = [
+                    'id' => $row->category_id,
+                    'title' => $row->category_title,
+                    'order_position' => $row->order_position,
+                    'is_active' => $row->is_active,
+                    'products_count' => $row->products_count,
+                    'products' => []
+                ];
+            }
+
+            if ($row->product_id) {
+                $categories[$id]['products'][] = [
+                    'id' => $row->product_id,
+                    'title' => $row->product_title,
+                    'price' => $row->price,
+                    'photo' => $row->photo,
+                    'bot_id' => $row->bot_id,
+                ];
+            }
+        }
+
+        $categories = array_values($categories);
+
+
+
+        // Товары без категории
         $withoutCategory = Product::query()
             ->where("bot_id", $botId)
-            ->doesntHave("productCategories")
+            ->has("productCategories", "=", 0)
             ->whereNull("in_stop_list_at")
             ->whereNull("deleted_at")
             ->take(8)
+            ->offset(0)
             ->get();
 
-
-        return (object)[
-            "data" => [
-                [
-                    "id" => -1,
-                    "is_active" => true,
-                    "order_position" => 0,
-                    "title" => "Без категории",
-                    "bot_id" => $botId,
-                    "products" => $withoutCategory->toArray(),
-                    "products_count" => $withoutCategory->count()
-                ],
-                ...$categories->toArray()
-            ]
+        $tmpCategory = [
+            "id" => -1,
+            "is_active" => true,
+            "order_position" => 0,
+            "title" => "Без категории",
+            "bot_id" => $botId,
+            "products" => $withoutCategory->toArray(),
+            "products_count" => $withoutCategory->count()
         ];
 
+        return (object)[
+            "data" => [$tmpCategory, ...$categories->toArray()]
+        ];
 
 
     }
