@@ -46,16 +46,10 @@ class ProductCategory extends Model
     public static function getCategoriesWithProducts(int $botId)
     {
         // 1) Загружаем категории
-        $categories = DB::table('product_categories as pc')
-            ->select(
-                'pc.id',
-                'pc.title',
-                'pc.order_position',
-                'pc.is_active'
-            )
-            ->where('pc.bot_id', $botId)
-            ->where('pc.is_active', 1)
-            ->orderBy('pc.order_position')
+        $categories = ProductCategory::query()
+            ->where('bot_id', $botId)
+            ->where('is_active', true)
+            ->orderBy('order_position')
             ->get();
 
         if ($categories->isEmpty()) {
@@ -65,37 +59,33 @@ class ProductCategory extends Model
         $categoryIds = $categories->pluck('id')->toArray();
 
         // 2) Загружаем товары всех категорий одним запросом
-        $products = DB::table('products as p')
-            ->select(
-                'p.*',
-                'ppc.product_category_id'
-            )
-            ->join('product_product_category as ppc', 'ppc.product_id', '=', 'p.id')
+        $products = Product::query()
+            ->select('products.*', 'ppc.product_category_id')
+            ->join('product_product_category as ppc', 'ppc.product_id', '=', 'products.id')
             ->whereIn('ppc.product_category_id', $categoryIds)
-            ->where('p.bot_id', $botId)
-            ->whereNull('p.deleted_at')
-            ->whereNull('p.in_stop_list_at')
-            ->orderBy('p.id')
+            ->where('products.bot_id', $botId)
+            ->whereNull('products.deleted_at')
+            ->whereNull('products.in_stop_list_at')
+            ->orderBy('products.id')
             ->get()
             ->groupBy('product_category_id');
 
         // 3) Собираем структуру
         $result = [];
 
-        foreach ($categories as $cat) {
-            $catProducts = $products[$cat->id] ?? collect();
-
+        foreach ($categories as $category) {
             $result[] = [
-                'id' => $cat->id,
-                'title' => $cat->title,
-                'order_position' => $cat->order_position,
-                'is_active' => $cat->is_active,
-                'products' => $catProducts->take(8)->values(),
+                'id' => $category->id,
+                'title' => $category->title,
+                'order_position' => $category->order_position,
+                'is_active' => $category->is_active,
+                'products' => ($products[$category->id] ?? collect())->take(8)->values(),
             ];
         }
 
         return $result;
     }
+
 
 
 
