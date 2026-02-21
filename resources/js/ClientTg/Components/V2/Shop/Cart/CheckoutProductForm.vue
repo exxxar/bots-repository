@@ -128,7 +128,7 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
                 </div>
                 <div class="modal-body">
 
-                    <template v-if="!deliveryForm || loading_delivery" >
+                    <template v-if="!deliveryForm || loading_delivery">
                         <div class="d-flex justify-content-center align-items-center" style="height:100px;">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Загрузка...</span>
@@ -141,12 +141,14 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
                     <template v-if="deliveryForm&&!loading_delivery">
                         <div class="container">
                             <h6 class="fw-bold mb-2">
-                                <span v-if="(deliveryForm.delivery_details||[]).length>1">Цена доставки формируется из</span>
+                                <span
+                                    v-if="(deliveryForm.delivery_details||[]).length>1">Цена доставки формируется из</span>
                                 <span v-else>Цена доставки</span>
                             </h6>
                             <ul class="list-group mb-2 list-group-flush">
-                                <template v-if="(deliveryForm.delivery_details||[]).length>0">
-                                    <li class="list-group-item" v-for="item in Object.keys(deliveryForm.delivery_details)">
+
+                                    <li class="list-group-item"
+                                        v-for="item in Object.keys(deliveryForm.delivery_details)">
                                         <div class="d-flex justify-content-between w-100">
                                             <span class="fw-bold">{{ deliveryForm.delivery_details[item].title }}</span>
                                             <span>
@@ -162,22 +164,35 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
                                         </div>
                                     </li>
 
-                                </template>
+
 
                             </ul>
                             <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
-                                <h6 class="fw-bold d-flex justify-content-between" >
+                                <h6 class="fw-bold d-flex justify-content-between">
+                                    Ваш адрес
+                                    <span class="badge bg-primary">{{ deliveryForm.address }}</span>
+                                </h6>
+                                <h6 class="fw-bold d-flex justify-content-between">
                                     Общее расстояние
-                                    <span class="badge bg-primary" >{{ deliveryForm.distance }} км</span>
+                                    <span class="badge bg-primary">{{ deliveryForm.distance }} км</span>
                                 </h6>
                                 <h6 class="fw-bold d-flex justify-content-between">
                                     Общая сумма за доставку
-                                    <span class="badge bg-primary" >{{ deliveryForm.delivery_price }} руб.</span>
+                                    <span class="badge bg-primary">{{ deliveryForm.delivery_price }} руб.</span>
                                 </h6>
                             </template>
                             <template v-else>
-                                <p class="alert alert-light">Цена доставки будет рассчитана курьером! Проверьте корректность введенного вами адреса и попробуйте расчитать доставку еще раз!</p>
+                                <p class="alert alert-light">Цена доставки будет рассчитана курьером! Проверьте
+                                    корректность введенного вами адреса и попробуйте рассчитать доставку еще раз!</p>
+
                             </template>
+
+                            <button
+                                type="button"
+                                class="w-100 p-3 btn btn-primary"
+                                @click="getDeliveryPriceData">
+                                <i class="fa-solid fa-money-bill-wave"></i> Рассчитать цену доставки
+                            </button>
                         </div>
                     </template>
 
@@ -206,8 +221,8 @@ export default {
             deliveryForm: null,
             offer_agreement: true,
             delivery_price_request_step: 0,
-            loading_delivery:false,
-            delivery_message:'',
+            loading_delivery: false,
+            delivery_message: '',
             need_select_table_by_number: false,
             need_request_delivery_price: true,
             error_delivery_price_message: null,
@@ -292,9 +307,10 @@ export default {
             document.dispatchEvent(new Event('switch-to-cart'));
         },
 
-        requestDeliveryPrice() {
+        getDeliveryPriceData() {
             this.need_request_delivery_price = false
             this.error_delivery_price_message = null
+
 
             this.loading_delivery = true
             this.$notify({
@@ -302,10 +318,6 @@ export default {
                 text: "Мы начали процесс расчета цены доставки",
             })
 
-            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('delivery-price-modal'))
-
-            if (modal)
-                modal.show()
 
             this.$store.dispatch("requestDeliveryPrice", {
                 city: this.deliveryForm.city,
@@ -313,6 +325,7 @@ export default {
                 building: this.deliveryForm.building,
             }).then(resp => {
 
+                this.deliveryForm.address = resp.address || null
                 this.deliveryForm.delivery_price = resp.price || 0
                 this.deliveryForm.distance = resp.distance || 0
                 this.deliveryForm.delivery_details = resp.config || []
@@ -341,6 +354,16 @@ export default {
 
                 this.loading_delivery = false
             })
+        },
+        requestDeliveryPrice() {
+
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('delivery-price-modal'))
+
+            if (modal)
+                modal.show()
+
+            this.getDeliveryPriceData()
         },
         startCheckout() {
             if (this.spent_time > 0)

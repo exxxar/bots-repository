@@ -1,9 +1,9 @@
 <template>
 
 
-    <div class="card mb-2 border-light" >
+    <div class="card mb-2 border-light shadow-sm rounded-3 ">
         <div class="row g-0">
-            <div class="col-md-4">
+            <div class="col-4">
                 <img
                     @click="$emit('select', partner)"
                     style="max-height:210px;"
@@ -23,29 +23,30 @@
                     </span>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-8 d-flex align-items-center">
                 <div class="card-body" @click="$emit('select', partner)">
                     <h5 class="my-2 fw-bold">{{ partner.title }}</h5>
                     <p class="fst-italic mb-2" v-if="partner.description">{{ partner.description || '' }}</p>
-                    <p class="card-text"
-                       style="line-height:100%;"
-                       v-if="partner.categories">
+                    <!--                    <p class="card-text"
+                                           style="line-height:100%;"
+                                           v-if="partner.categories">
 
-                        <span
-                            class="badge bg-success text-white"
-                            style="font-size:10px; margin:3px;"
-                            v-for="category in visibleCategories"
-                            :key="category.id"
-                        >
-                            #{{ category.title }}
-                        </span>
-                        <span v-if="hasHidden" class="text-muted fw-bold" style="font-size:12px;">
-                            ...
-                        </span>
-                    </p>
-                    <!--                    <button class="btn btn-primary w-100 p-3"
-                                                @click="$emit('select', partner)"
-                                                type="button">К товарам</button>-->
+                                            <span
+                                                class="badge bg-success text-white"
+                                                style="font-size:8px; margin:1px;"
+                                                v-for="category in visibleCategories"
+                                                :key="category.id"
+                                            >
+                                                #{{ category.title }}
+                                            </span>
+                                            <span v-if="hasHidden" class="text-muted fw-bold" style="font-size:12px;">
+                                                ...
+                                            </span>
+                                        </p>-->
+                    <button class="btn btn-primary w-100 p-2"
+                            @click="$emit('select', partner)"
+                            type="button">К товарам
+                    </button>
                 </div>
             </div>
         </div>
@@ -83,7 +84,7 @@ export default {
     mounted() {
         console.log(this.partner)
     },
-    methods:{
+    methods: {
         addToFavorite() {
             this.$store.dispatch("togglePartnerInFavorites", {
                 form: {
@@ -128,18 +129,31 @@ export default {
 
 .partner-controls {
     position: absolute;
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
     top: 10px;
-    z-index: 20;
+    right: 10px;
 }
+
+.partner-controls .badge {
+    background: rgba(255, 255, 255, 0.8);
+    color: #edecec;
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.badge-category {
+    font-size: 10px;
+    margin: 2px;
+    padding: 4px 6px;
+    border-radius: 12px;
+}
+
 .img-partner-card {
-    max-height: 300px;
+    min-height: 180px;
     width: 100%;
     object-fit: cover;
     border-radius: 5px;
 }
+
 
 .partner-card {
     height: 300px;
