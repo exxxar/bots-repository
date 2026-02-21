@@ -45,87 +45,57 @@ class ProductCategory extends Model
 
     public static function getCategoriesWithProducts(int $botId)
     {
-        $rows = DB::select("
-        SELECT
-            pc.id AS category_id,
-            pc.title AS category_title,
-            pc.order_position,
-            pc.is_active,
+        $categories = DB::table('product_categories as pc')
+            ->select(
+                'pc.id',
+                'pc.title',
+                'pc.order_position',
+                'pc.is_active',
+                DB::raw('COUNT(p.id) as products_count')
+            )
+            ->leftJoin('product_product_category as ppc', 'ppc.product_category_id', '=', 'pc.id')
+            ->leftJoin('products as p', function ($join) {
+                $join->on('p.id', '=', 'ppc.product_id')
+                    ->whereNull('p.deleted_at')
+                    ->whereNull('p.in_stop_list_at');
+            })
+            ->where('pc.bot_id', $botId)
+            ->where('pc.is_active', 1)
+            ->groupBy('pc.id')
+            ->having('products_count', '>', 0)
+            ->orderBy('pc.order_position')
+            ->get();
 
-            p.id AS product_id,
-            p.title AS product_title,
-            p.current_price,
-            p.old_price,
-            p.images,
-            p.bot_id,
+        $products = DB::table('products as p')
+            ->select(
+                'p.*',
+                'ppc.product_category_id'
+            )
+            ->join('product_product_category as ppc', 'ppc.product_id', '=', 'p.id')
+            ->where('p.bot_id', $botId)
+            ->whereNull('p.deleted_at')
+            ->whereNull('p.in_stop_list_at')
+            ->orderBy('p.id')
+            ->get()
+            ->groupBy('product_category_id');
 
-            (
-                SELECT COUNT(*)
-                FROM products p2
-                JOIN product_product_category ppc2
-                    ON ppc2.product_id = p2.id
-                WHERE ppc2.product_category_id = pc.id
-                  AND p2.deleted_at IS NULL
-                  AND p2.in_stop_list_at IS NULL
-            ) AS products_count
+        $result = [];
 
-        FROM product_categories pc
+        foreach ($categories as $cat) {
+            $catProducts = $products[$cat->id] ?? collect();
 
-        JOIN product_product_category ppc
-            ON ppc.product_category_id = pc.id
-
-        JOIN products p
-            ON p.id = ppc.product_id
-
-        WHERE pc.bot_id = ?
-          AND pc.is_active = 1
-          AND p.deleted_at IS NULL
-          AND p.in_stop_list_at IS NULL
-
-          -- Берём только первые 8 товаров на категорию
-          AND (
-                SELECT COUNT(*)
-                FROM product_product_category ppc3
-                JOIN products p3 ON p3.id = ppc3.product_id
-                WHERE ppc3.product_category_id = pc.id
-                  AND p3.deleted_at IS NULL
-                  AND p3.in_stop_list_at IS NULL
-                  AND p3.id <= p.id
-            ) <= 8
-
-        ORDER BY pc.order_position, p.id
-    ", [$botId]);
-
-        // Группируем результат
-        $categories = [];
-
-        foreach ($rows as $row) {
-            $id = $row->category_id;
-
-            if (!isset($categories[$id])) {
-                $categories[$id] = [
-                    'id' => $row->category_id,
-                    'title' => $row->category_title,
-                    'order_position' => $row->order_position,
-                    'is_active' => $row->is_active,
-                    'products_count' => $row->products_count,
-                    'products' => []
-                ];
-            }
-
-            if ($row->product_id) {
-                $categories[$id]['products'][] = [
-                    'id' => $row->product_id,
-                    'title' => $row->product_title,
-                    'current_price' => $row->current_price,
-                    'old_price' => $row->old_price,
-                    'images' => $row->images,
-                    'bot_id' => $row->bot_id,
-                ];
-            }
+            $result[] = [
+                'id' => $cat->id,
+                'title' => $cat->title,
+                'order_position' => $cat->order_position,
+                'is_active' => $cat->is_active,
+                'products_count' => $cat->products_count,
+                'products' => $catProducts->take(8)->values(),
+            ];
         }
 
-        return array_values($categories);
+        return $result;
+
     }
 
 
