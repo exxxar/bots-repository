@@ -30,8 +30,12 @@
                      @click="$emit('select', partner)">
 
                     <div>
-                        <h5 class="my-2 fw-bold text-white">{{ partner.title }}</h5>
-                        <p class="fst-italic mb-2 text-white" v-if="partner.description">{{ partner.description || '' }}</p>
+                        <h5
+                            style="line-height:100%;"
+                            class="my-2 fw-bold text-white">{{ partner.title }}</h5>
+                        <p
+                            style="line-height:100%;font-size:14px;"
+                            class="fst-italic mb-2 text-white" v-if="partner.description">{{ partner.description || '' }}</p>
                     </div>
                     <!--                    <p class="card-text"
                                            style="line-height:100%;"
