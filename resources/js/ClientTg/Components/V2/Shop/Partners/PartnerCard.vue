@@ -2,13 +2,13 @@
 
 
     <div
-        style="background-size: cover;"
+        style="background-size: cover;border-radius: 35px !important;"
         :style="[
                   'background-image:url('+'/images-by-bot-id/'+bot.id+'/'+partner.image+''
                 ]"
         class="card mb-2 border-light shadow-sm rounded-3 ">
         <div class="row g-0">
-            <div class="col-4">
+            <div class="col-2">
 
                 <div class="partner-controls">
                        <span
@@ -24,18 +24,18 @@
                     </span>
                 </div>
             </div>
-            <div class="col-8 d-flex align-items-center" style="background:rgba(0,0,0,0.69);">
+            <div class="col-8 d-flex align-items-center" style="background:rgba(0,0,0,0.49);">
                 <div class="card-body d-flex flex-column justify-content-between"
                      style="height:180px;"
                      @click="$emit('select', partner)">
 
                     <div>
-                        <h5
+                        <h3
                             style="line-height:100%;"
-                            class="my-2 fw-bold text-white">{{ partner.title }}</h5>
+                            class="my-2 fw-bold text-white text-center">{{ partner.title }}</h3>
                         <p
-                            style="line-height:100%;font-size:14px;"
-                            class="fst-italic mb-2 text-white" v-if="partner.description">{{ partner.description || '' }}</p>
+                            style="line-height:100%;"
+                            class="fst-italic mb-2 text-white text-center   " v-if="partner.description">{{ partner.description || '' }}</p>
                     </div>
                     <!--                    <p class="card-text"
                                            style="line-height:100%;"
@@ -53,16 +53,12 @@
                                                 ...
                                             </span>
                                         </p>-->
-                    <button
 
-                        class="btn btn-primary w-100 p-2"
-                            @click="$emit('select', partner)"
-                            type="button">К товарам
-                    </button>
                 </div>
 
             </div>
-
+            <div class="col-2">
+            </div>
         </div>
     </div>
 </template>
