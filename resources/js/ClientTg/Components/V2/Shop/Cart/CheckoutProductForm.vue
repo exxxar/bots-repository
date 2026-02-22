@@ -120,7 +120,7 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
 
     <div class="modal fade" id="delivery-price-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-dialog modal-fullscreen ">
             <div class="modal-content ">
                 <div class="modal-header">
                     <h5 class="modal-title">Детали расчета цены доставки</h5>
@@ -182,14 +182,17 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
                                 </h6>
                             </template>
                             <template v-else>
-                                <p class="alert alert-light">Цена доставки будет рассчитана курьером! Проверьте
+                                <p
+                                    style="line-height:100%;font-size:12px;"
+                                    class="alert alert-light">Цена доставки будет рассчитана курьером! Проверьте
                                     корректность введенного вами адреса и попробуйте рассчитать доставку еще раз!</p>
 
                             </template>
 
                             <button
                                 type="button"
-                                class="w-100 p-3 btn btn-primary"
+                                style="line-height:100%;"
+                                class="w-100 p-2 btn btn-primary"
                                 @click="getDeliveryPriceData">
                                 <i class="fa-solid fa-money-bill-wave"></i> Рассчитать цену доставки
                             </button>

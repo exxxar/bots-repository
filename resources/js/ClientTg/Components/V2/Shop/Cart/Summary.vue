@@ -97,7 +97,8 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 
                             <button
                                 type="button"
-                                class="w-100 p-3 btn btn-primary"
+                                style="line-height:100%;"
+                                class="w-100 p-2 btn btn-primary"
                                 @click="recalcDeliveryPrice"
                                 v-if="deliveryForm.delivery_price===0">
                                 <i class="fa-solid fa-money-bill-wave"></i> Рассчитать цену доставки
