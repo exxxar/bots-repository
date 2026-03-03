@@ -6,6 +6,7 @@ import CertificateForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/C
 import TablePlanner from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/Tables/TablePlanner.vue";
 import CoffeeConfigForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/CoffeeConfigForm.vue";
 import SubscriptionForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/SubscriptionForm.vue";
+import KanbanCRMForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/KanbanCRMForm.vue";
 </script>
 <template>
 
@@ -20,6 +21,15 @@ import SubscriptionForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                     style="line-height:100%;white-space: nowrap;"
                     v-bind:class="{'active':tab===0}"
                     aria-current="page"><i class="fa-solid fa-scroll mr-2"></i> Магазин
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-info   btn p-3"
+                    @click="tab=7"
+                    style="line-height:100%;white-space: nowrap;"
+                    v-bind:class="{'active':tab===7}"
+                    aria-current="page"><i class="fa-brands fa-trello mr-2"></i> CRM
                 </button>
 
                 <button
@@ -112,6 +122,18 @@ import SubscriptionForm from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
             <SubscriptionForm
                 v-if="form"
                 v-model="form"></SubscriptionForm>
+
+            <button
+                style="z-index: 100;"
+                type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
+            </button>
+        </div>
+
+        <div v-if="tab===7" class="py-3">
+
+            <KanbanCRMForm
+                v-if="form"
+                v-model="form"></KanbanCRMForm>
 
             <button
                 style="z-index: 100;"

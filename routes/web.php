@@ -47,6 +47,9 @@ Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInv
 Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
 Route::view("/page-not-found", "error-node")->name("error-node");
 
+Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
+
+
 Route::get("/b/{botDomain}", [ShopScriptController::class, "simpleHomePage"]);
 
 Route::post('/log-error', [ClientErrorController::class, 'store']);

@@ -4,6 +4,7 @@ namespace App\Facades;
 
 
 use App\Http\BusinessLogic\Methods\CDEKLogicFactory as CDEKLogic;
+use App\Http\BusinessLogic\Methods\KanbanLogicFactory as KanbanLogic;
 use App\Http\BusinessLogic\Methods\BotMediaLogicFactory as MediaLogic;
 use App\Http\BusinessLogic\Methods\PartnersLogicFactory as PartnersLogic;
 use App\Http\BusinessLogic\Methods\ProductCollectionLogicFactory as CollectionLogic;
@@ -70,6 +71,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static CDEKLogic cdek()
  * @method static BasketLogic basket()
  * @method static StoryLogic story()
+ * @method static KanbanLogic kanban()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

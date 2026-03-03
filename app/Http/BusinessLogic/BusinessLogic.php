@@ -10,6 +10,7 @@ use App\Http\BusinessLogic\Methods\CDEKLogicFactory;
 use App\Http\BusinessLogic\Methods\FrontPadLogicFactory;
 use App\Http\BusinessLogic\Methods\IIKOLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
+use App\Http\BusinessLogic\Methods\KanbanLogicFactory;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory;
 use App\Http\BusinessLogic\Methods\PartnersLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
@@ -70,6 +71,7 @@ class BusinessLogic
     protected CDEKLogicFactory $cdek;
     protected BasketLogicFactory $basket;
     protected StoryLogicFactory $story;
+    protected KanbanLogicFactory $kanban;
 
     public function __construct()
     {
@@ -105,7 +107,14 @@ class BusinessLogic
         $this->cdek = new CDEKLogicFactory();
         $this->basket = new BasketLogicFactory();
         $this->table = new TableLogicFactory();
+        $this->kanban = new KanbanLogicFactory();
     }
+
+    public function kanban(): KanbanLogicFactory
+    {
+        return $this->kanban;
+    }
+
 
     public function table(): TableLogicFactory
     {

@@ -109,6 +109,11 @@ trait HasSettings
             "is_active" => false,
             "display_self" => true,
         ],
+        "kanban" => [
+            "is_active" => false,
+            "board_uuid" => null,
+            "token" => null,
+        ],
         "init_certificate" => [
             "title" => "Подарочный сертификат",
             "description" => "500 рублей на CashBack",
@@ -350,7 +355,17 @@ trait HasSettings
 
             }
 
-            $jsonParams = ["base_payment_service", "init_certificate", "themes", "manager", "recommendation", "partners", "tables_variants", "subscriptions"];
+            $jsonParams = [
+                "base_payment_service",
+                "init_certificate",
+                "themes",
+                "manager",
+                "recommendation",
+                "partners",
+                "tables_variants",
+                "subscriptions",
+                "kanban"
+            ];
 
             foreach ($jsonParams as $param) {
                 if (!is_null($tmp[$param] ?? null)) {
@@ -421,7 +436,7 @@ trait HasSettings
         $this->bot->config = $config;
         $this->bot->save();
 
-        Log::info("config update params=>".print_r($config, true));
+        Log::info("config update params=>" . print_r($config, true));
 
     }
 

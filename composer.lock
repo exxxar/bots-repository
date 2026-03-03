@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39c60e5da12aef29a868701316a08cfc",
+    "content-hash": "9c559a6b5f4f273935baa105342cd20e",
     "packages": [
         {
             "name": "andrey-tech/amocrm-api-php",
@@ -1092,6 +1092,51 @@
                 }
             ],
             "time": "2024-12-27T00:36:43+00:00"
+        },
+        {
+            "name": "exxxar/kanban-laravel",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/exxxar/kanban-crm-sdk.git",
+                "reference": "83388f83f3ee20f2b378bb32c48f8b5f679d969d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/exxxar/kanban-crm-sdk/zipball/83388f83f3ee20f2b378bb32c48f8b5f679d969d",
+                "reference": "83388f83f3ee20f2b378bb32c48f8b5f679d969d",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "php": ">=8.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Kanban": "Exxxar\\Kanban\\Facades\\Kanban"
+                    },
+                    "providers": [
+                        "Exxxar\\Kanban\\KanbanServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Exxxar\\Kanban\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Laravel SDK for Kanban CRM Board API",
+            "support": {
+                "issues": "https://github.com/exxxar/kanban-crm-sdk/issues",
+                "source": "https://github.com/exxxar/kanban-crm-sdk/tree/v1.0.2"
+            },
+            "time": "2026-02-28T17:09:56+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -11523,7 +11568,8 @@
         "ext-curl": "*",
         "ext-gd": "*",
         "ext-http": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-openssl": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

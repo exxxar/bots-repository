@@ -62,11 +62,7 @@ class ProductCategory extends Model
         // 2) Товары (минимум полей)
         $products = Product::query()
             ->select(
-                'products.id',
-                'products.title',
-                'products.current_price',
-                'products.old_price',
-                'products.images',
+                'products.*',
                 'ppc.product_category_id'
             )
             ->join('product_product_category as ppc', 'ppc.product_id', '=', 'products.id')

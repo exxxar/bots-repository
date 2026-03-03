@@ -7,6 +7,7 @@ use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use danog\Decoder\FileId;
 use Exception;
+use Exxxar\Kanban\Facades\Kanban;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Http;
@@ -112,6 +113,13 @@ trait BotBaseMethodsTrait
 
         if (!is_null($messageThreadId))
             $tmp["message_thread_id"] = $messageThreadId;
+
+  /*      Kanban::client()
+            ->setToken("")
+            ->tasks()
+            ->create([
+
+            ]);*/
 
         return $this->extractedMessage($message, $tmp, $chatId, $messageThreadId, $delay);
     }

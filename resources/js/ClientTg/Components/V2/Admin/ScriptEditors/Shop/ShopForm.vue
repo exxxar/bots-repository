@@ -505,6 +505,11 @@ export default {
                 need_hide_delivery_period: false,
                 can_use_booking: false,
 
+                kanban:{
+                  is_active:false,
+                  board_uuid:null,
+                  token:null,
+                },
                 tables_variants: [],
                 init_certificate: {
                     title: "Подарочный сертификат",
@@ -588,7 +593,7 @@ export default {
             },
             deep: true
         },
-        'form.can_use_sbp': {
+       /* 'form.can_use_sbp': {
             handler: function (newValue) {
                 if (!this.form.can_use_sbp) {
                     this.form.sbp = {
@@ -604,7 +609,7 @@ export default {
                 }
             },
             deep: true
-        },
+        },*/
 
     },
     mounted() {

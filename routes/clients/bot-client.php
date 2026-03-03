@@ -124,14 +124,18 @@ Route::prefix("bot-client")
 
         Route::prefix("wheel-of-fortune-custom")
             ->controller(WheelOfFortuneCustomScriptController::class)
-            ->middleware(["tgAuth.any", "slug"])
+            ->middleware(["tgAuth.any"])
             ->group(function () {
-                Route::post('/prepare', "formWheelOfFortunePrepare");
-                Route::post('/load-data', "loadData");
-                Route::post('/load-prizes-variants', "loadPrizesVariants");
+                Route::post('/prepare', "formWheelOfFortunePrepare")
+                    ->middleware(["slug"]);
+                Route::post('/load-data', "loadData")
+                    ->middleware(["slug"]);
+                Route::post('/load-prizes-variants', "loadPrizesVariants")
+                    ->middleware(["slug"]);
                 Route::post('/load-script-variants', "loadScriptVariants");
                 Route::post('/store-params', "storeParams")->middleware(["tgAuth.admin"]);
-                Route::post('/callback', "formWheelOfFortuneCallback");
+                Route::post('/callback', "formWheelOfFortuneCallback")
+                    ->middleware(["slug"]);
             });
 
 
