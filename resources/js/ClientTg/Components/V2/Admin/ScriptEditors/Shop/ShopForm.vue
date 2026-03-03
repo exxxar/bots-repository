@@ -593,9 +593,9 @@ export default {
             },
             deep: true
         },
-       /* 'form.can_use_sbp': {
+        'form.can_use_sbp': {
             handler: function (newValue) {
-                if (!this.form.can_use_sbp) {
+                if (!this.form.can_use_sbp || !this.form.sbp?.selected_sbp_bank) {
                     this.form.sbp = {
                         selected_sbp_bank: 'tinkoff',
                         tinkoff: {
@@ -609,7 +609,7 @@ export default {
                 }
             },
             deep: true
-        },*/
+        },
 
     },
     mounted() {
