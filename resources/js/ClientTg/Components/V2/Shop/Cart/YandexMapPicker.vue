@@ -54,6 +54,14 @@ export default {
         }
     },
     emits: ["update:address"],
+    watch: {
+        'searchQuery': {
+            handler: function (newValue) {
+                localStorage.setItem("cashman_self_map_tile_search_query", this.searchQuery || '')
+            },
+            deep: true
+        },
+    },
     computed: {
         bot() {
             return window.currentBot
@@ -91,6 +99,10 @@ export default {
 
     mounted() {
         this.initMap();
+
+        this.searchQuery = localStorage.getItem("cashman_self_map_tile_search_query") != null ?
+            localStorage.getItem("cashman_self_map_tile_search_query") : null
+
     },
 
     methods: {
