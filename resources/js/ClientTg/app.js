@@ -1,4 +1,5 @@
 import './bootstrap';
+import 'leaflet/dist/leaflet.css'
 import Vue3TouchEvents from "vue3-touch-events";
 import BotNotification from './modules/notifications.js'
 import BotPages from './modules/pages.js'

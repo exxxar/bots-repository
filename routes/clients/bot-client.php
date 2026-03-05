@@ -361,6 +361,7 @@ Route::prefix("bot-client")
                             ->middleware(["tgAuth.admin"]);
                         Route::post("/get-order-by-id", [ProductController::class, "loadOrderById"]);
                         Route::post("/add-cashback-to-order", [ProductController::class, "addCashBackToOrder"])->middleware(["tgAuth.admin"]);
+                        Route::post("/get-delivery-price-new", [ProductController::class, "getDeliveryPriceNew"]);
                         Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"]);
                     });
 

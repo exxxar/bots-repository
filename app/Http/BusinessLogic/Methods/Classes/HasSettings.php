@@ -123,6 +123,7 @@ trait HasSettings
         ],
         "delivery_price_text" => "Цена доставки рассчитывается курьером",
         "disabled_text" => "Временно недоступно!",
+        "map_tiler" => null,
         "can_work_in_marketplace" => false,
         "min_price" => 100,
         "manager" => [
@@ -257,9 +258,7 @@ trait HasSettings
             ],
             "checkout_title" => "Заказ товара",
             "checkout_description" => "Ваш товар"
-
         ],
-
         "subscriptions" => [
             'text' => 'Подпишись на каналы ниже и получи доступ к проекту',
             'is_active' => false,

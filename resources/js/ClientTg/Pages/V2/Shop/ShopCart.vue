@@ -6,6 +6,8 @@ import ScreenPaymentForm from "@/ClientTg/Components/V2/Shop/Cart/ScreenPaymentF
 import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 import {canBy} from "@/ClientTg/utils/commonMethods.js";
 import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductRecommendationList.vue";
+import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
+import PaymentTypes from "@/ClientTg/Components/V2/Shop/Cart/PaymentTypes.vue";
 </script>
 <template>
 
@@ -33,9 +35,7 @@ import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductReco
                     <ProductRecommendationList/>
                 </template>
             </CartProductList>
-
         </template>
-
 
         <template v-if="tab===1">
             <CheckoutProductForm
@@ -54,6 +54,58 @@ import ProductRecommendationList from "@/ClientTg/Components/V2/Shop/ProductReco
             <ScreenPaymentForm
                 v-on:start-checkout="startCheckout"
                 v-model="deliveryForm"></ScreenPaymentForm>
+        </template>
+
+        <template v-if="tab===4">
+            <div class="container">
+                <h6 class="opacity-75 my-3">Способы оплаты</h6>
+                <PaymentTypes v-model="deliveryForm"></PaymentTypes>
+
+                <Summary
+                    v-model="deliveryForm">
+                </Summary>
+
+                <button
+                    type="button"
+                    @click="tab=0"
+                    class="btn btn-outline-primary p-3 w-100 mb-2">
+                    <i class="fa-solid fa-cart-shopping"></i> Вернуться в корзину
+                </button>
+
+                <nav
+
+                    class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+                    style="border-radius:10px 10px 0px 0px;">
+                    <button
+                        v-if="deliveryForm.payment_type===4"
+                        @click="startCheckout"
+                        class="btn btn-primary p-3 w-100 d-flex justify-content-center align-items-center mb-2">
+                        Оплатить через
+
+                        <img
+                            style="width:80px; object-fit:cover;margin-left:10px;"
+                            v-lazy="'/images/Т-Банк.png'" alt="">
+                    </button>
+
+                    <button
+                        v-if="deliveryForm.payment_type===2"
+                        type="button"
+                        @click="tab=3"
+                        class="btn btn-primary p-3 w-100 mb-2">
+                        <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+                    </button>
+
+                    <button
+                        @click="startCheckout"
+                        v-if="deliveryForm.payment_type === 3 && settings.need_pay_after_call"
+                        class="btn btn-primary p-3 w-100 mb-2">
+                        <i class="fa-solid fa-hourglass  mr-2"></i>
+                        Оформить
+                    </button>
+
+                </nav>
+
+            </div>
         </template>
 
     </div>
@@ -137,10 +189,14 @@ export default {
     data() {
         return {
             tab: 0,
+
+
             deliveryForm: {
                 name: null,
                 phone: null,
                 address: null,
+                lng: null,
+                lat: null,
                 discount: 0,
                 cdek: {
                     tariff: null,

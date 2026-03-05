@@ -1,3 +1,6 @@
+<script setup>
+import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.vue";
+</script>
 <template>
     <template v-if="mode===1&&deliveryForm">
         <div class="form-floating mb-2">
@@ -45,37 +48,63 @@
         </div>
 
         <template v-if="!deliveryForm.need_pickup">
+
+            <YandexMapPicker
+                :mapKey="'l7t0HU7CqsgOKgS9rtvU'"
+
+                v-model:lat="deliveryForm.lat"
+                v-model:lng="deliveryForm.lng"
+                v-model:address="deliveryForm.address"
+            ></YandexMapPicker>
+
+
+            <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
+                <div class="alert alert-light my-2" @click="getDeliveryDetails">
+                    <p class="fw-bold d-flex justify-content-between mb-2">
+                        Общее расстояние
+                        <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
+                    </p>
+                    <p class="fw-bold d-flex justify-content-between mb-0">
+                        Общая сумма за доставку
+                        <span class="badge bg-primary">{{
+                                deliveryForm.delivery_price.toFixed(2)
+                            }} руб.</span>
+                    </p>
+                </div>
+            </template>
+            <!--
+                        <div
+
+                            class="form-floating mb-2">
+                            <input type="text"
+                                   v-model="deliveryForm.city"
+                                   class="form-control" id="deliveryForm-city"
+                                   placeholder="Ваш город" required>
+                            <label for="deliveryForm-city">Ваш город <span class="fw-bold text-danger">*</span></label>
+                        </div>
+
+                        <div
+                            class="form-floating mb-2">
+                            <input type="text"
+                                   v-model="deliveryForm.street"
+                                   class="form-control" id="deliveryForm-street"
+                                   placeholder="Улица" required>
+                            <label for="deliveryForm-street">Улица <span class="fw-bold text-danger">*</span></label>
+                        </div>
+
+
+                        <div
+                            class="form-floating mb-2">
+                            <input type="text"
+                                   v-model="deliveryForm.building"
+                                   class="form-control" id="deliveryForm-building"
+                                   placeholder="Номер дома" required>
+                            <label for="deliveryForm-building">Номер дома <span class="fw-bold text-danger">*</span></label>
+                        </div>
+            -->
+
             <div
-
-                class="form-floating mb-2">
-                <input type="text"
-                       v-model="deliveryForm.city"
-                       class="form-control" id="deliveryForm-city"
-                       placeholder="Ваш город" required>
-                <label for="deliveryForm-city">Ваш город <span class="fw-bold text-danger">*</span></label>
-            </div>
-
-            <div
-                class="form-floating mb-2">
-                <input type="text"
-                       v-model="deliveryForm.street"
-                       class="form-control" id="deliveryForm-street"
-                       placeholder="Улица" required>
-                <label for="deliveryForm-street">Улица <span class="fw-bold text-danger">*</span></label>
-            </div>
-
-
-            <div
-                class="form-floating mb-2">
-                <input type="text"
-                       v-model="deliveryForm.building"
-                       class="form-control" id="deliveryForm-building"
-                       placeholder="Номер дома" required>
-                <label for="deliveryForm-building">Номер дома <span class="fw-bold text-danger">*</span></label>
-            </div>
-
-            <div
-                class="form-floating mb-2">
+                class="form-floating my-2">
                 <input type="text"
                        v-model="deliveryForm.flat_number"
                        class="form-control" id="deliveryForm-flat-number"
@@ -266,6 +295,88 @@
 
     </template>
 
+    <div class="modal fade" id="delivery-price-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-body">
+
+                    <template v-if="!deliveryForm">
+                        <div class="d-flex justify-content-center align-items-center" style="height:100px;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Загрузка...</span>
+                            </div>
+                        </div>
+                        <p class="text-primary text-center fw-bold">Рассчитываем стоимость доставки</p>
+                    </template>
+
+
+                    <template v-if="deliveryForm">
+                        <div class="container">
+                            <h6 class="fw-bold mb-2">
+                                <span
+                                    v-if="(deliveryForm.delivery_details||[]).length>1">Цена доставки формируется из</span>
+                                <span v-else>Цена доставки</span>
+                            </h6>
+                            <ul class="list-group mb-2 list-group-flush">
+
+                                <li class="list-group-item"
+                                    v-for="item in Object.keys(deliveryForm.delivery_details)">
+                                    <div class="d-flex justify-content-between w-100">
+                                        <span class="fw-bold">{{ deliveryForm.delivery_details[item].title }}</span>
+                                        <span>
+                                             <span
+                                                 class="badge bg-primary mx-2">{{
+                                                     deliveryForm.delivery_details[item].distance
+                                                 }} км</span>
+                                             <span
+                                                 class="badge bg-primary">{{
+                                                     deliveryForm.delivery_details[item].price
+                                                 }} руб.</span>
+                                        </span>
+                                    </div>
+                                </li>
+
+
+                            </ul>
+                            <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
+                                <h6 class="fw-bold d-flex justify-content-between">
+                                    Ваш адрес
+                                    <span class="badge bg-primary">{{ deliveryForm.address }}</span>
+                                </h6>
+                                <h6 class="fw-bold d-flex justify-content-between">
+                                    Общее расстояние
+                                    <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
+                                </h6>
+                                <h6 class="fw-bold d-flex justify-content-between">
+                                    Общая сумма за доставку
+                                    <span class="badge bg-primary">{{
+                                            deliveryForm.delivery_price.toFixed(2)
+                                        }} руб.</span>
+                                </h6>
+                            </template>
+                            <template v-else>
+                                <p
+                                    style="line-height:100%;font-size:12px;"
+                                    class="alert alert-light">Цена доставки будет рассчитана курьером! Проверьте
+                                    корректность введенного вами адреса и попробуйте рассчитать доставку еще раз!</p>
+
+                            </template>
+
+                        </div>
+                    </template>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary p-3 w-100"
+                            data-bs-dismiss="modal">Далее
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 export default {
@@ -349,5 +460,14 @@ export default {
 
 
     },
+    methods:{
+        getDeliveryDetails(){
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('delivery-price-modal'))
+
+            if (modal)
+                modal.show()
+        }
+    }
 }
 </script>

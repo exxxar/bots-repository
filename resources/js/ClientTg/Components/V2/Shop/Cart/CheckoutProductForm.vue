@@ -1,6 +1,5 @@
 <script setup>
-import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
-import PaymentTypes from "@/ClientTg/Components/V2/Shop/Cart/PaymentTypes.vue";
+
 import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
 import OfferForm from "@/ClientTg/Components/V2/Shop/Cart/OfferForm.vue";
 import DeliveryForm from "@/ClientTg/Components/V2/Shop/Cart/DeliveryForm.vue";
@@ -17,95 +16,64 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
         <h6 class="opacity-75">Способы получения заказа</h6>
         <DeliveryTypes v-model="deliveryForm"></DeliveryTypes>
 
-        <h6 class="opacity-75">Способы оплаты</h6>
-        <PaymentTypes v-model="deliveryForm"></PaymentTypes>
 
         <h6 class="opacity-75 mb-3">Информация</h6>
         <DeliveryForm
             v-model="deliveryForm"
             :mode="0"></DeliveryForm>
 
+
         <OfferForm v-model="offer_agreement"></OfferForm>
 
 
-
-
-        <Summary
-            v-on:calc-delivery-price="requestDeliveryPrice"
-            v-model="deliveryForm">
-        </Summary>
 
         <p
             class="alert alert-danger fw-bold mb-2"
             v-if="error_delivery_price_message">{{ error_delivery_price_message }}</p>
 
-        <button type="button"
-                @click="goToProductCart"
-                class="btn btn-primary w-100 p-3">
-            <i class="fa-solid fa-cart-shopping"></i> Корзина с товаром
-        </button>
 
-        <nav
-            v-if="offer_agreement"
-            class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
-            style="border-radius:10px 10px 0px 0px;">
-
+        <template v-if="offer_agreement">
             <template v-if="spent_time<=0">
-                <template v-if="settings.need_automatic_delivery_request">
-                    <!-- v-if="cartTotalPrice <= settings.free_shipping_starts_from"-->
-                    <button
-                        v-if="delivery_price_request_step===0"
-                        @click="requestDeliveryPrice"
-                        class="btn btn-primary text-white p-3 w-100 d-flex align-items-center justify-content-center"
-                        :disabled="!canRequestDeliverPrice">
-                        <i class="fa-solid fa-map-location-dot mr-2"></i>
-                        <span class="px-2">Рассчитать цену доставки</span>
-                        <div
-                            v-if="!need_request_delivery_price"
-                            class="spinner-border ml-2 spinner-border-sm"
-                            role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </button>
-                </template>
+                <!--
+                                <template v-if="settings.need_automatic_delivery_request">
+                                    &lt;!&ndash; v-if="cartTotalPrice <= settings.free_shipping_starts_from"&ndash;&gt;
+                                    <button
+                                        v-if="delivery_price_request_step===0"
+                                        @click="requestDeliveryPrice"
+                                        class="btn btn-primary text-white p-3 w-100 my-2 d-flex align-items-center justify-content-center"
+                                        :disabled="!canRequestDeliverPrice">
+                                        <i class="fa-solid fa-map-location-dot mr-2"></i>
+                                        <span class="px-2">Рассчитать цену доставки</span>
+                                        <div
+                                            v-if="!need_request_delivery_price"
+                                            class="spinner-border ml-2 my-2 spinner-border-sm"
+                                            role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                </template>
+                -->
 
 
                 <template v-if="delivery_price_request_step===1">
 
                     <button
-                        v-if="settings.need_pay_after_call || deliveryForm.payment_type === 3"
+                        @click="nextStep(4)"
+                        v-if="settings.need_pay_after_call"
                         :disabled="!canSubmitForm"
-                        class="btn btn-primary p-3 w-100">
-                        <i v-if="spent_time<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                        class="btn btn-primary p-3 w-100 mb-2">
+                        <i v-if="spent_time<=0" class="fa-solid fa-file-invoice mr-2 "></i>
                         <i v-else class="fa-solid fa-hourglass  mr-2"></i>
-                        Оформить
+                        Далее
 
                     </button>
 
-                    <button
-                        v-if="deliveryForm.payment_type===4&&!settings.need_pay_after_call"
-                        :disabled="!canSubmitForm"
-                        class="btn btn-primary p-3 w-100 d-flex justify-content-center align-items-center">
-                        Оплатить через
-                        <img
-                            style="width:80px; object-fit:cover;margin-left:10px;"
-                            v-lazy="'/images/Т-Банк.png'" alt="">
-                    </button>
-
-                    <button
-                        v-if="deliveryForm.payment_type===2&&!settings.need_pay_after_call"
-                        type="button"
-                        @click="nextStep"
-                        :disabled="!canSubmitForm"
-                        class="btn btn-primary p-3 w-100">
-                        <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
-                    </button>
                 </template>
 
             </template>
             <template v-else>
                 <button type="button"
-                        class="btn btn-primary p-3 w-100 d-flex align-items-center justify-content-center">
+                        class="btn btn-primary p-3 w-100 d-flex align-items-center justify-content-center mb-2">
                     Осталось ждать {{ spent_time || 0 }} сек.
                     <div
                         v-if="!canSubmitForm"
@@ -116,97 +84,23 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
 
                 </button>
             </template>
-        </nav>
+        </template>
+        <!--        <nav
+                    v-if="offer_agreement"
+                    class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+                    style="border-radius:10px 10px 0px 0px;">
+
+
+                </nav>-->
+
+        <button type="button"
+                @click="goToProductCart"
+                class="btn btn-outline-primary w-100 p-3">
+            <i class="fa-solid fa-cart-shopping"></i> Вернуться в корзину
+        </button>
     </form>
 
-    <div class="modal fade" id="delivery-price-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen ">
-            <div class="modal-content ">
-                <div class="modal-body">
 
-                    <template v-if="!deliveryForm || loading_delivery">
-                        <div class="d-flex justify-content-center align-items-center" style="height:100px;">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Загрузка...</span>
-                            </div>
-                        </div>
-                        <p class="text-primary text-center fw-bold">Рассчитываем стоимость доставки</p>
-                    </template>
-
-
-                    <template v-if="deliveryForm&&!loading_delivery">
-                        <div class="container">
-                            <h6 class="fw-bold mb-2">
-                                <span
-                                    v-if="(deliveryForm.delivery_details||[]).length>1">Цена доставки формируется из</span>
-                                <span v-else>Цена доставки</span>
-                            </h6>
-                            <ul class="list-group mb-2 list-group-flush">
-
-                                    <li class="list-group-item"
-                                        v-for="item in Object.keys(deliveryForm.delivery_details)">
-                                        <div class="d-flex justify-content-between w-100">
-                                            <span class="fw-bold">{{ deliveryForm.delivery_details[item].title }}</span>
-                                            <span>
-                                             <span
-                                                 class="badge bg-primary mx-2">{{
-                                                     deliveryForm.delivery_details[item].distance
-                                                 }} км</span>
-                                             <span
-                                                 class="badge bg-primary">{{
-                                                     deliveryForm.delivery_details[item].price
-                                                 }} руб.</span>
-                                        </span>
-                                        </div>
-                                    </li>
-
-
-
-                            </ul>
-                            <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
-                                <h6 class="fw-bold d-flex justify-content-between">
-                                    Ваш адрес
-                                    <span class="badge bg-primary">{{ deliveryForm.address }}</span>
-                                </h6>
-                                <h6 class="fw-bold d-flex justify-content-between">
-                                    Общее расстояние
-                                    <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
-                                </h6>
-                                <h6 class="fw-bold d-flex justify-content-between">
-                                    Общая сумма за доставку
-                                    <span class="badge bg-primary">{{ deliveryForm.delivery_price.toFixed(2) }} руб.</span>
-                                </h6>
-                            </template>
-                            <template v-else>
-                                <p
-                                    style="line-height:100%;font-size:12px;"
-                                    class="alert alert-light">Цена доставки будет рассчитана курьером! Проверьте
-                                    корректность введенного вами адреса и попробуйте рассчитать доставку еще раз!</p>
-
-                            </template>
-
-                            <button
-                                type="button"
-                                style="line-height:100%;"
-                                class="w-100 p-2 btn btn-primary"
-                                @click="getDeliveryPriceData">
-                                <i class="fa-solid fa-money-bill-wave"></i> Рассчитать цену доставки
-                            </button>
-                        </div>
-                    </template>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary p-3 w-100"
-                            data-bs-dismiss="modal">Закрыть
-                    </button>
-
-                </div>
-            </div>
-        </div>
-    </div>
 </template>
 <script>
 
@@ -237,6 +131,19 @@ export default {
             handler: function (newValue) {
 
                 this.$emit("update:modelValue", this.deliveryForm)
+            },
+            deep: true
+        },
+        'deliveryForm.address': {
+            handler: function (newValue) {
+
+                if (newValue) {
+                    console.log("address", this.deliveryForm.address)
+                    console.log("lat", this.deliveryForm.lat)
+                    console.log("lng", this.deliveryForm.lng)
+
+                    this.getDeliveryPriceDataNew()
+                }
             },
             deep: true
         },
@@ -306,7 +213,52 @@ export default {
         goToProductCart() {
             document.dispatchEvent(new Event('switch-to-cart'));
         },
+        getDeliveryPriceDataNew() {
+            if (!this.deliveryForm.lat || !this.deliveryForm.lng)
+                return
 
+            this.need_request_delivery_price = false
+            this.error_delivery_price_message = null
+
+
+            this.loading_delivery = true
+
+            this.$store.dispatch("requestDeliveryPriceNew", {
+                address: this.deliveryForm.address,
+                lat: this.deliveryForm.lat,
+                lng: this.deliveryForm.lng,
+            }).then(resp => {
+
+                this.deliveryForm.address = resp.address || null
+                this.deliveryForm.delivery_price = resp.price || 0
+                this.deliveryForm.distance = resp.distance || 0
+                this.deliveryForm.delivery_details = resp.config || []
+
+                this.need_request_delivery_price = true
+                this.delivery_price_request_step = 1
+                this.$notify({
+                    title: "Корзина",
+                    text: "Цена доставки успешно просчитана",
+                    type: "success"
+                })
+
+                this.loading_delivery = false
+
+            }).catch(() => {
+                this.deliveryForm.delivery_price = 0
+                this.deliveryForm.distance = 0
+                this.need_request_delivery_price = true
+                this.delivery_price_request_step = 1
+                this.error_delivery_price_message = "Цена будет рассчитана курьером в момент доставки!"
+                this.$notify({
+                    title: "Корзина",
+                    text: "Ошибка расчёта цены доставки",
+                    type: "error"
+                })
+
+                this.loading_delivery = false
+            })
+        },
         getDeliveryPriceData() {
             this.need_request_delivery_price = false
             this.error_delivery_price_message = null
@@ -356,14 +308,7 @@ export default {
             })
         },
         requestDeliveryPrice() {
-
-
-            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('delivery-price-modal'))
-
-            if (modal)
-                modal.show()
-
-            this.getDeliveryPriceData()
+            this.getDeliveryPriceDataNew()
         },
         startCheckout() {
             if (this.spent_time > 0)
@@ -374,7 +319,8 @@ export default {
             startTimer(10);
         },
 
-        nextStep() {
+
+        nextStep(step) {
 
             if (this.spent_time > 0)
                 return;
@@ -404,7 +350,7 @@ export default {
                 return;
             }
 
-            this.$emit("change-tab", 3)
+            this.$emit("change-tab", step)
 
             startTimer(10);
         }

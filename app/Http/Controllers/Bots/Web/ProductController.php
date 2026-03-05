@@ -232,16 +232,16 @@ class ProductController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getDeliveryPrice(Request $request): \Illuminate\Http\JsonResponse
+    public function getDeliveryPriceNew(Request $request): \Illuminate\Http\JsonResponse
     {
 
         if (is_null($request->bot ?? null))
             throw new HttpException(404, "Не все параметры функции заданы!");
 
         $request->validate([
-            "city" => "required",
-            "street" => "required",
-            "building" => "required",
+            "address" => "required",
+            "lat" => "required",
+            "lng" => "required",
         ]);
 
         $bot = $request->bot ?? null;
@@ -257,8 +257,8 @@ class ProductController extends Controller
         $config = $request->bot->config ?? null;
 
         $basketBotIds = Basket::query()
-            ->where("bot_user_id",$botUser->id)
-            ->where("bot_id",$bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
             ->whereNull("ordered_at")
             ->get()
             ->pluck("bot_partner_id");
@@ -284,7 +284,113 @@ class ProductController extends Controller
 
         $partnerBoxConfig = [];
 
-        $city =$request->city ?? "";
+        $address = $request->address;
+
+        $lat = $request->lat ?? 0;
+        $lng = $request->lng ?? 0;
+
+
+        foreach ($partners as $bot) {
+            $config = $bot->config ?? [];
+            $price_per_km = $config["price_per_km"] ?? 100;
+            $min_base_delivery_price = $config["min_base_delivery_price"] ?? 100;
+
+            $partnerBoxConfig[$bot->bot_domain] = (object)[
+                "id" => $bot->id,
+                "price" => 0,
+                "title" => $bot->title ?? $bot->bot_domain ?? '-',
+                "distance" => 0,
+                "address" => $address,
+                "shop_coords" => $bot->config["shop_coords"] ?? null,
+                "client_coords" => $lat . ", " . $lng,
+            ];
+
+
+
+                $tmpDistance = BusinessLogic::geo()
+                    ->setBot($bot)
+                    ->getDistance($lat , $lng );
+
+
+
+                $distance = floatval(round($tmpDistance / 1000 ?? 0, 2));
+
+
+                $partnerBoxConfig[$bot->bot_domain]->distance = $distance;
+                $partnerBoxConfig[$bot->bot_domain]->price = round($min_base_delivery_price + $distance * $price_per_km, 2);
+
+                $sumDistance += $partnerBoxConfig[$bot->bot_domain]->distance;
+                $sumPrice += $partnerBoxConfig[$bot->bot_domain]->price;
+
+
+
+
+        }
+
+        return response()->json([
+            "distance" => $sumDistance,
+            "price" => $sumPrice,
+            "address" => $address,
+            "config" => $partnerBoxConfig,
+        ]);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function getDeliveryPrice(Request $request): \Illuminate\Http\JsonResponse
+    {
+
+        if (is_null($request->bot ?? null))
+            throw new HttpException(404, "Не все параметры функции заданы!");
+
+        $request->validate([
+            "city" => "required",
+            "street" => "required",
+            "building" => "required",
+        ]);
+
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+
+        if (is_null($bot))
+            return response()->json([
+                "distance" => 0,
+                "price" => 0,
+                "config" => []
+            ]);
+
+        $config = $request->bot->config ?? null;
+
+        $basketBotIds = Basket::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->whereNull("ordered_at")
+            ->get()
+            ->pluck("bot_partner_id");
+
+        $partners = \App\Models\Bot::query()
+            ->whereIn('id', $basketBotIds)
+            ->distinct('bot_partner_id')
+            ->get();
+
+        $partners = [...$partners, $bot];
+
+        if (is_null($config))
+            return response()->json([
+                "distance" => 0,
+                "price" => 0,
+                "address" => null,
+                "config" => []
+            ], 404);
+
+
+        $sumDistance = 0;
+        $sumPrice = 0;
+
+        $partnerBoxConfig = [];
+
+        $city = $request->city ?? "";
         $street = $this->ensureStreetPrefix($request->street ?? "");
         $address = "$city, $street, " . ($request->building ?? "");
         $geo = BusinessLogic::geo()
@@ -303,8 +409,8 @@ class ProductController extends Controller
                 "title" => $bot->title ?? $bot->bot_domain ?? '-',
                 "distance" => 0,
                 "address" => $address,
-                "shop_coords"=>$bot->config["shop_coords"] ?? null,
-                "client_coords"=>$geo->lat.", ".$geo->lon,
+                "shop_coords" => $bot->config["shop_coords"] ?? null,
+                "client_coords" => $geo->lat . ", " . $geo->lon,
             ];
 
 

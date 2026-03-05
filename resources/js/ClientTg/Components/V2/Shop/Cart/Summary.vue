@@ -68,9 +68,7 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                 <!-- Автоматический расчет -->
                                 <template v-if="settings.need_automatic_delivery_request">
                                     <span
-                                        class="d-flex justify-content-end text-decoration-underline"
-                                        :data-bs-toggle="deliveryForm.delivery_price > 0 ? 'modal' : null"
-                                        :data-bs-target="deliveryForm.delivery_price > 0 ? '#delivery-price-modal' : null"
+                                        class="d-flex justify-content-end"
                                     >
                                         <template v-if="deliveryForm.delivery_price > 0">
                                             {{ deliveryForm.delivery_price }}₽
@@ -78,14 +76,10 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                         <template v-else>
                                             не рассчитана
                                         </template>
-
-
                                     </span>
                                 </template>
 
 
-
-                                <!-- Ручной расчет курьером -->
                                 <span
                                     style="text-align:right;"
                                     class="d-block"
@@ -95,14 +89,6 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
                                 </span>
                             </p>
 
-                            <button
-                                type="button"
-                                style="line-height:100%;"
-                                class="w-100 p-2 btn btn-primary"
-                                @click="recalcDeliveryPrice"
-                                v-if="deliveryForm.delivery_price===0">
-                                <i class="fa-solid fa-money-bill-wave"></i> Рассчитать цену доставки
-                            </button>
                         </li>
 
 
@@ -244,7 +230,7 @@ import {cashbackLimit} from "@/ClientTg/utils/commonMethods.js";
             </div>
         </div>
 
-        <!-- Modal -->
+
 
     </template>
 </template>

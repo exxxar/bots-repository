@@ -170,13 +170,6 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     скопируйте и вставьте <span class="fw-bold text-primary">00.000000</span>, <span
                         class="fw-bold text-primary">00.000000</span> координаты в это поле.
                 </p>
-                <!--                <div class="form-floating mb-2">
-                                    <input type="text"
-                                           v-model="form.yandex_geocoder"
-                                           required
-                                           class="form-control" id="floatingInput" placeholder="name@example.com">
-                                    <label for="floatingInput">Токен от Яндекс.Геокодер</label>
-                                </div>-->
 
                 <div class="form-floating mb-2">
                     <input type="text"
@@ -186,6 +179,18 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                            class="form-control" id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput">Координаты заведения</label>
                 </div>
+
+                <p class="alert alert-light mb-2">Также нужно добавить токен от карты на сервисе
+                    <a class="text-primary fw-bold" href="https://cloud.maptiler.com/account/keys/" target="_blank">MapTiler</a>
+                </p>
+                <div class="form-floating mb-2">
+                    <input type="text"
+                           v-model="form.map_tiler"
+                           required
+                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Токен от MatTiler</label>
+                </div>
+
 
             </template>
         </template>
@@ -486,6 +491,7 @@ export default {
             form: {
                 shop_coords: null,
                 yandex_geocoder: null,
+                map_tiler: null,
                 free_shipping_starts_from: 0,
                 min_base_delivery_price: 0,
                 price_per_km: 80,
