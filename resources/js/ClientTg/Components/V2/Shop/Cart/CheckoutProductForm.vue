@@ -56,7 +56,6 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
 
                 <button
                     @click="nextStep(4)"
-                    v-if="settings.need_pay_after_call"
                     :disabled="!canSubmitForm"
                     class="btn btn-primary p-3 w-100 mb-2">
                     <i v-if="spent_time<=0" class="fa-solid fa-file-invoice mr-2 "></i>
