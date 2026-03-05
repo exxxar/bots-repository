@@ -49,32 +49,34 @@ import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.
 
         <template v-if="!deliveryForm.need_pickup">
 
-            <YandexMapPicker
-                :mapKey="'l7t0HU7CqsgOKgS9rtvU'"
+            <template v-if="settings?.map_tiler">
+                <YandexMapPicker
+                    :mapKey="settings?.map_tiler||'l7t0HU7CqsgOKgS9rtvU'"
 
-                v-model:lat="deliveryForm.lat"
-                v-model:lng="deliveryForm.lng"
-                v-model:address="deliveryForm.address"
-            ></YandexMapPicker>
+                    v-model:lat="deliveryForm.lat"
+                    v-model:lng="deliveryForm.lng"
+                    v-model:address="deliveryForm.address"
+                ></YandexMapPicker>
 
-
-            <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
-                <div class="alert alert-light my-2" @click="getDeliveryDetails">
-                    <p class="fw-bold d-flex justify-content-between mb-2">
-                        Общее расстояние
-                        <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
-                    </p>
-                    <p class="fw-bold d-flex justify-content-between mb-0">
-                        Общая сумма за доставку
-                        <span class="badge bg-primary">{{
-                                deliveryForm.delivery_price.toFixed(2)
-                            }} руб.</span>
-                    </p>
-                </div>
+                <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
+                    <div class="alert alert-light my-2" @click="getDeliveryDetails">
+                        <p class="fw-bold d-flex justify-content-between mb-2">
+                            Общее расстояние
+                            <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
+                        </p>
+                        <p class="fw-bold d-flex justify-content-between mb-0">
+                            Общая сумма за доставку
+                            <span class="badge bg-primary">{{
+                                    deliveryForm.delivery_price.toFixed(2)
+                                }} руб.</span>
+                        </p>
+                    </div>
+                </template>
             </template>
-            <!--
-                        <div
 
+
+            <template v-else>
+                        <div
                             class="form-floating mb-2">
                             <input type="text"
                                    v-model="deliveryForm.city"
@@ -101,8 +103,8 @@ import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.
                                    placeholder="Номер дома" required>
                             <label for="deliveryForm-building">Номер дома <span class="fw-bold text-danger">*</span></label>
                         </div>
-            -->
 
+            </template>
             <div
                 class="form-floating my-2">
                 <input type="text"
