@@ -172,11 +172,11 @@ export default {
             this.coords = {lat, lng: lon};
             this.findAddress = this.formatAddress(data[0].address);
 
-            localStorage.setItem("cashman_self_map_tile_search_query",  this.findAddress)
-
             this.$emit("update:address", this.findAddress);
             this.$emit("update:lng", this.coords.lng);
             this.$emit("update:lat", this.coords.lat);
+
+            localStorage.setItem("cashman_self_map_tile_search_query",  this.findAddress)
         },
 
         async reverseGeocode(lat, lng) {

@@ -130,21 +130,13 @@ export default {
 
         'deliveryForm': {
             handler: function (newValue) {
-
                 this.$emit("update:modelValue", this.deliveryForm)
             },
             deep: true
         },
         'deliveryForm.address': {
             handler: function (newValue) {
-
-                if (newValue) {
-                    console.log("address", this.deliveryForm.address)
-                    console.log("lat", this.deliveryForm.lat)
-                    console.log("lng", this.deliveryForm.lng)
-
-                    this.getDeliveryPriceDataNew()
-                }
+                this.getDeliveryPriceDataNew()
             },
             deep: true
         },
