@@ -247,6 +247,8 @@ class ProductController extends Controller
         $bot = $request->bot ?? null;
         $botUser = $request->botUser ?? null;
 
+
+
         if (is_null($bot))
             return response()->json([
                 "distance" => 0,
@@ -289,32 +291,36 @@ class ProductController extends Controller
         $lat = $request->lat ?? 0;
         $lng = $request->lng ?? 0;
 
+        $config = $bot->config ?? [];
+        $price_per_km = $config["price_per_km"] ?? 100;
+        $min_base_delivery_price = $config["min_base_delivery_price"] ?? 100;
 
-        foreach ($partners as $bot) {
-            $config = $bot->config ?? [];
-            $price_per_km = $config["price_per_km"] ?? 100;
-            $min_base_delivery_price = $config["min_base_delivery_price"] ?? 100;
+        $isPartnersActive = $config["partners"]["is_active"] ?? false;
+
+        $isPartnersDisplaySelf = $config["partners"]["display_self"] ?? false;
+
+        foreach ($partners as $partner) {
+            if ($isPartnersActive && !$isPartnersDisplaySelf
+                && $partner->id == $this->bot->id
+            )
+                continue;
+
 
             $partnerBoxConfig[$bot->bot_domain] = (object)[
-                "id" => $bot->id,
+                "id" => $partner->id,
                 "price" => 0,
-                "title" => $bot->title ?? $bot->bot_domain ?? '-',
+                "title" => $partner->title ?? $partner->bot_domain ?? '-',
                 "distance" => 0,
                 "address" => $address,
-                "shop_coords" => $bot->config["shop_coords"] ?? null,
+                "shop_coords" => $partner->config["shop_coords"] ?? null,
                 "client_coords" => $lat . ", " . $lng,
             ];
-
-
 
                 $tmpDistance = BusinessLogic::geo()
                     ->setBot($bot)
                     ->getDistance($lat , $lng );
 
-
-
                 $distance = floatval(round($tmpDistance / 1000 ?? 0, 2));
-
 
                 $partnerBoxConfig[$bot->bot_domain]->distance = $distance;
                 $partnerBoxConfig[$bot->bot_domain]->price = round($min_base_delivery_price + $distance * $price_per_km, 2);
