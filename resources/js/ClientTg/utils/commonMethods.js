@@ -17,7 +17,7 @@ export function cashbackLimit() {
 
     let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
 
-    return Math.min(cashBackAmount, maxUserCashback) || 0
+    return Math.round(Math.min(cashBackAmount, maxUserCashback) || 0)
 }
 
 export function canBy() {

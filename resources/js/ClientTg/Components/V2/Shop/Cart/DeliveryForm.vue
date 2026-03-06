@@ -64,11 +64,11 @@ import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.
                         style="position: sticky;bottom: 05px;z-index: 100;"
                         class="alert alert-light my-2" @click="getDeliveryDetails">
                         <p class="fw-bold d-flex justify-content-between mb-2">
-                            Общее расстояние
+                            Расстояние
                             <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
                         </p>
-                        <p class="fw-bold d-flex justify-content-between mb-0">
-                            Общая сумма за доставку
+                        <p class="fw-bold d-flex justify-content-between mb-0 align-items-center">
+                            Сумма за доставку
                             <span class="badge bg-primary">{{
                                     deliveryForm.delivery_price.toFixed(2)
                                 }} руб.</span>
