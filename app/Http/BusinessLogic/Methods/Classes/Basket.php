@@ -186,6 +186,7 @@ class Basket
         $distance = $this->data["distance"] ?? 0;
         $lat = $this->data["lat"] ?? 0;
         $lng = $this->data["lng"] ?? 0;
+        $address = $this->data["address"] ?? '';
 
         $paymentType = $this->data["payment_type"] ?? 4;
         $deliveryDetails = json_decode($this->data["delivery_details"] ?? '[]');
@@ -400,9 +401,9 @@ class Basket
             'delivery_note' => $deliveryNote,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
             'receiver_phone' => $this->data["phone"] ?? 'Нет телефона',
-            'address' => $this->fsPrepareAddress() . "," . ($this->data["flat_number"] ?? ""),
-            'receiver_latitude' => 0,
-            'receiver_longitude' => 0,
+            'address' => $address . "," . ($this->data["flat_number"] ?? "")."($lat, $lng)",
+            'receiver_latitude' => $lat,
+            'receiver_longitude' => $lng,
 
             'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
             'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора

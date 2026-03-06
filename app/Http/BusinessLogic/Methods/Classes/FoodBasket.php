@@ -49,7 +49,9 @@ trait FoodBasket
         $whenReady = ($this->data["when_ready"] ?? "false") == "true";
         $needPickup = ($this->data["need_pickup"] ?? "false") == "true";
         $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
-        $address = (($this->data["city"] ?? "") . "," . ($this->data["street"] ?? "") . "," . ($this->data["building"] ?? ""));
+        $address = ($this->data["address"] ?? "");
+        $lat = $this->data["lat"] ?? 0;
+        $lng = $this->data["lng"] ?? 0;
 
 
         return !$needPickup ?
@@ -58,7 +60,7 @@ trait FoodBasket
                 $this->botUser->telegram_chat_id ?? '-',
                 $this->data["name"] ?? 'Не указано',
                 $this->data["phone"] ?? 'Не указано',
-                $address . "," . ($this->data["flat_number"] ?? ""),
+                $address . "," . ($this->data["flat_number"] ?? "")."($lat, $lng)",
                 $order->delivery_price ?? 0,
                 $order->delivery_range ?? 0,
                 $this->data["entrance_number"] ?? 'Не указано',
