@@ -134,12 +134,7 @@ export default {
             },
             deep: true
         },
-        'deliveryForm.address': {
-            handler: function (newValue) {
-                this.getDeliveryPriceDataNew()
-            },
-            deep: true
-        },
+
         'deliveryForm.need_pickup': {
             handler: function (newValue) {
 
@@ -200,26 +195,30 @@ export default {
             this.spent_time = event.detail
         });
 
+        window.addEventListener("change-delivery-address", (event) =>{
+            const address = event.detail.address
+            const lng = event.detail.lng
+            const lat = event.detail.lat
+
+            this.getDeliveryPriceDataNew(address, lat, lng)
+
+        });
+
         this.delivery_price_request_step = (this.deliveryForm.need_pickup === true ? 1 : 0) || (this.settings.need_automatic_delivery_request ? 0 : 1)
     },
     methods: {
         goToProductCart() {
             document.dispatchEvent(new Event('switch-to-cart'));
         },
-        getDeliveryPriceDataNew() {
-            if (!this.deliveryForm.lat || !this.deliveryForm.lng)
-                return
-
+        getDeliveryPriceDataNew(address, lat, lng) {
             this.need_request_delivery_price = false
             this.error_delivery_price_message = null
-
-
             this.loading_delivery = true
 
             this.$store.dispatch("requestDeliveryPriceNew", {
-                address: this.deliveryForm.address,
-                lat: this.deliveryForm.lat,
-                lng: this.deliveryForm.lng,
+                address: address,
+                lat: lat,
+                lng: lng,
             }).then(resp => {
 
                 this.deliveryForm.address = resp.address || null

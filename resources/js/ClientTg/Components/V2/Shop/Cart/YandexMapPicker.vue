@@ -176,6 +176,14 @@ export default {
             this.$emit("update:lng", this.coords.lng);
             this.$emit("update:lat", this.coords.lat);
 
+            window.dispatchEvent(new CustomEvent('change-delivery-address', {
+                detail:{
+                    address:  this.findAddress,
+                    lng:  this.coords.lng,
+                    lat:  this.coords.lat,
+                }
+            }));
+
             localStorage.setItem("cashman_self_map_tile_search_query",  this.findAddress)
         },
 
