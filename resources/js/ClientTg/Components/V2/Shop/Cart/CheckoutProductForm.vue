@@ -218,13 +218,12 @@ export default {
             const lat = event.detail.lat
 
 
+            this.getDeliveryPriceDataNew(address, lat, lng)
+
             this.$notify({
                 title:'Ищем указанный вами адрес!',
                 text: address + "("+lat+","+lng+")",
             })
-
-
-            this.getDeliveryPriceDataNew(address, lat, lng)
 
         });
 
@@ -240,7 +239,6 @@ export default {
 
             this.deliveryForm.delivery_price = 0
             this.deliveryForm.distance = 0
-
 
             this.loading_delivery = true
 
