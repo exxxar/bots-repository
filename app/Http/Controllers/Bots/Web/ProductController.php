@@ -299,9 +299,10 @@ class ProductController extends Controller
 
         $isPartnersDisplaySelf = $config["partners"]["display_self"] ?? false;
 
+
         foreach ($partners as $partner) {
             if ($isPartnersActive && !$isPartnersDisplaySelf
-                && $partner->id == $this->bot->id
+                && $partner->id == $bot->id
             )
                 continue;
 
