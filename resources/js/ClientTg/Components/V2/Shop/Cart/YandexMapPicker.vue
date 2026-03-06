@@ -218,10 +218,7 @@ export default {
                 full = full.replace(item.original, item.ru);
             });
 
-            this.$notify({
-                title:'Адрес',
-                text:'Адрес доставки:'+this.findAddress ,
-            })
+
             return full;
         },
 

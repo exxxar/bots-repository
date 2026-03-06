@@ -75,6 +75,9 @@ import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.
                         </p>
                     </div>
                 </template>
+                <template v-else>
+                    <slot name="loadingDeliveryData"></slot>
+                </template>
             </template>
 
 

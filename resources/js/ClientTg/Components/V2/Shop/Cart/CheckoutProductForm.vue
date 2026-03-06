@@ -20,7 +20,23 @@ import DeliveryTypes from "@/ClientTg/Components/V2/Shop/Cart/DeliveryTypes.vue"
         <h6 class="opacity-75 mb-3">Информация</h6>
         <DeliveryForm
             v-model="deliveryForm"
-            :mode="0"></DeliveryForm>
+            :mode="0">
+
+            <template
+                #loadingDeliveryData
+                v-if="loading_delivery">
+                <div
+                    style="position: sticky;bottom: 05px;z-index: 100;"
+                    class="alert alert-light my-2 d-flex justify-content-center flex-column align-items-center">
+                    <div
+                        class="spinner-border ml-2 spinner-border-lg"
+                        role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mb-0">Ищем ваш адрес!</p>
+                </div>
+            </template>
+        </DeliveryForm>
 
 
         <OfferForm v-model="offer_agreement"></OfferForm>
@@ -197,11 +213,16 @@ export default {
 
         window.addEventListener("change-delivery-address", (event) =>{
 
-            console.log("Test", event)
-
             const address = event.detail.address
             const lng = event.detail.lng
             const lat = event.detail.lat
+
+
+            this.$notify({
+                title:'Ищем указанный вами адрес!',
+                text: address + "("+lat+","+lng+")",
+            })
+
 
             this.getDeliveryPriceDataNew(address, lat, lng)
 
@@ -216,6 +237,11 @@ export default {
         getDeliveryPriceDataNew(address, lat, lng) {
             this.need_request_delivery_price = false
             this.error_delivery_price_message = null
+
+            this.deliveryForm.delivery_price = 0
+            this.deliveryForm.distance = 0
+
+
             this.loading_delivery = true
 
             this.$store.dispatch("requestDeliveryPriceNew", {
