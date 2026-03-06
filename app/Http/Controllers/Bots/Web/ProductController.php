@@ -307,7 +307,7 @@ class ProductController extends Controller
                 continue;
 
 
-            $partnerBoxConfig[$bot->bot_domain] = (object)[
+            $partnerBoxConfig[$partner->bot_domain] = (object)[
                 "id" => $partner->id,
                 "price" => 0,
                 "title" => $partner->title ?? $partner->bot_domain ?? '-',
@@ -318,16 +318,16 @@ class ProductController extends Controller
             ];
 
                 $tmpDistance = BusinessLogic::geo()
-                    ->setBot($bot)
+                    ->setBot($partner)
                     ->getDistance($lat , $lng );
 
                 $distance = floatval(round($tmpDistance / 1000 ?? 0, 2));
 
-                $partnerBoxConfig[$bot->bot_domain]->distance = $distance;
-                $partnerBoxConfig[$bot->bot_domain]->price = round($min_base_delivery_price + $distance * $price_per_km, 2);
+                $partnerBoxConfig[$partner->bot_domain]->distance = $distance;
+                $partnerBoxConfig[$partner->bot_domain]->price = round($min_base_delivery_price + $distance * $price_per_km, 2);
 
-                $sumDistance += $partnerBoxConfig[$bot->bot_domain]->distance;
-                $sumPrice += $partnerBoxConfig[$bot->bot_domain]->price;
+                $sumDistance += $partnerBoxConfig[$partner->bot_domain]->distance;
+                $sumPrice += $partnerBoxConfig[$partner->bot_domain]->price;
 
 
 
