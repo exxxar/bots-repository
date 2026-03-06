@@ -188,7 +188,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                            v-model="form.map_tiler"
                            required
                            class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Токен от MatTiler</label>
+                    <label for="floatingInput">Токен от MapTiler</label>
                 </div>
 
 

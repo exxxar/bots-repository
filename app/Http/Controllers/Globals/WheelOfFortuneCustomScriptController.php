@@ -15,7 +15,7 @@ use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
 use Carbon\Carbon;
-use HttpException;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -24,6 +24,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use ReflectionClass;
 use stdClass;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
 class WheelOfFortuneCustomScriptController extends SlugController
@@ -237,7 +238,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($botUser) || is_null($slug))
-            throw new HttpException("Не заданы необходимые параметры функции", 400);
+            throw new HttpException(400, "Не заданы необходимые параметры функции");
 
 
         $maxAttempts = (Collection::make($slug->config ?? [])
@@ -261,7 +262,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->first();
 
         if (is_null($action))
-            throw new HttpException("Вы еще не начали розыгрыш!", 400);
+            throw new HttpException(400, "Вы еще не начали розыгрыш!");
 
         $action->current_attempts++;
         if ($action->current_attempts >= $maxAttempts)
@@ -446,7 +447,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($botUser) || is_null($slug))
-            throw new HttpException("Не заданы необходимые параметры функции", 400);
+            throw new HttpException(400, "Не заданы необходимые параметры функции" );
 
 
         $dictionary = [
@@ -509,7 +510,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($slug))
-            throw new HttpException("Не все параметры функции заданы!", 404);
+            throw new HttpException(404, "Не все параметры функции заданы!");
 
         $slug = BotMenuSlug::query()->find($slug->id);
 
@@ -698,7 +699,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
     protected function extractedPreparedPrizes(mixed $bot, mixed $botUser, mixed $slug): \Illuminate\Http\JsonResponse
     {
         if (is_null($bot) || is_null($botUser) || is_null($slug))
-            throw new HttpException("Не заданы необходимые параметры функции", 400);
+            throw new HttpException(400,"Не заданы необходимые параметры функции");
 
         $maxAttempts = (Collection::make($slug->config ?? [])
             ->where("key", "max_attempts")

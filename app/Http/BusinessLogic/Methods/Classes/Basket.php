@@ -184,6 +184,9 @@ class Basket
         $needPickup = ($this->data["need_pickup"] ?? "false") == "true";
         $deliveryPrice = $this->data["delivery_price"] ?? 0;
         $distance = $this->data["distance"] ?? 0;
+        $lat = $this->data["lat"] ?? 0;
+        $lng = $this->data["lng"] ?? 0;
+
         $paymentType = $this->data["payment_type"] ?? 4;
         $deliveryDetails = json_decode($this->data["delivery_details"] ?? '[]');
         $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
@@ -193,6 +196,11 @@ class Basket
             ->where("bot_user_id", $this->botUser->id)
             ->whereNull("ordered_at")
             ->get();
+
+
+        $isPartnersActive = $this->bot->config["partners"]["is_active"] ?? false;
+
+        $isPartnersDisplaySelf = $this->bot->config["partners"]["display_self"] ?? false;
 
 
         $summaryPrice = 0;
@@ -211,6 +219,11 @@ class Basket
 
             $partner = $item->partner ?? $this->bot;
 
+            if ($isPartnersActive && !$isPartnersDisplaySelf
+                && $partner->id == $this->bot->id
+            )
+                continue;
+
             $deliveryDetails = (array)$deliveryDetails;
 
             if (empty($partnerProductBox[$partner->bot_domain])) {
@@ -224,7 +237,7 @@ class Basket
                     ->first())->extra_charge ?? 0;
                 $partnerProductBox[$partner->bot_domain]["summary_price"] = 0;
                 $partnerProductBox[$partner->bot_domain]["summary_count"] = 0;
-                $partnerProductBox[$partner->bot_domain]["summary_discount"] =0;
+                $partnerProductBox[$partner->bot_domain]["summary_discount"] = 0;
                 $partnerProductBox[$partner->bot_domain]["delivery_price"] = $deliveryDetails[$partner->bot_domain]->price ?? 0;
                 $partnerProductBox[$partner->bot_domain]["distance"] = $deliveryDetails[$partner->bot_domain]->distance ?? 0;
                 $partnerProductBox[$partner->bot_domain]["address"] = $deliveryDetails[$partner->bot_domain]->address ?? '-';
