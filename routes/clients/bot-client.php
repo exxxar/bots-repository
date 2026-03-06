@@ -133,7 +133,7 @@ Route::prefix("bot-client")
                 Route::post('/load-prizes-variants', "loadPrizesVariants")
                     ->middleware(["slug"]);
                 Route::post('/load-script-variants', "loadScriptVariants");
-                Route::post('/store-params', "storeParams")->middleware(["tgAuth.admin"]);
+                Route::post('/store-params', "storeParams")->middleware(["tgAuth.admin","slug"]);
                 Route::post('/callback', "formWheelOfFortuneCallback")
                     ->middleware(["slug"]);
             });
