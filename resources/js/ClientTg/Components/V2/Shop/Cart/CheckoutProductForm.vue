@@ -196,6 +196,9 @@ export default {
         });
 
         window.addEventListener("change-delivery-address", (event) =>{
+
+            console.log("Test", event)
+
             const address = event.detail.address
             const lng = event.detail.lng
             const lat = event.detail.lat

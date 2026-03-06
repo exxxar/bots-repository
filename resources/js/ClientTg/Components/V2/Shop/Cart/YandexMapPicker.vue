@@ -57,7 +57,26 @@ export default {
     watch: {
         'searchQuery': {
             handler: function (newValue) {
-                localStorage.setItem("cashman_self_map_tile_search_query", this.searchQuery || '')
+                localStorage.setItem("cashman_self_map_tile_search_query", this.searchQuery)
+            },
+            deep: true
+        },
+        'findAddress': {
+            handler: function (newValue) {
+                this.$emit("update:address", this.findAddress || this.searchQuery);
+                this.$emit("update:lng", this.coords.lng);
+                this.$emit("update:lat", this.coords.lat);
+
+
+                localStorage.setItem("cashman_self_map_tile_search_query",  this.findAddress)
+
+                window.dispatchEvent(new CustomEvent('change-delivery-address', {
+                    detail: {
+                        address: this.findAddress || this.searchQuery,
+                        lng: this.coords.lng,
+                        lat: this.coords.lat,
+                    }
+                }));
             },
             deep: true
         },
@@ -150,6 +169,8 @@ export default {
             this.marker = new maplibregl.Marker({color: "red"})
                 .setLngLat([lng, lat])
                 .addTo(this.map);
+
+
         },
 
         async searchAddress() {
@@ -172,19 +193,7 @@ export default {
             this.coords = {lat, lng: lon};
             this.findAddress = this.formatAddress(data[0].address);
 
-            this.$emit("update:address", this.findAddress);
-            this.$emit("update:lng", this.coords.lng);
-            this.$emit("update:lat", this.coords.lat);
 
-            window.dispatchEvent(new CustomEvent('change-delivery-address', {
-                detail:{
-                    address:  this.findAddress,
-                    lng:  this.coords.lng,
-                    lat:  this.coords.lat,
-                }
-            }));
-
-            localStorage.setItem("cashman_self_map_tile_search_query",  this.findAddress)
         },
 
         async reverseGeocode(lat, lng) {

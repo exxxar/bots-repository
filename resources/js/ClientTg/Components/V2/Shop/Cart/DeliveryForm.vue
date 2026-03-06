@@ -51,6 +51,7 @@ import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.
 
             <template v-if="settings?.map_tiler">
                 <YandexMapPicker
+
                     :mapKey="settings?.map_tiler||'l7t0HU7CqsgOKgS9rtvU'"
 
                     v-model:lat="deliveryForm.lat"
@@ -59,7 +60,9 @@ import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.
                 ></YandexMapPicker>
 
                 <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
-                    <div class="alert alert-light my-2" @click="getDeliveryDetails">
+                    <div
+                        style="position: sticky;bottom: 05px;z-index: 100;"
+                        class="alert alert-light my-2" @click="getDeliveryDetails">
                         <p class="fw-bold d-flex justify-content-between mb-2">
                             Общее расстояние
                             <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
