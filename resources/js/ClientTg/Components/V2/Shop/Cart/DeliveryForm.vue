@@ -348,16 +348,16 @@ import YandexMapPicker from "@/ClientTg/Components/V2/Shop/Cart/YandexMapPicker.
 
                             </ul>
                             <template v-if="deliveryForm.distance>0&&deliveryForm.delivery_price>0">
-                                <h6 class="fw-bold d-flex justify-content-between">
+                                <h6 class="fw-bold d-flex justify-content-between align-items-center">
                                     Ваш адрес
                                     <span class="badge bg-primary">{{ deliveryForm.address }}</span>
                                 </h6>
-                                <h6 class="fw-bold d-flex justify-content-between">
-                                    Общее расстояние
+                                <h6 class="fw-bold d-flex justify-content-between align-items-center">
+                                    Расстояние
                                     <span class="badge bg-primary">{{ deliveryForm.distance.toFixed(2) }} км</span>
                                 </h6>
-                                <h6 class="fw-bold d-flex justify-content-between">
-                                    Общая сумма за доставку
+                                <h6 class="fw-bold d-flex justify-content-between align-items-center">
+                                    Сумма за доставку
                                     <span class="badge bg-primary">{{
                                             deliveryForm.delivery_price.toFixed(2)
                                         }} руб.</span>

@@ -192,8 +192,6 @@ export default {
 
             this.coords = {lat, lng: lon};
             this.findAddress = this.formatAddress(data[0].address);
-
-
         },
 
         async reverseGeocode(lat, lng) {
