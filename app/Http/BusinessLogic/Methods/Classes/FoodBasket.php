@@ -55,12 +55,12 @@ trait FoodBasket
 
 
         return !$needPickup ?
-            sprintf("\n".($whenReady ? "🟢" : "🟡") . " Заказ №: <b>%s</b>\nИдентификатор клиента: <b>%s</b>\n\n<b>Данные для доставки:</b>\nФ.И.О.: <b>%s</b>\nНомер телефона: <b>%s</b>\nАдрес: <b>%s</b>\nЦена доставки: %s руб.\nДистанция: %s км\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: <b>%s</b>\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: <b>%s</b> чел.\n",
+            sprintf("\n".($whenReady ? "🟢" : "🟡") . " Заказ №: <b>%s</b>\nИдентификатор клиента: <b>%s</b>\n\n<b>Данные для доставки:</b>\nФ.И.О.: <b>%s</b>\nНомер телефона: <b>%s</b>\nАдрес: %s\nЦена доставки: %s руб.\nДистанция: %s км\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: <b>%s</b>\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: <b>%s</b> чел.\n",
                 $order->id ?? '-',
                 $this->botUser->telegram_chat_id ?? '-',
                 $this->data["name"] ?? 'Не указано',
                 $this->data["phone"] ?? 'Не указано',
-                $address . "," . ($this->data["flat_number"] ?? "")."($lat, $lng)",
+                "<code>".$address . "," . ($this->data["flat_number"] ?? "")."</code><code>($lat, $lng)</code>",
                 $order->delivery_price ?? 0,
                 $order->delivery_range ?? 0,
                 $this->data["entrance_number"] ?? 'Не указано',
